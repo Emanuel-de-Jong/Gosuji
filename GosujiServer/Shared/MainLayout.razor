@@ -1,0 +1,69 @@
+﻿@inherits LayoutComponentBase
+
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+
+@inject NavigationManager navigationManager
+@inject IJSRuntime JS
+
+<PageTitle>GosujiServer</PageTitle>
+
+<div class="page">
+    <main>
+        <div id="mainNavBar" class="top-row px-4 auth">
+            <div class="navItem">
+                <a href="">Home</a>
+            </div>
+
+            <div class="navItem">
+                <a href="trainer">Train</a>
+            </div>
+
+            <div class="navItem">
+                <a href="" @onclick="GoToProfile">Profile</a>
+            </div>
+
+            <LoginDisplay />
+
+            <div class="navItem">
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="darkThemeSwitch" checked>
+                    <label class="form-check-label" for="darkThemeSwitch">Dark theme</label>
+                </div>
+            </div>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private ClaimsPrincipal claimsPrincipal;
+
+    private void GoToProfile()
+    {
+        navigationManager.NavigateTo("user/" + claimsPrincipal.Identity.Name);
+    }
+
+    protected override void OnInitialized()
+    {
+        if (G.LogRouting) Console.WriteLine("MainLayout.razor");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            claimsPrincipal = (await authenticationStateTask).User;
+
+            await JS.InvokeVoidAsync("custom.init");
+
+            //GoToProfile();
+        }
+    }
+}

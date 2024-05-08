@@ -1,0 +1,51 @@
+﻿@page "/"
+@using GosujiServer.Services;
+@inject DbService dbService;
+
+<PageTitle>Gosuji</PageTitle>
+
+<div class="page-layout">
+    <h1 class="header page-header">Gosuji</h1>
+
+    <!-- Videos -->
+    <div class="video-container">
+        <iframe class="video trailer" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+        <iframe class="video improvement" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+        <iframe class="video guide" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+    </div>
+
+    <!-- Explanation and Description of the page -->
+    <p class="description">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+
+    <!-- Changelog -->
+    <div class="changelog-container">
+        <h2 class="header changelog-header">Changelog</h2>
+
+        @foreach(Changelog changelogEntry in changelogs)
+        {
+            <h4 class="individual-header">@changelogEntry.Version @changelogEntry.Name</h4>
+        <p class="changelog">
+            @changelogEntry.Description
+        </p>
+        }
+    </div>
+</div>
+
+@code {
+
+    ApplicationDbContext dbContext;
+    List<Changelog> changelogs;
+
+    protected override void OnInitialized()
+    {
+        dbContext = dbService.GetContext();
+        changelogs = dbContext.Changelogs.ToList();
+        changelogs.Reverse();
+    }
+
+}
