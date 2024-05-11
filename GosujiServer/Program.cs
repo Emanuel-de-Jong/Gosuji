@@ -22,7 +22,8 @@ builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfi
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-//builder.Services.AddSession();
+builder.Services.AddSession();
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
 
@@ -55,7 +56,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//app.UseSession();
+app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

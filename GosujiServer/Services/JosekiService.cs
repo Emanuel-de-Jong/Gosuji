@@ -1,4 +1,5 @@
-﻿using IGOEnchi.GoGameLogic;
+﻿using GosujiServer.Data;
+using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
 using IGOEnchi.SmartGameLib;
 using System.IO;
@@ -7,14 +8,41 @@ namespace GosujiServer.Services
 {
     public class JosekiService
     {
-        private GoGame game;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private Dictionary<string, GoNode> JosekiNodes;
 
-        public JosekiService()
+        private GoGame baseGame;
+
+        public JosekiService(IHttpContextAccessor _httpContextAccessor)
         {
+            httpContextAccessor = _httpContextAccessor;
+
+            JosekiNodes = new();
+
             using var fileStream = File.OpenRead(@"Resources\AI-Josekis-True-0.3-15-15-8-8-6.sgf");
 
             var gameTree = SgfReader.LoadFromStream(fileStream);
-            game = SgfCompiler.Compile(gameTree);
+            baseGame = SgfCompiler.Compile(gameTree);
+        }
+
+        private string GetSessionId()
+        {
+            return httpContextAccessor.HttpContext.Session.Id;
+        }
+
+        private GoNode GetSessionNode()
+        {
+            return JosekiNodes[GetSessionId()];
+        }
+
+        public void AddSession()
+        {
+            JosekiNodes[GetSessionId()] = baseGame.RootNode;
+        }
+
+        public void RemoveSession()
+        {
+            JosekiNodes.Remove(GetSessionId());
         }
     }
 }
