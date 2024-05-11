@@ -6,8 +6,16 @@ namespace GosujiServer.Models.GoGameWraps
     {
         public static string Print(this Stone stone)
         {
-            return (stone.IsBlack ? "B" : "W") +
-                "(" + stone.X + "," + stone.Y + ")";
+            string output = (stone.IsBlack ? "B" : "W");
+            if (stone.X == 20)
+            {
+                output += "(PASS)";
+            } else
+            {
+                output += "(" + stone.X + "," + stone.Y + ")";
+            }
+
+            return output;
         }
     }
 }

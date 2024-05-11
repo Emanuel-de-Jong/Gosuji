@@ -5,6 +5,7 @@
 @using Microsoft.EntityFrameworkCore
 @using GosujiServer.Services
 @using GosujiServer.Models.GoGameWraps;
+@using IGOEnchi.GoGameLogic;
 
 @inject JosekiService josekiService
 @inject IJSRuntime JS
@@ -17,5 +18,10 @@
     @if (josekiService.CurrentStone() != null)
     {
         <p>@josekiService.CurrentStone().Print()</p>
+    }
+
+    @foreach (Stone childStone in josekiService.ChildStones())
+    {
+        <button @onclick="() => josekiService.ToChild(childStone)">@childStone.Print()</button>
     }
 </div>
