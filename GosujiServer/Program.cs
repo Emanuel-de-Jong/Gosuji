@@ -18,11 +18,18 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+//builder.Services.AddSession();
+
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
+
 builder.Services.AddSingleton<DbService>();
 builder.Services.AddSingleton<KataGoService>();
+builder.Services.AddSingleton<JosekiService>();
+
 builder.Services.AddSignalR(hubOptions =>
 {
     hubOptions.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB
@@ -47,6 +54,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+//app.UseSession();
 
 app.UseAuthentication();
 app.UseAuthorization();

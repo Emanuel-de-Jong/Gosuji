@@ -17,6 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="IGOEnchi.GoGameSgf" Version="1.0.7" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.10" />
