@@ -44,5 +44,47 @@ namespace GosujiServer.Services
         {
             JosekiNodes.Remove(GetSessionId());
         }
+
+        public Stone? CurrentStone()
+        {
+            GoNode node = GetSessionNode();
+            if (node is GoMoveNode)
+            {
+                return ((GoMoveNode)node).Stone;
+            }
+
+            return null;
+        }
+
+        public List<Stone> ChildStones()
+        {
+            List<Stone> childStones = new();
+
+            foreach (var childNode in GetSessionNode().ChildNodes)
+            {
+                if (childNode is GoMoveNode)
+                {
+                    childStones.Add(((GoMoveNode)childNode).Stone);
+                }
+            }
+
+            return childStones;
+        }
+
+        public void ToChild(Stone childStoneToGo)
+        {
+            foreach (var childNode in GetSessionNode().ChildNodes)
+            {
+                if (childNode is GoMoveNode)
+                {
+                    GoMoveNode childMove = (GoMoveNode)childNode;
+                    if (childMove.Stone.AtPlaceOf(childStoneToGo))
+                    {
+                        JosekiNodes[GetSessionId()] = childMove;
+                        break;
+                    }
+                }
+            }
+        }
     }
 }

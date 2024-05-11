@@ -4,6 +4,7 @@
 @using System.Security.Claims
 @using Microsoft.EntityFrameworkCore
 @using GosujiServer.Services
+@using GosujiServer.Models.GoGameWraps;
 
 @inject JosekiService josekiService
 @inject IJSRuntime JS
@@ -13,5 +14,8 @@
         <h1>Josekis</h1>
     </div>
 
-    
+    @if (josekiService.CurrentStone() != null)
+    {
+        <p>@josekiService.CurrentStone().Print()</p>
+    }
 </div>
