@@ -1,6 +1,5 @@
-var trainerBoard = { ...board };
+class TrainerBoard extends Board {
 
-trainerBoard.ogInit = trainerBoard.init;
-trainerBoard.init = function (serverBoardsize, serverHandicap, serverSGF) {
-    trainerBoard.ogInit(serverBoardsize, serverHandicap, serverSGF);
-};
+}
+
+var trainerBoard = new TrainerBoard();
