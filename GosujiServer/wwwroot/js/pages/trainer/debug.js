@@ -22,7 +22,7 @@ debug.clear = function () {};
 
 debug.logAllFuncCalls = function () {
     let objs = [
-        board,
+        trainerBoard,
         db,
         G,
         katago,

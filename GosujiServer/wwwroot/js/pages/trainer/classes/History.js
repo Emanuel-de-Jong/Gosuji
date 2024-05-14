@@ -10,14 +10,14 @@ class History {
     }
 
 
-    add(data, x = board.getNodeX(), y = board.getNodeY()) {
+    add(data, x = trainerBoard.getNodeX(), y = trainerBoard.getNodeY()) {
         if (!this.dataType) this.dataType = typeof data;
 
         if (!this.grid[y]) this.grid[y] = [];
         this.grid[y][x] = data;
     }
 
-    get(x = board.getNodeX(), y = board.getNodeY()) {
+    get(x = trainerBoard.getNodeX(), y = trainerBoard.getNodeY()) {
         if (!this.grid[y]) return;
         return this.grid[y][x];
     }

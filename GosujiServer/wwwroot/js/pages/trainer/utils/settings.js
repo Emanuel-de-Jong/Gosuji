@@ -196,8 +196,8 @@ settings.setKomi = function () {
 
 settings.showOptionsElementInputListener = function () {
     if (!settings.showOptionsElement.checked) {
-        if (!board.nextButton.disabled) {
-            board.nextButton.click();
+        if (!trainerBoard.nextButton.disabled) {
+            trainerBoard.nextButton.click();
         }
     }
 };

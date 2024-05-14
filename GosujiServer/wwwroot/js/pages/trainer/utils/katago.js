@@ -41,10 +41,10 @@ katago.restart = async function () {
 };
 
 katago.setBoardsize = async function () {
-    if (G.LOG) console.log("katago.setBoardsize " + board.boardsize);
+    if (G.LOG) console.log("katago.setBoardsize " + trainerBoard.boardsize);
 
     return G.rcKataGoWrapperRef
-        .invokeMethodAsync("SetBoardsize", board.boardsize)
+        .invokeMethodAsync("SetBoardsize", trainerBoard.boardsize)
         .then((response) => {
             return response;
         })
@@ -80,12 +80,12 @@ katago.setKomi = async function () {
 };
 
 katago.setHandicap = async function () {
-    if (!board.handicap) return;
+    if (!trainerBoard.handicap) return;
 
-    if (G.LOG) console.log("katago.setHandicap " + board.handicap);
+    if (G.LOG) console.log("katago.setHandicap " + trainerBoard.handicap);
 
     return G.rcKataGoWrapperRef
-        .invokeMethodAsync("SetHandicap", board.handicap)
+        .invokeMethodAsync("SetHandicap", trainerBoard.handicap)
         .then((response) => {
             return response;
         })
@@ -94,7 +94,7 @@ katago.setHandicap = async function () {
         });
 };
 
-katago.analyzeMove = async function (coord, color = board.getNextColor()) {
+katago.analyzeMove = async function (coord, color = trainerBoard.getNextColor()) {
     if (G.LOG) console.log("katago.analyzeMove " + G.colorNumToName(color) + " " + katago.coordNumToName(coord));
 
     return G.rcKataGoWrapperRef
@@ -112,7 +112,7 @@ katago.analyze = async function (
     moveOptions = settings.suggestionOptions,
     minVisitsPerc = settings.minVisitsPerc,
     maxVisitDiffPerc = settings.maxVisitDiffPerc,
-    color = board.getNextColor()
+    color = trainerBoard.getNextColor()
 ) {
     minVisitsPerc = settings.minVisitsPercSwitch ? minVisitsPerc : 0;
     maxVisitDiffPerc = settings.maxVisitDiffPercSwitch ? maxVisitDiffPerc : 100;
@@ -141,7 +141,7 @@ katago.analyze = async function (
         });
 };
 
-katago.play = async function (coord, color = board.getColor()) {
+katago.play = async function (coord, color = trainerBoard.getColor()) {
     if (G.LOG) console.log("katago.play " + G.colorNumToName(color) + " " + katago.coordNumToName(coord));
 
     return G.rcKataGoWrapperRef
@@ -155,7 +155,7 @@ katago.play = async function (coord, color = board.getColor()) {
 };
 
 katago.playRange = async function () {
-    let moves = board.getMoves();
+    let moves = trainerBoard.getMoves();
     if (moves.length == 0) return;
 
     let serverMoves = {
@@ -228,7 +228,7 @@ katago.coordNumToName = function (numCoord) {
     };
 
     let x = xConvert[numCoord.x];
-    let y = board.boardsize + 1 - numCoord.y;
+    let y = trainerBoard.boardsize + 1 - numCoord.y;
     return "" + x + y;
 };
 
@@ -260,6 +260,6 @@ katago.coordNameToNum = function (nameCoord) {
     let nums = nameCoord.substring(1).split(" ");
 
     let x = xConvert[nameCoord[0]];
-    let y = board.boardsize + 1 - parseInt(nums[0]);
+    let y = trainerBoard.boardsize + 1 - parseInt(nums[0]);
     return new Coord(x, y);
 };

@@ -113,7 +113,7 @@ G.setPhase = function (phase) {
     G.phaseChangedEvent.dispatch({ phase: phase });
 };
 
-G.setColor = function (color = board.getNextColor()) {
+G.setColor = function (color = trainerBoard.getNextColor()) {
     if (color == G.COLOR_TYPE.RANDOM) {
         color = utils.randomInt(2) == 0 ? G.COLOR_TYPE.B : G.COLOR_TYPE.W;
     }
@@ -164,7 +164,7 @@ G.pass = async function (suggestion) {
     G.isPassed = true;
     G.wasPassed = true;
     gameplay.takePlayerControl();
-    board.nextButton.disabled = true;
+    trainerBoard.nextButton.disabled = true;
 
     G.result = suggestion.score.copy();
 
@@ -172,7 +172,7 @@ G.pass = async function (suggestion) {
     stats.setResult(resultStr);
     sgf.setResultMeta(resultStr);
 
-    board.pass();
+    trainerBoard.pass();
 
     alert("Game finished!");
     // await db.save();

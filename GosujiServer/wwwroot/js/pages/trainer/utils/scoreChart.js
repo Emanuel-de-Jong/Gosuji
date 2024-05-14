@@ -170,7 +170,7 @@ scoreChart.themeChangedListener = function (e) {
     scoreChart.chart.update();
 };
 
-scoreChart.fillHistoryWithSuggestionHistory = function (node = board.editor.getRoot()) {
+scoreChart.fillHistoryWithSuggestionHistory = function (node = trainerBoard.editor.getRoot()) {
     for (let i = 0; i < node.children.length; i++) {
         scoreChart.fillHistoryWithSuggestionHistory(node.children[i]);
     }
@@ -198,12 +198,12 @@ scoreChart.clearChart = function () {
 scoreChart.canvasClickListener = function (click) {
     const points = scoreChart.chart.getElementsAtEventForMode(click, "nearest", { intersect: false }, true);
     if (points[0]) {
-        board.goToNode(scoreChart.labels[points[0].index]);
+        trainerBoard.goToNode(scoreChart.labels[points[0].index]);
     }
 };
 
 scoreChart.update = function (suggestion) {
-    let moveNumber = board.getMoveNumber();
+    let moveNumber = trainerBoard.getMoveNumber();
     if (scoreChart.labels.includes(moveNumber)) return;
 
     let index;
@@ -230,7 +230,7 @@ scoreChart.update = function (suggestion) {
 
 scoreChart.refresh = function () {
     let points = [];
-    let node = board.editor.getCurrent();
+    let node = trainerBoard.editor.getCurrent();
     do {
         let x = node.navTreeX;
         let y = node.navTreeY;

@@ -42,7 +42,7 @@ init.init = async function (
     init.restartButton.addEventListener("click", init.restartButtonClickListener);
 
     settings.init(serverColor);
-    board.init(serverBoardsize, serverHandicap, serverSGF);
+    trainerBoard.init(serverBoardsize, serverHandicap, serverSGF);
     await sgf.init(userName, serverKomi, serverRuleset);
     sgfComment.init();
     scoreChart.init();
@@ -72,7 +72,7 @@ init.clear = async function () {
 
     G.clear();
     settings.clear();
-    board.clear();
+    trainerBoard.clear();
     await sgf.clear();
     sgfComment.clear();
     scoreChart.clear();
