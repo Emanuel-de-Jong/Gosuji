@@ -35,16 +35,16 @@ board.HANDICAP_SGFS = {
 
 
 board.init = function (serverBoardsize, serverHandicap, serverSGF) {
-    board.handicapElement = document.getElementById("currentHandicap");
+    this.handicapElement = document.getElementById("currentHandicap");
 
-    board.placeStoneAudios = [
+    this.placeStoneAudios = [
         new Audio("resources/placeStone0.mp3"),
         new Audio("resources/placeStone1.mp3"),
         new Audio("resources/placeStone2.mp3"),
         new Audio("resources/placeStone3.mp3"),
         new Audio("resources/placeStone4.mp3"),
     ];
-    board.lastPlaceStoneAudioIndex = 0;
+    this.lastPlaceStoneAudioIndex = 0;
 
     // Disable mouse 3/4 triggering prev/next in browser
     document.addEventListener("mouseup", (e) => {
@@ -52,16 +52,16 @@ board.init = function (serverBoardsize, serverHandicap, serverSGF) {
             e.preventDefault();
         }
     });
-    utils.addEventsListener(document, ["keydown", "mousedown"], board.keydownAndMousedownListener);
+    utils.addEventsListener(document, ["keydown", "mousedown"], this.keydownAndMousedownListener);
 
-    board.clear(serverBoardsize, serverHandicap, serverSGF);
+    this.clear(serverBoardsize, serverHandicap, serverSGF);
 };
 
 board.clear = function (serverBoardsize, serverHandicap, serverSGF) {
-    board.boardsize = serverBoardsize ? serverBoardsize : settings.boardsize;
-    board.setHandicap(serverHandicap != null ? serverHandicap : settings.handicap);
+    this.boardsize = serverBoardsize ? serverBoardsize : settings.boardsize;
+    this.setHandicap(serverHandicap != null ? serverHandicap : settings.handicap);
 
-    board.element = document.getElementById("board");
+    this.element = document.getElementById("board");
 
     let besogoOptions = {
         resize: "auto",
@@ -69,18 +69,18 @@ board.clear = function (serverBoardsize, serverHandicap, serverSGF) {
         panels: "control+names+tree+comment+file",
         coord: "western",
         tool: "navOnly",
-        size: board.boardsize,
+        size: this.boardsize,
         variants: 2,
         nowheel: true,
     };
 
     if (serverSGF) {
         besogoOptions.sgf = serverSGF;
-    } else if (board.handicap != 0) {
+    } else if (this.handicap != 0) {
         besogoOptions.sgf = "(;" +
-            "SZ[" + board.boardsize + "]" +
-            "HA[" + board.handicap + "]" +
-            "AB" + board.HANDICAP_SGFS[board.boardsize][board.handicap] +
+            "SZ[" + this.boardsize + "]" +
+            "HA[" + this.handicap + "]" +
+            "AB" + this.HANDICAP_SGFS[this.boardsize][this.handicap] +
             ")";
     }
 
@@ -95,9 +95,9 @@ board.clear = function (serverBoardsize, serverHandicap, serverSGF) {
             "(;FF[4]GM[1]SZ[19]KM[6.5]RU[Japanese];B[pd];W[cp];B[pp];W[dc];B[eq];W[dq];B[ep];W[cn];B[ip];W[nq];B[lq];W[pr];B[qq];W[qr];B[qm];W[mq];B[lp];W[lr];B[kr];W[ms];B[jq];W[nc];B[qf];W[pc];B[qc];W[pb];B[ce];W[cd];B[de];W[fc];B[ci];W[od];B[pe];W[kd];B[cl];W[pj];B[en];W[dj];B[di];W[dl];B[dm];W[el];B[cj];W[gm];B[fm];W[fl];B[gl];W[gk];B[hl];W[hk];B[il];W[ik];B[jl];W[em];B[fn];W[cm];B[ej];W[fk];B[oe];W[ne];B[nf];W[qh];B[rk];W[rj];B[qk];W[qj];B[me];W[nd];B[ck];W[dn];B[no];W[pk];B[om];W[pl];B[jk];W[pm];B[pn];W[ql];B[rm];W[rl];B[qo];W[rq];B[ml];W[mj];B[fe];W[hd];B[je];W[jd];B[he];W[ie];B[if];W[id];B[hf];W[ke];B[mf];W[kf];B[gi];W[ii];B[md];W[mc];B[qb];W[ld];B[gd];W[gc];B[jj];W[hi];B[gh];W[og];B[of];W[qg];B[mh];W[nh];B[lg];W[mi];B[rp];W[sq];B[sp];W[rs];B[er];W[dr];B[be];W[bd];B[pa];W[oa];B[qa];W[ob];B[ad];W[ac];B[ae];W[bb];B[ds];W[cs];B[es];W[br];B[dk];W[bl];B[bk];W[al];B[ng];W[oh];B[ak];W[bn];B[oq];W[or];B[op];W[mo];B[mp];W[np];B[mn];W[nn];B[lo];W[nm];B[nl];W[ol];B[on];W[lm];B[ll];W[lh];B[mg];W[ki];B[jf];W[kg];B[ed];W[ec];B[nk];W[nj];B[rg];W[rh];B[rf];W[hh];B[hg];W[jg];B[fd];W[sm];B[sn];W[sl];B[rn];W[kk];B[kl];W[kj];B[lk];W[lj];B[ji];W[jh];B[ig];W[fj];B[fi];W[ih];B[eh];W[eo];B[fo];W[do];B[ok];W[oj];B[sh];W[si];B[sg];W[dp];B[gp];W[pg];B[ks];W[rd];B[qd];W[rc];B[rb];W[sb];B[re];W[se];B[pf];W[le];B[lf];W[gj];B[ij];W[hj];B[dd];W[ls];B[mk];W[nr];B[ek];W[lb])";
     }
 
-    besogo.create(board.element, besogoOptions);
+    besogo.create(this.element, besogoOptions);
 
-    board.editor = board.element.besogoEditor;
+    this.editor = this.element.besogoEditor;
 
     document.querySelector('#game button[title="Variants: [child]/sibling"]').remove();
     document.querySelector('#game button[title="Variants: show/[hide]"]').remove();
@@ -115,41 +115,41 @@ board.clear = function (serverBoardsize, serverHandicap, serverSGF) {
             "beforeend",
             '<button type="button" class="btn btn-secondary" id="next" disabled>></button>'
         );
-    board.nextButton = document.getElementById("next");
+    this.nextButton = document.getElementById("next");
 
-    board.commentElement = document.querySelector("#game .besogo-comment textarea");
+    this.commentElement = document.querySelector("#game .besogo-comment textarea");
 
-    board.lastMove = board.editor.getCurrent();
+    this.lastMove = this.editor.getCurrent();
 
-    board.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
-    board.editor.addListener(gameplay.treeJumpedCheckListener);
-    board.editor.addListener(sgf.boardEditorListener);
-    board.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
-    G.phaseChangedEvent.add(board.phaseChangedListener);
+    this.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
+    this.editor.addListener(gameplay.treeJumpedCheckListener);
+    this.editor.addListener(sgf.boardEditorListener);
+    this.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
+    G.phaseChangedEvent.add(this.phaseChangedListener);
 
     // console.log(besogo);
-    // console.log(board.editor);
-    // console.log(board.editor.getCurrent());
+    // console.log(this.editor);
+    // console.log(this.editor.getCurrent());
 };
 
 
 board.play = async function (suggestion, moveType = G.MOVE_TYPE.NONE, tool = "auto") {
-    await board.draw(suggestion.coord, tool, true, moveType);
+    await this.draw(suggestion.coord, tool, true, moveType);
     scoreChart.update(suggestion);
     sgfComment.setComment(moveType);
 };
 
 board.draw = async function (coord, tool = "auto", sendToServer = true) {
-    board.editor.setTool(tool);
-    board.editor.click(coord.x, coord.y, false, false);
-    board.editor.setTool("navOnly");
+    this.editor.setTool(tool);
+    this.editor.click(coord.x, coord.y, false, false);
+    this.editor.setTool("navOnly");
 
     if (tool == "auto" || tool == "playB" || tool == "playW") {
         if (G.phase == G.PHASE_TYPE.CORNERS || G.phase == G.PHASE_TYPE.PREMOVES || G.phase == G.PHASE_TYPE.GAMEPLAY) {
-            board.playPlaceStoneAudio();
+            this.playPlaceStoneAudio();
         }
 
-        board.lastMove = board.editor.getCurrent();
+        this.lastMove = this.editor.getCurrent();
 
         G.suggestionsHistory.add(G.suggestions);
 
@@ -169,10 +169,10 @@ board.playPlaceStoneAudio = function () {
     let placeStoneAudioIndex;
     do {
         placeStoneAudioIndex = utils.randomInt(5);
-    } while (placeStoneAudioIndex == board.lastPlaceStoneAudioIndex);
-    board.lastPlaceStoneAudioIndex = placeStoneAudioIndex;
+    } while (placeStoneAudioIndex == this.lastPlaceStoneAudioIndex);
+    this.lastPlaceStoneAudioIndex = placeStoneAudioIndex;
 
-    board.placeStoneAudios[placeStoneAudioIndex].play();
+    this.placeStoneAudios[placeStoneAudioIndex].play();
 };
 
 board.syncWithServer = async function () {
@@ -182,90 +182,90 @@ board.syncWithServer = async function () {
 };
 
 board.getColor = function () {
-    let currentMove = board.editor.getCurrent();
+    let currentMove = this.editor.getCurrent();
     if (currentMove.move) {
         return currentMove.move.color;
     }
 
     if (currentMove.moveNumber == 0) {
-        return !board.handicap ? G.COLOR_TYPE.W : G.COLOR_TYPE.B;
+        return !this.handicap ? G.COLOR_TYPE.W : G.COLOR_TYPE.B;
     }
 
     return G.COLOR_TYPE.B;
 };
 
 board.getNextColor = function () {
-    let currentMove = board.editor.getCurrent();
+    let currentMove = this.editor.getCurrent();
     if (currentMove.children && currentMove.children.length > 0) {
         return currentMove.children[0].move.color;
     }
 
-    return board.getColor() * -1;
+    return this.getColor() * -1;
 };
 
 board.findStone = function (coord) {
-    return board.editor.getCurrent().getStone(coord.x, coord.y);
+    return this.editor.getCurrent().getStone(coord.x, coord.y);
 };
 
 board.pass = function () {
-    board.editor.click(0, 0, false);
+    this.editor.click(0, 0, false);
 };
 
 board.removeMarkup = function (coord) {
-    let markup = board.editor.getCurrent().markup;
-    markup[(coord.x - 1) * board.boardsize + (coord.y - 1)] = 0;
+    let markup = this.editor.getCurrent().markup;
+    markup[(coord.x - 1) * this.boardsize + (coord.y - 1)] = 0;
 };
 
 board.drawCoords = function (suggestionList) {
     let suggestions = suggestionList.getFilterByWeaker();
 
-    let markup = board.editor.getCurrent().markup;
+    let markup = this.editor.getCurrent().markup;
     for (let i = 0; i < markup.length; i++) {
         if (markup[i] && markup[i] != 4) {
             markup[i] = 0;
         }
     }
 
-    board.editor.setTool("label");
+    this.editor.setTool("label");
     for (let i = 0; i < suggestions.length; i++) {
         let coord = suggestions[i].coord;
 
-        board.editor.setLabel(suggestions[i].grade);
-        board.editor.click(coord.x, coord.y, false, false);
+        this.editor.setLabel(suggestions[i].grade);
+        this.editor.click(coord.x, coord.y, false, false);
     }
 
-    board.editor.setTool("navOnly");
+    this.editor.setTool("navOnly");
 };
 
 board.goToNode = function (nodeNumber) {
-    let currentNodeNumber = board.getMoveNumber();
+    let currentNodeNumber = this.getMoveNumber();
     let nodesToJump = nodeNumber - currentNodeNumber;
     if (nodesToJump > 0) {
-        board.editor.nextNode(nodesToJump);
+        this.editor.nextNode(nodesToJump);
     } else if (nodesToJump < 0) {
-        board.editor.prevNode(nodesToJump * -1);
+        this.editor.prevNode(nodesToJump * -1);
     }
 };
 
 board.getMoveNumber = function () {
-    return board.editor.getCurrent().moveNumber;
+    return this.editor.getCurrent().moveNumber;
 };
 
 board.getNodeX = function () {
-    return board.editor.getCurrent().navTreeX;
+    return this.editor.getCurrent().navTreeX;
 };
 
 board.getNodeY = function () {
-    return board.editor.getCurrent().navTreeY;
+    return this.editor.getCurrent().navTreeY;
 };
 
 board.getNodeCoord = function () {
-    return new Coord(board.getNodeX(), board.getNodeY());
+    return new Coord(this.getNodeX(), this.getNodeY());
 };
 
 board.getMoves = function () {
     let moves = [];
-    let node = board.editor.getCurrent();
+    let node = this.editor.getCurrent();
     while (node.moveNumber != 0) {
         moves.push({
             color: node.move.color,
@@ -280,21 +280,21 @@ board.getMoves = function () {
 };
 
 board.setHandicap = function (handicap) {
-    board.handicap = handicap;
-    board.handicapElement.innerHTML = handicap;
+    this.handicap = handicap;
+    this.handicapElement.innerHTML = handicap;
     if (G.phase != G.PHASE_TYPE.NONE && G.phase != G.PHASE_TYPE.INIT) sgf.setHandicapMeta();
 };
 
 board.keydownAndMousedownListener = function (event) {
     if (event.code == "Space" || event.code == "Enter" || event.button == 1 || event.button == 3 || event.button == 4) {
-        board.nextButton.click();
+        this.nextButton.click();
     }
 };
 
 board.phaseChangedListener = function (e) {
     if (e.phase == G.PHASE_TYPE.GAMEPLAY || e.phase == G.PHASE_TYPE.FINISHED) {
-        board.editor.setIsTreeJumpAllowed(true);
+        this.editor.setIsTreeJumpAllowed(true);
     } else {
-        board.editor.setIsTreeJumpAllowed(false);
+        this.editor.setIsTreeJumpAllowed(false);
     }
 };
