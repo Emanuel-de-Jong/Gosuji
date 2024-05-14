@@ -19,6 +19,14 @@ namespace GosujiServer.Pages
             josekiService.ToChild(josekiService.ChildStones()[0]);
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await JS.InvokeVoidAsync("josekisPage.init");
+            }
+        }
+
         public void Dispose()
         {
             josekiService.RemoveSession();
