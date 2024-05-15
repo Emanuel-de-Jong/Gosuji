@@ -7,21 +7,11 @@
 }
 
 
-#title {
+#profilePage #title {
     text-align: center;
 }
 
-
-#gameTableDiv {
-}
-
-#percentPerGameLineChartDiv {
-}
-
-#gameStageBarChartDiv {
-}
-
-#daysChart {
+#profilePage #daysChart {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -29,7 +19,7 @@
     height: 200px;
 }
 
-.day {
+#profilePage .day {
     margin: 0 5px 5px 0;
     width: 20px;
     height: 20px;

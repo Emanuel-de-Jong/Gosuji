@@ -1,136 +1,136 @@
-#debug {
+#trainerPage #debug {
     background-color: lightgrey;
     padding: 15px 25px;
 }
 
-#debug ul {
+#trainerPage #debug ul {
     margin: 0;
     padding: 0;
 }
 
-#debug li {
+#trainerPage #debug li {
     display: inline-block;
     text-decoration: none;
 }
 
 
-#flex-container {
+#trainerPage #flex-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
 }
 
-.flex-item {
+#trainerPage .flex-item {
     display: contents;
     flex: auto;
 }
 
 
-#game .board {
+#trainerPage #game .board {
     position: relative;
     width: 725px;
 }
 
-#game .next {
+#trainerPage #game .next {
     position: absolute;
     top: 5px;
     right: 5px;
 }
 
-#game .besogo-container {
+#trainerPage #game .besogo-container {
     background-color: transparent;
 }
 
-#game .besogo-whiteInfo {
+#trainerPage #game .besogo-whiteInfo {
     background-color: rgb(200, 200, 200);
 }
 
-#game .besogo-blackInfo {
+#trainerPage #game .besogo-blackInfo {
     background-color: rgb(50, 50, 50);
 }
 
-#game .besogo-gameInfo {
+#trainerPage #game .besogo-gameInfo {
     display: none !important;
 }
 
-#game .besogo-tree {
+#trainerPage #game .besogo-tree {
     flex-basis: 3%;
 }
 
 
-#stats {
+#trainerPage #stats {
     width: 400px;
     font-size: 22px;
 }
 
-#stats > div {
+#trainerPage #stats > div {
     margin-bottom: 10px;
 }
 
-#stats #keyValues > div {
+#trainerPage #stats #keyValues > div {
     margin-bottom: 35px;
 }
 
-#stats #title {
+#trainerPage #stats #title {
     font-size: 1.5rem;
     font-weight: 800;
 }
 
-#stats #scoreChartColor {
+#trainerPage #stats #scoreChartColor {
     max-width: 163px;
 }
 
 
-#settings {
+#trainerPage #settings {
     width: 400px;
 }
 
-#settings .accordion-body .row .row {
+#trainerPage #settings .accordion-body .row .row {
     margin-bottom: 15px;
 }
 
-#settings input:invalid {
+#trainerPage #settings input:invalid {
     border-color: red !important;
 }
 
-#settings .form-invalid-message {
+#trainerPage #settings .form-invalid-message {
     width: 100%;
     color: red;
     font-size: 0.8125rem;
 }
 
-#settings .input-group-text input[type="checkbox"] {
+#trainerPage #settings .input-group-text input[type="checkbox"] {
     min-width: 16px;
 }
 
-#settings .input-group input[type="number"],
-#settings #opponentOptionPercDiv span,
-#settings #preOptionPercDiv span,
-#settings #minVisitsPercDiv span,
-#settings #maxVisitDiffPercDiv span {
+#trainerPage #settings .input-group input[type="number"],
+#trainerPage #settings #opponentOptionPercDiv span,
+#trainerPage #settings #preOptionPercDiv span,
+#trainerPage #settings #minVisitsPercDiv span,
+#trainerPage #settings #maxVisitDiffPercDiv span {
     border-top-right-radius: 0.375rem;
     border-bottom-right-radius: 0.375rem;
 }
 
-#settings #opponentOptionPercDiv input[type="number"],
-#settings #preOptionPercDiv input[type="number"],
-#settings #minVisitsPercDiv input[type="number"],
-#settings #maxVisitDiffPercDiv input[type="number"] {
+#trainerPage #settings #opponentOptionPercDiv input[type="number"],
+#trainerPage #settings #preOptionPercDiv input[type="number"],
+#trainerPage #settings #minVisitsPercDiv input[type="number"],
+#trainerPage #settings #maxVisitDiffPercDiv input[type="number"] {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 }
 
-#settings #settingsButtonDiv {
+#trainerPage #settings #settingsButtonDiv {
     margin-bottom: 20px;
 }
 
 
-.accordion-button {
+#trainerPage .accordion-button {
     padding: 8px 20px 8px 10px !important;
 }
 
-.accordion-body {
+#trainerPage .accordion-body {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }

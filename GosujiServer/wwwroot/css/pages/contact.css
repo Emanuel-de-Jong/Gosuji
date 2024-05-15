@@ -1,54 +1,54 @@
-button:hover {
+#contactPage button:hover {
     border-color: lightblue;
 }
 
-  .page-layout {
+#contactPage .page-layout {
     max-width: 1000px;
     margin: 0 auto;
     display: flex;
 }
 
-  .contact-header {
+#contactPage .contact-header {
     text-align: center;
     margin: 30px 0 40px;
 }
 
-  .contact-information {
+#contactPage .contact-information {
     margin: 30px 0;
 }
 
-  .feedback-header {
+#contactPage .feedback-header {
     font-weight: 200;
 }
 
-  .feedback-container {
+#contactPage .feedback-container {
     margin: 0 auto;
 }
 
-  .feedback-subcontainer {
+#contactPage .feedback-subcontainer {
     display: flex;
     flex-direction: row;
 }
 
-  .feedback-subsubcontainer,
-  .feedback-type-list {
+#contactPage .feedback-subsubcontainer,
+#contactPage .feedback-type-list {
     display: flex;
     flex-direction: column;
     list-style-type: none;
 }
 
-  .feedback-type-header {
+#contactPage .feedback-type-header {
     margin: 30px 0 0 30px;
     font-weight: 200;
     font-size: 20px;
 }
 
-  .text-submit-container {
+#contactPage .text-submit-container {
     display: flex;
     flex-direction: column;
 }
 
-.feedback__submit {
+#contactPage .feedback__submit {
   width: 100px;
   margin: 10px 0 50px;
 }
