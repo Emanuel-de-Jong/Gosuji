@@ -22,7 +22,6 @@ debug.clear = function () {};
 
 debug.logAllFuncCalls = function () {
     let objs = [
-        trainerBoard,
         db,
         G,
         katago,
