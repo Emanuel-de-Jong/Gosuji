@@ -71,7 +71,18 @@ namespace GosujiServer.Services
             return childStones;
         }
 
-        public void ToChild(Stone childStoneToGo)
+        public void ToParent()
+        {
+            GoNode node = GetSessionNode();
+            if (node.ParentNode == null)
+            {
+                return;
+            }
+
+            JosekiNodes[GetSessionId()] = node.ParentNode;
+        }
+
+        public bool ToChild(Stone childStoneToGo)
         {
             foreach (var childNode in GetSessionNode().ChildNodes)
             {
@@ -81,10 +92,12 @@ namespace GosujiServer.Services
                     if (childMove.Stone.AtPlaceOf(childStoneToGo))
                     {
                         JosekiNodes[GetSessionId()] = childMove;
-                        break;
+                        return true;
                     }
                 }
             }
+
+            return false;
         }
     }
 }

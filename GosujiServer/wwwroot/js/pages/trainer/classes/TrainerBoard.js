@@ -112,6 +112,22 @@ class TrainerBoard extends Board {
         this.editor.setTool("navOnly");
     }
 
+    getMoves() {
+        let moves = [];
+        let node = this.editor.getCurrent();
+        while (node.moveNumber != 0) {
+            moves.push({
+                color: node.move.color,
+                coord: new Coord(node.move.x, node.move.y),
+            });
+    
+            node = node.parent;
+        }
+    
+        moves = moves.reverse();
+        return moves;
+    }
+
     setHandicap(handicap) {
         super.setHandicap(handicap);
 

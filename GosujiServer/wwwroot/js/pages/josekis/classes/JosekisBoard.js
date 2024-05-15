@@ -3,6 +3,7 @@ class JosekisBoard extends Board {
         super();
 
         this.besogoOptions.panels = "control+comment";
+        this.besogoOptions.tool = "cross";
     }
 
     init(boardsize, handicap, sgf) {
@@ -21,5 +22,16 @@ class JosekisBoard extends Board {
         // document.querySelector('#game input[value="Comment"]').remove();
         // document.querySelector('#game input[value="Edit Info"]').remove();
         // document.querySelector('#game input[value="Info"]').remove();
+
+        this.editor.addListener(this.crossPlacedListener);
+    }
+
+    crossPlacedListener = async (event) => {
+        if (event.markupChange && event.mark == 4) {
+            this.removeMarkup(new Coord(event.x, event.y));
+            this.editor.notifyListeners({ stoneChange: true });
+
+            await josekisPage.josekisRef.invokeMethodAsync("CrossPlacedListener", event.x - 1, event.y - 1);
+        }
     }
 }

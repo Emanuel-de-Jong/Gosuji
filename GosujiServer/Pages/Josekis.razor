@@ -20,6 +20,8 @@
         <p>@josekiService.CurrentStone().Print()</p>
     }
 
+    <button @onclick="() => josekiService.ToParent()">Back</button>
+
     @foreach (Stone childStone in josekiService.ChildStones())
     {
         <button @onclick="() => josekiService.ToChild(childStone)">@childStone.Print()</button>
