@@ -282,13 +282,13 @@ class Board {
         if (G.phase != G.PHASE_TYPE.NONE && G.phase != G.PHASE_TYPE.INIT) sgf.setHandicapMeta();
     }
 
-    keydownAndMousedownListener(event) {
+    keydownAndMousedownListener = (event) => {
         if (event.code == "Space" || event.code == "Enter" || event.button == 1 || event.button == 3 || event.button == 4) {
             this.nextButton.click();
         }
     }
 
-    phaseChangedListener(e) {
+    phaseChangedListener = (e) => {
         if (e.phase == G.PHASE_TYPE.GAMEPLAY || e.phase == G.PHASE_TYPE.FINISHED) {
             this.editor.setIsTreeJumpAllowed(true);
         } else {
