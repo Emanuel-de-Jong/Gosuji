@@ -18,9 +18,9 @@ init.init = async function (
     serverMoveTypes,
     serverChosenNotPlayedCoords
 ) {
-    G.isLoadingServerData = serverSGF != null;
+    trainerG.isLoadingServerData = serverSGF != null;
 
-    if (G.isLoadingServerData) {
+    if (trainerG.isLoadingServerData) {
         debug.testData = 0;
     }
 
@@ -35,14 +35,14 @@ init.init = async function (
     // console.log(serverMoveTypes);
     // console.log(serverChosenNotPlayedCoords);
 
-    G.init(trainerRef, rcKataGoWrapperRef, kataGoVersion, serverSuggestions, serverMoveTypes);
-    G.setPhase(G.PHASE_TYPE.INIT);
+    trainerG.init(trainerRef, rcKataGoWrapperRef, kataGoVersion, serverSuggestions, serverMoveTypes);
+    trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
     init.restartButton = document.getElementById("restart");
     init.restartButton.addEventListener("click", init.restartButtonClickListener);
 
     settings.init(serverColor);
-    G.board.init(serverBoardsize, serverHandicap, serverSGF);
+    trainerG.board.init(serverBoardsize, serverHandicap, serverSGF);
     await sgf.init(userName, serverKomi, serverRuleset);
     sgfComment.init();
     scoreChart.init();
@@ -56,8 +56,8 @@ init.init = async function (
     db.init();
 
     // console.log(stats.ratioHistory);
-    // console.log(G.suggestionsHistory);
-    // console.log(G.moveTypeHistory);
+    // console.log(trainerG.suggestionsHistory);
+    // console.log(trainerG.moveTypeHistory);
     // console.log(gameplay.chosenNotPlayedCoordHistory);
     // console.log(scoreChart.history);
 
@@ -68,11 +68,11 @@ init.init = async function (
 };
 
 init.clear = async function () {
-    G.setPhase(G.PHASE_TYPE.INIT);
+    trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
-    G.clear();
+    trainerG.clear();
     settings.clear();
-    G.board.clear();
+    trainerG.board.clear();
     await sgf.clear();
     sgfComment.clear();
     scoreChart.clear();
@@ -90,8 +90,8 @@ init.clear = async function () {
 
 
 init.start = async function () {
-    if (G.isLoadingServerData || debug.testData) {
-        G.isLoadingServerData = false;
+    if (trainerG.isLoadingServerData || debug.testData) {
+        trainerG.isLoadingServerData = false;
         gameplay.givePlayerControl(false);
     } else {
         await preMovePlacer.start();
@@ -105,7 +105,7 @@ init.restartButtonClickListener = async function () {
 init.sgfLoadingListener = async function () {
     preMovePlacer.clear();
     await selfplay.clear();
-    G.clear();
+    trainerG.clear();
 };
 
 init.sgfLoadedListener = async function () {

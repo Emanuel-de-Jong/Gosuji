@@ -17,7 +17,7 @@ katago.clear = async function () {
 katago.clearBoard = async function () {
     if (G.LOG) console.log("katago.clearBoard");
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("ClearBoard")
         .then((response) => {
             return response;
@@ -30,7 +30,7 @@ katago.clearBoard = async function () {
 katago.restart = async function () {
     if (G.LOG) console.log("katago.restart");
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("Restart")
         .then((response) => {
             return response;
@@ -41,10 +41,10 @@ katago.restart = async function () {
 };
 
 katago.setBoardsize = async function () {
-    if (G.LOG) console.log("katago.setBoardsize " + G.board.boardsize);
+    if (G.LOG) console.log("katago.setBoardsize " + trainerG.board.boardsize);
 
-    return G.rcKataGoWrapperRef
-        .invokeMethodAsync("SetBoardsize", G.board.boardsize)
+    return trainerG.rcKataGoWrapperRef
+        .invokeMethodAsync("SetBoardsize", trainerG.board.boardsize)
         .then((response) => {
             return response;
         })
@@ -56,7 +56,7 @@ katago.setBoardsize = async function () {
 katago.setRuleset = async function () {
     if (G.LOG) console.log("katago.setRuleset " + sgf.ruleset);
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("SetRuleset", sgf.ruleset)
         .then((response) => {
             return response;
@@ -69,7 +69,7 @@ katago.setRuleset = async function () {
 katago.setKomi = async function () {
     if (G.LOG) console.log("katago.setKomi " + sgf.komi);
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("SetKomi", sgf.komi)
         .then((response) => {
             return response;
@@ -80,12 +80,12 @@ katago.setKomi = async function () {
 };
 
 katago.setHandicap = async function () {
-    if (!G.board.handicap) return;
+    if (!trainerG.board.handicap) return;
 
-    if (G.LOG) console.log("katago.setHandicap " + G.board.handicap);
+    if (G.LOG) console.log("katago.setHandicap " + trainerG.board.handicap);
 
-    return G.rcKataGoWrapperRef
-        .invokeMethodAsync("SetHandicap", G.board.handicap)
+    return trainerG.rcKataGoWrapperRef
+        .invokeMethodAsync("SetHandicap", trainerG.board.handicap)
         .then((response) => {
             return response;
         })
@@ -94,10 +94,10 @@ katago.setHandicap = async function () {
         });
 };
 
-katago.analyzeMove = async function (coord, color = G.board.getNextColor()) {
+katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
     if (G.LOG) console.log("katago.analyzeMove " + G.colorNumToName(color) + " " + katago.coordNumToName(coord));
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("AnalyzeMove", G.colorNumToName(color), katago.coordNumToName(coord))
         .then((kataGoSuggestion) => {
             return MoveSuggestion.fromKataGo(kataGoSuggestion);
@@ -112,7 +112,7 @@ katago.analyze = async function (
     moveOptions = settings.suggestionOptions,
     minVisitsPerc = settings.minVisitsPerc,
     maxVisitDiffPerc = settings.maxVisitDiffPerc,
-    color = G.board.getNextColor()
+    color = trainerG.board.getNextColor()
 ) {
     minVisitsPerc = settings.minVisitsPercSwitch ? minVisitsPerc : 0;
     maxVisitDiffPerc = settings.maxVisitDiffPercSwitch ? maxVisitDiffPerc : 100;
@@ -127,7 +127,7 @@ katago.analyze = async function (
                 color
         );
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("Analyze", G.colorNumToName(color), maxVisits, minVisitsPerc, maxVisitDiffPerc)
         .then((kataGoSuggestions) => {
             let suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
@@ -141,10 +141,10 @@ katago.analyze = async function (
         });
 };
 
-katago.play = async function (coord, color = G.board.getColor()) {
+katago.play = async function (coord, color = trainerG.board.getColor()) {
     if (G.LOG) console.log("katago.play " + G.colorNumToName(color) + " " + katago.coordNumToName(coord));
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("Play", G.colorNumToName(color), katago.coordNumToName(coord))
         .then((response) => {
             return response;
@@ -155,7 +155,7 @@ katago.play = async function (coord, color = G.board.getColor()) {
 };
 
 katago.playRange = async function () {
-    let moves = G.board.getMoves();
+    let moves = trainerG.board.getMoves();
     if (moves.length == 0) return;
 
     let serverMoves = {
@@ -172,7 +172,7 @@ katago.playRange = async function () {
 
     if (G.LOG) console.log("katago.playRange " + serverMoves);
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("PlayRange", serverMoves)
         .then((response) => {
             return response;
@@ -185,7 +185,7 @@ katago.playRange = async function () {
 katago.sgf = async function () {
     if (G.LOG) console.log("katago.sgf " + false);
 
-    return G.rcKataGoWrapperRef
+    return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("SGF", false)
         .then((response) => {
             return response;
@@ -228,7 +228,7 @@ katago.coordNumToName = function (numCoord) {
     };
 
     let x = xConvert[numCoord.x];
-    let y = G.board.boardsize + 1 - numCoord.y;
+    let y = trainerG.board.boardsize + 1 - numCoord.y;
     return "" + x + y;
 };
 
@@ -260,6 +260,6 @@ katago.coordNameToNum = function (nameCoord) {
     let nums = nameCoord.substring(1).split(" ");
 
     let x = xConvert[nameCoord[0]];
-    let y = G.board.boardsize + 1 - parseInt(nums[0]);
+    let y = trainerG.board.boardsize + 1 - parseInt(nums[0]);
     return new Coord(x, y);
 };

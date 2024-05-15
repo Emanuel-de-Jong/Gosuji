@@ -24,17 +24,17 @@ cornerPlacer.init = function () {
 cornerPlacer.clear = function () {};
 
 
-cornerPlacer.shouldForce = function (moveNumber = G.board.getMoveNumber()) {
+cornerPlacer.shouldForce = function (moveNumber = trainerG.board.getMoveNumber()) {
     if (moveNumber > 4) return false;
 
-    if (G.board.handicap != 0 || (G.board.boardsize != 19 && G.board.boardsize != 13)) return false;
+    if (trainerG.board.handicap != 0 || (trainerG.board.boardsize != 19 && trainerG.board.boardsize != 13)) return false;
 
     if ((settings.forceOpponentCorners == "First" || settings.forceOpponentCorners == "Both") && (
-                G.color == G.COLOR_TYPE.W && moveNumber == 0 ||
-                G.color == G.COLOR_TYPE.B && moveNumber == 1) ||
+                trainerG.color == G.COLOR_TYPE.W && moveNumber == 0 ||
+                trainerG.color == G.COLOR_TYPE.B && moveNumber == 1) ||
             (settings.forceOpponentCorners == "Second" || settings.forceOpponentCorners == "Both") && (
-                G.color == G.COLOR_TYPE.W && moveNumber == 2 ||
-                G.color == G.COLOR_TYPE.B && moveNumber == 3)) {
+                trainerG.color == G.COLOR_TYPE.W && moveNumber == 2 ||
+                trainerG.color == G.COLOR_TYPE.B && moveNumber == 3)) {
         return true;
     }
 
@@ -44,11 +44,11 @@ cornerPlacer.shouldForce = function (moveNumber = G.board.getMoveNumber()) {
 cornerPlacer.getSuggestion = async function () {
     let cornerOptions = cornerPlacer.getEmptyCorner();
     let coord = cornerPlacer.chooseCornerOption(cornerOptions);
-    return await G.analyzeMove(coord);
+    return await trainerG.analyzeMove(coord);
 };
 
 cornerPlacer.play = async function (suggestion) {
-    await G.board.play(suggestion, G.MOVE_TYPE.FORCED_CORNER);
+    await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.FORCED_CORNER);
 };
 
 cornerPlacer.getEmptyCorner = function () {
@@ -58,7 +58,7 @@ cornerPlacer.getEmptyCorner = function () {
     for (let i = 0; i < 4; i++) {
         let cornerOptions = corners[i];
         for (let option in cornerOptions) {
-            if (G.board.findStone(cornerOptions[option])) {
+            if (trainerG.board.findStone(cornerOptions[option])) {
                 stoneFound = true;
                 break;
             }

@@ -81,7 +81,7 @@ stats.encodeRatioHistory = function () {
     return encoded;
 };
 
-stats.encodeRatioHistoryLoop = function (node = G.board.editor.getRoot()) {
+stats.encodeRatioHistoryLoop = function (node = trainerG.board.editor.getRoot()) {
     let encoded = [];
 
     for (let i = 0; i < node.children.length; i++) {
@@ -147,7 +147,7 @@ stats.printDecodedRatioHistory = function (node) {
     }
 };
 
-stats.getMostRatiosBranch = function (node = G.board.editor.getRoot(), ratioCount = 0) {
+stats.getMostRatiosBranch = function (node = trainerG.board.editor.getRoot(), ratioCount = 0) {
     if (stats.ratioHistory.get(node.navTreeX, node.navTreeY)) ratioCount++;
 
     if (node.children.length == 0) {
@@ -171,9 +171,9 @@ stats.getMostRatiosBranch = function (node = G.board.editor.getRoot(), ratioCoun
 stats.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER) {
     let node;
     if (rangeStart == null) {
-        node = G.board.editor.getCurrent();
+        node = trainerG.board.editor.getCurrent();
     } else {
-        node = G.board.editor.getRoot();
+        node = trainerG.board.editor.getRoot();
         while (node.children.length != 0 && node.moveNumber < rangeEnd) {
             if (node.children[0].moveNumber > rangeEnd) break;
             node = node.children[0];

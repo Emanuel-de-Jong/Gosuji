@@ -144,7 +144,7 @@ scoreChart.clear = function () {
     scoreChart.clearChart();
     scoreChart.history = new History();
 
-    if (G.isLoadingServerData) {
+    if (trainerG.isLoadingServerData) {
         scoreChart.fillHistoryWithSuggestionHistory();
     }
 
@@ -170,14 +170,14 @@ scoreChart.themeChangedListener = function (e) {
     scoreChart.chart.update();
 };
 
-scoreChart.fillHistoryWithSuggestionHistory = function (node = G.board.editor.getRoot()) {
+scoreChart.fillHistoryWithSuggestionHistory = function (node = trainerG.board.editor.getRoot()) {
     for (let i = 0; i < node.children.length; i++) {
         scoreChart.fillHistoryWithSuggestionHistory(node.children[i]);
     }
 
     if (!node.move) return;
 
-    let suggestionList = G.suggestionsHistory.get(node.navTreeX, node.navTreeY);
+    let suggestionList = trainerG.suggestionsHistory.get(node.navTreeX, node.navTreeY);
     if (!suggestionList) return;
 
     let suggestion = suggestionList.find(new Coord(node.move.x, node.move.y));
@@ -198,12 +198,12 @@ scoreChart.clearChart = function () {
 scoreChart.canvasClickListener = function (click) {
     const points = scoreChart.chart.getElementsAtEventForMode(click, "nearest", { intersect: false }, true);
     if (points[0]) {
-        G.board.goToNode(scoreChart.labels[points[0].index]);
+        trainerG.board.goToNode(scoreChart.labels[points[0].index]);
     }
 };
 
 scoreChart.update = function (suggestion) {
-    let moveNumber = G.board.getMoveNumber();
+    let moveNumber = trainerG.board.getMoveNumber();
     if (scoreChart.labels.includes(moveNumber)) return;
 
     let index;
@@ -230,7 +230,7 @@ scoreChart.update = function (suggestion) {
 
 scoreChart.refresh = function () {
     let points = [];
-    let node = G.board.editor.getCurrent();
+    let node = trainerG.board.editor.getCurrent();
     do {
         let x = node.navTreeX;
         let y = node.navTreeY;

@@ -20,9 +20,9 @@ sgf.clear = async function (serverKomi, serverRuleset) {
     await sgf.setRuleset(serverKomi != null ? serverKomi : settings.ruleset);
     await sgf.setKomi(serverRuleset ? serverRuleset : settings.komi);
 
-    G.board.editor.setGameInfo("GoTrainer-HumanAI", "GN");
-    G.board.editor.setGameInfo("GoTrainer-HumanAI", "SO");
-    G.board.editor.setGameInfo(Date(), "DT");
+    trainerG.board.editor.setGameInfo("GoTrainer-HumanAI", "GN");
+    trainerG.board.editor.setGameInfo("GoTrainer-HumanAI", "SO");
+    trainerG.board.editor.setGameInfo(Date(), "DT");
 
     sgf.setPlayersMeta();
     sgf.setRankPlayerMeta();
@@ -48,20 +48,20 @@ sgf.sgfLoadingListener = function () {
 sgf.sgfLoadedListener = async function () {
     sgf.isThirdParty = true;
 
-    let gameInfo = G.board.editor.getGameInfo();
+    let gameInfo = trainerG.board.editor.getGameInfo();
 
     if (gameInfo.RE) {
         stats.setResult(gameInfo.RE);
     }
 
-    G.setColor();
+    trainerG.setColor();
 
     if (gameInfo.SZ) {
-        G.board.boardsize = parseInt(gameInfo.SZ);
+        trainerG.board.boardsize = parseInt(gameInfo.SZ);
     }
 
     if (gameInfo.HA) {
-        G.board.setHandicap(parseInt(gameInfo.HA));
+        trainerG.board.setHandicap(parseInt(gameInfo.HA));
     }
 
     if (confirm("Would you like to use the ruleset and komi of the SGF?")) {
@@ -85,42 +85,42 @@ sgf.setRuleset = async function (ruleset) {
     sgf.ruleset = ruleset;
     sgf.setRulesetMeta();
     sgf.rulesetElement.innerHTML = ruleset;
-    if (G.phase != G.PHASE_TYPE.NONE && G.phase != G.PHASE_TYPE.INIT) await katago.setRuleset();
+    if (trainerG.phase != trainerG.PHASE_TYPE.NONE && trainerG.phase != trainerG.PHASE_TYPE.INIT) await katago.setRuleset();
 };
 
 sgf.setKomi = async function (komi) {
     sgf.komi = komi;
     sgf.setKomiMeta();
     sgf.komiElement.innerHTML = komi;
-    if (G.phase != G.PHASE_TYPE.NONE && G.phase != G.PHASE_TYPE.INIT) await katago.setKomi();
+    if (trainerG.phase != trainerG.PHASE_TYPE.NONE && trainerG.phase != trainerG.PHASE_TYPE.INIT) await katago.setKomi();
 };
 
 
 sgf.setPlayersMeta = function () {
-    G.board.editor.setGameInfo(sgf.userName ? sgf.userName : "Player", "P" + G.colorNumToName(G.color));
-    G.board.editor.setGameInfo("AI", "P" + G.colorNumToName(G.color * -1));
+    trainerG.board.editor.setGameInfo(sgf.userName ? sgf.userName : "Player", "P" + G.colorNumToName(trainerG.color));
+    trainerG.board.editor.setGameInfo("AI", "P" + G.colorNumToName(trainerG.color * -1));
 };
 
 sgf.setRankPlayerMeta = function () {
-    G.board.editor.setGameInfo(settings.suggestionVisits + "", G.colorNumToName(G.color) + "R");
+    trainerG.board.editor.setGameInfo(settings.suggestionVisits + "", G.colorNumToName(trainerG.color) + "R");
 };
 
 sgf.setRankAIMeta = function () {
-    G.board.editor.setGameInfo(settings.opponentVisits + "", G.colorNumToName(G.color * -1) + "R");
+    trainerG.board.editor.setGameInfo(settings.opponentVisits + "", G.colorNumToName(trainerG.color * -1) + "R");
 };
 
 sgf.setHandicapMeta = function () {
-    G.board.editor.setGameInfo(G.board.handicap + "", "HA");
+    trainerG.board.editor.setGameInfo(trainerG.board.handicap + "", "HA");
 };
 
 sgf.setRulesetMeta = function () {
-    G.board.editor.setGameInfo(sgf.ruleset, "RU");
+    trainerG.board.editor.setGameInfo(sgf.ruleset, "RU");
 };
 
 sgf.setKomiMeta = function () {
-    G.board.editor.setGameInfo(sgf.komi + "", "KM");
+    trainerG.board.editor.setGameInfo(sgf.komi + "", "KM");
 };
 
 sgf.setResultMeta = function (result) {
-    G.board.editor.setGameInfo(result, "RE");
+    trainerG.board.editor.setGameInfo(result, "RE");
 };

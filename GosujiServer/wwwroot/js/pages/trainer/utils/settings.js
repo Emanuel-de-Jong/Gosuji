@@ -81,7 +81,7 @@ settings.init = function (serverColor) {
 };
 
 settings.clear = function (serverColor) {
-    G.setColor(serverColor ? serverColor : settings.colorType);
+    trainerG.setColor(serverColor ? serverColor : settings.colorType);
 };
 
 
@@ -196,8 +196,8 @@ settings.setKomi = function () {
 
 settings.showOptionsElementInputListener = function () {
     if (!settings.showOptionsElement.checked) {
-        if (!G.board.nextButton.disabled) {
-            G.board.nextButton.click();
+        if (!trainerG.board.nextButton.disabled) {
+            trainerG.board.nextButton.click();
         }
     }
 };

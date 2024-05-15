@@ -46,14 +46,14 @@ class TrainerBoard extends Board {
         this.editor.addListener(gameplay.treeJumpedCheckListener);
         this.editor.addListener(sgf.boardEditorListener);
         this.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
-        G.phaseChangedEvent.add(this.phaseChangedListener);
+        trainerG.phaseChangedEvent.add(this.phaseChangedListener);
     
         // console.log(besogo);
         // console.log(this.editor);
         // console.log(this.editor.getCurrent());
     }
 
-    async play(suggestion, moveType = G.MOVE_TYPE.NONE, tool = "auto") {
+    async play(suggestion, moveType = trainerG.MOVE_TYPE.NONE, tool = "auto") {
         await this.draw(suggestion.coord, tool, true, moveType);
         scoreChart.update(suggestion);
         sgfComment.setComment(moveType);
@@ -65,13 +65,13 @@ class TrainerBoard extends Board {
         this.editor.setTool("navOnly");
     
         if (tool == "auto" || tool == "playB" || tool == "playW") {
-            if (G.phase == G.PHASE_TYPE.CORNERS || G.phase == G.PHASE_TYPE.PREMOVES || G.phase == G.PHASE_TYPE.GAMEPLAY) {
+            if (trainerG.phase == trainerG.PHASE_TYPE.CORNERS || trainerG.phase == trainerG.PHASE_TYPE.PREMOVES || trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY) {
                 this.playPlaceStoneAudio();
             }
     
             this.lastMove = this.editor.getCurrent();
     
-            G.suggestionsHistory.add(G.suggestions);
+            trainerG.suggestionsHistory.add(trainerG.suggestions);
     
             if (sendToServer) {
                 if (tool == "auto") {
@@ -116,7 +116,7 @@ class TrainerBoard extends Board {
         super.setHandicap(handicap);
 
         this.handicapElement.innerHTML = handicap;
-        if (G.phase != G.PHASE_TYPE.NONE && G.phase != G.PHASE_TYPE.INIT) sgf.setHandicapMeta();
+        if (trainerG.phase != trainerG.PHASE_TYPE.NONE && trainerG.phase != trainerG.PHASE_TYPE.INIT) sgf.setHandicapMeta();
     }
 
     keydownAndMousedownListener = (event) => {
@@ -126,7 +126,7 @@ class TrainerBoard extends Board {
     }
 
     phaseChangedListener = (e) => {
-        if (e.phase == G.PHASE_TYPE.GAMEPLAY || e.phase == G.PHASE_TYPE.FINISHED) {
+        if (e.phase == trainerG.PHASE_TYPE.GAMEPLAY || e.phase == trainerG.PHASE_TYPE.FINISHED) {
             this.editor.setIsTreeJumpAllowed(true);
         } else {
             this.editor.setIsTreeJumpAllowed(false);

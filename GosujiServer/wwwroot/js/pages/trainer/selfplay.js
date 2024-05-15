@@ -19,20 +19,20 @@ selfplay.clear = async function () {
 
 
 selfplay.start = async function () {
-    G.setPhase(G.PHASE_TYPE.SELFPLAY);
+    trainerG.setPhase(trainerG.PHASE_TYPE.SELFPLAY);
 
     await gameplay.handleJumped();
 
-    while (selfplay.isPlaying || G.color != G.board.getNextColor()) {
-        await G.analyze(settings.selfplayVisits, 1);
-        if (G.isPassed) {
+    while (selfplay.isPlaying || trainerG.color != trainerG.board.getNextColor()) {
+        await trainerG.analyze(settings.selfplayVisits, 1);
+        if (trainerG.isPassed) {
             selfplay.button.click();
             return;
         }
 
-        if (!selfplay.isPlaying && G.color == G.board.getNextColor()) return;
+        if (!selfplay.isPlaying && trainerG.color == trainerG.board.getNextColor()) return;
 
-        await G.board.play(G.suggestions.get(0), G.MOVE_TYPE.SELFPLAY);
+        await trainerG.board.play(trainerG.suggestions.get(0), trainerG.MOVE_TYPE.SELFPLAY);
     }
 };
 
@@ -42,7 +42,7 @@ selfplay.buttonClickListener = async function () {
         selfplay.button.innerHTML = "Stop selfplay";
 
         gameplay.takePlayerControl();
-        G.board.nextButton.disabled = true;
+        trainerG.board.nextButton.disabled = true;
 
         selfplay.startPromise = selfplay.start();
     } else {
@@ -51,7 +51,7 @@ selfplay.buttonClickListener = async function () {
 
         await selfplay.startPromise;
 
-        if (!G.isPassed && !sgf.isSGFLoading) {
+        if (!trainerG.isPassed && !sgf.isSGFLoading) {
             gameplay.givePlayerControl();
         }
     }

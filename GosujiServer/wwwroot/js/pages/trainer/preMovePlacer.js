@@ -18,7 +18,7 @@ preMovePlacer.clear = function () {
 
 
 preMovePlacer.start = async function () {
-    G.setPhase(G.PHASE_TYPE.PREMOVES);
+    trainerG.setPhase(trainerG.PHASE_TYPE.PREMOVES);
 
     preMovePlacer.isStopped = false;
 
@@ -40,14 +40,14 @@ preMovePlacer.start = async function () {
         }
     }
 
-    while (G.color != G.board.getNextColor() && !G.isPassed && !sgf.isSGFLoading) {
+    while (trainerG.color != trainerG.board.getNextColor() && !trainerG.isPassed && !sgf.isSGFLoading) {
         await preMovePlacer.play(true);
     }
 
     preMovePlacer.stopButton.hidden = true;
     selfplay.button.hidden = false;
 
-    if (!G.isPassed && !sgf.isSGFLoading) {
+    if (!trainerG.isPassed && !sgf.isSGFLoading) {
         gameplay.givePlayerControl();
     }
 };
@@ -60,13 +60,13 @@ preMovePlacer.play = async function (isForced = false) {
     if (!isForced && preMovePlacer.isStopped) return;
 
     let preOptions = 1;
-    if (G.board.getNextColor() != G.color && utils.randomInt(100) + 1 <= settings.preOptionPerc) {
+    if (trainerG.board.getNextColor() != trainerG.color && utils.randomInt(100) + 1 <= settings.preOptionPerc) {
         preOptions = settings.preOptions;
     }
 
-    await G.analyze(settings.preVisits, preOptions, preMovePlacer.MIN_VISITS_PERC, preMovePlacer.MAX_VISIT_DIFF_PERC);
-    if (G.isPassed) preMovePlacer.isStopped = true;
+    await trainerG.analyze(settings.preVisits, preOptions, preMovePlacer.MIN_VISITS_PERC, preMovePlacer.MAX_VISIT_DIFF_PERC);
+    if (trainerG.isPassed) preMovePlacer.isStopped = true;
     if (!isForced && preMovePlacer.isStopped) return;
 
-    await G.board.play(G.suggestions.get(utils.randomInt(G.suggestions.length())), G.MOVE_TYPE.PRE);
+    await trainerG.board.play(trainerG.suggestions.get(utils.randomInt(trainerG.suggestions.length())), trainerG.MOVE_TYPE.PRE);
 };

@@ -20,7 +20,7 @@ db.save = async function () {
 db.saveTrainerSettingConfig = async function () {
     if (G.LOG) console.log("db.saveTrainerSettingConfig");
 
-    return G.trainerRef
+    return trainerG.trainerRef
         .invokeMethodAsync(
             "SaveTrainerSettingConfig",
             settings.boardsize,
@@ -81,7 +81,7 @@ db.saveGameStats = async function () {
     let midgameRatio = stats.getRatio(db.OPENING_RATIO_MOVENUMBER + 1, db.MIDGAME_RATIO_MOVENUMBER);
     let endgameRatio = stats.getRatio(db.MIDGAME_RATIO_MOVENUMBER + 1);
 
-    return G.trainerRef
+    return trainerG.trainerRef
         .invokeMethodAsync("SaveGameStats", gameRatio, openingRatio, midgameRatio, endgameRatio)
         .then((response) => {
             return response;
@@ -94,23 +94,23 @@ db.saveGameStats = async function () {
 db.saveGame = async function () {
     if (G.LOG) console.log("db.saveGame");
 
-    return G.trainerRef
+    return trainerG.trainerRef
         .invokeMethodAsync(
             "SaveGame",
-            G.result ? G.result.scoreLead : null,
-            G.board.getNodeX(),
-            G.board.getNodeY(),
-            G.board.boardsize,
-            G.board.handicap,
-            G.color,
+            trainerG.result ? trainerG.result.scoreLead : null,
+            trainerG.board.getNodeX(),
+            trainerG.board.getNodeY(),
+            trainerG.board.boardsize,
+            trainerG.board.handicap,
+            trainerG.color,
             sgf.ruleset,
             sgf.komi,
-            besogo.composeSgf(G.board.editor),
+            besogo.composeSgf(trainerG.board.editor),
             new Uint8Array(stats.encodeRatioHistory()),
-            new Uint8Array(G.suggestionsHistory.encode()),
-            new Uint8Array(G.moveTypeHistory.encode()),
+            new Uint8Array(trainerG.suggestionsHistory.encode()),
+            new Uint8Array(trainerG.moveTypeHistory.encode()),
             new Uint8Array(gameplay.chosenNotPlayedCoordHistory.encode()),
-            G.wasPassed,
+            trainerG.wasPassed,
             sgf.isThirdParty
         )
         .then((response) => {

@@ -6,46 +6,46 @@ sgfComment.init = function () {
 };
 
 sgfComment.clear = function () {
-    sgfComment.setComment(G.MOVE_TYPE.INIT);
+    sgfComment.setComment(trainerG.MOVE_TYPE.INIT);
 };
 
 
 sgfComment.setComment = function (moveType) {
-    if (moveType == G.MOVE_TYPE.NONE) return;
+    if (moveType == trainerG.MOVE_TYPE.NONE) return;
 
     let comment;
     switch (moveType) {
-        case G.MOVE_TYPE.INIT:
+        case trainerG.MOVE_TYPE.INIT:
             comment = sgfComment.createInitComment();
             break;
-        case G.MOVE_TYPE.FORCED_CORNER:
+        case trainerG.MOVE_TYPE.FORCED_CORNER:
             comment = sgfComment.createForcedCornerComment();
             break;
-        case G.MOVE_TYPE.PRE:
+        case trainerG.MOVE_TYPE.PRE:
             comment = sgfComment.createPreComment();
             break;
-        case G.MOVE_TYPE.SELFPLAY:
+        case trainerG.MOVE_TYPE.SELFPLAY:
             comment = sgfComment.createSelfplayComment();
             break;
-        case G.MOVE_TYPE.PLAYER:
+        case trainerG.MOVE_TYPE.PLAYER:
             comment = sgfComment.createPlayerComment();
             break;
-        case G.MOVE_TYPE.OPPONENT:
+        case trainerG.MOVE_TYPE.OPPONENT:
             comment = sgfComment.createOpponentComment();
             break;
     }
 
-    G.board.editor.setComment(comment);
-    G.board.commentElement.scrollTop = 0;
+    trainerG.board.editor.setComment(comment);
+    trainerG.board.commentElement.scrollTop = 0;
 
-    G.moveTypeHistory.add(moveType);
+    trainerG.moveTypeHistory.add(moveType);
 };
 
 sgfComment.createInitComment = function () {
     return "GOSUJI " + G.VERSION +
-        "\nBoard size: " + G.board.boardsize +
-        "\nHandicap: " + G.board.handicap +
-        "\nColor: " + G.colorNumToFullName(G.color) +
+        "\nBoard size: " + trainerG.board.boardsize +
+        "\nHandicap: " + trainerG.board.handicap +
+        "\nColor: " + G.colorNumToFullName(trainerG.color) +
         "\nPre moves switch: " + settings.preMovesSwitch +
         "\nPre moves: " + settings.preMoves +
         "\nPre move strength: " + settings.preVisits +
@@ -125,7 +125,7 @@ sgfComment.createOpponentComment = function () {
 
 
 sgfComment.createCommentVisits = function () {
-    let suggestions = G.suggestions;
+    let suggestions = trainerG.suggestions;
     if (suggestions == null) return "";
 
     comment = "\nVisits";
@@ -164,9 +164,9 @@ sgfComment.createCommentScore = function () {
 };
 
 sgfComment.createCommentKataGo = function () {
-    if (G.kataGoVersion == null) return "";
+    if (trainerG.kataGoVersion == null) return "";
 
     return "\nKataGo" +
-        "\nVersion: " + G.kataGoVersion.version +
-        "\nModel: " + G.kataGoVersion.model;
+        "\nVersion: " + trainerG.kataGoVersion.version +
+        "\nModel: " + trainerG.kataGoVersion.model;
 };
