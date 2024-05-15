@@ -53,6 +53,8 @@ G.init = function (trainerRef, rcKataGoWrapperRef, kataGoVersion, serverSuggesti
 
     G.phaseChangedEvent = new CEvent();
 
+    G.board = new TrainerBoard();
+
     G.clear(serverSuggestions, serverMoveTypes);
 };
 
@@ -113,7 +115,7 @@ G.setPhase = function (phase) {
     G.phaseChangedEvent.dispatch({ phase: phase });
 };
 
-G.setColor = function (color = trainerBoard.getNextColor()) {
+G.setColor = function (color = G.board.getNextColor()) {
     if (color == G.COLOR_TYPE.RANDOM) {
         color = utils.randomInt(2) == 0 ? G.COLOR_TYPE.B : G.COLOR_TYPE.W;
     }
@@ -164,7 +166,7 @@ G.pass = async function (suggestion) {
     G.isPassed = true;
     G.wasPassed = true;
     gameplay.takePlayerControl();
-    trainerBoard.nextButton.disabled = true;
+    G.board.nextButton.disabled = true;
 
     G.result = suggestion.score.copy();
 
@@ -172,7 +174,7 @@ G.pass = async function (suggestion) {
     stats.setResult(resultStr);
     sgf.setResultMeta(resultStr);
 
-    trainerBoard.pass();
+    G.board.pass();
 
     alert("Game finished!");
     // await db.save();

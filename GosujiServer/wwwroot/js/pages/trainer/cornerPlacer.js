@@ -24,10 +24,10 @@ cornerPlacer.init = function () {
 cornerPlacer.clear = function () {};
 
 
-cornerPlacer.shouldForce = function (moveNumber = trainerBoard.getMoveNumber()) {
+cornerPlacer.shouldForce = function (moveNumber = G.board.getMoveNumber()) {
     if (moveNumber > 4) return false;
 
-    if (trainerBoard.handicap != 0 || (trainerBoard.boardsize != 19 && trainerBoard.boardsize != 13)) return false;
+    if (G.board.handicap != 0 || (G.board.boardsize != 19 && G.board.boardsize != 13)) return false;
 
     if ((settings.forceOpponentCorners == "First" || settings.forceOpponentCorners == "Both") && (
                 G.color == G.COLOR_TYPE.W && moveNumber == 0 ||
@@ -48,7 +48,7 @@ cornerPlacer.getSuggestion = async function () {
 };
 
 cornerPlacer.play = async function (suggestion) {
-    await trainerBoard.play(suggestion, G.MOVE_TYPE.FORCED_CORNER);
+    await G.board.play(suggestion, G.MOVE_TYPE.FORCED_CORNER);
 };
 
 cornerPlacer.getEmptyCorner = function () {
@@ -58,7 +58,7 @@ cornerPlacer.getEmptyCorner = function () {
     for (let i = 0; i < 4; i++) {
         let cornerOptions = corners[i];
         for (let option in cornerOptions) {
-            if (trainerBoard.findStone(cornerOptions[option])) {
+            if (G.board.findStone(cornerOptions[option])) {
                 stoneFound = true;
                 break;
             }

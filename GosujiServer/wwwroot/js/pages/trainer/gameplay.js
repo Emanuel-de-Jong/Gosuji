@@ -29,7 +29,7 @@ gameplay.clear = function (serverChosenNotPlayedCoords) {
 gameplay.givePlayerControl = function (isSuggestionNeeded = true) {
     G.setPhase(G.PHASE_TYPE.GAMEPLAY);
 
-    trainerBoard.editor.setTool("cross");
+    G.board.editor.setTool("cross");
     gameplay.isPlayerControlling = true;
     if (isSuggestionNeeded) {
         gameplay.suggestionsPromise = G.analyze();
@@ -37,7 +37,7 @@ gameplay.givePlayerControl = function (isSuggestionNeeded = true) {
 };
 
 gameplay.takePlayerControl = function () {
-    trainerBoard.editor.setTool("navOnly");
+    G.board.editor.setTool("navOnly");
     gameplay.isPlayerControlling = false;
 };
 
@@ -45,12 +45,12 @@ gameplay.playerMarkupPlacedCheckListener = async function (event) {
     if (event.markupChange && event.mark == 4 && gameplay.isPlayerControlling && !sgf.isSGFLoading) {
         gameplay.takePlayerControl();
 
-        if (trainerBoard.getNextColor() != G.color) {
+        if (G.board.getNextColor() != G.color) {
             G.setColor();
         }
 
         let markupCoord = new Coord(event.x, event.y);
-        trainerBoard.removeMarkup(markupCoord);
+        G.board.removeMarkup(markupCoord);
 
         await gameplay.playerTurn(markupCoord);
     }
@@ -86,7 +86,7 @@ gameplay.playerTurn = async function (markupCoord) {
     await gameplay.playerPlay(isRightChoice, isPerfectChoice, suggestionToPlay, markupCoord);
 
     if (settings.showOptions) {
-        trainerBoard.nextButton.disabled = false;
+        G.board.nextButton.disabled = false;
     } else {
         await gameplay.nextButtonClickListener();
     }
@@ -94,7 +94,7 @@ gameplay.playerTurn = async function (markupCoord) {
 
 gameplay.handleJumped = async function () {
     if (gameplay.isJumped) {
-        await trainerBoard.syncWithServer();
+        await G.board.syncWithServer();
         gameplay.suggestionsPromise = G.analyze();
         gameplay.isJumped = false;
     }
@@ -107,16 +107,16 @@ gameplay.playerPlay = async function (isRightChoice, isPerfectChoice, suggestion
 
     if (!settings.disableAICorrection || isRightChoice) {
         if (!isRightChoice) {
-            gameplay.chosenNotPlayedCoordHistory.add(markupCoord, trainerBoard.getNodeX() + 1);
+            gameplay.chosenNotPlayedCoordHistory.add(markupCoord, G.board.getNodeX() + 1);
         }
 
-        await trainerBoard.play(suggestionToPlay, G.MOVE_TYPE.PLAYER);
+        await G.board.play(suggestionToPlay, G.MOVE_TYPE.PLAYER);
 
         if (!isRightChoice) {
-            await trainerBoard.draw(markupCoord, "cross");
+            await G.board.draw(markupCoord, "cross");
         }
     } else {
-        await trainerBoard.play(await G.analyzeMove(markupCoord), G.MOVE_TYPE.PLAYER);
+        await G.board.play(await G.analyzeMove(markupCoord), G.MOVE_TYPE.PLAYER);
     }
 
     if (!cornerPlacer.shouldForce()) {
@@ -140,7 +140,7 @@ gameplay.getOpponentOptions = function () {
 };
 
 gameplay.nextButtonClickListener = async function () {
-    trainerBoard.nextButton.disabled = true;
+    G.board.nextButton.disabled = true;
     await gameplay.opponentTurn();
 };
 
@@ -157,7 +157,7 @@ gameplay.opponentTurn = async function () {
         if (G.isPassed) return;
         if (opponentTurnId != gameplay.opponentTurnId) return;
 
-        await trainerBoard.play(G.suggestions.get(utils.randomInt(G.suggestions.length())), G.MOVE_TYPE.OPPONENT);
+        await G.board.play(G.suggestions.get(utils.randomInt(G.suggestions.length())), G.MOVE_TYPE.OPPONENT);
     }
 
     gameplay.givePlayerControl();
@@ -170,15 +170,15 @@ gameplay.treeJumpedCheckListener = function (event) {
 
         if (
             !event.treeChange ||
-            (settings.showOptions && G.color == trainerBoard.getColor()) ||
-            (settings.showOpponentOptions && G.color != trainerBoard.getColor())
+            (settings.showOptions && G.color == G.board.getColor()) ||
+            (settings.showOpponentOptions && G.color != G.board.getColor())
         ) {
             if (G.phase == G.PHASE_TYPE.GAMEPLAY) {
-                if (!event.treeChange || trainerBoard.getNodeX() == 0) G.suggestions = G.suggestionsHistory.get();
+                if (!event.treeChange || G.board.getNodeX() == 0) G.suggestions = G.suggestionsHistory.get();
 
                 if (G.suggestions) {
                     stats.setVisits(G.suggestions);
-                    trainerBoard.drawCoords(G.suggestions);
+                    G.board.drawCoords(G.suggestions);
                 }
             }
         }
@@ -191,7 +191,7 @@ gameplay.treeJumpedCheckListener = function (event) {
             if (!gameplay.isJumped) {
                 gameplay.isJumped = true;
                 G.isPassed = false;
-                trainerBoard.nextButton.disabled = true;
+                G.board.nextButton.disabled = true;
             }
         }
     }

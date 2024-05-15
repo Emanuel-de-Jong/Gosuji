@@ -20,9 +20,9 @@ sgf.clear = async function (serverKomi, serverRuleset) {
     await sgf.setRuleset(serverKomi != null ? serverKomi : settings.ruleset);
     await sgf.setKomi(serverRuleset ? serverRuleset : settings.komi);
 
-    trainerBoard.editor.setGameInfo("GoTrainer-HumanAI", "GN");
-    trainerBoard.editor.setGameInfo("GoTrainer-HumanAI", "SO");
-    trainerBoard.editor.setGameInfo(Date(), "DT");
+    G.board.editor.setGameInfo("GoTrainer-HumanAI", "GN");
+    G.board.editor.setGameInfo("GoTrainer-HumanAI", "SO");
+    G.board.editor.setGameInfo(Date(), "DT");
 
     sgf.setPlayersMeta();
     sgf.setRankPlayerMeta();
@@ -48,7 +48,7 @@ sgf.sgfLoadingListener = function () {
 sgf.sgfLoadedListener = async function () {
     sgf.isThirdParty = true;
 
-    let gameInfo = trainerBoard.editor.getGameInfo();
+    let gameInfo = G.board.editor.getGameInfo();
 
     if (gameInfo.RE) {
         stats.setResult(gameInfo.RE);
@@ -57,11 +57,11 @@ sgf.sgfLoadedListener = async function () {
     G.setColor();
 
     if (gameInfo.SZ) {
-        trainerBoard.boardsize = parseInt(gameInfo.SZ);
+        G.board.boardsize = parseInt(gameInfo.SZ);
     }
 
     if (gameInfo.HA) {
-        trainerBoard.setHandicap(parseInt(gameInfo.HA));
+        G.board.setHandicap(parseInt(gameInfo.HA));
     }
 
     if (confirm("Would you like to use the ruleset and komi of the SGF?")) {
@@ -97,30 +97,30 @@ sgf.setKomi = async function (komi) {
 
 
 sgf.setPlayersMeta = function () {
-    trainerBoard.editor.setGameInfo(sgf.userName ? sgf.userName : "Player", "P" + G.colorNumToName(G.color));
-    trainerBoard.editor.setGameInfo("AI", "P" + G.colorNumToName(G.color * -1));
+    G.board.editor.setGameInfo(sgf.userName ? sgf.userName : "Player", "P" + G.colorNumToName(G.color));
+    G.board.editor.setGameInfo("AI", "P" + G.colorNumToName(G.color * -1));
 };
 
 sgf.setRankPlayerMeta = function () {
-    trainerBoard.editor.setGameInfo(settings.suggestionVisits + "", G.colorNumToName(G.color) + "R");
+    G.board.editor.setGameInfo(settings.suggestionVisits + "", G.colorNumToName(G.color) + "R");
 };
 
 sgf.setRankAIMeta = function () {
-    trainerBoard.editor.setGameInfo(settings.opponentVisits + "", G.colorNumToName(G.color * -1) + "R");
+    G.board.editor.setGameInfo(settings.opponentVisits + "", G.colorNumToName(G.color * -1) + "R");
 };
 
 sgf.setHandicapMeta = function () {
-    trainerBoard.editor.setGameInfo(trainerBoard.handicap + "", "HA");
+    G.board.editor.setGameInfo(G.board.handicap + "", "HA");
 };
 
 sgf.setRulesetMeta = function () {
-    trainerBoard.editor.setGameInfo(sgf.ruleset, "RU");
+    G.board.editor.setGameInfo(sgf.ruleset, "RU");
 };
 
 sgf.setKomiMeta = function () {
-    trainerBoard.editor.setGameInfo(sgf.komi + "", "KM");
+    G.board.editor.setGameInfo(sgf.komi + "", "KM");
 };
 
 sgf.setResultMeta = function (result) {
-    trainerBoard.editor.setGameInfo(result, "RE");
+    G.board.editor.setGameInfo(result, "RE");
 };

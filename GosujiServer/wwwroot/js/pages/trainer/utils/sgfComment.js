@@ -35,16 +35,16 @@ sgfComment.setComment = function (moveType) {
             break;
     }
 
-    trainerBoard.editor.setComment(comment);
-    trainerBoard.commentElement.scrollTop = 0;
+    G.board.editor.setComment(comment);
+    G.board.commentElement.scrollTop = 0;
 
     G.moveTypeHistory.add(moveType);
 };
 
 sgfComment.createInitComment = function () {
     return "GOSUJI " + G.VERSION +
-        "\nBoard size: " + trainerBoard.boardsize +
-        "\nHandicap: " + trainerBoard.handicap +
+        "\nBoard size: " + G.board.boardsize +
+        "\nHandicap: " + G.board.handicap +
         "\nColor: " + G.colorNumToFullName(G.color) +
         "\nPre moves switch: " + settings.preMovesSwitch +
         "\nPre moves: " + settings.preMoves +

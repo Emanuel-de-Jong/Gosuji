@@ -40,7 +40,7 @@ preMovePlacer.start = async function () {
         }
     }
 
-    while (G.color != trainerBoard.getNextColor() && !G.isPassed && !sgf.isSGFLoading) {
+    while (G.color != G.board.getNextColor() && !G.isPassed && !sgf.isSGFLoading) {
         await preMovePlacer.play(true);
     }
 
@@ -60,7 +60,7 @@ preMovePlacer.play = async function (isForced = false) {
     if (!isForced && preMovePlacer.isStopped) return;
 
     let preOptions = 1;
-    if (trainerBoard.getNextColor() != G.color && utils.randomInt(100) + 1 <= settings.preOptionPerc) {
+    if (G.board.getNextColor() != G.color && utils.randomInt(100) + 1 <= settings.preOptionPerc) {
         preOptions = settings.preOptions;
     }
 
@@ -68,5 +68,5 @@ preMovePlacer.play = async function (isForced = false) {
     if (G.isPassed) preMovePlacer.isStopped = true;
     if (!isForced && preMovePlacer.isStopped) return;
 
-    await trainerBoard.play(G.suggestions.get(utils.randomInt(G.suggestions.length())), G.MOVE_TYPE.PRE);
+    await G.board.play(G.suggestions.get(utils.randomInt(G.suggestions.length())), G.MOVE_TYPE.PRE);
 };
