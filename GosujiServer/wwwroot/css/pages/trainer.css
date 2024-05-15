@@ -28,7 +28,6 @@
 
 
 #trainerPage #game .board {
-    position: relative;
     width: 725px;
 }
 
@@ -36,18 +35,6 @@
     position: absolute;
     top: 5px;
     right: 5px;
-}
-
-#trainerPage #game .besogo-container {
-    background-color: transparent;
-}
-
-#trainerPage #game .besogo-whiteInfo {
-    background-color: rgb(200, 200, 200);
-}
-
-#trainerPage #game .besogo-blackInfo {
-    background-color: rgb(50, 50, 50);
 }
 
 #trainerPage #game .besogo-gameInfo {

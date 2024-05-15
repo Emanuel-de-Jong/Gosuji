@@ -1,0 +1,15 @@
+#josekisPage #flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+#josekisPage .flex-item {
+    display: contents;
+    flex: auto;
+}
+
+#josekisPage .board {
+    width: 725px;
+}

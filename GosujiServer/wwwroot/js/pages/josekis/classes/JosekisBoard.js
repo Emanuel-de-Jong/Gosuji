@@ -2,7 +2,7 @@ class JosekisBoard extends Board {
     constructor() {
         super();
 
-        this.besogoOptions.panels = "control+names+tree+comment+file";
+        this.besogoOptions.panels = "control+comment";
     }
 
     init(boardsize, handicap, sgf) {

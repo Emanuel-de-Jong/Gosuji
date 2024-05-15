@@ -1,0 +1,15 @@
+.board {
+    position: relative;
+}
+
+.besogo-container {
+    background-color: transparent;
+}
+
+.besogo-whiteInfo {
+    background-color: rgb(200, 200, 200);
+}
+
+.besogo-blackInfo {
+    background-color: rgb(50, 50, 50);
+}
