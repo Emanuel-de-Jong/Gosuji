@@ -59,7 +59,7 @@ class Board {
         this.boardsize = serverBoardsize ? serverBoardsize : settings.boardsize;
         this.setHandicap(serverHandicap != null ? serverHandicap : settings.handicap);
     
-        this.element = document.getElementById("board");
+        this.element = document.querySelector(".board");
     
         let besogoOptions = {
             resize: "auto",
@@ -111,9 +111,9 @@ class Board {
             .querySelector("#game .besogo-board")
             .insertAdjacentHTML(
                 "beforeend",
-                '<button type="button" class="btn btn-secondary" id="next" disabled>></button>'
+                '<button type="button" class="btn btn-secondary next" disabled>></button>'
             );
-        this.nextButton = document.getElementById("next");
+        this.nextButton = document.querySelector(".next");
     
         this.commentElement = document.querySelector("#game .besogo-comment textarea");
     
