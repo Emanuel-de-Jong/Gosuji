@@ -12,8 +12,6 @@ class JosekisBoard extends Board {
 
     clear(boardsize, handicap, sgf) {
         super.clear(boardsize, handicap, sgf);
-
-        this.editor.setLabel("A");
     
         // document.querySelector('#game button[title="Variants: [child]/sibling"]').remove();
         // document.querySelector('#game button[title="Variants: show/[hide]"]').remove();

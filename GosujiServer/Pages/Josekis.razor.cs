@@ -20,6 +20,8 @@ namespace GosujiServer.Pages
 
         [Inject]
         private IJSRuntime JS { get; set; }
+        [Inject]
+        private JosekisService josekisService { get; set; }
 
         private int sessionId;
         private DotNetObjectReference<Josekis>? josekisRef;
@@ -33,23 +35,19 @@ namespace GosujiServer.Pages
         {
             if (firstRender)
             {
-                josekiService.AddSession(sessionId);
+                josekisService.AddSession(sessionId);
 
                 josekisRef = DotNetObjectReference.Create(this);
 
                 await JS.InvokeVoidAsync("josekisPage.init", josekisRef);
 
-                for (int i = 0; i < 4; i++)
-                {
-                    josekiService.ToChild(sessionId, josekiService.Children(sessionId)[0]);
-                    await Play();
-                }
+                await AddMarkups();
             }
         }
 
         private async Task Play()
         {
-            JosekisNode? node = josekiService.Current(sessionId);
+            JosekisNode node = josekisService.Current(sessionId);
             if (node == null)
             {
                 return;
@@ -57,6 +55,15 @@ namespace GosujiServer.Pages
 
             await JS.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
             await JS.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
+
+            await AddMarkups();
+
+            await JS.InvokeVoidAsync($"{EDITOR}.setTool", "cross");
+        }
+
+        private async Task AddMarkups()
+        {
+            JosekisNode node = josekisService.Current(sessionId);
 
             foreach (Mark mark in node.Marks)
             {
@@ -69,8 +76,6 @@ namespace GosujiServer.Pages
             }
 
             await JS.InvokeVoidAsync($"{BOARD}.redraw");
-
-            await JS.InvokeVoidAsync($"{EDITOR}.setTool", "cross");
         }
 
         private async Task AddMark(Mark mark)
@@ -102,15 +107,16 @@ namespace GosujiServer.Pages
         }
 
         [JSInvokable]
-        public void PrevNodeClickListener()
+        public async Task PrevNodeClickListener()
         {
-            josekiService.ToParent(sessionId);
+            josekisService.ToParent(sessionId);
+            await AddMarkups();
         }
 
         [JSInvokable]
         public async Task CrossPlacedListener(int x, int y)
         {
-            if (!josekiService.ToChild(sessionId, new JosekisNode(x, y)))
+            if (!josekisService.ToChild(sessionId, new JosekisNode(x, y)))
             {
                 return;
             }
@@ -121,7 +127,7 @@ namespace GosujiServer.Pages
         public void Dispose()
         {
             josekisRef?.Dispose();
-            josekiService.RemoveSession(sessionId);
+            josekisService.RemoveSession(sessionId);
         }
     }
 }

@@ -4,8 +4,8 @@ namespace GosujiServer.Models
 {
     public class JosekisNode
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public int? X { get; set; }
+        public int? Y { get; set; }
         public bool IsBlack { get; set; }
         public string? Comment { get; set; }
         public List<TextLabel>? Labels { get; set; }
@@ -15,6 +15,13 @@ namespace GosujiServer.Models
         {
             X = x;
             Y = y;
+        }
+
+        public JosekisNode(GoNode node)
+        {
+            Comment = node.Comment;
+            Labels = node.Markup.Labels;
+            Marks = node.Markup.Marks;
         }
 
         public JosekisNode(GoMoveNode moveNode)

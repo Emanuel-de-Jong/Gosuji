@@ -34,7 +34,7 @@ namespace GosujiServer.Services
             JosekisGoNodes.Remove(sessionId);
         }
 
-        public JosekisNode? Current(int sessionId)
+        public JosekisNode Current(int sessionId)
         {
             GoNode node = JosekisGoNodes[sessionId];
             if (node is GoMoveNode)
@@ -42,7 +42,7 @@ namespace GosujiServer.Services
                 return new JosekisNode((GoMoveNode)node);
             }
 
-            return null;
+            return new JosekisNode(node);
         }
 
         public List<JosekisNode> Children(int sessionId)
