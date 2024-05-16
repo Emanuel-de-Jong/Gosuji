@@ -12,6 +12,8 @@ class JosekisBoard extends Board {
 
     clear(boardsize, handicap, sgf) {
         super.clear(boardsize, handicap, sgf);
+
+        this.editor.setLabel("A");
     
         // document.querySelector('#game button[title="Variants: [child]/sibling"]').remove();
         // document.querySelector('#game button[title="Variants: show/[hide]"]').remove();
@@ -24,6 +26,14 @@ class JosekisBoard extends Board {
         // document.querySelector('#game input[value="Info"]').remove();
 
         this.editor.addListener(this.crossPlacedListener);
+    }
+
+    addMarkup(x, y, markup) {
+        this.editor.getCurrent().markup[(x - 1)*19 + (y - 1)] = markup;
+    }
+
+    redraw() {
+        this.editor.notifyListeners({ markupChange: true });
     }
 
     crossPlacedListener = async (event) => {
