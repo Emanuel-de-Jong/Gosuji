@@ -7,10 +7,6 @@
 }
 
 
-#profilePage #title {
-    text-align: center;
-}
-
 #profilePage #daysChart {
     display: flex;
     flex-direction: column;

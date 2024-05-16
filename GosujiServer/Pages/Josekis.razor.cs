@@ -75,6 +75,8 @@ namespace GosujiServer.Pages
                 await AddLabel(textLabel);
             }
 
+            await JS.InvokeVoidAsync($"{EDITOR}.setComment", node.Comment);
+
             await JS.InvokeVoidAsync($"{BOARD}.redraw");
         }
 
