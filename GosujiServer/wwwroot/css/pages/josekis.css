@@ -6,10 +6,19 @@
 }
 
 #josekisPage .flex-item {
-    display: contents;
-    flex: auto;
+    flex: 1;
 }
 
 #josekisPage .board {
-    width: 600px;
+    width: 725px;
+}
+
+#josekisPage #comment {
+    margin-top: 40px;
+    margin-left: 40px;
+    font-size: 25px;
+}
+
+#josekisPage .pass {
+    font-weight: 700;
 }

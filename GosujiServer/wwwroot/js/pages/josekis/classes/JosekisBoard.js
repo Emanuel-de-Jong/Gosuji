@@ -2,7 +2,7 @@ class JosekisBoard extends Board {
     constructor() {
         super();
 
-        this.besogoOptions.panels = "control+comment";
+        this.besogoOptions.panels = "control";
         this.besogoOptions.tool = "cross";
     }
 
@@ -21,9 +21,6 @@ class JosekisBoard extends Board {
         document.querySelector('button[title="Next sibling"]').remove();
         document.querySelector('button[title="Variants: [child]/sibling"]').remove();
         document.querySelector('button[title="Variants: show/[hide]"]').remove();
-        document.querySelector('input[value="Comment"]').remove();
-        document.querySelector('input[value="Edit Info"]').remove();
-        document.querySelector('input[value="Info"]').remove();
         
         document.querySelector('button[title="First node"]').insertAdjacentHTML("afterend",
             `<button class="lastBranchBtn">

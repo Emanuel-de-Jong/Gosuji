@@ -26,6 +26,8 @@ namespace GosujiServer.Pages
         private int sessionId;
         private DotNetObjectReference<Josekis>? josekisRef;
 
+        public string[] Comment { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             sessionId = random.Next(100_000_000, 999_999_999);
@@ -75,7 +77,8 @@ namespace GosujiServer.Pages
                 await AddLabel(textLabel);
             }
 
-            await JS.InvokeVoidAsync($"{EDITOR}.setComment", node.Comment);
+            Comment = node.Comment.Split("\r\n");
+            StateHasChanged();
 
             await JS.InvokeVoidAsync($"{BOARD}.redraw");
         }
