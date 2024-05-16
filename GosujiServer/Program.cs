@@ -29,7 +29,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuth
 
 builder.Services.AddSingleton<DbService>();
 builder.Services.AddSingleton<KataGoService>();
-builder.Services.AddSingleton<JosekiService>();
+builder.Services.AddSingleton<JosekisService>();
 
 builder.Services.AddSignalR(hubOptions =>
 {

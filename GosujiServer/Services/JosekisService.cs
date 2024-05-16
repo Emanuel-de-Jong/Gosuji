@@ -5,18 +5,18 @@ using IGOEnchi.SmartGameLib;
 
 namespace GosujiServer.Services
 {
-    public class JosekiService
+    public class JosekisService
     {
         private readonly IHttpContextAccessor httpContextAccessor;
-        private Dictionary<string, GoNode> JosekiNodes;
+        private Dictionary<string, GoNode> JosekisGoNodes;
 
         private GoGame baseGame;
 
-        public JosekiService(IHttpContextAccessor _httpContextAccessor)
+        public JosekisService(IHttpContextAccessor _httpContextAccessor)
         {
             httpContextAccessor = _httpContextAccessor;
 
-            JosekiNodes = new();
+            JosekisGoNodes = new();
 
             using var fileStream = File.OpenRead(@"Resources\AI-Josekis-True-0.3-15-15-8-8-6.sgf");
 
@@ -31,17 +31,17 @@ namespace GosujiServer.Services
 
         private GoNode GetSessionNode()
         {
-            return JosekiNodes[GetSessionId()];
+            return JosekisGoNodes[GetSessionId()];
         }
 
         public void AddSession()
         {
-            JosekiNodes[GetSessionId()] = baseGame.RootNode;
+            JosekisGoNodes[GetSessionId()] = baseGame.RootNode;
         }
 
         public void RemoveSession()
         {
-            JosekiNodes.Remove(GetSessionId());
+            JosekisGoNodes.Remove(GetSessionId());
         }
 
         public JosekisNode? Current()
@@ -78,7 +78,7 @@ namespace GosujiServer.Services
                 return;
             }
 
-            JosekiNodes[GetSessionId()] = node.ParentNode;
+            JosekisGoNodes[GetSessionId()] = node.ParentNode;
         }
 
         public bool ToChild(JosekisNode childToGo)
@@ -90,7 +90,7 @@ namespace GosujiServer.Services
                     GoMoveNode childMove = (GoMoveNode)childNode;
                     if (childToGo.Compare(childMove))
                     {
-                        JosekiNodes[GetSessionId()] = childMove;
+                        JosekisGoNodes[GetSessionId()] = childMove;
                         return true;
                     }
                 }
