@@ -6,5 +6,5 @@ josekisPage.init = function (josekisRef) {
     josekisPage.board = new JosekisBoard();
     josekisPage.board.init(19, 0);
 
-    document.querySelector('button[title="Previous node"]').addEventListener("click", async () => { await josekisRef.invokeMethodAsync("PrevNodeClickListener") });
+    document.querySelector('button[title="Previous node"]').addEventListener("click", async () => { await josekisRef.invokeMethodAsync("Prev") });
 };

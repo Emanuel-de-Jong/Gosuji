@@ -1243,16 +1243,16 @@ besogo.makeControlPanel = function(container, editor) {
                 if (current.parent.children.length > 1) { // Has siblings
                     arraySetColor(siblingElements, 'black');
                 } else { // No siblings
-                    arraySetColor(siblingElements, besogo.GREY);
+                    arraySetColor(siblingElements, 'black');
                 }
             } else { // No parent
-                arraySetColor(leftElements, besogo.GREY);
-                arraySetColor(siblingElements, besogo.GREY);
+                arraySetColor(leftElements, 'black');
+                arraySetColor(siblingElements, 'black');
             }
             if (current.children.length) { // Has children
                 arraySetColor(rightElements, 'black');
             } else { // No children
-                arraySetColor(rightElements, besogo.GREY);
+                arraySetColor(rightElements, 'black');
             }
         }
 

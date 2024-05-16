@@ -13,17 +13,35 @@ class JosekisBoard extends Board {
     clear(boardsize, handicap, sgf) {
         super.clear(boardsize, handicap, sgf);
     
-        // document.querySelector('#game button[title="Variants: [child]/sibling"]').remove();
-        // document.querySelector('#game button[title="Variants: show/[hide]"]').remove();
-        // document.querySelector('#game input[value="9x9"]').remove();
-        // document.querySelector('#game input[value="13x13"]').remove();
-        // document.querySelector('#game input[value="19x19"]').remove();
-        // document.querySelector('#game input[value="?x?"]').remove();
-        // document.querySelector('#game input[value="Comment"]').remove();
-        // document.querySelector('#game input[value="Edit Info"]').remove();
-        // document.querySelector('#game input[value="Info"]').remove();
+        document.querySelector('button[title="Jump back"]').remove();
+        document.querySelector('button[title="Next node"]').remove();
+        document.querySelector('button[title="Jump forward"]').remove();
+        document.querySelector('button[title="Last node"]').remove();
+        document.querySelector('button[title="Previous sibling"]').remove();
+        document.querySelector('button[title="Next sibling"]').remove();
+        document.querySelector('button[title="Variants: [child]/sibling"]').remove();
+        document.querySelector('button[title="Variants: show/[hide]"]').remove();
+        document.querySelector('input[value="Comment"]').remove();
+        document.querySelector('input[value="Edit Info"]').remove();
+        document.querySelector('input[value="Info"]').remove();
+        
+        document.querySelector('button[title="First node"]').insertAdjacentHTML("afterend",
+            `<button class="lastBranchBtn">
+                <svg width="100%" height="100%" viewBox="0 0 100 100">
+                    <polygon points="95,10 50,50 50,10 5,50 50,90 50,50 95,90" stroke="none"></polygon>
+                </svg>
+            </button>`
+        );
+        document.querySelector('button[title="Previous node"]').insertAdjacentHTML("afterend", '<button style="width: 50px" class="passBtn">Pass</button>');
 
+        document.querySelector(".passBtn").addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("Pass"); });
+        document.querySelector(".lastBranchBtn").addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("LastBranch"); });
+        document.querySelector('button[title="First node"]').addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("First"); });
         this.editor.addListener(this.crossPlacedListener);
+    }
+
+    clearFuture() {
+        this.editor.getCurrent().children = [];
     }
 
     addMarkup(x, y, markup) {
@@ -39,7 +57,7 @@ class JosekisBoard extends Board {
             this.removeMarkup(new Coord(event.x, event.y));
             this.editor.notifyListeners({ stoneChange: true });
 
-            await josekisPage.josekisRef.invokeMethodAsync("CrossPlacedListener", event.x - 1, event.y - 1);
+            await josekisPage.josekisRef.invokeMethodAsync("Next", event.x - 1, event.y - 1);
         }
     }
 }

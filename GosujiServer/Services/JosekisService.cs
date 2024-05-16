@@ -71,6 +71,33 @@ namespace GosujiServer.Services
             JosekisGoNodes[sessionId] = node.ParentNode;
         }
 
+        public int ToLastBranch(int sessionId)
+        {
+            GoNode node = JosekisGoNodes[sessionId];
+
+            int returnCount = 0;
+
+            do {
+                if (node.ParentNode == null)
+                {
+                    break;
+                }
+
+                node = node.ParentNode;
+                returnCount++;
+
+            } while (node.ChildNodes.Count < 2);
+
+            JosekisGoNodes[sessionId] = node;
+
+            return returnCount;
+        }
+
+        public void ToFirst(int sessionId)
+        {
+            JosekisGoNodes[sessionId] = baseGame.RootNode;
+        }
+
         public bool ToChild(int sessionId, JosekisNode childToGo)
         {
             foreach (var childNode in JosekisGoNodes[sessionId].ChildNodes)

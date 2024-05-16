@@ -107,14 +107,40 @@ namespace GosujiServer.Pages
         }
 
         [JSInvokable]
-        public async Task PrevNodeClickListener()
+        public async Task Pass()
+        {
+            josekisService.ToChild(sessionId, new JosekisNode(20, 20));
+            await Play();
+        }
+
+        [JSInvokable]
+        public async Task Prev()
         {
             josekisService.ToParent(sessionId);
+            await JS.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
 
         [JSInvokable]
-        public async Task CrossPlacedListener(int x, int y)
+        public async Task LastBranch()
+        {
+            int returnCount = josekisService.ToLastBranch(sessionId);
+            await JS.InvokeVoidAsync($"{EDITOR}.prevNode", returnCount);
+
+            await JS.InvokeVoidAsync($"{BOARD}.clearFuture");
+            await AddMarkups();
+        }
+
+        [JSInvokable]
+        public async Task First()
+        {
+            josekisService.ToFirst(sessionId);
+            await JS.InvokeVoidAsync($"{BOARD}.clearFuture");
+            await AddMarkups();
+        }
+
+        [JSInvokable]
+        public async Task Next(int x, int y)
         {
             if (!josekisService.ToChild(sessionId, new JosekisNode(x, y)))
             {
