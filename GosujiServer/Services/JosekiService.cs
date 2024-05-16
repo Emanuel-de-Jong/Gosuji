@@ -1,8 +1,7 @@
-﻿using GosujiServer.Data;
+﻿using GosujiServer.Models;
 using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
 using IGOEnchi.SmartGameLib;
-using System.IO;
 
 namespace GosujiServer.Services
 {
@@ -45,30 +44,30 @@ namespace GosujiServer.Services
             JosekiNodes.Remove(GetSessionId());
         }
 
-        public Stone? CurrentStone()
+        public JosekisNode? Current()
         {
             GoNode node = GetSessionNode();
             if (node is GoMoveNode)
             {
-                return ((GoMoveNode)node).Stone;
+                return new JosekisNode((GoMoveNode)node);
             }
 
             return null;
         }
 
-        public List<Stone> ChildStones()
+        public List<JosekisNode> Children()
         {
-            List<Stone> childStones = new();
+            List<JosekisNode> children = new();
 
             foreach (var childNode in GetSessionNode().ChildNodes)
             {
                 if (childNode is GoMoveNode)
                 {
-                    childStones.Add(((GoMoveNode)childNode).Stone);
+                    children.Add(new JosekisNode((GoMoveNode)childNode));
                 }
             }
 
-            return childStones;
+            return children;
         }
 
         public void ToParent()
@@ -82,14 +81,14 @@ namespace GosujiServer.Services
             JosekiNodes[GetSessionId()] = node.ParentNode;
         }
 
-        public bool ToChild(Stone childStoneToGo)
+        public bool ToChild(JosekisNode childToGo)
         {
             foreach (var childNode in GetSessionNode().ChildNodes)
             {
                 if (childNode is GoMoveNode)
                 {
                     GoMoveNode childMove = (GoMoveNode)childNode;
-                    if (childMove.Stone.AtPlaceOf(childStoneToGo))
+                    if (childToGo.Compare(childMove))
                     {
                         JosekiNodes[GetSessionId()] = childMove;
                         return true;

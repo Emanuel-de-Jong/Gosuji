@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using System.Xml.Linq;
 using GosujiServer.Models.GoGameWraps;
+using GosujiServer.Models;
 
 namespace GosujiServer.Pages
 {
@@ -32,7 +33,7 @@ namespace GosujiServer.Pages
 
                 for (int i = 0; i < 4; i++)
                 {
-                    josekiService.ToChild(josekiService.ChildStones()[0]);
+                    josekiService.ToChild(josekiService.Children()[0]);
                     await Play();
                 }
             }
@@ -40,14 +41,14 @@ namespace GosujiServer.Pages
 
         private async Task Play()
         {
-            Stone? stone = josekiService.CurrentStone();
-            if (stone == null)
+            JosekisNode? node = josekiService.Current();
+            if (node == null)
             {
                 return;
             }
 
-            await JS.InvokeVoidAsync($"{EDITOR}.setTool", stone.IsBlack ? "playB" : "playW");
-            await JS.InvokeVoidAsync($"{EDITOR}.click", stone.X + 1, stone.Y + 1, false, false);
+            await JS.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
+            await JS.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
             await JS.InvokeVoidAsync($"{EDITOR}.setTool", "cross");
         }
 
@@ -60,7 +61,7 @@ namespace GosujiServer.Pages
         [JSInvokable]
         public async Task CrossPlacedListener(int x, int y)
         {
-            if (!josekiService.ToChild(new Stone(x, y, true)))
+            if (!josekiService.ToChild(new JosekisNode(x, y)))
             {
                 return;
             }

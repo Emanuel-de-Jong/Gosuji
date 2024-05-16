@@ -15,18 +15,6 @@
         <h1>Josekis</h1>
     </div>
 
-    @if (josekiService.CurrentStone() != null)
-    {
-        <p>@josekiService.CurrentStone().Print()</p>
-    }
-
-    <button @onclick="() => josekiService.ToParent()">Back</button>
-
-    @foreach (Stone childStone in josekiService.ChildStones())
-    {
-        <button @onclick="() => josekiService.ToChild(childStone)">@childStone.Print()</button>
-    }
-
     <div id="flex-container">
         <div class="flex-item">
             <div id="game">
