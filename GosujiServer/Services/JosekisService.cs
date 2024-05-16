@@ -8,7 +8,7 @@ namespace GosujiServer.Services
     public class JosekisService
     {
         private readonly IHttpContextAccessor httpContextAccessor;
-        private Dictionary<string, GoNode> JosekisGoNodes;
+        private Dictionary<int, GoNode> JosekisGoNodes;
 
         private GoGame baseGame;
 
@@ -24,29 +24,19 @@ namespace GosujiServer.Services
             baseGame = SgfCompiler.Compile(gameTree);
         }
 
-        private string GetSessionId()
+        public void AddSession(int sessionId)
         {
-            return httpContextAccessor.HttpContext.Session.Id;
+            JosekisGoNodes[sessionId] = baseGame.RootNode;
         }
 
-        private GoNode GetSessionNode()
+        public void RemoveSession(int sessionId)
         {
-            return JosekisGoNodes[GetSessionId()];
+            JosekisGoNodes.Remove(sessionId);
         }
 
-        public void AddSession()
+        public JosekisNode? Current(int sessionId)
         {
-            JosekisGoNodes[GetSessionId()] = baseGame.RootNode;
-        }
-
-        public void RemoveSession()
-        {
-            JosekisGoNodes.Remove(GetSessionId());
-        }
-
-        public JosekisNode? Current()
-        {
-            GoNode node = GetSessionNode();
+            GoNode node = JosekisGoNodes[sessionId];
             if (node is GoMoveNode)
             {
                 return new JosekisNode((GoMoveNode)node);
@@ -55,11 +45,11 @@ namespace GosujiServer.Services
             return null;
         }
 
-        public List<JosekisNode> Children()
+        public List<JosekisNode> Children(int sessionId)
         {
             List<JosekisNode> children = new();
 
-            foreach (var childNode in GetSessionNode().ChildNodes)
+            foreach (var childNode in JosekisGoNodes[sessionId].ChildNodes)
             {
                 if (childNode is GoMoveNode)
                 {
@@ -70,27 +60,27 @@ namespace GosujiServer.Services
             return children;
         }
 
-        public void ToParent()
+        public void ToParent(int sessionId)
         {
-            GoNode node = GetSessionNode();
+            GoNode node = JosekisGoNodes[sessionId];
             if (node.ParentNode == null)
             {
                 return;
             }
 
-            JosekisGoNodes[GetSessionId()] = node.ParentNode;
+            JosekisGoNodes[sessionId] = node.ParentNode;
         }
 
-        public bool ToChild(JosekisNode childToGo)
+        public bool ToChild(int sessionId, JosekisNode childToGo)
         {
-            foreach (var childNode in GetSessionNode().ChildNodes)
+            foreach (var childNode in JosekisGoNodes[sessionId].ChildNodes)
             {
                 if (childNode is GoMoveNode)
                 {
                     GoMoveNode childMove = (GoMoveNode)childNode;
                     if (childToGo.Compare(childMove))
                     {
-                        JosekisGoNodes[GetSessionId()] = childMove;
+                        JosekisGoNodes[sessionId] = childMove;
                         return true;
                     }
                 }

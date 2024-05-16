@@ -13,16 +13,27 @@ namespace GosujiServer.Pages
 {
     public partial class Josekis : ComponentBase, IDisposable
     {
+        private static Random random = new Random();
+
         private const string BOARD = "josekisPage.board";
         private const string EDITOR = $"{BOARD}.editor";
 
+        [Inject]
+        private IJSRuntime JS { get; set; }
+
+        private int sessionId;
         private DotNetObjectReference<Josekis>? josekisRef;
+
+        protected override async Task OnInitializedAsync()
+        {
+            sessionId = random.Next(100_000_000, 999_999_999);
+        }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                josekiService.AddSession();
+                josekiService.AddSession(sessionId);
 
                 josekisRef = DotNetObjectReference.Create(this);
 
@@ -30,7 +41,7 @@ namespace GosujiServer.Pages
 
                 for (int i = 0; i < 4; i++)
                 {
-                    josekiService.ToChild(josekiService.Children()[0]);
+                    josekiService.ToChild(sessionId, josekiService.Children(sessionId)[0]);
                     await Play();
                 }
             }
@@ -38,7 +49,7 @@ namespace GosujiServer.Pages
 
         private async Task Play()
         {
-            JosekisNode? node = josekiService.Current();
+            JosekisNode? node = josekiService.Current(sessionId);
             if (node == null)
             {
                 return;
@@ -93,13 +104,13 @@ namespace GosujiServer.Pages
         [JSInvokable]
         public void PrevNodeClickListener()
         {
-            josekiService.ToParent();
+            josekiService.ToParent(sessionId);
         }
 
         [JSInvokable]
         public async Task CrossPlacedListener(int x, int y)
         {
-            if (!josekiService.ToChild(new JosekisNode(x, y)))
+            if (!josekiService.ToChild(sessionId, new JosekisNode(x, y)))
             {
                 return;
             }
@@ -110,7 +121,7 @@ namespace GosujiServer.Pages
         public void Dispose()
         {
             josekisRef?.Dispose();
-            josekiService.RemoveSession();
+            josekiService.RemoveSession(sessionId);
         }
     }
 }
