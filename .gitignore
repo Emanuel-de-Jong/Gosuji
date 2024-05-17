@@ -4,7 +4,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Custom
-gosuji.db
 gosuji.db-shm
 gosuji.db-wal
 
