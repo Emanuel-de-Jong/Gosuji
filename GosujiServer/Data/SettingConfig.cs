@@ -5,6 +5,8 @@ namespace GosujiServer.Data
     public class SettingConfig : DbModel
     {
         [Key] public long Id { get; set; }
+        public long LanguageId { get; set; }
+        public Language? Language { get; set; }
         public bool IsDarkMode { get; set; }
         public int Volume { get; set; } = 100;
         public bool IsGetChangelogEmail { get; set; } = true;

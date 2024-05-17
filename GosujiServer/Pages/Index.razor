@@ -1,5 +1,8 @@
 ﻿@page "/"
 @using GosujiServer.Services;
+@using System.Security.Claims;
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject DbService dbService;
 
 <PageTitle>Gosuji</PageTitle>
@@ -40,15 +43,20 @@
 
 
 @code {
+    ClaimsPrincipal user;
 
     ApplicationDbContext dbContext;
     List<Changelog> changelogs;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        AuthenticationState authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
         dbContext = dbService.GetContext();
         changelogs = dbContext.Changelogs.ToList();
         changelogs.Reverse();
-    }
 
+        await dbContext.DisposeAsync();
+    }
 }
