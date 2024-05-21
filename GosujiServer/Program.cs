@@ -31,6 +31,8 @@ builder.Services.AddSingleton<DbService>();
 builder.Services.AddSingleton<KataGoService>();
 builder.Services.AddSingleton<JosekisService>();
 
+builder.Services.AddScoped<TranslateService>();
+
 builder.Services.AddSignalR(hubOptions =>
 {
     hubOptions.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB

@@ -6,6 +6,7 @@
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject UserManager<User> userManager
 @inject DbService dbService;
+@inject TranslateService translateService;
 
 <PageTitle>Gosuji</PageTitle>
 
@@ -22,10 +23,7 @@
 
         <!-- Explanation and Description of the page -->
         <p class="description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            @translateService.Get("Index_Summary")
         </p>
 
         <!-- Changelog -->
@@ -57,7 +55,9 @@
             user = await userManager.GetUserAsync(claimsPrincipal);
         }
 
-        dbContext = dbService.GetContext();
+        await translateService.Init(user);
+
+        dbContext = await dbService.GetContextAsync();
 
         // if (user.SettingConfigId == null)
         // {
@@ -68,6 +68,23 @@
 
         //     dbContext.Update(user);
         //     await dbContext.SaveChangesAsync();
+        // }
+
+        // if (dbContext.TextKeys.Count() == 0)
+        // {
+        //     dbContext.TextKeys.Add(new TextKey()
+        //         {
+        //             Key = "Index_Summary"
+        //         });
+
+        //     dbContext.TextValues.Add(new TextValue()
+        //         {
+        //             LanguageId = 1,
+        //             TextKeyId = 1,
+        //             Value = "Your place to learn Go from AI"
+        //         });
+
+        //     dbContext.SaveChanges();
         // }
 
         changelogs = dbContext.Changelogs.ToList();
