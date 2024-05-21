@@ -40,3 +40,12 @@ custom.disableDarkTheme = function () {
     custom.theme = custom.THEME_TYPES.LIGHT;
     custom.htmlElement.dataset.bsTheme = "light";
 };
+
+custom.fitTextareaToContent = function (textarea) {
+    if (textarea.value == "") {
+        return;
+    }
+
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + 5 + "px";
+};

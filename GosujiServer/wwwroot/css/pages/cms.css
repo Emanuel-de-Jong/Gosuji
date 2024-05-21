@@ -1,0 +1,11 @@
+#cmsPage .flex-item {
+    border: 2px solid darkblue;
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 850px;
+    max-width: 850px;
+}
+
+#cmsPage #translationInputs textarea {
+    height: 24px;
+}

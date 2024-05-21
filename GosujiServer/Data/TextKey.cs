@@ -6,5 +6,10 @@ namespace GosujiServer.Data
     {
         [Key] public long Id { get; set; }
         public string Key { get; set; }
+
+        public TextKey(string key)
+        {
+            Key = key;
+        }
     }
 }
