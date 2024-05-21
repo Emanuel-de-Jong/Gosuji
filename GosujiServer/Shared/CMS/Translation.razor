@@ -1,0 +1,35 @@
+﻿<h3>Translation</h3>
+
+<div class="mb-3">
+    <label for="newTextKey" class="form-label">Key</label>
+    <input type="text" class="form-control" id="newTextKey" @bind="newKey">
+</div>
+<button type="button" class="btn btn-primary" @onclick="AddTextKey">Add</button>
+
+<div class="mb-3">
+    <label for="language" class="form-label">Language</label>
+    <select id="language" class="form-select" @onchange="LanguageSelected">
+        <option value="-1">None</option>
+        @foreach (Language language in languages.Values)
+        {
+            <option value="@language.Id">@language.Name</option>
+        }
+    </select>
+</div>
+
+@if (textValues != null)
+{
+    <div id="translationInputs">
+        @foreach (TextKey key in textKeys)
+        {
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">@key.Key</label>
+                <div class="col-sm-6">
+                    <textarea class="form-control" @bind="translations[key.Id]" oninput="custom.fitTextareaToContent(this)">@(translations[key.Id])</textarea>
+                </div>
+            </div>
+        }
+    </div>
+
+    <button type="button" class="btn btn-primary" @onclick="SaveTranslations">Save</button>
+}
