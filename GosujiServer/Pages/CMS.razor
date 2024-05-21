@@ -37,7 +37,7 @@
                         <div class="mb-3 row">
                             <label class="col-sm-4 col-form-label">@key.Key</label>
                             <div class="col-sm-6">
-                                <textarea class="form-control" id="@key.Id" oninput="custom.fitTextareaToContent(this)">@(textValues.ContainsKey(key.Id) ? textValues[key.Id].Value : "")</textarea>
+                                <textarea class="form-control" @bind="translations[key.Id]" oninput="custom.fitTextareaToContent(this)">@(translations[key.Id])</textarea>
                             </div>
                         </div>
                     }

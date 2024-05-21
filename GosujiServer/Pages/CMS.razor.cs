@@ -24,7 +24,10 @@ namespace GosujiServer.Pages
         private Dictionary<long, Language> languages;
         private Dictionary<long, TextValue>? textValues;
 
+        private Dictionary<long, string>? translations;
+
         private string newKey;
+        private long currentLanguageId = -1;
 
         protected override async Task OnInitializedAsync()
         {
@@ -56,20 +59,55 @@ namespace GosujiServer.Pages
 
         private async Task LanguageSelected(ChangeEventArgs e)
         {
-            long languageId = long.Parse(e.Value.ToString());
-            if (languageId == -1)
+            currentLanguageId = long.Parse(e.Value.ToString());
+            if (currentLanguageId == -1)
             {
                 return;
             }
 
+            PrepareTranslationInputs();
+        }
+
+        private async Task PrepareTranslationInputs()
+        {
             ApplicationDbContext dbContext = await dbService.GetContextAsync();
-            textValues = dbContext.TextValues.Where(tv => tv.LanguageId == languageId).ToDictionary(tv => tv.TextKeyId);
+            var tempTextValues = dbContext.TextValues.Where(tv => tv.LanguageId == currentLanguageId).ToDictionary(tv => tv.TextKeyId);
             await dbContext.DisposeAsync();
+
+            translations = new();
+            foreach (TextKey textKey in textKeys)
+            {
+                translations[textKey.Id] = tempTextValues.ContainsKey(textKey.Id) ? tempTextValues[textKey.Id].Value : "";
+            }
+
+            textValues = tempTextValues;
         }
 
         private async Task SaveTranslations()
         {
+            ApplicationDbContext dbContext = await dbService.GetContextAsync();
 
+            foreach (KeyValuePair<long, string> pair in translations)
+            {
+                if (textValues.ContainsKey(pair.Key))
+                {
+                    TextValue textValue = textValues[pair.Key];
+                    textValue.Value = pair.Value;
+                    dbContext.TextValues.Update(textValue);
+                } else
+                {
+                    TextValue textValue = new()
+                    {
+                        LanguageId = currentLanguageId,
+                        TextKeyId = pair.Key,
+                        Value = pair.Value
+                    };
+                    await dbContext.TextValues.AddAsync(textValue);
+                }
+            }
+
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
         }
     }
 }
