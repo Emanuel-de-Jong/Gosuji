@@ -18,7 +18,7 @@ namespace GosujiServer.Services
 
             JosekisGoNodes = new();
 
-            using var fileStream = File.OpenRead(@"Resources\AI-Josekis-True-0.3-15-15-8-8-6.sgf");
+            using var fileStream = File.OpenRead(@"Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf");
 
             var gameTree = SgfReader.LoadFromStream(fileStream);
             baseGame = SgfCompiler.Compile(gameTree);

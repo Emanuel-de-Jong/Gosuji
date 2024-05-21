@@ -77,8 +77,11 @@ namespace GosujiServer.Pages
                 await AddLabel(textLabel);
             }
 
-            Comment = node.Comment.Split("\r\n");
-            StateHasChanged();
+            if (node.Comment != null)
+            {
+                Comment = node.Comment.Split("\r\n");
+                StateHasChanged();
+            }
 
             await JS.InvokeVoidAsync($"{BOARD}.redraw");
         }
