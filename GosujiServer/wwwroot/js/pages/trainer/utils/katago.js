@@ -33,6 +33,10 @@ katago.restart = async function () {
     return trainerG.rcKataGoWrapperRef
         .invokeMethodAsync("Restart")
         .then((response) => {
+            if (response == false) {
+                alert("You already use this page somewhere else!");
+            }
+
             return response;
         })
         .catch((error) => {

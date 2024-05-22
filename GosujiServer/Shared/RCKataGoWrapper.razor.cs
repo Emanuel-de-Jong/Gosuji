@@ -42,16 +42,23 @@ namespace GosujiServer.Shared
         }
 
         [JSInvokable]
-        public void Restart()
+        public bool Restart()
         {
             if (G.Log) Console.WriteLine("RCKataGoWrapper.Restart");
 
             if (kataGo == null)
             {
                 kataGo = kataGoService.Get(userId);
+
+                if (kataGo == null)
+                {
+                    return false;
+                }
             }
 
             kataGo?.Restart();
+
+            return true;
         }
 
         [JSInvokable]
@@ -141,7 +148,7 @@ namespace GosujiServer.Shared
 
         public void Dispose()
         {
-            kataGoService.Return(userId);
+            kataGoService.Return(userId).Wait();
         }
     }
 }

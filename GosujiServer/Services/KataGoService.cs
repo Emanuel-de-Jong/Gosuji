@@ -12,7 +12,6 @@ namespace GosujiServer.Services
         private const int MAX_INSTANCES = 8;
 
         private DbService dbService;
-        private MoveCountService moveCountService;
 
         private System.Timers.Timer cashInTimer;
 
@@ -21,10 +20,9 @@ namespace GosujiServer.Services
 
         private KataGoVersion? version;
 
-        public KataGoService(DbService _dbService, MoveCountService _moveCountService)
+        public KataGoService(DbService _dbService)
         {
             dbService = _dbService;
-            moveCountService = _moveCountService;
 
             cashInTimer = new(12 * 60 * 60 * 1000); // 12 hours
             cashInTimer.AutoReset = true;
@@ -134,7 +132,7 @@ namespace GosujiServer.Services
 
         private async Task CashIn(string userId)
         {
-            UserMoveCount? moveCount = await moveCountService.Get(userId);
+            UserMoveCount? moveCount = await MoveCountManager.Get(dbService, userId);
             moveCount.KataGoVisits += instances[userId].TotalVisits;
 
             ApplicationDbContext dbContext = await dbService.GetContextAsync();

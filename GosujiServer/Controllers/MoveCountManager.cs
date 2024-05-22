@@ -1,24 +1,18 @@
 ﻿using GosujiServer.Data;
-using Microsoft.AspNetCore.Components.Authorization;
+using GosujiServer.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
-namespace GosujiServer.Services
+namespace GosujiServer.Controllers
 {
-    public class MoveCountService
+    public class MoveCountManager
     {
-        private DbService dbService;
-
-        public MoveCountService(DbService _dbService)
-        {
-            dbService = _dbService;
-        }
-
-        public async Task<UserMoveCount> Get(string userId)
+        public static async Task<UserMoveCount> Get(DbService dbService, string userId)
         {
             ApplicationDbContext dbContext = await dbService.GetContextAsync();
 
-            UserMoveCount? moveCount = await dbContext.UserMoveCounts.Where(mc => mc.UserId == userId).OrderBy(mc => mc.CreateDate).FirstOrDefaultAsync();
+            List<UserMoveCount> moveCounts = await dbContext.UserMoveCounts.Where(mc => mc.UserId == userId).ToListAsync();
+
+            UserMoveCount? moveCount = moveCounts.OrderBy(mc => mc.CreateDate).LastOrDefault();
             if (moveCount == null || (DateTimeOffset.UtcNow - moveCount.CreateDate).TotalDays > 7)
             {
                 moveCount = new UserMoveCount(userId);
