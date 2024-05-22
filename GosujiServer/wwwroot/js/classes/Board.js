@@ -42,12 +42,13 @@ class Board {
     };
 
     init(boardsize, handicap, sgf) {
+        let fileDir = "resources/audio/pages/";
         this.placeStoneAudios = [
-            new Audio("resources/placeStone0.mp3"),
-            new Audio("resources/placeStone1.mp3"),
-            new Audio("resources/placeStone2.mp3"),
-            new Audio("resources/placeStone3.mp3"),
-            new Audio("resources/placeStone4.mp3"),
+            new Audio(fileDir + "placeStone0.mp3"),
+            new Audio(fileDir + "placeStone1.mp3"),
+            new Audio(fileDir + "placeStone2.mp3"),
+            new Audio(fileDir + "placeStone3.mp3"),
+            new Audio(fileDir + "placeStone4.mp3"),
         ];
         this.lastPlaceStoneAudioIndex = 0;
     
