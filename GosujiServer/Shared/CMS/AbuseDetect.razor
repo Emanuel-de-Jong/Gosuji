@@ -3,16 +3,18 @@
 <table id="abuseTable" class="table table-striped">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Name</th>
+            <th>Sub</th>
+            <th>Visits</th>
         </tr>
     </thead>
     <tbody>
         @foreach (User user in users)
         {
-            <tr>
-                <td>@user.Id</td>
+            <tr id="@user.Id">
                 <td>@user.UserName</td>
+                <td>@(subscriptions.ContainsKey(user.Id) ? subscriptions[user.Id] : "Free")</td>
+                <td>@(totalVisits.ContainsKey(user.Id) ? totalVisits[user.Id] : "0")</td>
             </tr>
         }
     </tbody>
