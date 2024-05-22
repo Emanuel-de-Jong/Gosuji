@@ -1,6 +1,7 @@
 ﻿using GosujiServer.Data;
 using GosujiServer.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
 namespace GosujiServer.Shared.CMS
@@ -25,8 +26,8 @@ namespace GosujiServer.Shared.CMS
         protected override async Task OnInitializedAsync()
         {
             ApplicationDbContext dbContext = await dbService.GetContextAsync();
-            textKeys = dbContext.TextKeys.ToList();
-            languages = dbContext.Languages.ToDictionary(l => l.Id);
+            textKeys = await dbContext.TextKeys.ToListAsync();
+            languages = await dbContext.Languages.ToDictionaryAsync(l => l.Id);
             await dbContext.DisposeAsync();
         }
 
@@ -64,7 +65,7 @@ namespace GosujiServer.Shared.CMS
         private async Task PrepareTranslationInputs()
         {
             ApplicationDbContext dbContext = await dbService.GetContextAsync();
-            var tempTextValues = dbContext.TextValues.Where(tv => tv.LanguageId == currentLanguageId).ToDictionary(tv => tv.TextKeyId);
+            var tempTextValues = await dbContext.TextValues.Where(tv => tv.LanguageId == currentLanguageId).ToDictionaryAsync(tv => tv.TextKeyId);
             await dbContext.DisposeAsync();
 
             translations = new();
