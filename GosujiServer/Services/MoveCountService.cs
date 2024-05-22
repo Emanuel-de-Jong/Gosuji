@@ -7,29 +7,14 @@ namespace GosujiServer.Services
 {
     public class MoveCountService
     {
-        private AuthenticationStateProvider authenticationStateProvider;
         private DbService dbService;
 
-        private string? userId;
-
-        public MoveCountService(AuthenticationStateProvider _authenticationStateProvider, DbService _dbService)
+        public MoveCountService(DbService _dbService)
         {
-            authenticationStateProvider = _authenticationStateProvider;
             dbService = _dbService;
-
-            GetUser();
         }
 
-        private async Task GetUser()
-        {
-            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
-            {
-                userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            }
-        }
-
-        public async Task<UserMoveCount> Get()
+        public async Task<UserMoveCount> Get(string userId)
         {
             ApplicationDbContext dbContext = await dbService.GetContextAsync();
 

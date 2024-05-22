@@ -1,5 +1,7 @@
-﻿using GosujiServer.Controllers;
+﻿using GosujiServer.Areas.Identity.Data;
+using GosujiServer.Controllers;
 using GosujiServer.Data;
+using Microsoft.EntityFrameworkCore;
 using System.Timers;
 
 namespace GosujiServer.Services
@@ -26,14 +28,35 @@ namespace GosujiServer.Services
 
             cashInTimer = new(12 * 60 * 60 * 1000); // 12 hours
             cashInTimer.AutoReset = true;
-            cashInTimer.Elapsed += (object? _, ElapsedEventArgs _) => CashIn(false);
+            cashInTimer.Elapsed += (object? sender, ElapsedEventArgs e) => CashInTimerElapsed();
             cashInTimer.Enabled = true;
 
             ManageFreeInstances();
         }
 
-        public KataGo Get(string userId)
+        private async Task CashInTimerElapsed()
         {
+            foreach (KeyValuePair<string, KataGo> pair in new Dictionary<string, KataGo>(instances))
+            {
+                if ((DateTimeOffset.UtcNow - pair.Value.LastStartTime).Hours <= 6)
+                {
+                    continue;
+                }
+
+                await CashIn(pair.Key);
+
+                pair.Value.Stop();
+                instances.Remove(pair.Key);
+            }
+        }
+
+        public KataGo? Get(string userId)
+        {
+            if (instances.ContainsKey(userId))
+            {
+                return null;
+            }
+
             if (freeInstances.Count == 0)
             {
                 ManageFreeInstances();
@@ -47,10 +70,18 @@ namespace GosujiServer.Services
             return instance;
         }
 
-        public void Return(string userId)
+        public async Task Return(string userId)
         {
+            if (!instances.ContainsKey(userId))
+            {
+                return;
+            }
+
+            await CashIn(userId);
+
             KataGo instance = instances[userId];
             instance.Restart();
+            instance.TotalVisits = 0;
 
             freeInstances.Push(instance);
             instances.Remove(userId);
@@ -101,32 +132,25 @@ namespace GosujiServer.Services
             return version;
         }
 
-        private async Task CashIn(bool forceAll)
+        private async Task CashIn(string userId)
         {
+            UserMoveCount? moveCount = await moveCountService.Get(userId);
+            moveCount.KataGoVisits += instances[userId].TotalVisits;
+
             ApplicationDbContext dbContext = await dbService.GetContextAsync();
 
-            foreach (KeyValuePair<string, KataGo> pair in instances)
-            {
-                if (!forceAll && (DateTimeOffset.UtcNow - pair.Value.LastStartTime).Hours <= 6)
-                {
-                    continue;
-                }
-
-                UserMoveCount? moveCount = await moveCountService.Get();
-                moveCount.KataGoVisits += pair.Value.TotalVisits;
-
-                dbContext.UserMoveCounts.Update(moveCount);
-                await dbContext.SaveChangesAsync();
-
-                instances.Remove(pair.Key);
-            }
+            dbContext.UserMoveCounts.Update(moveCount);
+            await dbContext.SaveChangesAsync();
 
             await dbContext.DisposeAsync();
         }
 
         public void Dispose()
         {
-            CashIn(true).Wait();
+            foreach (string userId in instances.Keys)
+            {
+                CashIn(userId).Wait();
+            }
         }
     }
 }

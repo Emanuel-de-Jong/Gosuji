@@ -27,7 +27,7 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
 
-builder.Services.AddScoped<MoveCountService>();
+builder.Services.AddSingleton<MoveCountService>();
 builder.Services.AddSingleton<DbService>();
 builder.Services.AddSingleton<KataGoService>();
 builder.Services.AddSingleton<JosekisService>();

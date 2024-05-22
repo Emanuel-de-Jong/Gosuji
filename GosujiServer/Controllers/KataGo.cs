@@ -14,6 +14,8 @@ namespace GosujiServer.Controllers
         public StreamReader? errorReader;
         public StreamWriter? writer;
 
+        private bool stopped = false;
+
         private int lastMaxVisits;
 
         public KataGo()
@@ -24,6 +26,11 @@ namespace GosujiServer.Controllers
         private async Task Start()
         {
             if (G.Log) Console.WriteLine("KataGo.Start");
+
+            if (stopped)
+            {
+                return;
+            }
             
             LastStartTime = DateTimeOffset.UtcNow;
 
@@ -54,6 +61,12 @@ namespace GosujiServer.Controllers
                 line = ReadError();
                 Console.WriteLine(line);
             } while (!line.Contains("GTP ready"));
+        }
+
+        public void Stop()
+        {
+            stopped = true;
+            process.Dispose();
         }
 
         public void ClearBoard()
