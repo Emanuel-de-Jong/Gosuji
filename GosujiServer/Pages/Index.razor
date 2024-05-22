@@ -55,7 +55,13 @@
             user = await userManager.GetUserAsync(claimsPrincipal);
         }
 
-        await translateService.Init(user);
+        if (user != null)
+        {
+            await translateService.Init(user);
+        } else
+        {
+            await translateService.Init();
+        }
 
         dbContext = await dbService.GetContextAsync();
 
