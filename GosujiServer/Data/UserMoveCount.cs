@@ -10,5 +10,10 @@ namespace GosujiServer.Data
         public User User { get; set; }
         public int Moves { get; set; }
         public int KataGoVisits { get; set; }
+
+        public UserMoveCount(string userId)
+        {
+            UserId = userId;
+        }
     }
 }

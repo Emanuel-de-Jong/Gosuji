@@ -6,6 +6,9 @@ namespace GosujiServer.Controllers
 {
     public class KataGo
     {
+        public int TotalVisits { get; set; } = 0;
+        public DateTimeOffset LastStartTime { get; set; }
+
         public Process? process;
         public StreamReader? reader;
         public StreamReader? errorReader;
@@ -13,9 +16,16 @@ namespace GosujiServer.Controllers
 
         private int lastMaxVisits;
 
-        private void Start()
+        public KataGo()
+        {
+            Start();
+        }
+
+        private async Task Start()
         {
             if (G.Log) Console.WriteLine("KataGo.Start");
+            
+            LastStartTime = DateTimeOffset.UtcNow;
 
             lastMaxVisits = 0;
 
@@ -26,12 +36,18 @@ namespace GosujiServer.Controllers
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardInput = true;
             process.StartInfo.UseShellExecute = false;
-            process.Start();
+
+            await Task.Run(() => process.Start());
 
             reader = process.StandardOutput;
             errorReader = process.StandardError;
             writer = process.StandardInput;
 
+            await Task.Run(() => WaitForGTPReady());
+        }
+
+        private void WaitForGTPReady()
+        {
             string line;
             do
             {
@@ -103,6 +119,8 @@ namespace GosujiServer.Controllers
             }
 
             Write("kata-genmove_analyze " + color + " allow " + color + " " + coord + " 1");
+            TotalVisits += maxVisits;
+
             Read(); // Ignore '= '
             string[] analysis = Read().Split(" ");
             ClearReader();
@@ -132,6 +150,8 @@ namespace GosujiServer.Controllers
             }
 
             Write("kata-genmove_analyze " + color);
+            TotalVisits += maxVisits;
+
             Read(); // Ignore '= '
             string[] analysis = Read().Split(" ");
             ClearReader();
