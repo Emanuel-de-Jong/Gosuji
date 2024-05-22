@@ -42,7 +42,7 @@ class Board {
     };
 
     init(boardsize, handicap, sgf) {
-        let fileDir = "resources/audio/pages/";
+        let fileDir = "resources/audio/pages/trainer/";
         this.placeStoneAudios = [
             new Audio(fileDir + "placeStone0.mp3"),
             new Audio(fileDir + "placeStone1.mp3"),
