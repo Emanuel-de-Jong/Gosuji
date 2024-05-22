@@ -9,6 +9,6 @@ namespace GosujiServer.Data
         public string UserId { get; set; }
         public User User { get; set; }
         public int Moves { get; set; }
-        public int Visits { get; set; }
+        public int KataGoVisits { get; set; }
     }
 }

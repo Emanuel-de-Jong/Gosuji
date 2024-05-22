@@ -17,7 +17,7 @@ namespace GosujiServer.Shared.CMS
 
         private List<User> users;
         private Dictionary<string, UserSubscription> subscriptions;
-        private Dictionary<string, long> totalVisits;
+        private Dictionary<string, long> totalKataGoVisits;
 
         protected override async Task OnInitializedAsync()
         {
@@ -25,16 +25,16 @@ namespace GosujiServer.Shared.CMS
             users = await dbContext.Users.ToListAsync();
             subscriptions = await dbContext.UserSubscriptions.Include(us => us.SubscriptionType).ToDictionaryAsync(us => us.UserId);
 
-            totalVisits = new();
+            totalKataGoVisits = new();
             foreach (UserMoveCount moveCount in await dbContext.UserMoveCounts.ToListAsync())
             {
-                if (!totalVisits.ContainsKey(moveCount.UserId))
+                if (!totalKataGoVisits.ContainsKey(moveCount.UserId))
                 {
-                    totalVisits[moveCount.UserId] = moveCount.Visits;
+                    totalKataGoVisits[moveCount.UserId] = moveCount.KataGoVisits;
                 }
                 else
                 {
-                    totalVisits[moveCount.UserId] += moveCount.Visits;
+                    totalKataGoVisits[moveCount.UserId] += moveCount.KataGoVisits;
                 }
             }
 

@@ -5,16 +5,16 @@
         <tr>
             <th>Name</th>
             <th>Sub</th>
-            <th>Visits</th>
+            <th>KataGo Visits</th>
         </tr>
     </thead>
     <tbody>
         @foreach (User user in users)
         {
-            <tr id="@user.Id">
-                <td>@user.UserName</td>
+            <tr>
+                <td title="@user.Id">@user.UserName</td>
                 <td>@(subscriptions.ContainsKey(user.Id) ? subscriptions[user.Id] : "Free")</td>
-                <td>@(totalVisits.ContainsKey(user.Id) ? totalVisits[user.Id] : "0")</td>
+                <td>@(totalKataGoVisits.ContainsKey(user.Id) ? totalKataGoVisits[user.Id] : "0")</td>
             </tr>
         }
     </tbody>
