@@ -5,7 +5,8 @@
         <tr>
             <th>Name</th>
             <th>Sub</th>
-            <th>KataGo Visits</th>
+            <th>KataGo visits (week)</th>
+            <th>KataGo visits</th>
         </tr>
     </thead>
     <tbody>
@@ -14,6 +15,7 @@
             <tr>
                 <td title="@user.Id">@user.UserName</td>
                 <td>@(subscriptions.ContainsKey(user.Id) ? subscriptions[user.Id] : "Free")</td>
+                <td>@weekKataGoVisits[user.Id]</td>
                 <td>@(totalKataGoVisits.ContainsKey(user.Id) ? totalKataGoVisits[user.Id] : "0")</td>
             </tr>
         }

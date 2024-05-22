@@ -1,4 +1,5 @@
 ﻿using GosujiServer.Areas.Identity.Data;
+using GosujiServer.Controllers;
 using GosujiServer.Data;
 using GosujiServer.Pages;
 using GosujiServer.Services;
@@ -18,6 +19,7 @@ namespace GosujiServer.Shared.CMS
         private List<User> users;
         private Dictionary<string, UserSubscription> subscriptions;
         private Dictionary<string, long> totalKataGoVisits;
+        private Dictionary<string, long> weekKataGoVisits;
 
         protected override async Task OnInitializedAsync()
         {
@@ -36,6 +38,12 @@ namespace GosujiServer.Shared.CMS
                 {
                     totalKataGoVisits[moveCount.UserId] += moveCount.KataGoVisits;
                 }
+            }
+
+            weekKataGoVisits = new();
+            foreach (User user in users)
+            {
+                weekKataGoVisits[user.Id] = await MoveCountManager.GetWeekKataGoVisits(dbService, user.Id);
             }
 
             await dbContext.DisposeAsync();
