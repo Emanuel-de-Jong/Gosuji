@@ -36,7 +36,7 @@ namespace GosujiServer.Shared
         [JSInvokable]
         public void ClearBoard()
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.ClearBoard");
+            if (G.Log) Console.WriteLine("CKataGoWrapper.ClearBoard");
 
             kataGo?.ClearBoard();
         }
@@ -44,7 +44,7 @@ namespace GosujiServer.Shared
         [JSInvokable]
         public bool Restart()
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.Restart");
+            if (G.Log) Console.WriteLine("CKataGoWrapper.Restart");
 
             if (kataGo == null)
             {
@@ -64,7 +64,7 @@ namespace GosujiServer.Shared
         [JSInvokable]
         public void SetBoardsize([RegularExpression(@"(9|13|19)")] string boardsize)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.SetBoardsize " + boardsize);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.SetBoardsize " + boardsize);
 
             kataGo?.SetBoardsize(int.Parse(boardsize));
         }
@@ -72,7 +72,7 @@ namespace GosujiServer.Shared
         [JSInvokable]
         public void SetRuleset([RegularExpression(@"(Japanese|Chinese)")] string ruleset)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.SetRuleset " + ruleset);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.SetRuleset " + ruleset);
 
             kataGo?.SetRuleset(ruleset);
         }
@@ -80,7 +80,7 @@ namespace GosujiServer.Shared
         [JSInvokable]
         public void SetKomi([Range(-150, 150)] float komi)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.SetKomi " + komi);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.SetKomi " + komi);
 
             kataGo?.SetKomi(komi);
         }
@@ -88,7 +88,7 @@ namespace GosujiServer.Shared
         [JSInvokable]
         public void SetHandicap([Range(2, 9)] int handicap)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.SetHandicap " + handicap);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.SetHandicap " + handicap);
 
             kataGo?.SetHandicap(handicap);
         }
@@ -97,7 +97,7 @@ namespace GosujiServer.Shared
         public MoveSuggestion? AnalyzeMove([RegularExpression(@"(B|W)")] string color,
             [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.AnalyzeMove " + color + " " + coord);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.AnalyzeMove " + color + " " + coord);
 
             MoveSuggestion? output = kataGo?.AnalyzeMove(color, coord);
             //MoveSuggestion output = new(color, coord, 200, 0.8f, 1.5f);
@@ -110,7 +110,7 @@ namespace GosujiServer.Shared
             [Range(0, 100)] float minVisitsPerc,
             [Range(0, 100)] float maxVisitDiffPerc)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.Analyze " + color + " " + maxVisits + " " + minVisitsPerc + " " + maxVisitDiffPerc);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.Analyze " + color + " " + maxVisits + " " + minVisitsPerc + " " + maxVisitDiffPerc);
 
             List<MoveSuggestion>? output = kataGo?.Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
             //List<MoveSuggestion> output = new()
@@ -125,7 +125,7 @@ namespace GosujiServer.Shared
         public void Play([RegularExpression(@"(B|W)")] string color,
             [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.Play " + color + " " + coord);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.Play " + color + " " + coord);
 
             kataGo?.Play(color, coord);
         }
@@ -133,7 +133,7 @@ namespace GosujiServer.Shared
         [JSInvokable]
         public void PlayRange(Moves moves)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.PlayRange " + moves);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.PlayRange " + moves);
 
             kataGo?.PlayRange(moves);
         }
@@ -141,7 +141,7 @@ namespace GosujiServer.Shared
         [JSInvokable]
         public string? SGF(bool shouldWriteFile)
         {
-            if (G.Log) Console.WriteLine("RCKataGoWrapper.SGF " + shouldWriteFile);
+            if (G.Log) Console.WriteLine("CKataGoWrapper.SGF " + shouldWriteFile);
 
             return kataGo?.SGF(shouldWriteFile);
         }

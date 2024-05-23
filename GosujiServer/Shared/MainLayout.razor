@@ -28,16 +28,6 @@
                     <div class="navItem">
                         <a href="" @onclick="GoToProfile">Profile</a>
                     </div>
-
-                    <div class="navItem">
-                        <a href="Identity/Account/Manage">@context.User.Identity?.Name</a>
-                    </div>
-
-                    <div class="navItem">
-                        <form method="post" action="Identity/Account/LogOut">
-                            <button type="submit" class="nav-link btn btn-link">Logout</button>
-                        </form>
-                    </div>
                 </Authorized>
                 <NotAuthorized>
                     <div class="navItem">

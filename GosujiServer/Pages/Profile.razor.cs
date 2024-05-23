@@ -13,7 +13,7 @@ namespace GosujiServer.Pages
         PLAYED = 2,
     }
 
-    public partial class Profile
+    public partial class Profile : ComponentBase
     {
         [Parameter]
         public string? Name { get; set; }

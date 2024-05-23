@@ -17,7 +17,7 @@ katago.clear = async function () {
 katago.clearBoard = async function () {
     if (G.LOG) console.log("katago.clearBoard");
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("ClearBoard")
         .then((response) => {
             return response;
@@ -30,7 +30,7 @@ katago.clearBoard = async function () {
 katago.restart = async function () {
     if (G.LOG) console.log("katago.restart");
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("Restart")
         .then((response) => {
             if (response == false) {
@@ -47,7 +47,7 @@ katago.restart = async function () {
 katago.setBoardsize = async function () {
     if (G.LOG) console.log("katago.setBoardsize " + trainerG.board.boardsize);
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("SetBoardsize", trainerG.board.boardsize)
         .then((response) => {
             return response;
@@ -60,7 +60,7 @@ katago.setBoardsize = async function () {
 katago.setRuleset = async function () {
     if (G.LOG) console.log("katago.setRuleset " + sgf.ruleset);
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("SetRuleset", sgf.ruleset)
         .then((response) => {
             return response;
@@ -73,7 +73,7 @@ katago.setRuleset = async function () {
 katago.setKomi = async function () {
     if (G.LOG) console.log("katago.setKomi " + sgf.komi);
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("SetKomi", sgf.komi)
         .then((response) => {
             return response;
@@ -88,7 +88,7 @@ katago.setHandicap = async function () {
 
     if (G.LOG) console.log("katago.setHandicap " + trainerG.board.handicap);
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("SetHandicap", trainerG.board.handicap)
         .then((response) => {
             return response;
@@ -101,7 +101,7 @@ katago.setHandicap = async function () {
 katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
     if (G.LOG) console.log("katago.analyzeMove " + G.colorNumToName(color) + " " + katago.coordNumToName(coord));
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("AnalyzeMove", G.colorNumToName(color), katago.coordNumToName(coord))
         .then((kataGoSuggestion) => {
             return MoveSuggestion.fromKataGo(kataGoSuggestion);
@@ -131,7 +131,7 @@ katago.analyze = async function (
                 color
         );
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("Analyze", G.colorNumToName(color), maxVisits, minVisitsPerc, maxVisitDiffPerc)
         .then((kataGoSuggestions) => {
             let suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
@@ -148,7 +148,7 @@ katago.analyze = async function (
 katago.play = async function (coord, color = trainerG.board.getColor()) {
     if (G.LOG) console.log("katago.play " + G.colorNumToName(color) + " " + katago.coordNumToName(coord));
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("Play", G.colorNumToName(color), katago.coordNumToName(coord))
         .then((response) => {
             return response;
@@ -176,7 +176,7 @@ katago.playRange = async function () {
 
     if (G.LOG) console.log("katago.playRange " + serverMoves);
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("PlayRange", serverMoves)
         .then((response) => {
             return response;
@@ -189,7 +189,7 @@ katago.playRange = async function () {
 katago.sgf = async function () {
     if (G.LOG) console.log("katago.sgf " + false);
 
-    return trainerG.rcKataGoWrapperRef
+    return trainerG.cKataGoWrapperRef
         .invokeMethodAsync("SGF", false)
         .then((response) => {
             return response;

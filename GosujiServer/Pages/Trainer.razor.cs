@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace GosujiServer.Pages
 {
-    public partial class Trainer
+    public partial class Trainer : ComponentBase
     {
         [Parameter]
         public long? GameId { get; set; }
@@ -23,10 +23,10 @@ namespace GosujiServer.Pages
 
         private ApplicationDbContext? context;
 
-        private CKataGoWrapper? rcKataGoWrapper;
+        private CKataGoWrapper? cKataGoWrapper;
 
         private DotNetObjectReference<Trainer>? trainerRef;
-        private DotNetObjectReference<CKataGoWrapper>? rcKataGoWrapperRef;
+        private DotNetObjectReference<CKataGoWrapper>? cKataGoWrapperRef;
 
         private User? user;
 
@@ -55,7 +55,7 @@ namespace GosujiServer.Pages
 
                 JS.InvokeAsync<string>("init.init",
                     trainerRef,
-                    rcKataGoWrapperRef,
+                    cKataGoWrapperRef,
                     user.UserName,
                     kataGoVersion,
 
@@ -74,7 +74,7 @@ namespace GosujiServer.Pages
             {
                 JS.InvokeAsync<string>("init.init",
                     trainerRef,
-                    rcKataGoWrapperRef,
+                    cKataGoWrapperRef,
                     user.UserName,
                     kataGoVersion);
             }
@@ -351,7 +351,7 @@ namespace GosujiServer.Pages
                 }
 
                 trainerRef = DotNetObjectReference.Create(this);
-                rcKataGoWrapperRef = DotNetObjectReference.Create(rcKataGoWrapper);
+                cKataGoWrapperRef = DotNetObjectReference.Create(cKataGoWrapper);
 
                 Start();
             }
@@ -360,7 +360,7 @@ namespace GosujiServer.Pages
         public void Dispose()
         {
             trainerRef?.Dispose();
-            rcKataGoWrapperRef?.Dispose();
+            cKataGoWrapperRef?.Dispose();
         }
     }
 }

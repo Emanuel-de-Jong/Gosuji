@@ -3,7 +3,7 @@ var init = {};
 
 init.init = async function (
     trainerRef,
-    rcKataGoWrapperRef,
+    cKataGoWrapperRef,
     userName,
     kataGoVersion,
 
@@ -35,7 +35,7 @@ init.init = async function (
     // console.log(serverMoveTypes);
     // console.log(serverChosenNotPlayedCoords);
 
-    trainerG.init(trainerRef, rcKataGoWrapperRef, kataGoVersion, serverSuggestions, serverMoveTypes);
+    trainerG.init(trainerRef, cKataGoWrapperRef, kataGoVersion, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
     init.restartButton = document.getElementById("restart");

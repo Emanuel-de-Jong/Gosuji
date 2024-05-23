@@ -9,9 +9,13 @@
 @inject IJSRuntime JS
 
 <div id="profilePage">
-    <div id="title">
-        <h1>@Name</h1>
-    </div>
+    <h1>@Name</h1>
+
+    <a class="btn btn-primary" href="Identity/Account/Manage">Settings</a>
+
+    <form method="post" action="Identity/Account/LogOut">
+        <button type="submit" class="btn btn-secondary">Logout</button>
+    </form>
 
     @if (Games == null)
     {
