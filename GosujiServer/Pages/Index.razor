@@ -65,34 +65,6 @@
 
         dbContext = await dbService.GetContextAsync();
 
-        // if (user.SettingConfigId == null)
-        // {
-        //     user.SettingConfig = new SettingConfig()
-        //     {
-        //         LanguageId = 1
-        //     };
-
-        //     dbContext.Update(user);
-        //     await dbContext.SaveChangesAsync();
-        // }
-
-        // if (dbContext.TextKeys.Count() == 0)
-        // {
-        //     dbContext.TextKeys.Add(new TextKey()
-        //         {
-        //             Key = "Index_Summary"
-        //         });
-
-        //     dbContext.TextValues.Add(new TextValue()
-        //         {
-        //             LanguageId = 1,
-        //             TextKeyId = 1,
-        //             Value = "Your place to learn Go from AI"
-        //         });
-
-        //     dbContext.SaveChanges();
-        // }
-
         changelogs = dbContext.Changelogs.ToList();
         changelogs.Reverse();
 

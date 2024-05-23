@@ -2,13 +2,29 @@
 
 @using GosujiServer.Shared.CMS;
 
-<div id="cmsPage">
-    <div id="flex-container">
-        <div class="flex-item">
-            <Translation />
-        </div>
-        <div class="flex-item">
-            <AbuseDetect />
-        </div>
-    </div>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <AuthorizeView Roles="Owner">
+            <Authorized Context="a">
+
+                <div id="cmsPage">
+                    <div id="flex-container">
+                        <div class="flex-item">
+                            <CTranslation />
+                        </div>
+                        <div class="flex-item">
+                            <CAbuseDetect />
+                        </div>
+                    </div>
+                </div>
+
+            </Authorized>
+            <NotAuthorized Context="a">
+                <Unauthorized />
+            </NotAuthorized>
+        </AuthorizeView>
+    </Authorized>
+    <NotAuthorized>
+        <CRedirect URI="Identity/Account/Login" />
+    </NotAuthorized>
+</AuthorizeView>
