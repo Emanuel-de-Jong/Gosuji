@@ -20,10 +20,39 @@
             </div>
 
             <div class="navItem">
-                <a href="" @onclick="GoToProfile">Profile</a>
+                <a href="contact">Contact</a>
             </div>
 
-            <LoginDisplay />
+            <AuthorizeView>
+                <Authorized>
+                    <div class="navItem">
+                        <a href="" @onclick="GoToProfile">Profile</a>
+                    </div>
+
+                    <div class="navItem">
+                        <a href="Identity/Account/Manage">@context.User.Identity?.Name</a>
+                    </div>
+
+                    <div class="navItem">
+                        <form method="post" action="Identity/Account/LogOut">
+                            <button type="submit" class="nav-link btn btn-link">Logout</button>
+                        </form>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    <div class="navItem">
+                        <a href="subscription">Subscribe</a>
+                    </div>
+
+                    <div class="navItem">
+                        <a href="Identity/Account/Register">Register</a>
+                    </div>
+
+                    <div class="navItem">
+                        <a href="Identity/Account/Login">Login</a>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
 
             <div class="navItem">
                 <div class="form-check form-switch">
@@ -63,7 +92,6 @@
 
             await JS.InvokeVoidAsync("custom.init");
 
-            //GoToProfile();
             // navigationManager.NavigateTo("josekis");
         }
     }

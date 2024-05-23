@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace GosujiServer.Shared.CMS
 {
-    public partial class Translation : ComponentBase
+    public partial class CTranslation : ComponentBase
     {
         [Inject]
         private IJSRuntime JS { get; set; }

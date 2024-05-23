@@ -14,7 +14,7 @@ using System.Security.Claims;
 
 namespace GosujiServer.Shared
 {
-    public partial class RCKataGoWrapper : ComponentBase, IDisposable
+    public partial class CKataGoWrapper : ComponentBase, IDisposable
     {
         [Inject]
         AuthenticationStateProvider authenticationStateProvider { get; set; }

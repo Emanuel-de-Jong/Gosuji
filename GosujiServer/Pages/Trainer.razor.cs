@@ -23,10 +23,10 @@ namespace GosujiServer.Pages
 
         private ApplicationDbContext? context;
 
-        private RCKataGoWrapper? rcKataGoWrapper;
+        private CKataGoWrapper? rcKataGoWrapper;
 
         private DotNetObjectReference<Trainer>? trainerRef;
-        private DotNetObjectReference<RCKataGoWrapper>? rcKataGoWrapperRef;
+        private DotNetObjectReference<CKataGoWrapper>? rcKataGoWrapperRef;
 
         private User? user;
 

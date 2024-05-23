@@ -9,7 +9,7 @@ using Microsoft.JSInterop;
 
 namespace GosujiServer.Shared.CMS
 {
-    public partial class AbuseDetect : ComponentBase
+    public partial class CAbuseDetect : ComponentBase
     {
         [Inject]
         private IJSRuntime JS { get; set; }
