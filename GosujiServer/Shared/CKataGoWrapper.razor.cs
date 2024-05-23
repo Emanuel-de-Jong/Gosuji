@@ -148,7 +148,10 @@ namespace GosujiServer.Shared
 
         public void Dispose()
         {
-            kataGoService.Return(userId).Wait();
+            if (userId != null)
+            {
+                kataGoService.Return(userId).Wait();
+            }
         }
     }
 }

@@ -6,13 +6,15 @@ namespace GosujiServer.Shared
     {
         [Parameter]
         public string? URI { get; set; }
+        [Parameter]
+        public bool ForceLoad { get; set; }
 
         [Inject]
         private NavigationManager? navigationManager { get; set; }
 
         protected override void OnAfterRender(bool firstRender)
         {
-            navigationManager.NavigateTo("/" + URI);
+            navigationManager.NavigateTo("/" + URI, ForceLoad);
         }
     }
 }

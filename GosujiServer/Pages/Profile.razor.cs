@@ -1,8 +1,12 @@
 ﻿using GosujiServer.Areas.Identity.Data;
 using GosujiServer.Data;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
+using System;
+using System.Security.Claims;
 
 namespace GosujiServer.Pages
 {
@@ -17,6 +21,14 @@ namespace GosujiServer.Pages
     {
         [Parameter]
         public string? Name { get; set; }
+
+        [Inject]
+        private AuthenticationStateProvider authenticationStateProvider { get; set; }
+        [Inject]
+        private UserManager<User> userManager { get; set; }
+        [Inject]
+        private NavigationManager navigationManager { get; set; }
+
         public List<Game>? Games { get; set; }
         public List<Game>? FinishedGames { get; set; }
 
@@ -40,7 +52,19 @@ namespace GosujiServer.Pages
         {
             if (G.LogRouting) Console.WriteLine("Profile.razor");
 
-            await JS.InvokeVoidAsync("profilePage.init", GameStat.RIGHT_COLOR.ToCSS(), GameStat.PERFECT_COLOR.ToCSS());
+            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
+            {
+                navigationManager.NavigateTo("Identity/Account/Login");
+                return;
+            }
+
+            User user = await userManager.GetUserAsync(claimsPrincipal);
+            if (user.UserName != Name && !await userManager.IsInRoleAsync(user, "Owner"))
+            {
+                navigationManager.NavigateTo("user/" + user.UserName);
+                return;
+            }
 
             context = dbService.GetContext();
 
@@ -55,14 +79,13 @@ namespace GosujiServer.Pages
                 .ToListAsync();
 
             await context.DisposeAsync();
-
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-
+                await JS.InvokeVoidAsync("profilePage.init", GameStat.RIGHT_COLOR.ToCSS(), GameStat.PERFECT_COLOR.ToCSS());
             }
 
             if (!isGamesFilled && Games != null)

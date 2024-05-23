@@ -72,7 +72,21 @@ namespace GosujiServer.Services
             {
                 ApplicationDbContext dbContext = await dbService.GetContextAsync();
 
-                user.SettingConfig = await dbContext.SettingConfigs.FindAsync(user.SettingConfigId);
+                if (user.SettingConfigId != null)
+                {
+                    user.SettingConfig = await dbContext.SettingConfigs.FindAsync(user.SettingConfigId);
+                }
+                else
+                {
+                    user.SettingConfig = new();
+                    user.SettingConfig.LanguageId = 1;
+                    await dbContext.SettingConfigs.AddAsync(user.SettingConfig);
+                    await dbContext.SaveChangesAsync();
+
+                    user.SettingConfigId = user.SettingConfig.Id;
+                    dbContext.Update(user);
+                    await dbContext.SaveChangesAsync();
+                }
 
                 await dbContext.DisposeAsync();
             }

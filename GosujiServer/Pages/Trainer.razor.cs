@@ -350,6 +350,11 @@ namespace GosujiServer.Pages
                     user = await userManager.GetUserAsync(userClaimsPrincipal);
                 }
 
+                if (user == null)
+                {
+                    return;
+                }
+
                 trainerRef = DotNetObjectReference.Create(this);
                 cKataGoWrapperRef = DotNetObjectReference.Create(cKataGoWrapper);
 
