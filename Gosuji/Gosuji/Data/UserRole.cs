@@ -1,7 +1,7 @@
-﻿using GosujiServer.Interfaces;
+﻿using Gosuji.Client.Data;
 using Microsoft.AspNetCore.Identity;
 
-namespace GosujiServer.Areas.Identity.Data
+namespace Gosuji.Data
 {
     public class UserRole : IdentityUserRole<string>, IDbModel
     {

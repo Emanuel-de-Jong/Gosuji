@@ -1,10 +1,10 @@
-﻿using GosujiServer.Data;
-using GosujiServer.Services;
+﻿using Gosuji.Client.Data;
+using Gosuji.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
-namespace GosujiServer.Shared.CMS
+namespace Gosuji.Components.Shared.CMS
 {
     public partial class CTranslation : ComponentBase
     {
@@ -12,7 +12,7 @@ namespace GosujiServer.Shared.CMS
         private IJSRuntime JS { get; set; }
 
         [Inject]
-        private DbService dbService { get; set; }
+        private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
         private List<TextKey> textKeys;
         private Dictionary<long, Language> languages;
@@ -25,7 +25,7 @@ namespace GosujiServer.Shared.CMS
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationDbContext dbContext = await dbService.GetContextAsync();
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             textKeys = await dbContext.TextKeys.ToListAsync();
             languages = await dbContext.Languages.ToDictionaryAsync(l => l.Id);
             await dbContext.DisposeAsync();
@@ -43,7 +43,7 @@ namespace GosujiServer.Shared.CMS
         {
             TextKey newKeyObj = new(newKey);
 
-            ApplicationDbContext dbContext = await dbService.GetContextAsync();
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             await dbContext.TextKeys.AddAsync(newKeyObj);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -64,7 +64,7 @@ namespace GosujiServer.Shared.CMS
 
         private async Task PrepareTranslationInputs()
         {
-            ApplicationDbContext dbContext = await dbService.GetContextAsync();
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             var tempTextValues = await dbContext.TextValues.Where(tv => tv.LanguageId == currentLanguageId).ToDictionaryAsync(tv => tv.TextKeyId);
             await dbContext.DisposeAsync();
 
@@ -79,7 +79,7 @@ namespace GosujiServer.Shared.CMS
 
         private async Task SaveTranslations()
         {
-            ApplicationDbContext dbContext = await dbService.GetContextAsync();
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
             foreach (KeyValuePair<long, string> pair in translations)
             {

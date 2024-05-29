@@ -1,6 +1,4 @@
-﻿using GosujiServer.Interfaces;
-
-namespace GosujiServer.Data
+﻿namespace Gosuji.Client.Data
 {
     public class DbModel : IDbModel
     {

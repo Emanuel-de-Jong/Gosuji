@@ -1,22 +1,11 @@
 ﻿@page "/trainer/{GameId:long?}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@using GosujiServer.Controllers
-@using GosujiServer.Services
-@using GosujiServer.Models
-@using Microsoft.EntityFrameworkCore
 @using Microsoft.Extensions.Options
-@using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
-
-@implements IDisposable
-
-@inject IJSRuntime JS
-@inject DbService dbService
-@inject KataGoService kataGoService
+@using Gosuji.Client.Components.Shared
 
 <PageTitle>Trainer</PageTitle>
-
-<CKataGoWrapper @ref="cKataGoWrapper" />
 
 <AuthorizeView>
     <Authorized>
@@ -468,6 +457,6 @@
 
     </Authorized>
     <NotAuthorized>
-        <CRedirect URI="Identity/Account/Register" ForceLoad="true" />
+        <CRedirect URI="Account/Register" ForceLoad="true" />
     </NotAuthorized>
 </AuthorizeView>

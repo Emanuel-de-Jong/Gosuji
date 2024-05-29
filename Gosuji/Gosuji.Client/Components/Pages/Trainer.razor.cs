@@ -1,34 +1,33 @@
-﻿using GosujiServer.Areas.Identity.Data;
-using GosujiServer.Controllers;
-using GosujiServer.Data;
-using GosujiServer.Shared;
+﻿using Gosuji.Client.Controllers.GameDecoder;
+using Gosuji.Client.Data;
+using Gosuji.Client.Models;
+using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.JSInterop;
 using System.Security.Claims;
 
-namespace GosujiServer.Pages
+namespace Gosuji.Client.Components.Pages
 {
-    public partial class Trainer : ComponentBase
+    public partial class Trainer : ComponentBase, IDisposable
     {
         [Parameter]
         public long? GameId { get; set; }
 
-        [CascadingParameter]
-        private Task<AuthenticationState>? authenticationStateTask { get; set; }
-
         [Inject]
-        private UserManager<User>? userManager { get; set; }
+        AuthenticationStateProvider authenticationStateProvider { get; set; }
+        [Inject]
+        private IKataGoService kataGoService { get; set; }
+        [Inject]
+        private IJSRuntime js { get; set; }
+        [Inject]
+        private IDataService dataService { get; set; }
 
-        private ApplicationDbContext? context;
-
-        private CKataGoWrapper? cKataGoWrapper;
+        private string? userId;
+        private string? userName;
 
         private DotNetObjectReference<Trainer>? trainerRef;
-        private DotNetObjectReference<CKataGoWrapper>? cKataGoWrapperRef;
-
-        private User? user;
+        private DotNetObjectReference<IKataGoService>? kataGoServiceRef;
 
         private Game? game;
         private TrainerSettingConfig? trainerSettingConfig;
@@ -38,25 +37,57 @@ namespace GosujiServer.Pages
         private GameStat? endgameStat;
         private KataGoVersion? kataGoVersion;
 
-        public void Start()
+        protected override async Task OnInitializedAsync()
         {
-            context = dbService.GetContext();
+            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
+            {
+                userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
+            }
+        }
 
-            kataGoVersion = kataGoService.GetVersion();
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                if (userId == null)
+                {
+                    return;
+                }
+
+                if (await kataGoService.UserHasInstance(userId))
+                {
+                    await js.InvokeVoidAsync("alert", "You already use this page somewhere else!");
+                    return;
+                }
+
+                trainerRef = DotNetObjectReference.Create(this);
+                kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
+
+                await Start();
+            }
+        }
+
+        public async Task Start()
+        {
+            kataGoVersion = await kataGoService.GetVersion();
 
             //GameId = 12;
             if (GameId != null)
             {
-                game = context.Games.Find(GameId);
-                Models.RatioTree decodedRatios = GameDecoder.DecodeRatios(game.Ratios);
-                Dictionary<short, Dictionary<short, Models.SuggestionList>> decodedSuggestions = GameDecoder.DecodeSuggestions(game.Suggestions);
-                Dictionary<short, Dictionary<short, Enums.EMoveType>> decodedMoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
-                Dictionary<short, Dictionary<short, Models.Coord>> decodedChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords);
+                game = await dataService.GetGame(GameId.Value);
 
-                JS.InvokeAsync<string>("init.init",
+                RatioTree decodedRatios = GameDecoder.DecodeRatios(game.Ratios);
+                Dictionary<short, Dictionary<short, SuggestionList>> decodedSuggestions = GameDecoder.DecodeSuggestions(game.Suggestions);
+                Dictionary<short, Dictionary<short, EMoveType>> decodedMoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
+                Dictionary<short, Dictionary<short, Coord>> decodedChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords);
+
+                js.InvokeVoidAsync("init.init",
                     trainerRef,
-                    cKataGoWrapperRef,
-                    user.UserName,
+                    kataGoServiceRef,
+                    userId,
+                    userName,
                     kataGoVersion,
 
                     game.Boardsize,
@@ -72,19 +103,18 @@ namespace GosujiServer.Pages
             }
             else
             {
-                JS.InvokeAsync<string>("init.init",
+                js.InvokeVoidAsync("init.init",
                     trainerRef,
-                    cKataGoWrapperRef,
-                    user.UserName,
+                    kataGoServiceRef,
+                    userId,
+                    userName,
                     kataGoVersion);
             }
-
-            context.Dispose();
         }
 
 
         [JSInvokable]
-        public void SaveTrainerSettingConfig(
+        public async Task SaveTrainerSettingConfig(
             int boardsize,
             int handicap,
             int colorType,
@@ -128,8 +158,6 @@ namespace GosujiServer.Pages
             bool showOpponentOptions)
         {
             if (G.Log) Console.WriteLine("Index.SaveTrainerSettingConfig");
-
-            context = dbService.GetContext();
 
             TrainerSettingConfig newConfig = new()
             {
@@ -178,101 +206,82 @@ namespace GosujiServer.Pages
 
             newConfig.SetHash();
 
-            TrainerSettingConfig? identicalConfig = context.TrainerSettingConfigs.Where(t => t.Hash == newConfig.Hash).FirstOrDefault();
-            if (identicalConfig != null)
+            if (trainerSettingConfig?.Hash == newConfig.Hash)
             {
-                if (trainerSettingConfig != null)
-                {
-                    context.TrainerSettingConfigs.Remove(trainerSettingConfig);
-                }
-
-                trainerSettingConfig = identicalConfig;
-            }
-            else
-            {
-                if (trainerSettingConfig == null)
-                {
-                    trainerSettingConfig = newConfig;
-                    context.TrainerSettingConfigs.Add(trainerSettingConfig);
-                }
-                else
-                {
-                    trainerSettingConfig.Update(newConfig);
-                }
+                    return;
             }
 
-            context.SaveChanges();
-            context.Dispose();
+            newConfig.Id = await dataService.PostTrainerSettingConfig(newConfig);
+            trainerSettingConfig = newConfig;
         }
 
         [JSInvokable]
-        public void SaveGameStats(GameStat newGameStat, GameStat newOpeningStat, GameStat newMidgameStat, GameStat newEndgameStat)
+        public async Task SaveGameStats(GameStat newGameStat, GameStat newOpeningStat, GameStat newMidgameStat, GameStat newEndgameStat)
         {
             if (G.Log) Console.WriteLine("Index.SaveGameStats");
 
-            context = dbService.GetContext();
-
-            if (newGameStat.Total > 0)
+            Task[] tasks =
             {
-                if (gameStat == null)
-                {
-                    gameStat = newGameStat;
-                    context.GameStats.Add(gameStat);
-                }
-                else
-                {
-                    gameStat.Update(newGameStat);
-                }
+                Task.Run(async () => {
+                    GameStat? updatedGameStat = await UpdateGameStat(gameStat, newGameStat);
+                    if (updatedGameStat != null)
+                    {
+                        gameStat = updatedGameStat;
+                    }
+                }),
+                Task.Run(async () => {
+                    GameStat? updatedGameStat = await UpdateGameStat(openingStat, newOpeningStat);
+                    if (updatedGameStat != null)
+                    {
+                        openingStat = updatedGameStat;
+                    }
+                }),
+                Task.Run(async () => {
+                    GameStat? updatedGameStat = await UpdateGameStat(midgameStat, newMidgameStat);
+                    if (updatedGameStat != null)
+                    {
+                        midgameStat = updatedGameStat;
+                    }
+                }),
+                Task.Run(async () => {
+                    GameStat? updatedGameStat = await UpdateGameStat(endgameStat, newEndgameStat);
+                    if (updatedGameStat != null)
+                    {
+                        endgameStat = updatedGameStat;
+                    }
+                }),
+            };
+
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task<GameStat?> UpdateGameStat(GameStat? gameStat, GameStat newGameStat)
+        {
+            if (newGameStat.Total == 0)
+            {
+                return null;
             }
 
-
-            if (newOpeningStat.Total > 0)
+            if (gameStat != null && gameStat.Equal(newGameStat))
             {
-                if (openingStat == null)
-                {
-                    openingStat = newOpeningStat;
-                    context.GameStats.Add(openingStat);
-                }
-                else
-                {
-                    openingStat.Update(newOpeningStat);
-                }
+                return null;
             }
 
-
-            if (newMidgameStat.Total > 0)
+            if (gameStat == null)
             {
-                if (midgameStat == null)
-                {
-                    midgameStat = newMidgameStat;
-                    context.GameStats.Add(midgameStat);
-                }
-                else
-                {
-                    midgameStat.Update(newMidgameStat);
-                }
+                newGameStat.Id = await dataService.PostGameStat(newGameStat);
             }
-
-
-            if (newEndgameStat.Total > 0)
+            else
             {
-                if (endgameStat == null)
-                {
-                    endgameStat = newEndgameStat;
-                    context.GameStats.Add(endgameStat);
-                }
-                else
-                {
-                    endgameStat.Update(newEndgameStat);
-                }
+                newGameStat.Id = gameStat.Id;
+                await dataService.PutGameStat(newGameStat);
             }
-
-            context.SaveChanges();
-            context.Dispose();
+            
+            return newGameStat;
         }
 
         [JSInvokable]
-        public void SaveGame(
+        public async Task SaveGame(
             int? result,
             int prevNodeX,
             int prevNodeY,
@@ -291,16 +300,9 @@ namespace GosujiServer.Pages
         {
             if (G.Log) Console.WriteLine("Index.SaveGame");
 
-            //var decodedRatios = GameDecoder.DecodeRatios(encodedRatios);
-            //var decodedSuggestions = GameDecoder.DecodeSuggestions(encodedSuggestions);
-            //var decodedMoveTypes = GameDecoder.DecodeMoveTypes(encodedMoveTypes);
-            //var decodedChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(encodedChosenNotPlayedCoords);
-
-            context = dbService.GetContext();
-
             Game newGame = new()
             {
-                UserId = user.Id,
+                UserId = userId,
                 TrainerSettingConfigId = trainerSettingConfig.Id,
                 KataGoVersionId = kataGoVersion.Id,
                 GameStatId = gameStat?.Id,
@@ -325,47 +327,32 @@ namespace GosujiServer.Pages
                 IsThirdPartySGF = isThirdPartySGF,
             };
 
+            if (newGame.SGF == game?.SGF)
+            {
+                return;
+            }
+
             if (game == null)
             {
-                game = newGame;
-                context.Games.Add(game);
+                newGame.Id = await dataService.PostGame(newGame);
             }
             else
             {
-                game.Update(newGame);
+                newGame.Id = game.Id;
+                await dataService.PutGame(newGame);
             }
-
-            context.SaveChanges();
-            context.Dispose();
-        }
-
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                ClaimsPrincipal userClaimsPrincipal = (await authenticationStateTask).User;
-                if (userClaimsPrincipal.Identity.IsAuthenticated)
-                {
-                    user = await userManager.GetUserAsync(userClaimsPrincipal);
-                }
-
-                if (user == null)
-                {
-                    return;
-                }
-
-                trainerRef = DotNetObjectReference.Create(this);
-                cKataGoWrapperRef = DotNetObjectReference.Create(cKataGoWrapper);
-
-                Start();
-            }
+            game = newGame;
         }
 
         public void Dispose()
         {
             trainerRef?.Dispose();
-            cKataGoWrapperRef?.Dispose();
+            kataGoServiceRef?.Dispose();
+
+            if (userId != null)
+            {
+                kataGoService.Return(userId).Wait();
+            }
         }
     }
 }

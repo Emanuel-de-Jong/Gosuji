@@ -1,6 +1,9 @@
 ﻿@page "/cms"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
-@using GosujiServer.Shared.CMS;
+@using Gosuji.Client.Components.Shared
+@using Gosuji.Components.Shared.CMS
+@using Gosuji.Components.Shared.Errors
 
 <AuthorizeView>
     <Authorized>
@@ -25,6 +28,6 @@
         </AuthorizeView>
     </Authorized>
     <NotAuthorized>
-        <CRedirect URI="Identity/Account/Login" ForceLoad="true" />
+        <CRedirect URI="Account/Login" ForceLoad="true" />
     </NotAuthorized>
 </AuthorizeView>

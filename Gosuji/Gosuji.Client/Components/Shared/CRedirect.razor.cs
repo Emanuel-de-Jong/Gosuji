@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace GosujiServer.Shared
+namespace Gosuji.Client.Components.Shared
 {
     public partial class CRedirect : ComponentBase
     {

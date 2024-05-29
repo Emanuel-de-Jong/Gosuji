@@ -1,14 +1,12 @@
-﻿using GosujiServer.Areas.Identity.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace GosujiServer.Data
+namespace Gosuji.Client.Data
 {
     public class Game : DbModel
     {
         [Key] public long Id { get; set; }
 
         public string UserId { get; set; }
-        public User User { get; set; }
         public long TrainerSettingConfigId { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
         public long? KataGoVersionId { get; set; }
@@ -47,7 +45,6 @@ namespace GosujiServer.Data
         public void Update(Game newModel)
         {
             UserId = newModel.UserId;
-            User = newModel.User;
             TrainerSettingConfigId = newModel.TrainerSettingConfigId;
             TrainerSettingConfig = newModel.TrainerSettingConfig;
             KataGoVersionId = newModel.KataGoVersionId;

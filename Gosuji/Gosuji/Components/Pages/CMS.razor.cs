@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 
-namespace GosujiServer.Pages
+namespace Gosuji.Components.Pages
 {
     public partial class CMS : ComponentBase
     {
-        
+
     }
 }

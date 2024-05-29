@@ -1,18 +1,13 @@
-﻿using GosujiServer.Areas.Identity.Data;
+using Gosuji.Client.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace GosujiServer.Data
+namespace Gosuji.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User, IdentityRole, string, IdentityUserClaim<string>, UserRole,
-        IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, IdentityRole, string, IdentityUserClaim<string>, UserRole,
+        IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<SettingConfig> SettingConfigs { get; set; }
         public DbSet<UserSubscription> UserSubscriptions { get; set; }
         public DbSet<SubscriptionType> SubscriptionTypes { get; set; }
@@ -37,7 +32,7 @@ namespace GosujiServer.Data
 
             builder.Entity<User>()
                 .HasOne(e => e.CurrentSubscription)
-                .WithOne(e => e.User)
+                .WithOne()
                 .HasForeignKey<UserSubscription>(e => e.UserId);
 
             builder.Entity<SettingConfig>();
@@ -69,7 +64,10 @@ namespace GosujiServer.Data
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.Entity<TrainerSettingConfig>();
+            builder.Entity<TrainerSettingConfig>()
+                .HasIndex(e => e.Hash)
+                .IsUnique();
+
             builder.Entity<KataGoVersion>();
             builder.Entity<Preset>();
             builder.Entity<GameStat>();

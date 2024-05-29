@@ -1,4 +1,4 @@
-﻿namespace GosujiServer.Enums
+﻿namespace Gosuji.Client.Controllers.GameDecoder
 {
     public enum ERatio
     {

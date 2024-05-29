@@ -1,102 +1,47 @@
-﻿using GosujiServer.Areas.Identity.Data;
-using GosujiServer.Data;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Collections;
-using System.Security.Claims;
-
-namespace GosujiServer.Services
+﻿namespace Gosuji.Client.Services
 {
-    public class TranslateService
+    public class TranslateService : ITranslateService
     {
-        private static Dictionary<long, Dictionary<string, string>>? TRANSLATIONS;
+        private IDataService dataService;
 
-        private UserManager<User> userManager;
-        private DbService dbService;
-        private long languageId = 1;
+        public bool IsInitialized { get; private set; }
 
-        public TranslateService(UserManager<User> _userManager, DbService _dbService)
+        private Dictionary<long, Dictionary<string, string>> translations;
+        private Dictionary<string, long> userLanguageIds;
+
+        public TranslateService(IDataService _dataService)
         {
-            userManager = _userManager;
-            dbService = _dbService;
-        }
-
-        public async Task Init(AuthenticationStateProvider authenticationStateProvider)
-        {
-            await Init((await authenticationStateProvider.GetAuthenticationStateAsync()).User);
-        }
-
-        public async Task Init(ClaimsPrincipal claimsPrincipal)
-        {
-            if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
-            {
-                return;
-            }
-
-            await Init(await userManager.GetUserAsync(claimsPrincipal));
-        }
-
-        public async Task Init(User user)
-        {
-            await SetLanguageId(user);
-
-            await Init();
+            dataService = _dataService;
         }
 
         public async Task Init()
         {
-            if (TRANSLATIONS == null)
+            if (IsInitialized)
             {
-                TRANSLATIONS = new();
-
-                ApplicationDbContext dbContext = await dbService.GetContextAsync();
-
-                foreach (TextValue val in dbContext.TextValues.Include(tv => tv.TextKey))
-                {
-                    if (!TRANSLATIONS.ContainsKey(val.LanguageId))
-                    {
-                        TRANSLATIONS[val.LanguageId] = new();
-                    }
-
-                    TRANSLATIONS[val.LanguageId][val.TextKey.Key] = val.Value;
-                }
-
-                await dbContext.DisposeAsync();
-            }
-        }
-
-        private async Task SetLanguageId(User user)
-        {
-            if (user.SettingConfig == null)
-            {
-                ApplicationDbContext dbContext = await dbService.GetContextAsync();
-
-                if (user.SettingConfigId != null)
-                {
-                    user.SettingConfig = await dbContext.SettingConfigs.FindAsync(user.SettingConfigId);
-                }
-                else
-                {
-                    user.SettingConfig = new();
-                    user.SettingConfig.LanguageId = 1;
-                    await dbContext.SettingConfigs.AddAsync(user.SettingConfig);
-                    await dbContext.SaveChangesAsync();
-
-                    user.SettingConfigId = user.SettingConfig.Id;
-                    dbContext.Update(user);
-                    await dbContext.SaveChangesAsync();
-                }
-
-                await dbContext.DisposeAsync();
+                return;
             }
 
-            languageId = user.SettingConfig.LanguageId;
+            translations = await dataService.GetKeyValuesByLanguage();
+            userLanguageIds = await dataService.GetUserLanguageIds();
+
+            IsInitialized = true;
         }
 
-        public string Get(string key)
+        public string? Get(string? userId, string key)
         {
-            return TRANSLATIONS[languageId][key];
+            long languageId = userId != null ? userLanguageIds[userId] : 1;
+
+            if (!translations.ContainsKey(languageId))
+            {
+                return null;
+            }
+
+            if (!translations[languageId].ContainsKey(key))
+            {
+                return null;
+            }
+
+            return translations[languageId][key];
         }
     }
 }

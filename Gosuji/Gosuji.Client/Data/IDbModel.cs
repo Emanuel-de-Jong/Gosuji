@@ -1,4 +1,4 @@
-﻿namespace GosujiServer.Interfaces
+﻿namespace Gosuji.Client.Data
 {
     public interface IDbModel
     {

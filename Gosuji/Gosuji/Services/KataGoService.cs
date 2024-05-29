@@ -1,154 +1,159 @@
-﻿using GosujiServer.Areas.Identity.Data;
-using GosujiServer.Controllers;
-using GosujiServer.Data;
+﻿using Gosuji.Client;
+using Gosuji.Client.Services;
+using Gosuji.Controllers;
+using Gosuji.Data;
+using Gosuji.Client.Models.KataGo;
 using Microsoft.EntityFrameworkCore;
-using System.Timers;
+using System.Diagnostics;
+using Gosuji.Client.Models.Josekis;
+using Microsoft.JSInterop;
+using Gosuji.Client.Data;
+using Microsoft.EntityFrameworkCore.Internal;
+using System;
 
-namespace GosujiServer.Services
+namespace Gosuji.Services
 {
-    public class KataGoService : IDisposable
+    public class KataGoService : IServerService, IKataGoService, IDisposable
     {
-        private const int MIN_INSTANCES = 3;
-        private const int MAX_INSTANCES = 8;
+        private IDbContextFactory<ApplicationDbContext> dbContextFactory;
 
-        private DbService dbService;
-
-        private System.Timers.Timer cashInTimer;
-
-        private Stack<KataGo> freeInstances = new();
-        private Dictionary<string, KataGo> instances = new();
-
+        private KataGoPool pool;
         private KataGoVersion? version;
 
-        public KataGoService(DbService _dbService)
+        public KataGoService(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
         {
-            dbService = _dbService;
+            dbContextFactory = _dbContextFactory;
 
-            cashInTimer = new(12 * 60 * 60 * 1000); // 12 hours
-            cashInTimer.AutoReset = true;
-            cashInTimer.Elapsed += (object? sender, ElapsedEventArgs e) => CashInTimerElapsed();
-            cashInTimer.Enabled = true;
-
-            ManageFreeInstances();
+            pool = new(dbContextFactory);
         }
 
-        private async Task CashInTimerElapsed()
+        public static void CreateEndpoints(WebApplication app)
         {
-            foreach (KeyValuePair<string, KataGo> pair in new Dictionary<string, KataGo>(instances))
-            {
-                if ((DateTimeOffset.UtcNow - pair.Value.LastStartTime).Hours <= 6)
-                {
-                    continue;
-                }
-
-                await CashIn(pair.Key);
-
-                pair.Value.Stop();
-                instances.Remove(pair.Key);
-            }
+            RouteGroupBuilder group = app.MapGroup("/api/KataGoService");
+            group.MapGet("/GetVersion", (IKataGoService service) => service.GetVersion());
+            group.MapGet("/Return/{userId}", (string userId, IKataGoService service) => service.Return(userId));
+            group.MapGet("/UserHasInstance/{userId}", (string userId, IKataGoService service) => service.UserHasInstance(userId));
+            group.MapGet("/ClearBoard/{userId}", (string userId, IKataGoService service) => service.ClearBoard(userId));
+            group.MapGet("/Restart/{userId}", (string userId, IKataGoService service) => service.Restart(userId));
+            group.MapGet("/SetBoardsize/{userId}/{boardsize}", (string userId, int boardsize, IKataGoService service) => service.SetBoardsize(userId, boardsize));
+            group.MapGet("/SetRuleset/{userId}/{ruleset}", (string userId, string ruleset, IKataGoService service) => service.SetRuleset(userId, ruleset));
+            group.MapGet("/SetKomi/{userId}/{komi}", (string userId, float komi, IKataGoService service) => service.SetKomi(userId, komi));
+            group.MapGet("/SetHandicap/{userId}/{handicap}", (string userId, int handicap, IKataGoService service) => service.SetHandicap(userId, handicap));
+            group.MapGet("/AnalyzeMove/{userId}/{color}/{coord}", (string userId, string color, string coord, IKataGoService service) => service.AnalyzeMove(userId, color, coord));
+            group.MapGet("/Analyze/{userId}/{color}/{maxVisits}/{minVisitsPerc}/{maxVisitDiffPerc}",
+                (string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc, IKataGoService service) => 
+                service.Analyze(userId, color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
+            group.MapGet("/Play/{userId}/{color}/{coord}", (string userId, string color, string coord, IKataGoService service) => service.Play(userId, color, coord));
+            group.MapPost("/PlayRange/{userId}", (string userId, Moves moves, IKataGoService service) => service.PlayRange(userId, moves));
+            group.MapGet("/SGF/{userId}/{shouldWriteFile}", (string userId, bool shouldWriteFile, IKataGoService service) => service.SGF(userId, shouldWriteFile));
         }
 
-        public KataGo? Get(string userId)
-        {
-            if (instances.ContainsKey(userId))
-            {
-                return null;
-            }
-
-            if (freeInstances.Count == 0)
-            {
-                ManageFreeInstances();
-            }
-
-            KataGo instance = freeInstances.Pop();
-            instances[userId] = instance;
-
-            ManageFreeInstances();
-
-            return instance;
-        }
-
-        public async Task Return(string userId)
-        {
-            if (!instances.ContainsKey(userId))
-            {
-                return;
-            }
-
-            await CashIn(userId);
-
-            KataGo instance = instances[userId];
-            instance.Restart();
-            instance.TotalVisits = 0;
-
-            freeInstances.Push(instance);
-            instances.Remove(userId);
-
-            ManageFreeInstances();
-        }
-
-        private void ManageFreeInstances()
-        {
-            if (freeInstances.Count < MIN_INSTANCES)
-            {
-                for (int i = 0; i < MIN_INSTANCES - freeInstances.Count; i++)
-                {
-                    freeInstances.Push(new KataGo());
-                }
-            }
-            else if (freeInstances.Count > MAX_INSTANCES)
-            {
-                for (int i = 0; i < freeInstances.Count - MAX_INSTANCES; i++)
-                {
-                    freeInstances.Pop();
-                }
-            }
-        }
-
-        public KataGoVersion GetVersion()
+        public async Task<KataGoVersion> GetVersion()
         {
             if (version == null)
             {
-                ApplicationDbContext context = dbService.GetContext();
+                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-                version = context.KataGoVersions
+                version = await dbContext.KataGoVersions
                     .Where(k => k.Model == KataGoVersion.MODEL)
                     .Where(k => k.Version == KataGoVersion.VERSION)
                     .Where(k => k.Config == KataGoVersion.GetConfig())
-                    .FirstOrDefault();
+                .FirstOrDefaultAsync();
 
                 if (version == null)
                 {
-                    version = new KataGoVersion();
-                    context.Add(version);
-                    context.SaveChanges();
+                    version = KataGoVersion.GetCurrent();
+                    await dbContext.AddAsync(version);
+                    await dbContext.SaveChangesAsync();
                 }
 
-                context.Dispose();
+                await dbContext.DisposeAsync();
+
+                version.Config = "";
             }
 
             return version;
         }
 
-        private async Task CashIn(string userId)
+        public async Task Return(string userId)
         {
-            UserMoveCount? moveCount = await MoveCountManager.Get(dbService, userId);
-            moveCount.KataGoVisits += instances[userId].TotalVisits;
+            await pool.Return(userId);
+        }
 
-            ApplicationDbContext dbContext = await dbService.GetContextAsync();
+        public async Task<bool> UserHasInstance(string userId)
+        {
+            return pool.UserHasInstance(userId);
+        }
 
-            dbContext.UserMoveCounts.Update(moveCount);
-            await dbContext.SaveChangesAsync();
+        [JSInvokable]
+        public async Task ClearBoard(string userId)
+        {
+            pool.Get(userId).ClearBoard();
+        }
 
-            await dbContext.DisposeAsync();
+        [JSInvokable]
+        public async Task Restart(string userId)
+        {
+            pool.Get(userId).Restart();
+        }
+
+        [JSInvokable]
+        public async Task SetBoardsize(string userId, int boardsize)
+        {
+            pool.Get(userId).SetBoardsize(boardsize);
+        }
+
+        [JSInvokable]
+        public async Task SetRuleset(string userId, string ruleset)
+        {
+            pool.Get(userId).SetRuleset(ruleset);
+        }
+
+        [JSInvokable]
+        public async Task SetKomi(string userId, float komi)
+        {
+            pool.Get(userId).SetKomi(komi);
+        }
+
+        [JSInvokable]
+        public async Task SetHandicap(string userId, int handicap)
+        {
+            pool.Get(userId).SetHandicap(handicap);
+        }
+
+        [JSInvokable]
+        public async Task<MoveSuggestion> AnalyzeMove(string userId, string color, string coord)
+        {
+            return pool.Get(userId).AnalyzeMove(color, coord);
+        }
+
+        [JSInvokable]
+        public async Task<List<MoveSuggestion>> Analyze(string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
+        {
+            return pool.Get(userId).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+        }
+
+        [JSInvokable]
+        public async Task Play(string userId, string color, string coord)
+        {
+            pool.Get(userId).Play(color, coord);
+        }
+
+        [JSInvokable]
+        public async Task PlayRange(string userId, Moves moves)
+        {
+            pool.Get(userId).PlayRange(moves);
+        }
+
+        [JSInvokable]
+        public async Task<string> SGF(string userId, bool shouldWriteFile)
+        {
+            return pool.Get(userId).SGF(shouldWriteFile);
         }
 
         public void Dispose()
         {
-            foreach (string userId in instances.Keys)
-            {
-                CashIn(userId).Wait();
-            }
+            pool.Dispose();
         }
     }
 }

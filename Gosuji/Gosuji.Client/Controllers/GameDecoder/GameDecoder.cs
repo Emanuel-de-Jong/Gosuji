@@ -1,22 +1,21 @@
-﻿using GosujiServer.Enums;
-using GosujiServer.Models;
+﻿using Gosuji.Client.Models;
 
-namespace GosujiServer.Controllers
+namespace Gosuji.Client.Controllers.GameDecoder
 {
     public class GameDecoder
     {
-        public static Int16 EncodeYIndicator = -1;
-        public static Int16 SuggestionsEncodeAnalyzeMoveIndicator = -2;
+        public static short EncodeYIndicator = -1;
+        public static short SuggestionsEncodeAnalyzeMoveIndicator = -2;
 
 
-        private static Dictionary<Int16, Dictionary<Int16, T>> Decode<T>(byte[] bytes, Func<int, (T, int)> dataDecoder)
+        private static Dictionary<short, Dictionary<short, T>> Decode<T>(byte[] bytes, Func<int, (T, int)> dataDecoder)
         {
             int i = 0;
-            Int16 y = 0;
-            Dictionary<Int16, Dictionary<Int16, T>> result = new();
+            short y = 0;
+            Dictionary<short, Dictionary<short, T>> result = new();
             while (i < bytes.Length)
             {
-                Int16 x = GetInt16(bytes, i);
+                short x = GetInt16(bytes, i);
                 i += 2;
 
                 if (x == EncodeYIndicator)
@@ -42,11 +41,11 @@ namespace GosujiServer.Controllers
             RatioTree rootNode = new();
 
             int i = 0;
-            Int16 y = 0;
+            short y = 0;
             RatioTree node = rootNode;
             while (i < bytes.Length)
             {
-                Int16 x = GetInt16(bytes, i);
+                short x = GetInt16(bytes, i);
                 i += 2;
 
                 if (x == EncodeYIndicator)
@@ -54,10 +53,10 @@ namespace GosujiServer.Controllers
                     y = GetInt16(bytes, i);
                     i += 2;
 
-                    Int16 nodeY = GetInt16(bytes, i);
+                    short nodeY = GetInt16(bytes, i);
                     i += 2;
 
-                    Int16 nodeX = GetInt16(bytes, i);
+                    short nodeX = GetInt16(bytes, i);
                     i += 2;
 
                     node = rootNode.Nodes[nodeY][nodeX];
@@ -71,7 +70,7 @@ namespace GosujiServer.Controllers
             return rootNode;
         }
 
-        public static Dictionary<Int16, Dictionary<Int16, SuggestionList>> DecodeSuggestions(byte[] bytes)
+        public static Dictionary<short, Dictionary<short, SuggestionList>> DecodeSuggestions(byte[] bytes)
         {
             return Decode(bytes, (i) =>
             {
@@ -125,7 +124,7 @@ namespace GosujiServer.Controllers
             return (suggestion, i);
         }
 
-        public static Dictionary<Int16, Dictionary<Int16, EMoveType>> DecodeMoveTypes(byte[] bytes)
+        public static Dictionary<short, Dictionary<short, EMoveType>> DecodeMoveTypes(byte[] bytes)
         {
             return Decode(bytes, (i) =>
             {
@@ -134,7 +133,7 @@ namespace GosujiServer.Controllers
             });
         }
 
-        public static Dictionary<Int16, Dictionary<Int16, Coord>> DecodeChosenNotPlayedCoords(byte[] bytes)
+        public static Dictionary<short, Dictionary<short, Coord>> DecodeChosenNotPlayedCoords(byte[] bytes)
         {
             return Decode(bytes, (i) =>
             {
@@ -146,7 +145,7 @@ namespace GosujiServer.Controllers
         }
 
 
-        private static Int16 GetInt16(byte[] bytes, int i)
+        private static short GetInt16(byte[] bytes, int i)
         {
             byte[] tempBytes = new byte[] { bytes[i], bytes[++i] };
             if (BitConverter.IsLittleEndian)
@@ -156,7 +155,7 @@ namespace GosujiServer.Controllers
             return BitConverter.ToInt16(tempBytes, 0);
         }
 
-        private static Int32 GetInt32(byte[] bytes, int i)
+        private static int GetInt32(byte[] bytes, int i)
         {
             byte[] tempBytes = new byte[] { bytes[i], bytes[++i], bytes[++i], bytes[++i] };
             if (BitConverter.IsLittleEndian)

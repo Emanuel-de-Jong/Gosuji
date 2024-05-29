@@ -1,14 +1,13 @@
-﻿using GosujiServer.Data;
-using GosujiServer.Services;
+﻿using Gosuji.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace GosujiServer.Controllers
+namespace Gosuji.Controllers
 {
     public class MoveCountManager
     {
-        public static async Task<UserMoveCount> Get(DbService dbService, string userId)
+        public static async Task<UserMoveCount> Get(IDbContextFactory<ApplicationDbContext> dbContextFactory, string userId)
         {
-            ApplicationDbContext dbContext = await dbService.GetContextAsync();
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
             List<UserMoveCount> moveCounts = await dbContext.UserMoveCounts.Where(mc => mc.UserId == userId).ToListAsync();
             UserMoveCount? moveCount = moveCounts.OrderBy(mc => mc.CreateDate).LastOrDefault();
@@ -27,9 +26,9 @@ namespace GosujiServer.Controllers
         }
 
         // Doesn't create a new UserMoveCount.
-        public static async Task<long> GetWeekKataGoVisits(DbService dbService, string userId)
+        public static async Task<long> GetWeekKataGoVisits(IDbContextFactory<ApplicationDbContext> dbContextFactory, string userId)
         {
-            ApplicationDbContext dbContext = await dbService.GetContextAsync();
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
             List<UserMoveCount> moveCounts = await dbContext.UserMoveCounts.Where(mc => mc.UserId == userId).ToListAsync();
             UserMoveCount? moveCount = moveCounts.OrderBy(mc => mc.CreateDate).LastOrDefault();

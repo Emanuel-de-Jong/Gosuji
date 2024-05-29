@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GosujiServer.Data
+namespace Gosuji.Client.Data
 {
     public class Discount : DbModel
     {

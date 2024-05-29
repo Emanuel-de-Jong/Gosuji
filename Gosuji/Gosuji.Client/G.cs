@@ -1,4 +1,4 @@
-﻿namespace GosujiServer
+﻿namespace Gosuji.Client
 {
     public static class G
     {
@@ -8,11 +8,6 @@
 #else
                 false;
 #endif
-
-        public static bool LogRouting = false;
-
-        //public static string ConnectionString = "Data Source=(localdb)\\mssqllocaldb;Initial Catalog=aspnet-GosujiServer-24E974ED-5CCD-44B7-9AE4-ECBD51EEE5E9;Persist Security Info=True;User ID=sa;Password=@Password1;MultipleActiveResultSets=True";
-        public static string ConnectionString = "Data Source=gosuji.db";
 
         public static string ColorNumToName(int colorNum)
         {

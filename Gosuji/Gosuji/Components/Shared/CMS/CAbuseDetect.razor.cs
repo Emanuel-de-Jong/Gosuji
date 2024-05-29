@@ -1,20 +1,18 @@
-﻿using GosujiServer.Areas.Identity.Data;
-using GosujiServer.Controllers;
-using GosujiServer.Data;
-using GosujiServer.Pages;
-using GosujiServer.Services;
+﻿using Gosuji.Client.Data;
+using Gosuji.Controllers;
+using Gosuji.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
-namespace GosujiServer.Shared.CMS
+namespace Gosuji.Components.Shared.CMS
 {
     public partial class CAbuseDetect : ComponentBase
     {
         [Inject]
         private IJSRuntime JS { get; set; }
         [Inject]
-        private DbService dbService { get; set; }
+        private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
         private List<User> users;
         private Dictionary<string, UserSubscription> subscriptions;
@@ -23,7 +21,7 @@ namespace GosujiServer.Shared.CMS
 
         protected override async Task OnInitializedAsync()
         {
-            ApplicationDbContext dbContext = await dbService.GetContextAsync();
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             users = await dbContext.Users.ToListAsync();
             subscriptions = await dbContext.UserSubscriptions.Include(us => us.SubscriptionType).ToDictionaryAsync(us => us.UserId);
 
@@ -43,7 +41,7 @@ namespace GosujiServer.Shared.CMS
             weekKataGoVisits = new();
             foreach (User user in users)
             {
-                weekKataGoVisits[user.Id] = await MoveCountManager.GetWeekKataGoVisits(dbService, user.Id);
+                weekKataGoVisits[user.Id] = await MoveCountManager.GetWeekKataGoVisits(dbContextFactory, user.Id);
             }
 
             await dbContext.DisposeAsync();

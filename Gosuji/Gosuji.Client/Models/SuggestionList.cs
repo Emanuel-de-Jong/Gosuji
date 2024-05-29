@@ -1,4 +1,4 @@
-﻿namespace GosujiServer.Models
+﻿namespace Gosuji.Client.Models
 {
     public class SuggestionList
     {

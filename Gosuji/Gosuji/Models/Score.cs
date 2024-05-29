@@ -1,4 +1,4 @@
-﻿namespace GosujiServer.Models
+﻿namespace Gosuji.Models
 {
     public class Score
     {

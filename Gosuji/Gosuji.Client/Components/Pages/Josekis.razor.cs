@@ -1,15 +1,9 @@
-﻿using GosujiServer.Areas.Identity.Data;
-using GosujiServer.Data;
-using GosujiServer.Services;
-using IGOEnchi.GoGameLogic;
+﻿using Gosuji.Client.Models.Josekis;
+using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
-using System.Xml.Linq;
-using GosujiServer.Models.GoGameWraps;
-using GosujiServer.Models;
 
-namespace GosujiServer.Pages
+namespace Gosuji.Client.Components.Pages
 {
     public partial class Josekis : ComponentBase, IDisposable
     {
@@ -19,9 +13,9 @@ namespace GosujiServer.Pages
         private const string EDITOR = $"{BOARD}.editor";
 
         [Inject]
-        private IJSRuntime JS { get; set; }
+        private IJSRuntime js { get; set; }
         [Inject]
-        private JosekisService josekisService { get; set; }
+        private IJosekisService josekisService { get; set; }
 
         private int sessionId;
         private DotNetObjectReference<Josekis>? josekisRef;
@@ -37,11 +31,11 @@ namespace GosujiServer.Pages
         {
             if (firstRender)
             {
-                josekisService.AddSession(sessionId);
+                await josekisService.AddSession(sessionId);
 
                 josekisRef = DotNetObjectReference.Create(this);
 
-                await JS.InvokeVoidAsync("josekisPage.init", josekisRef);
+                await js.InvokeVoidAsync("josekisPage.init", josekisRef);
 
                 await AddMarkups();
             }
@@ -49,32 +43,35 @@ namespace GosujiServer.Pages
 
         private async Task Play()
         {
-            JosekisNode node = josekisService.Current(sessionId);
+            JosekisNode node = await josekisService.Current(sessionId);
             if (node == null)
             {
                 return;
             }
 
-            await JS.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
-            await JS.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
+            await js.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
+            await js.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
 
-            await AddMarkups();
+            await AddMarkups(node);
 
-            await JS.InvokeVoidAsync($"{EDITOR}.setTool", "cross");
+            await js.InvokeVoidAsync($"{EDITOR}.setTool", "cross");
         }
 
         private async Task AddMarkups()
         {
-            JosekisNode node = josekisService.Current(sessionId);
+            await AddMarkups(await josekisService.Current(sessionId));
+        }
 
-            foreach (Mark mark in node.Marks)
+        private async Task AddMarkups(JosekisNode node)
+        {
+            foreach (JosekisMark mark in node.Marks)
             {
                 await AddMark(mark);
             }
 
-            foreach (TextLabel textLabel in node.Labels)
+            foreach (JosekisLabel label in node.Labels)
             {
-                await AddLabel(textLabel);
+                await AddLabel(label);
             }
 
             if (node.Comment != null)
@@ -83,74 +80,74 @@ namespace GosujiServer.Pages
                 StateHasChanged();
             }
 
-            await JS.InvokeVoidAsync($"{BOARD}.redraw");
+            await js.InvokeVoidAsync($"{BOARD}.redraw");
         }
 
-        private async Task AddMark(Mark mark)
+        private async Task AddMark(JosekisMark mark)
         {
             int markId = 0;
             switch (mark.MarkType)
             {
-                case MarkType.Circle:
+                case JosekisMarkType.Circle:
                     markId = 1;
                     break;
-                case MarkType.Square:
+                case JosekisMarkType.Square:
                     markId = 2;
                     break;
-                case MarkType.Triangle:
+                case JosekisMarkType.Triangle:
                     markId = 3;
                     break;
-                case MarkType.Mark:
+                case JosekisMarkType.Mark:
                     //markId = 4;
                     markId = 2; // Cross is used for selecting
                     break;
             }
 
-            await JS.InvokeVoidAsync($"{BOARD}.addMarkup", mark.X + 1, mark.Y + 1, markId);
+            await js.InvokeVoidAsync($"{BOARD}.addMarkup", mark.X + 1, mark.Y + 1, markId);
         }
 
-        private async Task AddLabel(TextLabel textLabel)
+        private async Task AddLabel(JosekisLabel textLabel)
         {
-            await JS.InvokeVoidAsync($"{BOARD}.addMarkup", textLabel.X + 1, textLabel.Y + 1, textLabel.Text);
+            await js.InvokeVoidAsync($"{BOARD}.addMarkup", textLabel.X + 1, textLabel.Y + 1, textLabel.Text);
         }
 
         [JSInvokable]
         public async Task Pass()
         {
-            josekisService.ToChild(sessionId, new JosekisNode(20, 20));
+            await josekisService.ToChild(sessionId, new JosekisNode(20, 20));
             await Play();
         }
 
         [JSInvokable]
         public async Task Prev()
         {
-            josekisService.ToParent(sessionId);
-            await JS.InvokeVoidAsync($"{BOARD}.clearFuture");
+            await josekisService.ToParent(sessionId);
+            await js.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
 
         [JSInvokable]
         public async Task LastBranch()
         {
-            int returnCount = josekisService.ToLastBranch(sessionId);
-            await JS.InvokeVoidAsync($"{EDITOR}.prevNode", returnCount);
+            int returnCount = await josekisService.ToLastBranch(sessionId);
+            await js.InvokeVoidAsync($"{EDITOR}.prevNode", returnCount);
 
-            await JS.InvokeVoidAsync($"{BOARD}.clearFuture");
+            await js.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
 
         [JSInvokable]
         public async Task First()
         {
-            josekisService.ToFirst(sessionId);
-            await JS.InvokeVoidAsync($"{BOARD}.clearFuture");
+            await josekisService.ToFirst(sessionId);
+            await js.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
 
         [JSInvokable]
         public async Task Next(int x, int y)
         {
-            if (!josekisService.ToChild(sessionId, new JosekisNode(x, y)))
+            if (!await josekisService.ToChild(sessionId, new JosekisNode(x, y)))
             {
                 return;
             }

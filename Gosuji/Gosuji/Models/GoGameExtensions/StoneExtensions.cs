@@ -1,6 +1,6 @@
 ﻿using IGOEnchi.GoGameLogic;
 
-namespace GosujiServer.Models.GoGameWraps
+namespace Gosuji.Models.GoGameWraps
 {
     public static class StoneExtensions
     {
@@ -10,7 +10,8 @@ namespace GosujiServer.Models.GoGameWraps
             if (stone.X == 20)
             {
                 output += "(PASS)";
-            } else
+            }
+            else
             {
                 output += "(" + stone.X + "," + stone.Y + ")";
             }

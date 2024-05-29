@@ -1,6 +1,4 @@
-﻿using IGOEnchi.GoGameLogic;
-
-namespace GosujiServer.Models
+﻿namespace Gosuji.Client.Models.Josekis
 {
     public class JosekisNode
     {
@@ -8,8 +6,12 @@ namespace GosujiServer.Models
         public int? Y { get; set; }
         public bool IsBlack { get; set; }
         public string? Comment { get; set; }
-        public List<TextLabel>? Labels { get; set; }
-        public List<Mark>? Marks { get; set; }
+        public List<JosekisLabel>? Labels { get; set; }
+        public List<JosekisMark>? Marks { get; set; }
+
+        public JosekisNode()
+        {
+        }
 
         public JosekisNode(int x, int y)
         {
@@ -17,26 +19,19 @@ namespace GosujiServer.Models
             Y = y;
         }
 
-        public JosekisNode(GoNode node)
+        public JosekisNode(string comment, List<JosekisLabel> labels, List<JosekisMark> marks)
         {
-            Comment = node.Comment;
-            Labels = node.Markup.Labels;
-            Marks = node.Markup.Marks;
+            Comment = comment;
+            Labels = labels;
+            Marks = marks;
         }
 
-        public JosekisNode(GoMoveNode moveNode)
+        public JosekisNode(int x, int y, bool isBlack, string comment, List<JosekisLabel> labels, List<JosekisMark> marks)
+            : this(comment, labels, marks)
         {
-            X = moveNode.Stone.X;
-            Y = moveNode.Stone.Y;
-            IsBlack = moveNode.Stone.IsBlack;
-            Comment = moveNode.Comment;
-            Labels = moveNode.Markup.Labels;
-            Marks = moveNode.Markup.Marks;
-        }
-
-        public bool Compare(GoMoveNode moveNode)
-        {
-            return X == moveNode.Stone.X && Y == moveNode.Stone.Y;
+            X = x;
+            Y = y;
+            IsBlack = isBlack;
         }
     }
 }

@@ -1,73 +1,64 @@
 ﻿@page "/"
-@using GosujiServer.Services;
-@using System.Security.Claims;
-@using Microsoft.AspNetCore.Identity;
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@using System.Security.Claims
+@using Gosuji.Client.Data
+@using Gosuji.Client.Services
 
 @inject AuthenticationStateProvider authenticationStateProvider
-@inject UserManager<User> userManager
-@inject DbService dbService;
-@inject TranslateService translateService;
+@inject IDataService dataService
+@inject ITranslateService translateService;
 
 <PageTitle>Gosuji</PageTitle>
 
-<div id="homePage">
-    <div class="page-layout">
-        <h1 class="header page-header">Gosuji</h1>
+@if (translateService.IsInitialized)
+{
+    <div id="homePage">
+        <div class="page-layout">
+            <h1 class="header page-header">Gosuji</h1>
 
-        <!-- Videos -->
-        <div class="video-container">
-            <iframe class="video trailer" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
-            <iframe class="video improvement" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
-            <iframe class="video guide" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
-        </div>
+            <!-- Videos -->
+            <div class="video-container">
+                <iframe class="video trailer" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+                <iframe class="video improvement" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+                <iframe class="video guide" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+            </div>
 
-        <!-- Explanation and Description of the page -->
-        <p class="description">
-            @translateService.Get("Index_Summary")
-        </p>
+            <!-- Explanation and Description of the page -->
+            <p class="description">
+                @translateService.Get(userId, "Index_Summary")
+            </p>
 
-        <!-- Changelog -->
-        <div class="changelog-container">
-            <h2 class="header changelog-header">Changelog</h2>
+            <!-- Changelog -->
+            <div class="changelog-container">
+                <h2 class="header changelog-header">Changelog</h2>
 
-            @foreach (Changelog changelogEntry in changelogs)
-            {
-                <h4 class="individual-header">@changelogEntry.Version @changelogEntry.Name</h4>
-                <p class="changelog">
-                    @changelogEntry.Description
-                </p>
-            }
+                @if (changelogs != null)
+                {
+                    @foreach (Changelog changelogEntry in changelogs)
+                    {
+                        <h4 class="individual-header">@changelogEntry.Version @changelogEntry.Name</h4>
+                        <p class="changelog">
+                            @changelogEntry.Description
+                        </p>
+                    }
+                }
+            </div>
         </div>
     </div>
-</div>
-
+}
 
 @code {
-    User user;
-    ApplicationDbContext dbContext;
-    List<Changelog> changelogs;
+    private string? userId;
+    private Changelog[]? changelogs;
 
     protected override async Task OnInitializedAsync()
     {
-        ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
-        if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
-        {
-            user = await userManager.GetUserAsync(claimsPrincipal);
-        }
+        await translateService.Init();
 
-        if (user != null)
-        {
-            await translateService.Init(user);
-        } else
-        {
-            await translateService.Init();
-        }
+        userId = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-        dbContext = await dbService.GetContextAsync();
-
-        changelogs = dbContext.Changelogs.ToList();
+        changelogs = await dataService.GetChangelogs();
         changelogs.Reverse();
-
-        await dbContext.DisposeAsync();
     }
 }

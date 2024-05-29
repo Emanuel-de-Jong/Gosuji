@@ -1,0 +1,13 @@
+﻿@page "/account-buttons"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@layout EmptyLayout
+
+@using Gosuji.Components.Layout
+
+<a class="btn btn-primary" href="Account/Manage">Settings</a>
+
+<form method="post" action="Account/Logout">
+    <input type="hidden" name="__RequestVerificationToken" value="@antiforgeryToken" />
+    <input type="hidden" name="ReturnUrl" value="" />
+    <button type="submit" class="btn btn-secondary">Logout</button>
+</form>

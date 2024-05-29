@@ -1,11 +1,7 @@
 ﻿@page "/josekis"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
-@using Microsoft.EntityFrameworkCore
-@using GosujiServer.Services
-@using GosujiServer.Models.GoGameWraps;
-@using IGOEnchi.GoGameLogic;
 
 <div id="josekisPage">
     <div id="flex-container">

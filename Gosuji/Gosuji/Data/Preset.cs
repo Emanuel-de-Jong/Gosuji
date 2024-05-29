@@ -1,7 +1,7 @@
-﻿using GosujiServer.Areas.Identity.Data;
+﻿using Gosuji.Client.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace GosujiServer.Data
+namespace Gosuji.Data
 {
     public class Preset : DbModel
     {

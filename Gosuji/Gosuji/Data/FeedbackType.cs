@@ -1,6 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Data;
+using System.ComponentModel.DataAnnotations;
 
-namespace GosujiServer.Data
+namespace Gosuji.Data
 {
     public class FeedbackType : DbModel
     {

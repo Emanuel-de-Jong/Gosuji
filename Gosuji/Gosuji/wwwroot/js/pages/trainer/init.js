@@ -3,7 +3,8 @@ var init = {};
 
 init.init = async function (
     trainerRef,
-    cKataGoWrapperRef,
+    kataGoServiceRef,
+    userId,
     userName,
     kataGoVersion,
 
@@ -35,7 +36,7 @@ init.init = async function (
     // console.log(serverMoveTypes);
     // console.log(serverChosenNotPlayedCoords);
 
-    trainerG.init(trainerRef, cKataGoWrapperRef, kataGoVersion, serverSuggestions, serverMoveTypes);
+    trainerG.init(trainerRef, kataGoServiceRef, kataGoVersion, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
     init.restartButton = document.getElementById("restart");
@@ -52,7 +53,7 @@ init.init = async function (
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
-    await katago.init();
+    await katago.init(userId);
     db.init();
 
     // console.log(stats.ratioHistory);

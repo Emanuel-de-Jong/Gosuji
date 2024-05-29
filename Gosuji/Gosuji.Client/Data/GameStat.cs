@@ -1,8 +1,8 @@
-﻿using GosujiServer.Models;
+﻿using Gosuji.Client.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GosujiServer.Data
+namespace Gosuji.Client.Data
 {
     public class GameStat : DbModel
     {
@@ -43,6 +43,17 @@ namespace GosujiServer.Data
             PerfectStreak = newModel.PerfectStreak;
             PerfectTopStreak = newModel.PerfectTopStreak;
             base.Update(newModel);
+        }
+
+        public bool Equal(GameStat other)
+        {
+            return MoveNumber == other.MoveNumber &&
+                Right == other.Right &&
+                RightStreak == other.RightStreak &&
+                RightTopStreak == other.RightTopStreak &&
+                Perfect == other.Perfect &&
+                PerfectStreak == other.PerfectStreak &&
+                PerfectTopStreak == other.PerfectTopStreak;
         }
 
         public override string ToString()

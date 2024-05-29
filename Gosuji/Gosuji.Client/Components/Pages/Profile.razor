@@ -1,21 +1,12 @@
 ﻿@page "/user/{Name}"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@using Microsoft.AspNetCore.Identity
-@using System.Security.Claims
-@using Microsoft.EntityFrameworkCore
-@using GosujiServer.Services
-
-@inject DbService dbService
-@inject IJSRuntime JS
+@using Gosuji.Client.Data
 
 <div id="profilePage">
     <h1>@Name</h1>
 
-    <a class="btn btn-primary" href="Identity/Account/Manage">Settings</a>
-
-    <form method="post" action="Identity/Account/LogOut">
-        <button type="submit" class="btn btn-secondary">Logout</button>
-    </form>
+    <iframe src="/account-buttons" />
 
     @if (Games == null)
     {

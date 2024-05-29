@@ -1,13 +1,11 @@
-﻿using GosujiServer.Areas.Identity.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace GosujiServer.Data
+namespace Gosuji.Client.Data
 {
     public class UserSubscription : DbModel
     {
         [Key] public long Id { get; set; }
         public string UserId { get; set; }
-        public User User { get; set; }
         public long SubscriptionTypeId { get; set; }
         public SubscriptionType? SubscriptionType { get; set; }
         public long? DiscountId { get; set; }

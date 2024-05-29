@@ -1,14 +1,11 @@
-﻿using GosujiServer.Areas.Identity.Data;
-using GosujiServer.Data;
+﻿using Gosuji.Client.Data;
+using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
-using System;
 using System.Security.Claims;
 
-namespace GosujiServer.Pages
+namespace Gosuji.Client.Components.Pages
 {
     public enum DaysChartDayTypes
     {
@@ -25,15 +22,15 @@ namespace GosujiServer.Pages
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
-        private UserManager<User> userManager { get; set; }
-        [Inject]
         private NavigationManager navigationManager { get; set; }
+        [Inject]
+        private IJSRuntime js { get; set; }
+        [Inject]
+        private IDataService dataService { get; set; }
 
-        public List<Game>? Games { get; set; }
-        public List<Game>? FinishedGames { get; set; }
+        public Game[]? Games { get; set; }
+        public Game[]? FinishedGames { get; set; }
 
-        private ApplicationDbContext? context;
-        private User? user;
         private bool isGamesFilled = false;
 
         public async Task DownloadSGF(long gameId)
@@ -42,7 +39,7 @@ namespace GosujiServer.Pages
             {
                 if (game.Id == gameId)
                 {
-                    await JS.InvokeVoidAsync("profilePage.downloadSGF", game.Name, game.SGF);
+                    await js.InvokeVoidAsync("profilePage.downloadSGF", game.Name, game.SGF);
                     break;
                 }
             }
@@ -50,42 +47,27 @@ namespace GosujiServer.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            if (G.LogRouting) Console.WriteLine("Profile.razor");
-
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
             {
-                navigationManager.NavigateTo("Identity/Account/Login");
+                navigationManager.NavigateTo("Account/Login");
                 return;
             }
 
-            User user = await userManager.GetUserAsync(claimsPrincipal);
-            if (user.UserName != Name && !await userManager.IsInRoleAsync(user, "Owner"))
+            if (claimsPrincipal.Identity.Name != Name)
             {
-                navigationManager.NavigateTo("user/" + user.UserName);
+                navigationManager.NavigateTo("user/" + claimsPrincipal.Identity.Name);
                 return;
             }
 
-            context = dbService.GetContext();
-
-            user = await context.Users.Where(u => u.UserName == Name).FirstOrDefaultAsync();
-            Games = await context.Games
-                .Where(g => g.UserId == user.Id)
-                .Where(g => g.IsDeleted == false)
-                .Include(g => g.GameStat)
-                .Include(g => g.OpeningStat)
-                .Include(g => g.MidgameStat)
-                .Include(g => g.EndgameStat)
-                .ToListAsync();
-
-            await context.DisposeAsync();
+            Games = await dataService.GetUserGames(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                await JS.InvokeVoidAsync("profilePage.init", GameStat.RIGHT_COLOR.ToCSS(), GameStat.PERFECT_COLOR.ToCSS());
+                await js.InvokeVoidAsync("profilePage.init", GameStat.RIGHT_COLOR.ToCSS(), GameStat.PERFECT_COLOR.ToCSS());
             }
 
             if (!isGamesFilled && Games != null)
@@ -103,7 +85,7 @@ namespace GosujiServer.Pages
 
         private async Task CreateGameTable()
         {
-            await JS.InvokeVoidAsync("profilePage.createGameTable");
+            await js.InvokeVoidAsync("profilePage.createGameTable");
         }
 
         private async Task CreatePercentPerGameLineChart()
@@ -118,7 +100,7 @@ namespace GosujiServer.Pages
                 perfectPercents.Add(game.GameStat.PerfectPercent);
             }
 
-            await JS.InvokeVoidAsync("profilePage.createPercentPerGameLineChart", rightPercents, perfectPercents);
+            await js.InvokeVoidAsync("profilePage.createPercentPerGameLineChart", rightPercents, perfectPercents);
         }
 
         private async Task CreateGameStageBarChart()
@@ -129,7 +111,7 @@ namespace GosujiServer.Pages
             int perfectOpenings = 0, perfectMidgames = 0, perfectEndgames = 0;
             int perfectOpening = 0, perfectMidgame = 0, perfectEndgame = 0;
 
-            for (int i = FinishedGames.Count - 1; i >= 0; i--)
+            for (int i = FinishedGames.Length - 1; i >= 0; i--)
             {
                 Game game = FinishedGames[i];
                 if (rightOpenings < 5 && game.OpeningStat != null && game.OpeningStat.Right >= 5)
@@ -173,7 +155,7 @@ namespace GosujiServer.Pages
             perfectMidgame = perfectMidgame > 0 ? (int)Math.Round((double)perfectMidgame / perfectMidgames) : 0;
             perfectEndgame = perfectEndgame > 0 ? (int)Math.Round((double)perfectEndgame / perfectEndgames) : 0;
 
-            await JS.InvokeVoidAsync("profilePage.createGameStageBarChart",
+            await js.InvokeVoidAsync("profilePage.createGameStageBarChart",
                 new int[] { rightOpening, rightMidgame, rightEndgame },
                 new int[] { perfectOpening, perfectMidgame, perfectEndgame });
         }
@@ -182,9 +164,9 @@ namespace GosujiServer.Pages
         {
             Dictionary<string, DaysChartDayTypes> days = new();
 
-            if (FinishedGames.Count == 0)
+            if (FinishedGames.Length == 0)
             {
-                await JS.InvokeVoidAsync("profilePage.createDaysChart", days);
+                await js.InvokeVoidAsync("profilePage.createDaysChart", days);
                 return;
             }
 
@@ -220,7 +202,7 @@ namespace GosujiServer.Pages
                 canCatchUpCount--;
             }
 
-            await JS.InvokeVoidAsync("profilePage.createDaysChart", days);
+            await js.InvokeVoidAsync("profilePage.createDaysChart", days);
         }
     }
 }

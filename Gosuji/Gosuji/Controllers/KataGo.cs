@@ -1,8 +1,9 @@
-﻿using GosujiServer.Data;
-using GosujiServer.Models.KataGo;
+﻿using Gosuji.Client;
+using Gosuji.Client.Data;
+using Gosuji.Client.Models.KataGo;
 using System.Diagnostics;
 
-namespace GosujiServer.Controllers
+namespace Gosuji.Controllers
 {
     public class KataGo
     {
@@ -31,7 +32,7 @@ namespace GosujiServer.Controllers
             {
                 return;
             }
-            
+
             LastStartTime = DateTimeOffset.UtcNow;
 
             lastMaxVisits = 0;

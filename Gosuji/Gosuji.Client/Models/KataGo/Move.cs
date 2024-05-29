@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GosujiServer.Models.KataGo
+namespace Gosuji.Client.Models.KataGo
 {
     public class Move
     {

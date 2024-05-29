@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace GosujiServer.Data
+namespace Gosuji.Client.Data
 {
     public class TrainerSettingConfig : DbModel
     {

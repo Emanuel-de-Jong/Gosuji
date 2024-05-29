@@ -1,6 +1,6 @@
-﻿using GosujiServer.Enums;
+﻿using Gosuji.Client.Controllers.GameDecoder;
 
-namespace GosujiServer.Models
+namespace Gosuji.Client.Models
 {
     public class RatioTree
     {

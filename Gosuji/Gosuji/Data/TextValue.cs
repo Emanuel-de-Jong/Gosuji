@@ -1,4 +1,6 @@
-﻿namespace GosujiServer.Data
+﻿using Gosuji.Client.Data;
+
+namespace Gosuji.Data
 {
     public class TextValue : DbModel
     {

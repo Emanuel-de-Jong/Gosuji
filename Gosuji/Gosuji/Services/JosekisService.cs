@@ -1,11 +1,13 @@
-﻿using GosujiServer.Models;
+﻿using Gosuji.Client.Models.Josekis;
+using Gosuji.Client.Services;
+using Gosuji.Controllers;
 using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
 using IGOEnchi.SmartGameLib;
 
-namespace GosujiServer.Services
+namespace Gosuji.Services
 {
-    public class JosekisService
+    public class JosekisService : IServerService, IJosekisService
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private Dictionary<int, GoNode> JosekisGoNodes;
@@ -24,43 +26,41 @@ namespace GosujiServer.Services
             baseGame = SgfCompiler.Compile(gameTree);
         }
 
-        public void AddSession(int sessionId)
+        public static void CreateEndpoints(WebApplication app)
+        {
+            RouteGroupBuilder group = app.MapGroup("/api/JosekisService");
+            group.MapGet("/AddSession/{sessionId}", (int sessionId, IJosekisService service) => service.AddSession(sessionId));
+            group.MapGet("/RemoveSession/{sessionId}", (int sessionId, IJosekisService service) => service.RemoveSession(sessionId));
+            group.MapGet("/Current/{sessionId}", (int sessionId, IJosekisService service) => service.Current(sessionId));
+            group.MapGet("/ToParent/{sessionId}", (int sessionId, IJosekisService service) => service.ToParent(sessionId));
+            group.MapGet("/ToLastBranch/{sessionId}", (int sessionId, IJosekisService service) => service.ToLastBranch(sessionId));
+            group.MapGet("/ToFirst/{sessionId}", (int sessionId, IJosekisService service) => service.ToFirst(sessionId));
+            group.MapPost("/ToChild/{sessionId}", (int sessionId, JosekisNode childToGo, IJosekisService service) => service.ToChild(sessionId, childToGo));
+        }
+
+        public async Task AddSession(int sessionId)
         {
             JosekisGoNodes[sessionId] = baseGame.RootNode;
         }
 
-        public void RemoveSession(int sessionId)
+        public async Task RemoveSession(int sessionId)
         {
             JosekisGoNodes.Remove(sessionId);
         }
 
-        public JosekisNode Current(int sessionId)
+        public async Task<JosekisNode> Current(int sessionId)
         {
             GoNode node = JosekisGoNodes[sessionId];
             if (node is GoMoveNode)
             {
-                return new JosekisNode((GoMoveNode)node);
+                GoMoveNode moveNode = (GoMoveNode)node;
+                return JosekisNodeConverter.Convert(moveNode);
             }
 
-            return new JosekisNode(node);
+            return JosekisNodeConverter.Convert(node);
         }
 
-        public List<JosekisNode> Children(int sessionId)
-        {
-            List<JosekisNode> children = new();
-
-            foreach (var childNode in JosekisGoNodes[sessionId].ChildNodes)
-            {
-                if (childNode is GoMoveNode)
-                {
-                    children.Add(new JosekisNode((GoMoveNode)childNode));
-                }
-            }
-
-            return children;
-        }
-
-        public void ToParent(int sessionId)
+        public async Task ToParent(int sessionId)
         {
             GoNode node = JosekisGoNodes[sessionId];
             if (node.ParentNode == null)
@@ -71,13 +71,14 @@ namespace GosujiServer.Services
             JosekisGoNodes[sessionId] = node.ParentNode;
         }
 
-        public int ToLastBranch(int sessionId)
+        public async Task<int> ToLastBranch(int sessionId)
         {
             GoNode node = JosekisGoNodes[sessionId];
 
             int returnCount = 0;
 
-            do {
+            do
+            {
                 if (node.ParentNode == null)
                 {
                     break;
@@ -93,19 +94,19 @@ namespace GosujiServer.Services
             return returnCount;
         }
 
-        public void ToFirst(int sessionId)
+        public async Task ToFirst(int sessionId)
         {
             JosekisGoNodes[sessionId] = baseGame.RootNode;
         }
 
-        public bool ToChild(int sessionId, JosekisNode childToGo)
+        public async Task<bool> ToChild(int sessionId, JosekisNode childToGo)
         {
             foreach (var childNode in JosekisGoNodes[sessionId].ChildNodes)
             {
                 if (childNode is GoMoveNode)
                 {
                     GoMoveNode childMove = (GoMoveNode)childNode;
-                    if (childToGo.Compare(childMove))
+                    if (childToGo.X == childMove.Stone.X && childToGo.Y == childMove.Stone.Y)
                     {
                         JosekisGoNodes[sessionId] = childMove;
                         return true;
