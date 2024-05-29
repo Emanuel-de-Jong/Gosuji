@@ -1,0 +1,48 @@
+﻿@page "/josekis"
+
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
+@using GosujiServer.Services
+@using GosujiServer.Models.GoGameWraps;
+@using IGOEnchi.GoGameLogic;
+
+<div id="josekisPage">
+    <div id="flex-container">
+        <div class="flex-item"></div>
+
+        <div class="flex-item">
+            <div id="game">
+                <div class="board"></div>
+            </div>
+        </div>
+
+        <div class="flex-item">
+            <div id="comment">
+                ▢ = Black <br />
+                △ = White <br /><br />
+
+                @if (Comment != null)
+                {
+                    @foreach (string line in Comment)
+                    {
+                        @foreach (string word in line.Split(" "))
+                        {
+                            @if (word == "Pass")
+                            {
+                                <span class="pass">
+                                    @(word + " ")
+                                </span>
+                            } else
+                            {
+                                @(word + " ")
+                            }
+                        }
+
+                        <br />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

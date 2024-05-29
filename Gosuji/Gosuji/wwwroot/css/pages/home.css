@@ -1,0 +1,30 @@
+#homePage .page-layout{
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+#homePage .header{
+    text-align: center;
+    margin: 30px 0 40px;
+}
+
+#homePage .changelog-header{
+    margin: 40px 0;
+}
+
+#homePage .video-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#homePage .video{
+    margin: 0 40px 50px;
+}
+
+#homePage .trailer{
+    margin: 0 240px 30px;
+}

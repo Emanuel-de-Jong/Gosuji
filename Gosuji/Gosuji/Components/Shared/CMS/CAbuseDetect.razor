@@ -1,0 +1,23 @@
+﻿<h3>Abuse Detect</h3>
+
+<table id="abuseTable" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Sub</th>
+            <th>KataGo visits (week)</th>
+            <th>KataGo visits</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (User user in users)
+        {
+            <tr>
+                <td title="@user.Id">@user.UserName</td>
+                <td>@(subscriptions.ContainsKey(user.Id) ? subscriptions[user.Id] : "Free")</td>
+                <td>@weekKataGoVisits[user.Id]</td>
+                <td>@(totalKataGoVisits.ContainsKey(user.Id) ? totalKataGoVisits[user.Id] : "0")</td>
+            </tr>
+        }
+    </tbody>
+</table>

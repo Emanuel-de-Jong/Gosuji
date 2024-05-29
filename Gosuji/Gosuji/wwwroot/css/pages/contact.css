@@ -1,0 +1,55 @@
+#contactPage button:hover {
+    border-color: lightblue;
+}
+
+#contactPage .page-layout {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+}
+
+#contactPage .contact-header {
+    text-align: center;
+    margin: 30px 0 40px;
+}
+
+#contactPage .contact-information {
+    margin: 30px 0;
+}
+
+#contactPage .feedback-header {
+    font-weight: 200;
+}
+
+#contactPage .feedback-container {
+    margin: 0 auto;
+}
+
+#contactPage .feedback-subcontainer {
+    display: flex;
+    flex-direction: row;
+}
+
+#contactPage .feedback-subsubcontainer,
+#contactPage .feedback-type-list {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+}
+
+#contactPage .feedback-type-header {
+    margin: 30px 0 0 30px;
+    font-weight: 200;
+    font-size: 20px;
+}
+
+#contactPage .text-submit-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#contactPage .feedback__submit {
+  width: 100px;
+  margin: 10px 0 50px;
+}
+

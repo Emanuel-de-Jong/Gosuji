@@ -1,0 +1,103 @@
+﻿@page "/subscription"
+
+<PageTitle>Subscriptions</PageTitle>
+
+<div id="subscriptionPage">
+    <h1 class="subscription-header">Subscription</h1>
+
+    <div class="subscription-cards">
+        <div class="card subscription-cards__card">
+            <div class="card-body">
+                <h5 class="card-title">Free</h5>
+                <div class="card-text">
+                    <ul>
+                        <li>Basic Settings</li>
+                        <li>Maximum Visits 100</li>
+                        <li>400 moves per day</li>
+                    </ul>
+                </div>
+                <div class="card-text subscription__price">
+                    €0,-
+                </div>
+                <a href="#" class="btn btn-link stretched-link"></a>
+            </div>
+        </div>
+            <div class="card subscription-cards__card">
+          <div class="card-body">
+            <h5 class="card-title">Level 1</h5>
+                <div class="card-text">
+                    <ul>
+                        <li>All Settings</li>
+                        <li>Maximum Visits 500</li>
+                        <li>5.000 moves per day</li>
+                    </ul>
+                </div>
+                <div class="card-text subscription__price">
+                    €7,50
+                </div>
+                <a href="#" class="btn btn-link stretched-link"></a>
+          </div>
+        </div>
+        <div class="card subscription-cards__card">
+            <div class="card-body">
+                <h5 class="card-title">Level 2</h5>
+                <div class="card-text">
+                    <ul>
+                        <li>All Settings</li>
+                        <li>Maximum Visits 1.500</li>
+                        <li>7.500 moves per day</li>
+                    </ul>
+                </div>
+                <div class="card-text subscription__price">
+                    €15,-
+                </div>
+                <a href="#" class="btn btn-link stretched-link"></a>
+            </div>
+        </div>
+        <div class="card subscription-cards__card">
+            <div class="card-body">
+                <h5 class="card-title">Level 3</h5>
+                <div class="card-text">
+                    <ul>
+                        <li>All Settings</li>
+                        <li>Maximum Visits 5.000</li>
+                        <li>15.000 moves per day</li>
+                    </ul>
+                </div>
+                <div class="card-text subscription__price">
+                    €35,-
+                </div>
+                <a href="#" class="btn btn-link stretched-link"></a>
+            </div>
+        </div>
+        <div class="card subscription-cards__card">
+            <div class="card-body">
+                <h5 class="card-title">Dynamic</h5>
+                <div class="card-text">
+                    <ul>
+                        <li>All Settings</li>
+                        <li>Maximum Visits 25.000</li>
+                        <li>Unlimited moves</li>
+                    </ul>
+                </div>
+                <div class="card-text subscription__price">
+                    €0.01 per move
+                </div>
+                <a href="#" class="btn btn-link stretched-link"></a>
+            </div>
+        </div>
+    </div>
+        <div class="selection">
+        <select class="selection__dropdown ">
+            <option value="1 month">Level 1</option>
+            <option value="2 month">Level 2</option>
+            <option value="3 month">Level 3</option>
+            <option value="4 month">Dynamic</option>
+        </select>
+            <button class="btn btn-primary selection__submit">Confirm</button>
+        </div>
+</div>
+
+@code {
+
+}

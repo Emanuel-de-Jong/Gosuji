@@ -1,0 +1,24 @@
+#josekisPage #flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+#josekisPage .flex-item {
+    flex: 1;
+}
+
+#josekisPage .board {
+    width: 725px;
+}
+
+#josekisPage #comment {
+    margin-top: 40px;
+    margin-left: 40px;
+    font-size: 25px;
+}
+
+#josekisPage .pass {
+    font-weight: 700;
+}

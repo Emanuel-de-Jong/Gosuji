@@ -1,0 +1,73 @@
+﻿@page "/"
+@using GosujiServer.Services;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Identity;
+
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject UserManager<User> userManager
+@inject DbService dbService;
+@inject TranslateService translateService;
+
+<PageTitle>Gosuji</PageTitle>
+
+<div id="homePage">
+    <div class="page-layout">
+        <h1 class="header page-header">Gosuji</h1>
+
+        <!-- Videos -->
+        <div class="video-container">
+            <iframe class="video trailer" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+            <iframe class="video improvement" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+            <iframe class="video guide" width="320" height="180" src="https://www.youtube.com/embed/tgbNymZ7vqY?autoplay=0&mute=1"></iframe>
+        </div>
+
+        <!-- Explanation and Description of the page -->
+        <p class="description">
+            @translateService.Get("Index_Summary")
+        </p>
+
+        <!-- Changelog -->
+        <div class="changelog-container">
+            <h2 class="header changelog-header">Changelog</h2>
+
+            @foreach (Changelog changelogEntry in changelogs)
+            {
+                <h4 class="individual-header">@changelogEntry.Version @changelogEntry.Name</h4>
+                <p class="changelog">
+                    @changelogEntry.Description
+                </p>
+            }
+        </div>
+    </div>
+</div>
+
+
+@code {
+    User user;
+    ApplicationDbContext dbContext;
+    List<Changelog> changelogs;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+        if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
+        {
+            user = await userManager.GetUserAsync(claimsPrincipal);
+        }
+
+        if (user != null)
+        {
+            await translateService.Init(user);
+        } else
+        {
+            await translateService.Init();
+        }
+
+        dbContext = await dbService.GetContextAsync();
+
+        changelogs = dbContext.Changelogs.ToList();
+        changelogs.Reverse();
+
+        await dbContext.DisposeAsync();
+    }
+}
