@@ -12,7 +12,7 @@ class JosekisBoard extends Board {
 
     clear(boardsize, handicap, sgf) {
         super.clear(boardsize, handicap, sgf);
-    
+
         document.querySelector('button[title="Jump back"]').remove();
         document.querySelector('button[title="Next node"]').remove();
         document.querySelector('button[title="Jump forward"]').remove();
@@ -21,7 +21,7 @@ class JosekisBoard extends Board {
         document.querySelector('button[title="Next sibling"]').remove();
         document.querySelector('button[title="Variants: [child]/sibling"]').remove();
         document.querySelector('button[title="Variants: show/[hide]"]').remove();
-        
+
         document.querySelector('button[title="First node"]').insertAdjacentHTML("afterend",
             `<button class="lastBranchBtn">
                 <svg width="100%" height="100%" viewBox="0 0 100 100">
@@ -42,7 +42,7 @@ class JosekisBoard extends Board {
     }
 
     addMarkup(x, y, markup) {
-        this.editor.getCurrent().markup[(x - 1)*19 + (y - 1)] = markup;
+        this.editor.getCurrent().markup[(x - 1) * 19 + (y - 1)] = markup;
     }
 
     redraw() {

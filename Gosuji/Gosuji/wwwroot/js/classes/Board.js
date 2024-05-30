@@ -51,18 +51,18 @@ class Board {
             new Audio(fileDir + "placeStone4.mp3"),
         ];
         this.lastPlaceStoneAudioIndex = 0;
-    
+
         this.clear(boardsize, handicap, sgf);
     }
 
     clear(boardsize, handicap, sgf) {
         this.boardsize = boardsize;
         this.setHandicap(handicap);
-    
+
         this.element = document.querySelector(".board");
 
         this.besogoOptions.size = this.boardsize;
-    
+
         delete this.besogoOptions.sgf;
         if (sgf) {
             this.besogoOptions.sgf = sgf;
@@ -73,7 +73,7 @@ class Board {
                 "AB" + this.HANDICAP_SGFS[this.boardsize][this.handicap] +
                 ")";
         }
-    
+
         if (debug.testData == 1) {
             this.besogoOptions.sgf =
                 "(;GM[1]FF[4]CA[UTF-8]AP[Sabaki:0.52.0]KM[7.5]SZ[19]DT[2022-12-29](;B[pd];W[qc](;B[qd];W[pc];B[od])(;B[pc];W[qd](;B[pe];W[qe];B[qf];W[rf])(;B[qe];W[re])))(;B[dp]))";
@@ -84,13 +84,13 @@ class Board {
             this.besogoOptions.sgf =
                 "(;FF[4]GM[1]SZ[19]KM[6.5]RU[Japanese];B[pd];W[cp];B[pp];W[dc];B[eq];W[dq];B[ep];W[cn];B[ip];W[nq];B[lq];W[pr];B[qq];W[qr];B[qm];W[mq];B[lp];W[lr];B[kr];W[ms];B[jq];W[nc];B[qf];W[pc];B[qc];W[pb];B[ce];W[cd];B[de];W[fc];B[ci];W[od];B[pe];W[kd];B[cl];W[pj];B[en];W[dj];B[di];W[dl];B[dm];W[el];B[cj];W[gm];B[fm];W[fl];B[gl];W[gk];B[hl];W[hk];B[il];W[ik];B[jl];W[em];B[fn];W[cm];B[ej];W[fk];B[oe];W[ne];B[nf];W[qh];B[rk];W[rj];B[qk];W[qj];B[me];W[nd];B[ck];W[dn];B[no];W[pk];B[om];W[pl];B[jk];W[pm];B[pn];W[ql];B[rm];W[rl];B[qo];W[rq];B[ml];W[mj];B[fe];W[hd];B[je];W[jd];B[he];W[ie];B[if];W[id];B[hf];W[ke];B[mf];W[kf];B[gi];W[ii];B[md];W[mc];B[qb];W[ld];B[gd];W[gc];B[jj];W[hi];B[gh];W[og];B[of];W[qg];B[mh];W[nh];B[lg];W[mi];B[rp];W[sq];B[sp];W[rs];B[er];W[dr];B[be];W[bd];B[pa];W[oa];B[qa];W[ob];B[ad];W[ac];B[ae];W[bb];B[ds];W[cs];B[es];W[br];B[dk];W[bl];B[bk];W[al];B[ng];W[oh];B[ak];W[bn];B[oq];W[or];B[op];W[mo];B[mp];W[np];B[mn];W[nn];B[lo];W[nm];B[nl];W[ol];B[on];W[lm];B[ll];W[lh];B[mg];W[ki];B[jf];W[kg];B[ed];W[ec];B[nk];W[nj];B[rg];W[rh];B[rf];W[hh];B[hg];W[jg];B[fd];W[sm];B[sn];W[sl];B[rn];W[kk];B[kl];W[kj];B[lk];W[lj];B[ji];W[jh];B[ig];W[fj];B[fi];W[ih];B[eh];W[eo];B[fo];W[do];B[ok];W[oj];B[sh];W[si];B[sg];W[dp];B[gp];W[pg];B[ks];W[rd];B[qd];W[rc];B[rb];W[sb];B[re];W[se];B[pf];W[le];B[lf];W[gj];B[ij];W[hj];B[dd];W[ls];B[mk];W[nr];B[ek];W[lb])";
         }
-    
+
         besogo.create(this.element, this.besogoOptions);
-    
+
         this.editor = this.element.besogoEditor;
-    
+
         this.commentElement = document.querySelector("#game .besogo-comment textarea");
-    
+
         this.lastMove = this.editor.getCurrent();
     }
 
@@ -100,7 +100,7 @@ class Board {
             placeStoneAudioIndex = utils.randomInt(5);
         } while (placeStoneAudioIndex == this.lastPlaceStoneAudioIndex);
         this.lastPlaceStoneAudioIndex = placeStoneAudioIndex;
-    
+
         this.placeStoneAudios[placeStoneAudioIndex].play();
     }
 
@@ -109,11 +109,11 @@ class Board {
         if (currentMove.move) {
             return currentMove.move.color;
         }
-    
+
         if (currentMove.moveNumber == 0) {
             return !this.handicap ? G.COLOR_TYPE.W : G.COLOR_TYPE.B;
         }
-    
+
         return G.COLOR_TYPE.B;
     }
 
@@ -122,7 +122,7 @@ class Board {
         if (currentMove.children && currentMove.children.length > 0) {
             return currentMove.children[0].move.color;
         }
-    
+
         return this.getColor() * -1;
     }
 

@@ -9,7 +9,7 @@ class TrainerBoard extends Board {
         this.handicapElement = document.getElementById("currentHandicap");
 
         super.init(serverBoardsize, serverHandicap, serverSGF);
-    
+
         // Disable mouse 3/4 triggering prev/next in browser
         document.addEventListener("mouseup", (e) => {
             if (typeof e === "object" && (e.button == 3 || e.button == 4)) {
@@ -23,7 +23,7 @@ class TrainerBoard extends Board {
         super.clear(serverBoardsize ? serverBoardsize : settings.boardsize,
             serverHandicap != null ? serverHandicap : settings.handicap,
             serverSGF);
-    
+
         document.querySelector('#game button[title="Variants: [child]/sibling"]').remove();
         document.querySelector('#game button[title="Variants: show/[hide]"]').remove();
         document.querySelector('#game input[value="9x9"]').remove();
@@ -33,7 +33,7 @@ class TrainerBoard extends Board {
         document.querySelector('#game input[value="Comment"]').remove();
         document.querySelector('#game input[value="Edit Info"]').remove();
         document.querySelector('#game input[value="Info"]').remove();
-    
+
         document
             .querySelector("#game .besogo-board")
             .insertAdjacentHTML(
@@ -41,13 +41,13 @@ class TrainerBoard extends Board {
                 '<button type="button" class="btn btn-secondary next" disabled>></button>'
             );
         this.nextButton = document.querySelector(".next");
-    
+
         this.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
         this.editor.addListener(gameplay.treeJumpedCheckListener);
         this.editor.addListener(sgf.boardEditorListener);
         this.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
         trainerG.phaseChangedEvent.add(this.phaseChangedListener);
-    
+
         // console.log(besogo);
         // console.log(this.editor);
         // console.log(this.editor.getCurrent());
@@ -63,16 +63,16 @@ class TrainerBoard extends Board {
         this.editor.setTool(tool);
         this.editor.click(coord.x, coord.y, false, false);
         this.editor.setTool("navOnly");
-    
+
         if (tool == "auto" || tool == "playB" || tool == "playW") {
             if (trainerG.phase == trainerG.PHASE_TYPE.CORNERS || trainerG.phase == trainerG.PHASE_TYPE.PREMOVES || trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY) {
                 this.playPlaceStoneAudio();
             }
-    
+
             this.lastMove = this.editor.getCurrent();
-    
+
             trainerG.suggestionsHistory.add(trainerG.suggestions);
-    
+
             if (sendToServer) {
                 if (tool == "auto") {
                     await katago.play(coord);
@@ -93,22 +93,22 @@ class TrainerBoard extends Board {
 
     drawCoords(suggestionList) {
         let suggestions = suggestionList.getFilterByWeaker();
-    
+
         let markup = this.editor.getCurrent().markup;
         for (let i = 0; i < markup.length; i++) {
             if (markup[i] && markup[i] != 4) {
                 markup[i] = 0;
             }
         }
-    
+
         this.editor.setTool("label");
         for (let i = 0; i < suggestions.length; i++) {
             let coord = suggestions[i].coord;
-    
+
             this.editor.setLabel(suggestions[i].grade);
             this.editor.click(coord.x, coord.y, false, false);
         }
-    
+
         this.editor.setTool("navOnly");
     }
 
@@ -120,10 +120,10 @@ class TrainerBoard extends Board {
                 color: node.move.color,
                 coord: new Coord(node.move.x, node.move.y),
             });
-    
+
             node = node.parent;
         }
-    
+
         moves = moves.reverse();
         return moves;
     }

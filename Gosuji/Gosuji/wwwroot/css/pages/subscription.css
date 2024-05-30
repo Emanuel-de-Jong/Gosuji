@@ -5,23 +5,23 @@
     margin: 0 auto;
 }
 
-#subscriptionPage .subscription-header{
+#subscriptionPage .subscription-header {
     text-align: center;
     margin: 30px 0 40px;
 }
 
-#subscriptionPage .subscription-cards{
+#subscriptionPage .subscription-cards {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     margin: 30px 0;
 }
 
-#subscriptionPage .subscription-cards__card{
+#subscriptionPage .subscription-cards__card {
     margin: 0 10px;
 }
 
-#subscriptionPage .card:hover{
+#subscriptionPage .card:hover {
     border-color: blue;
 }
 
@@ -30,22 +30,22 @@
     height: 300px;
 }
 
-#subscriptionPage .card-title{
+#subscriptionPage .card-title {
     text-align: center;
     margin-bottom: 20px;
 }
 
-#subscriptionPage .subscription__price{
+#subscriptionPage .subscription__price {
     text-align: center;
     font-size: 25px;
     margin-top: 55px;
 }
 
-#subscriptionPage .selection{
+#subscriptionPage .selection {
     margin: 50px auto 0;
 }
 
-#subscriptionPage .selection__dropdown{
+#subscriptionPage .selection__dropdown {
     width: 150px;
     margin-right: 60px;
     border-radius: 5px;

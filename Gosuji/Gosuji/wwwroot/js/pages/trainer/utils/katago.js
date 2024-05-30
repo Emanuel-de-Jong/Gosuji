@@ -122,11 +122,11 @@ katago.analyze = async function (
     if (G.LOG)
         console.log(
             "katago.analyze " +
-                maxVisits + " " +
-                moveOptions + " " +
-                minVisitsPerc + " " +
-                maxVisitDiffPerc + " " +
-                color
+            maxVisits + " " +
+            moveOptions + " " +
+            minVisitsPerc + " " +
+            maxVisitDiffPerc + " " +
+            color
         );
 
     return trainerG.kataGoServiceRef

@@ -17,7 +17,7 @@ debug.init = function () {
     debug.clear();
 };
 
-debug.clear = function () {};
+debug.clear = function () { };
 
 
 debug.logAllFuncCalls = function () {

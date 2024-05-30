@@ -51,11 +51,11 @@
     font-size: 22px;
 }
 
-#trainerPage #stats > div {
+#trainerPage #stats>div {
     margin-bottom: 10px;
 }
 
-#trainerPage #stats #keyValues > div {
+#trainerPage #stats #keyValues>div {
     margin-bottom: 35px;
 }
 
@@ -126,5 +126,4 @@
 
 /* DARK MODE */
 
-html[data-bs-theme="dark"] {
-}
+html[data-bs-theme="dark"] {}
