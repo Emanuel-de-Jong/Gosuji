@@ -89,7 +89,7 @@ namespace Gosuji.Services
         [JSInvokable]
         public async Task Restart(string userId)
         {
-            pool.Get(userId).Restart();
+            await pool.Get(userId).Restart();
         }
 
         [JSInvokable]

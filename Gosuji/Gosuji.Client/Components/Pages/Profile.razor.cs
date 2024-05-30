@@ -28,8 +28,8 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IDataService dataService { get; set; }
 
-        public Game[]? Games { get; set; }
-        public Game[]? FinishedGames { get; set; }
+        public Game[] Games { get; set; }
+        public Game[] FinishedGames { get; set; }
 
         private bool isGamesFilled = false;
 
@@ -94,7 +94,7 @@ namespace Gosuji.Client.Components.Pages
             List<int> perfectPercents = [];
             foreach (Game game in FinishedGames)
             {
-                if (game.GameStat.Total < 5)
+                if (game.GameStat == null || game.GameStat.Total < 5)
                 {
                     continue;
                 }

@@ -64,14 +64,20 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddMarkups(JosekisNode node)
         {
-            foreach (JosekisMark mark in node.Marks)
+            if (node.Marks != null)
             {
-                await AddMark(mark);
+                foreach (JosekisMark mark in node.Marks)
+                {
+                    await AddMark(mark);
+                }
             }
 
-            foreach (JosekisLabel label in node.Labels)
+            if (node.Labels != null)
             {
-                await AddLabel(label);
+                foreach (JosekisLabel label in node.Labels)
+                {
+                    await AddLabel(label);
+                }
             }
 
             if (node.Comment != null)

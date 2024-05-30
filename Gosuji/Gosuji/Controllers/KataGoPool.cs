@@ -73,7 +73,7 @@ namespace Gosuji.Controllers
             await CashIn(userId);
 
             KataGo instance = instances[userId];
-            instance.Restart();
+            await instance.Restart();
             instance.TotalVisits = 0;
 
             freeInstances.Push(instance);

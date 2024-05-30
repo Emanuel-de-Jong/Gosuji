@@ -10,10 +10,10 @@ namespace Gosuji.Controllers
         public int TotalVisits { get; set; } = 0;
         public DateTimeOffset LastStartTime { get; set; }
 
-        public Process? process;
-        public StreamReader? reader;
-        public StreamReader? errorReader;
-        public StreamWriter? writer;
+        public Process process;
+        public StreamReader reader;
+        public StreamReader errorReader;
+        public StreamWriter writer;
 
         private bool stopped = false;
 
@@ -86,7 +86,7 @@ namespace Gosuji.Controllers
             ClearReader();
         }
 
-        public void Restart()
+        public async Task Restart()
         {
             if (G.Log)
             {
@@ -98,7 +98,7 @@ namespace Gosuji.Controllers
                 Write("quit");
             }
 
-            Start();
+            await Start();
         }
 
         public void SetBoardsize(int boardsize)
@@ -211,19 +211,19 @@ namespace Gosuji.Controllers
                 string element = analysis[i];
                 if (element == "move")
                 {
-                    suggestion.SetMove(color, analysis[i + 1]);
+                    suggestion?.SetMove(color, analysis[i + 1]);
                 }
                 else if (element == "visits")
                 {
-                    suggestion.SetVisits(analysis[i + 1]);
+                    suggestion?.SetVisits(analysis[i + 1]);
                 }
                 else if (element == "winrate")
                 {
-                    suggestion.SetWinrate(analysis[i + 1]);
+                    suggestion?.SetWinrate(analysis[i + 1]);
                 }
                 else if (element == "scoreLead")
                 {
-                    suggestion.SetScoreLead(analysis[i + 1]);
+                    suggestion?.SetScoreLead(analysis[i + 1]);
                 }
 
                 if (element == "info" || i == analysis.Length - 1)
@@ -317,14 +317,14 @@ namespace Gosuji.Controllers
 
         private string Read()
         {
-            string line;
+            string? line;
             while ((line = reader.ReadLine()) == null) { }
             return line;
         }
 
         private string ReadError()
         {
-            string line;
+            string? line;
             while ((line = errorReader.ReadLine()) == null) { }
             return line;
         }

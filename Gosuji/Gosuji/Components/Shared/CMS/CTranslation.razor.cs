@@ -2,6 +2,7 @@
 using Gosuji.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.JSInterop;
 
 namespace Gosuji.Components.Shared.CMS
@@ -14,8 +15,8 @@ namespace Gosuji.Components.Shared.CMS
         [Inject]
         private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
-        private List<TextKey>? textKeys;
-        private Dictionary<long, Language>? languages;
+        private List<TextKey> textKeys;
+        private Dictionary<long, Language> languages;
         private Dictionary<long, TextValue>? textValues;
 
         private Dictionary<long, string>? translations;
@@ -41,6 +42,11 @@ namespace Gosuji.Components.Shared.CMS
 
         private async Task AddTextKey()
         {
+            if (newKey.IsNullOrEmpty())
+            {
+                return;
+            }
+
             TextKey newKeyObj = new(newKey);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();

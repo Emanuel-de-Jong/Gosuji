@@ -4,6 +4,10 @@ root = true
 # C# files
 [*.cs]
 
+### Custom
+dotnet_diagnostic.CS8618.severity = none
+dotnet_diagnostic.CS1998.severity = none
+
 #### Core EditorConfig Options ####
 
 # Indentation and spacing

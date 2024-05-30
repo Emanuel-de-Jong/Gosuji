@@ -46,12 +46,12 @@
                                 <td>@game.Boardsize</td>
                                 <td>@game.Handicap</td>
                                 <td>@G.ColorNumToFullName(game.Color)</td>
-                                <td>@game.GameStat.MoveNumber</td>
-                                <td>@game.GameStat.Total</td>
-                                <td>@(game.GameStat.RightPercent)%</td>
-                                <td>@game.GameStat.RightTopStreak</td>
-                                <td>@(game.GameStat.PerfectPercent)%</td>
-                                <td>@game.GameStat.PerfectTopStreak</td>
+                                <td>@game.GameStat?.MoveNumber</td>
+                                <td>@game.GameStat?.Total</td>
+                                <td>@(game.GameStat?.RightPercent)%</td>
+                                <td>@game.GameStat?.RightTopStreak</td>
+                                <td>@(game.GameStat?.PerfectPercent)%</td>
+                                <td>@game.GameStat?.PerfectTopStreak</td>
                                 <td>@game.IsThirdPartySGF</td>
                                 <td>@game.CreateDate.ToString("dd-MM-yy HH:mm")</td>
                                 <td><button type="button" class="btn btn-primary" @onclick="async () => await DownloadSGF(game.Id)">Download</button></td>

@@ -73,11 +73,13 @@ namespace Gosuji.Client.Components.Pages
         {
             kataGoVersion = await kataGoService.GetVersion();
 
-            //GameId = 12;
             if (GameId != null)
             {
                 game = await dataService.GetGame(GameId.Value);
+            }
 
+            if (game != null)
+            {
                 RatioTree decodedRatios = GameDecoder.DecodeRatios(game.Ratios);
                 Dictionary<short, Dictionary<short, SuggestionList>> decodedSuggestions = GameDecoder.DecodeSuggestions(game.Suggestions);
                 Dictionary<short, Dictionary<short, EMoveType>> decodedMoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
@@ -307,6 +309,11 @@ namespace Gosuji.Client.Components.Pages
             if (G.Log)
             {
                 Console.WriteLine("Index.SaveGame");
+            }
+
+            if (userId == null)
+            {
+                return;
             }
 
             Game newGame = new()

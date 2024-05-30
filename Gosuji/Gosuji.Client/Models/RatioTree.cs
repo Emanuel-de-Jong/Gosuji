@@ -9,14 +9,14 @@ namespace Gosuji.Client.Models
 
         public ERatio Value { get; set; }
 
-        public RatioTree Parent { get; set; }
+        public RatioTree? Parent { get; set; }
         public List<RatioTree> Children { get; set; }
         public Dictionary<short, Dictionary<short, RatioTree>> Nodes { get; set; }
 
 
         public RatioTree() : this(null, ERatio.NONE, 0, 0) { }
 
-        public RatioTree(RatioTree parent, ERatio value, short x, short y)
+        public RatioTree(RatioTree? parent, ERatio value, short x, short y)
         {
             Y = y;
             X = x;

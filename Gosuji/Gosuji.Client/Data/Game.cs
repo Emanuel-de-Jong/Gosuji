@@ -9,7 +9,7 @@ namespace Gosuji.Client.Data
         public string UserId { get; set; }
         public long TrainerSettingConfigId { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
-        public long? KataGoVersionId { get; set; }
+        public long KataGoVersionId { get; set; }
         public KataGoVersion? kataGoVersion { get; set; }
         public long? GameStatId { get; set; }
         public GameStat? GameStat { get; set; }
@@ -21,7 +21,7 @@ namespace Gosuji.Client.Data
         public GameStat? EndgameStat { get; set; }
 
         public string? Thumbnail { get; set; }
-        public string? Name { get; set; }
+        public string Name { get; set; }
         public int? Result { get; set; }
         public int PrevNodeX { get; set; }
         public int PrevNodeY { get; set; }
@@ -29,14 +29,14 @@ namespace Gosuji.Client.Data
         public int Boardsize { get; set; }
         public int Handicap { get; set; }
         public int Color { get; set; }
-        public string? Ruleset { get; set; }
+        public string Ruleset { get; set; }
         public float Komi { get; set; }
 
-        public string? SGF { get; set; }
-        public byte[]? Ratios { get; set; }
-        public byte[]? Suggestions { get; set; }
-        public byte[]? MoveTypes { get; set; }
-        public byte[]? ChosenNotPlayedCoords { get; set; }
+        public string SGF { get; set; }
+        public byte[] Ratios { get; set; }
+        public byte[] Suggestions { get; set; }
+        public byte[] MoveTypes { get; set; }
+        public byte[] ChosenNotPlayedCoords { get; set; }
 
         public bool IsFinished { get; set; }
         public bool IsThirdPartySGF { get; set; }
