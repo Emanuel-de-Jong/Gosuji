@@ -52,6 +52,11 @@ namespace Gosuji
 
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddWebOptimizer(p =>
+            {
+                //p.AddJavaScriptBundle("/js/pages/josekis/bundle.js", "js/pages/josekis/**/*.js");
+            });
+
             // Custom services
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddSingleton<IKataGoService, KataGoService>();
@@ -59,6 +64,8 @@ namespace Gosuji
             builder.Services.AddSingleton<ITranslateService, TranslateService>();
 
             WebApplication app = builder.Build();
+
+            app.UseWebOptimizer();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
