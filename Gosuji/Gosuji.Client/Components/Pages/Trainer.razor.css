@@ -31,12 +31,6 @@
     width: 725px;
 }
 
-#trainerPage #game .next {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-}
-
 #trainerPage #game .besogo-gameInfo {
     display: none !important;
 }
@@ -79,12 +73,6 @@
 
     #trainerPage #settings input:invalid {
         border-color: red !important;
-    }
-
-    #trainerPage #settings .form-invalid-message {
-        width: 100%;
-        color: red;
-        font-size: 0.8125rem;
     }
 
     #trainerPage #settings .input-group-text input[type="checkbox"] {

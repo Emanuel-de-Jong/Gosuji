@@ -17,6 +17,28 @@ h1 {
 }
 
 
+#trainerPage #game .next {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+#trainerPage #settings .form-invalid-message {
+    width: 100%;
+    color: red;
+    font-size: 0.8125rem;
+}
+
+
+#profilePage .day {
+    margin: 0 5px 5px 0;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    background-color: rgb(200, 200, 200);
+}
+
+
 /* DARK MODE */
 
 html[data-bs-theme="dark"] #mainNavBar {
