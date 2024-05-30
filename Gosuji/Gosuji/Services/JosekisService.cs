@@ -52,13 +52,7 @@ namespace Gosuji.Services
         public async Task<JosekisNode> Current(int sessionId)
         {
             GoNode node = JosekisGoNodes[sessionId];
-            if (node is GoMoveNode)
-            {
-                GoMoveNode moveNode = (GoMoveNode)node;
-                return JosekisNodeConverter.Convert(moveNode);
-            }
-
-            return JosekisNodeConverter.Convert(node);
+            return node is GoMoveNode moveNode ? JosekisNodeConverter.Convert(moveNode) : JosekisNodeConverter.Convert(node);
         }
 
         public async Task ToParent(int sessionId)
@@ -104,9 +98,8 @@ namespace Gosuji.Services
         {
             foreach (GoNode? childNode in JosekisGoNodes[sessionId].ChildNodes)
             {
-                if (childNode is GoMoveNode)
+                if (childNode is GoMoveNode childMove)
                 {
-                    GoMoveNode childMove = (GoMoveNode)childNode;
                     if (childToGo.X == childMove.Stone.X && childToGo.Y == childMove.Stone.Y)
                     {
                         JosekisGoNodes[sessionId] = childMove;

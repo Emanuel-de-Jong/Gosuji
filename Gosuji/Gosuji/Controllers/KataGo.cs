@@ -54,7 +54,7 @@ namespace Gosuji.Controllers
             errorReader = process.StandardError;
             writer = process.StandardInput;
 
-            await Task.Run(() => WaitForGTPReady());
+            await Task.Run(WaitForGTPReady);
         }
 
         private void WaitForGTPReady()
