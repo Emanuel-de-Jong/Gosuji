@@ -1,51 +1,53 @@
-var custom = {};
+if (typeof custom === "undefined") {
+    var custom = {};
 
 
-custom.THEME_TYPES = {
-    DARK: 0,
-    LIGHT: 1,
-};
+    custom.THEME_TYPES = {
+        DARK: 0,
+        LIGHT: 1,
+    };
 
 
-custom.init = function () {
-    custom.htmlElement = document.getElementsByTagName("html")[0];
+    custom.init = function () {
+        custom.htmlElement = document.getElementsByTagName("html")[0];
 
-    custom.darkThemeSwitch = document.getElementById("darkThemeSwitch");
-    if (custom.darkThemeSwitch) {
-        custom.darkThemeSwitch.addEventListener("input", custom.darkThemeSwitchInputListener);
-    }
+        custom.darkThemeSwitch = document.getElementById("darkThemeSwitch");
+        if (custom.darkThemeSwitch) {
+            custom.darkThemeSwitch.addEventListener("input", custom.darkThemeSwitchInputListener);
+        }
 
-    custom.themeChangedEvent = new CEvent();
+        custom.themeChangedEvent = new CEvent();
 
-    custom.theme = custom.THEME_TYPES.DARK;
-};
+        custom.theme = custom.THEME_TYPES.DARK;
+    };
 
 
-custom.darkThemeSwitchInputListener = function () {
-    if (custom.darkThemeSwitch.checked) {
-        custom.enableDarkTheme();
-    } else {
-        custom.disableDarkTheme();
-    }
+    custom.darkThemeSwitchInputListener = function () {
+        if (custom.darkThemeSwitch.checked) {
+            custom.enableDarkTheme();
+        } else {
+            custom.disableDarkTheme();
+        }
 
-    custom.themeChangedEvent.dispatch({ theme: custom.theme });
-};
+        custom.themeChangedEvent.dispatch({ theme: custom.theme });
+    };
 
-custom.enableDarkTheme = function () {
-    custom.theme = custom.THEME_TYPES.DARK;
-    custom.htmlElement.dataset.bsTheme = "dark";
-};
+    custom.enableDarkTheme = function () {
+        custom.theme = custom.THEME_TYPES.DARK;
+        custom.htmlElement.dataset.bsTheme = "dark";
+    };
 
-custom.disableDarkTheme = function () {
-    custom.theme = custom.THEME_TYPES.LIGHT;
-    custom.htmlElement.dataset.bsTheme = "light";
-};
+    custom.disableDarkTheme = function () {
+        custom.theme = custom.THEME_TYPES.LIGHT;
+        custom.htmlElement.dataset.bsTheme = "light";
+    };
 
-custom.fitTextareaToContent = function (textarea) {
-    if (textarea.value == "") {
-        return;
-    }
+    custom.fitTextareaToContent = function (textarea) {
+        if (textarea.value == "") {
+            return;
+        }
 
-    textarea.style.height = "auto";
-    textarea.style.height = textarea.scrollHeight + 5 + "px";
-};
+        textarea.style.height = "auto";
+        textarea.style.height = textarea.scrollHeight + 5 + "px";
+    };
+}

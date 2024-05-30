@@ -1,8 +1,10 @@
-var abuseDetect = {};
+if (typeof abuseDetect === "undefined") {
+    var abuseDetect = {};
 
 
-abuseDetect.init = function () {
-    this.table = new DataTable("#abuseTable", {
-        order: [[2, "desc"]]
-    });
-};
+    abuseDetect.init = function () {
+        this.table = new DataTable("#abuseTable", {
+            order: [[2, "desc"]]
+        });
+    };
+}
