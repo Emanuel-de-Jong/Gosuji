@@ -192,3 +192,5 @@ if (typeof profilePage === "undefined") {
         }
     };
 }
+
+export { profilePage };
