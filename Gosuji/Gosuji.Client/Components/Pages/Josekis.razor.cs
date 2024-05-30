@@ -13,9 +13,9 @@ namespace Gosuji.Client.Components.Pages
         private const string EDITOR = $"{BOARD}.editor";
 
         [Inject]
-        private IJSRuntime? js { get; set; }
+        private IJSRuntime js { get; set; }
         [Inject]
-        private IJosekisService? josekisService { get; set; }
+        private IJosekisService josekisService { get; set; }
 
         private int sessionId;
         private DotNetObjectReference<Josekis>? josekisRef;

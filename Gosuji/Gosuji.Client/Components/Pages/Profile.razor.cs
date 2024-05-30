@@ -20,13 +20,13 @@ namespace Gosuji.Client.Components.Pages
         public string? Name { get; set; }
 
         [Inject]
-        private AuthenticationStateProvider? authenticationStateProvider { get; set; }
+        private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
-        private NavigationManager? navigationManager { get; set; }
+        private NavigationManager navigationManager { get; set; }
         [Inject]
-        private IJSRuntime? js { get; set; }
+        private IJSRuntime js { get; set; }
         [Inject]
-        private IDataService? dataService { get; set; }
+        private IDataService dataService { get; set; }
 
         public Game[]? Games { get; set; }
         public Game[]? FinishedGames { get; set; }

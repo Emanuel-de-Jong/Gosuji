@@ -9,10 +9,10 @@ namespace Gosuji.Components.Shared.CMS
     public partial class CTranslation : ComponentBase
     {
         [Inject]
-        private IJSRuntime? JS { get; set; }
+        private IJSRuntime JS { get; set; }
 
         [Inject]
-        private IDbContextFactory<ApplicationDbContext>? dbContextFactory { get; set; }
+        private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
         private List<TextKey>? textKeys;
         private Dictionary<long, Language>? languages;
@@ -59,7 +59,7 @@ namespace Gosuji.Components.Shared.CMS
                 return;
             }
 
-            PrepareTranslationInputs();
+            await PrepareTranslationInputs();
         }
 
         private async Task PrepareTranslationInputs()

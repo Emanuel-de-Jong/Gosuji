@@ -10,9 +10,9 @@ namespace Gosuji.Components.Shared.CMS
     public partial class CAbuseDetect : ComponentBase
     {
         [Inject]
-        private IJSRuntime? JS { get; set; }
+        private IJSRuntime JS { get; set; }
         [Inject]
-        private IDbContextFactory<ApplicationDbContext>? dbContextFactory { get; set; }
+        private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
         private List<User>? users;
         private Dictionary<string, UserSubscription>? subscriptions;

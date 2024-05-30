@@ -15,13 +15,13 @@ namespace Gosuji.Client.Components.Pages
         public long? GameId { get; set; }
 
         [Inject]
-        private AuthenticationStateProvider? authenticationStateProvider { get; set; }
+        private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
-        private IKataGoService? kataGoService { get; set; }
+        private IKataGoService kataGoService { get; set; }
         [Inject]
-        private IJSRuntime? js { get; set; }
+        private IJSRuntime js { get; set; }
         [Inject]
-        private IDataService? dataService { get; set; }
+        private IDataService dataService { get; set; }
 
         private string? userId;
         private string? userName;

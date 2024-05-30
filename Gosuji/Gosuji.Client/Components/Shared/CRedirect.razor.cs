@@ -10,7 +10,7 @@ namespace Gosuji.Client.Components.Shared
         public bool ForceLoad { get; set; }
 
         [Inject]
-        private NavigationManager? navigationManager { get; set; }
+        private NavigationManager navigationManager { get; set; }
 
         protected override void OnAfterRender(bool firstRender)
         {
