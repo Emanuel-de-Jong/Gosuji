@@ -37,12 +37,12 @@ namespace Gosuji.Services
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-            Dictionary<long, Dictionary<string, string>> translations = new();
+            Dictionary<long, Dictionary<string, string>> translations = [];
             foreach (TextValue val in dbContext.TextValues.Include(tv => tv.TextKey))
             {
                 if (!translations.ContainsKey(val.LanguageId))
                 {
-                    translations[val.LanguageId] = new();
+                    translations[val.LanguageId] = [];
                 }
 
                 translations[val.LanguageId][val.TextKey.Key] = val.Value;
@@ -57,7 +57,7 @@ namespace Gosuji.Services
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-            Dictionary<string, long> userLanguageIds = new();
+            Dictionary<string, long> userLanguageIds = [];
             foreach (User user in dbContext.Users.Include(u => u.SettingConfig))
             {
                 userLanguageIds[user.Id] = user.SettingConfig.LanguageId;

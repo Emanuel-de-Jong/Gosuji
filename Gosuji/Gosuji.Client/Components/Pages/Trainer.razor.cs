@@ -15,13 +15,13 @@ namespace Gosuji.Client.Components.Pages
         public long? GameId { get; set; }
 
         [Inject]
-        AuthenticationStateProvider authenticationStateProvider { get; set; }
+        private AuthenticationStateProvider? authenticationStateProvider { get; set; }
         [Inject]
-        private IKataGoService kataGoService { get; set; }
+        private IKataGoService? kataGoService { get; set; }
         [Inject]
-        private IJSRuntime js { get; set; }
+        private IJSRuntime? js { get; set; }
         [Inject]
-        private IDataService dataService { get; set; }
+        private IDataService? dataService { get; set; }
 
         private string? userId;
         private string? userName;
@@ -157,7 +157,10 @@ namespace Gosuji.Client.Components.Pages
             float opponentOptionPerc,
             bool showOpponentOptions)
         {
-            if (G.Log) Console.WriteLine("Index.SaveTrainerSettingConfig");
+            if (G.Log)
+            {
+                Console.WriteLine("Index.SaveTrainerSettingConfig");
+            }
 
             TrainerSettingConfig newConfig = new()
             {
@@ -208,7 +211,7 @@ namespace Gosuji.Client.Components.Pages
 
             if (trainerSettingConfig?.Hash == newConfig.Hash)
             {
-                    return;
+                return;
             }
 
             newConfig.Id = await dataService.PostTrainerSettingConfig(newConfig);
@@ -218,7 +221,10 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task SaveGameStats(GameStat newGameStat, GameStat newOpeningStat, GameStat newMidgameStat, GameStat newEndgameStat)
         {
-            if (G.Log) Console.WriteLine("Index.SaveGameStats");
+            if (G.Log)
+            {
+                Console.WriteLine("Index.SaveGameStats");
+            }
 
             Task[] tasks =
             {
@@ -276,7 +282,7 @@ namespace Gosuji.Client.Components.Pages
                 newGameStat.Id = gameStat.Id;
                 await dataService.PutGameStat(newGameStat);
             }
-            
+
             return newGameStat;
         }
 
@@ -298,7 +304,10 @@ namespace Gosuji.Client.Components.Pages
             bool isFinished,
             bool isThirdPartySGF)
         {
-            if (G.Log) Console.WriteLine("Index.SaveGame");
+            if (G.Log)
+            {
+                Console.WriteLine("Index.SaveGame");
+            }
 
             Game newGame = new()
             {

@@ -10,14 +10,14 @@ namespace Gosuji.Components.Shared.CMS
     public partial class CAbuseDetect : ComponentBase
     {
         [Inject]
-        private IJSRuntime JS { get; set; }
+        private IJSRuntime? JS { get; set; }
         [Inject]
-        private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
+        private IDbContextFactory<ApplicationDbContext>? dbContextFactory { get; set; }
 
-        private List<User> users;
-        private Dictionary<string, UserSubscription> subscriptions;
-        private Dictionary<string, long> totalKataGoVisits;
-        private Dictionary<string, long> weekKataGoVisits;
+        private List<User>? users;
+        private Dictionary<string, UserSubscription>? subscriptions;
+        private Dictionary<string, long>? totalKataGoVisits;
+        private Dictionary<string, long>? weekKataGoVisits;
 
         protected override async Task OnInitializedAsync()
         {
@@ -25,7 +25,7 @@ namespace Gosuji.Components.Shared.CMS
             users = await dbContext.Users.ToListAsync();
             subscriptions = await dbContext.UserSubscriptions.Include(us => us.SubscriptionType).ToDictionaryAsync(us => us.UserId);
 
-            totalKataGoVisits = new();
+            totalKataGoVisits = [];
             foreach (UserMoveCount moveCount in await dbContext.UserMoveCounts.ToListAsync())
             {
                 if (!totalKataGoVisits.ContainsKey(moveCount.UserId))
@@ -38,7 +38,7 @@ namespace Gosuji.Components.Shared.CMS
                 }
             }
 
-            weekKataGoVisits = new();
+            weekKataGoVisits = [];
             foreach (User user in users)
             {
                 weekKataGoVisits[user.Id] = await MoveCountManager.GetWeekKataGoVisits(dbContextFactory, user.Id);

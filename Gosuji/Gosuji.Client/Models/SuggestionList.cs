@@ -2,7 +2,7 @@
 {
     public class SuggestionList
     {
-        public List<Suggestion> Suggestions { get; set; } = new();
+        public List<Suggestion> Suggestions { get; set; } = [];
 
         public Suggestion? AnalyzeMoveSuggestion { get; set; }
 

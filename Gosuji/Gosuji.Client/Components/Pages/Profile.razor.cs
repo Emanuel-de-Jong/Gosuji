@@ -20,13 +20,13 @@ namespace Gosuji.Client.Components.Pages
         public string? Name { get; set; }
 
         [Inject]
-        private AuthenticationStateProvider authenticationStateProvider { get; set; }
+        private AuthenticationStateProvider? authenticationStateProvider { get; set; }
         [Inject]
-        private NavigationManager navigationManager { get; set; }
+        private NavigationManager? navigationManager { get; set; }
         [Inject]
-        private IJSRuntime js { get; set; }
+        private IJSRuntime? js { get; set; }
         [Inject]
-        private IDataService dataService { get; set; }
+        private IDataService? dataService { get; set; }
 
         public Game[]? Games { get; set; }
         public Game[]? FinishedGames { get; set; }
@@ -90,11 +90,14 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task CreatePercentPerGameLineChart()
         {
-            List<int> rightPercents = new();
-            List<int> perfectPercents = new();
+            List<int> rightPercents = [];
+            List<int> perfectPercents = [];
             foreach (Game game in FinishedGames)
             {
-                if (game.GameStat.Total < 5) continue;
+                if (game.GameStat.Total < 5)
+                {
+                    continue;
+                }
 
                 rightPercents.Add(game.GameStat.RightPercent);
                 perfectPercents.Add(game.GameStat.PerfectPercent);
@@ -162,7 +165,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task CreateDaysChart()
         {
-            Dictionary<string, DaysChartDayTypes> days = new();
+            Dictionary<string, DaysChartDayTypes> days = [];
 
             if (FinishedGames.Length == 0)
             {
@@ -193,10 +196,17 @@ namespace Gosuji.Client.Components.Pages
             DateTime lastGameDate = FinishedGames.Last().CreateDate.DateTime;
             for (DateTime day = firstGameDate.Date; day.Date <= lastGameDate.Date; day = day.AddDays(1))
             {
-                if (canCatchUpCount == 0) break;
+                if (canCatchUpCount == 0)
+                {
+                    break;
+                }
 
                 string date = day.ToString("dd-MM-yy");
-                if (days[date] != DaysChartDayTypes.NONE) continue;
+                if (days[date] != DaysChartDayTypes.NONE)
+                {
+                    continue;
+                }
+
                 days[date] = DaysChartDayTypes.CAUGHT_UP;
 
                 canCatchUpCount--;

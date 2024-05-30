@@ -1,8 +1,6 @@
 ﻿using Gosuji.Client.Data;
-using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.JSInterop;
-using System.Drawing;
 using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services

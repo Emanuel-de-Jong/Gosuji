@@ -9,18 +9,18 @@ namespace Gosuji.Components.Shared.CMS
     public partial class CTranslation : ComponentBase
     {
         [Inject]
-        private IJSRuntime JS { get; set; }
+        private IJSRuntime? JS { get; set; }
 
         [Inject]
-        private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
+        private IDbContextFactory<ApplicationDbContext>? dbContextFactory { get; set; }
 
-        private List<TextKey> textKeys;
-        private Dictionary<long, Language> languages;
+        private List<TextKey>? textKeys;
+        private Dictionary<long, Language>? languages;
         private Dictionary<long, TextValue>? textValues;
 
         private Dictionary<long, string>? translations;
 
-        private string newKey;
+        private string? newKey;
         private long currentLanguageId = -1;
 
         protected override async Task OnInitializedAsync()
@@ -65,10 +65,10 @@ namespace Gosuji.Components.Shared.CMS
         private async Task PrepareTranslationInputs()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            var tempTextValues = await dbContext.TextValues.Where(tv => tv.LanguageId == currentLanguageId).ToDictionaryAsync(tv => tv.TextKeyId);
+            Dictionary<long, TextValue> tempTextValues = await dbContext.TextValues.Where(tv => tv.LanguageId == currentLanguageId).ToDictionaryAsync(tv => tv.TextKeyId);
             await dbContext.DisposeAsync();
 
-            translations = new();
+            translations = [];
             foreach (TextKey textKey in textKeys)
             {
                 translations[textKey.Id] = tempTextValues.ContainsKey(textKey.Id) ? tempTextValues[textKey.Id].Value : "";

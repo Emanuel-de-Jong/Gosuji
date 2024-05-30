@@ -1,15 +1,10 @@
-﻿using Gosuji.Client;
+﻿using Gosuji.Client.Data;
+using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services;
 using Gosuji.Controllers;
 using Gosuji.Data;
-using Gosuji.Client.Models.KataGo;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
-using Gosuji.Client.Models.Josekis;
 using Microsoft.JSInterop;
-using Gosuji.Client.Data;
-using Microsoft.EntityFrameworkCore.Internal;
-using System;
 
 namespace Gosuji.Services
 {
@@ -41,7 +36,7 @@ namespace Gosuji.Services
             group.MapGet("/SetHandicap/{userId}/{handicap}", (string userId, int handicap, IKataGoService service) => service.SetHandicap(userId, handicap));
             group.MapGet("/AnalyzeMove/{userId}/{color}/{coord}", (string userId, string color, string coord, IKataGoService service) => service.AnalyzeMove(userId, color, coord));
             group.MapGet("/Analyze/{userId}/{color}/{maxVisits}/{minVisitsPerc}/{maxVisitDiffPerc}",
-                (string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc, IKataGoService service) => 
+                (string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc, IKataGoService service) =>
                 service.Analyze(userId, color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
             group.MapGet("/Play/{userId}/{color}/{coord}", (string userId, string color, string coord, IKataGoService service) => service.Play(userId, color, coord));
             group.MapPost("/PlayRange/{userId}", (string userId, Moves moves, IKataGoService service) => service.PlayRange(userId, moves));

@@ -1,7 +1,5 @@
-﻿using Gosuji.Client.Data;
-using Gosuji.Data;
+﻿using Gosuji.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Timers;
 
 namespace Gosuji.Controllers
 {
@@ -15,7 +13,7 @@ namespace Gosuji.Controllers
         private System.Timers.Timer cashInTimer;
 
         private Stack<KataGo> freeInstances = new();
-        private Dictionary<string, KataGo> instances = new();
+        private Dictionary<string, KataGo> instances = [];
 
         public KataGoPool(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
         {

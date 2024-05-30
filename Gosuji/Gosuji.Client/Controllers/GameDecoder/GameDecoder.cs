@@ -12,7 +12,7 @@ namespace Gosuji.Client.Controllers.GameDecoder
         {
             int i = 0;
             short y = 0;
-            Dictionary<short, Dictionary<short, T>> result = new();
+            Dictionary<short, Dictionary<short, T>> result = [];
             while (i < bytes.Length)
             {
                 short x = GetInt16(bytes, i);
@@ -23,7 +23,7 @@ namespace Gosuji.Client.Controllers.GameDecoder
                     y = GetInt16(bytes, i);
                     i += 2;
 
-                    result[y] = new();
+                    result[y] = [];
                 }
                 else
                 {

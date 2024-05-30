@@ -24,10 +24,14 @@ namespace Gosuji.Client.Models
             Value = value;
 
             Parent = parent;
-            Children = new();
-            Nodes = parent != null ? parent.Nodes : new();
+            Children = [];
+            Nodes = parent != null ? parent.Nodes : [];
 
-            if (!Nodes.ContainsKey(Y)) Nodes.Add(Y, new());
+            if (!Nodes.ContainsKey(Y))
+            {
+                Nodes.Add(Y, []);
+            }
+
             Nodes[Y][X] = this;
         }
 
@@ -42,10 +46,10 @@ namespace Gosuji.Client.Models
 
         public Dictionary<short, Dictionary<short, ERatio>> ToDict()
         {
-            Dictionary<short, Dictionary<short, ERatio>> result = new();
+            Dictionary<short, Dictionary<short, ERatio>> result = [];
             foreach (KeyValuePair<short, Dictionary<short, RatioTree>> yPair in Nodes)
             {
-                result[yPair.Key] = new();
+                result[yPair.Key] = [];
                 foreach (KeyValuePair<short, RatioTree> xPair in yPair.Value)
                 {
                     result[yPair.Key][xPair.Key] = xPair.Value.Value;

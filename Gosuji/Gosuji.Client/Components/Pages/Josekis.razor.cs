@@ -7,20 +7,20 @@ namespace Gosuji.Client.Components.Pages
 {
     public partial class Josekis : ComponentBase, IDisposable
     {
-        private static Random random = new Random();
+        private static Random random = new();
 
         private const string BOARD = "josekisPage.board";
         private const string EDITOR = $"{BOARD}.editor";
 
         [Inject]
-        private IJSRuntime js { get; set; }
+        private IJSRuntime? js { get; set; }
         [Inject]
-        private IJosekisService josekisService { get; set; }
+        private IJosekisService? josekisService { get; set; }
 
         private int sessionId;
         private DotNetObjectReference<Josekis>? josekisRef;
 
-        public string[] Comment { get; set; }
+        public string[]? Comment { get; set; }
 
         protected override async Task OnInitializedAsync()
         {

@@ -1,12 +1,12 @@
 ﻿using IGOEnchi.GoGameLogic;
 
-namespace Gosuji.Models.GoGameWraps
+namespace Gosuji.Models.GoGameExtensions
 {
     public static class StoneExtensions
     {
         public static string Print(this Stone stone)
         {
-            string output = (stone.IsBlack ? "B" : "W");
+            string output = stone.IsBlack ? "B" : "W";
             if (stone.X == 20)
             {
                 output += "(PASS)";

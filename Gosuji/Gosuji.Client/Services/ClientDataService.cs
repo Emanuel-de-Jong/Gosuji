@@ -24,7 +24,7 @@ namespace Gosuji.Client.Services
 
         public async Task<Game[]> GetUserGames(string userId)
         {
-           return await http.GetFromJsonAsync<Game[]>($"{MAP_GROUP}/GetUserGames/{userId}");
+            return await http.GetFromJsonAsync<Game[]>($"{MAP_GROUP}/GetUserGames/{userId}");
         }
 
         public async Task<Game?> GetGame(long gameId)
@@ -34,12 +34,12 @@ namespace Gosuji.Client.Services
 
         public async Task<long> PostTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
         {
-           return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostTrainerSettingConfig", trainerSettingConfig)).Content.ReadAsStringAsync());
+            return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostTrainerSettingConfig", trainerSettingConfig)).Content.ReadAsStringAsync());
         }
 
         public async Task<long> PostGameStat(GameStat gameStat)
         {
-           return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostGameStat", gameStat)).Content.ReadAsStringAsync());
+            return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostGameStat", gameStat)).Content.ReadAsStringAsync());
         }
 
         public async Task PutGameStat(GameStat gameStat)

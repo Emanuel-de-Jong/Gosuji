@@ -26,7 +26,10 @@ namespace Gosuji.Controllers
 
         private async Task Start()
         {
-            if (G.Log) Console.WriteLine("KataGo.Start");
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.Start");
+            }
 
             if (stopped)
             {
@@ -72,7 +75,10 @@ namespace Gosuji.Controllers
 
         public void ClearBoard()
         {
-            if (G.Log) Console.WriteLine("KataGo.ClearBoard");
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.ClearBoard");
+            }
 
             Write("clear_board");
             ClearReader();
@@ -82,15 +88,25 @@ namespace Gosuji.Controllers
 
         public void Restart()
         {
-            if (G.Log) Console.WriteLine("KataGo.Restart");
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.Restart");
+            }
 
-            if (process != null) Write("quit");
+            if (process != null)
+            {
+                Write("quit");
+            }
+
             Start();
         }
 
         public void SetBoardsize(int boardsize)
         {
-            if (G.Log) Console.WriteLine("KataGo.SetBoardsize " + boardsize);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.SetBoardsize " + boardsize);
+            }
 
             Write("boardsize " + boardsize);
             ClearReader();
@@ -98,7 +114,10 @@ namespace Gosuji.Controllers
 
         public void SetRuleset(string ruleset)
         {
-            if (G.Log) Console.WriteLine("KataGo.SetRuleset " + ruleset);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.SetRuleset " + ruleset);
+            }
 
             Write("kata-set-rules " + ruleset);
             ClearReader();
@@ -106,7 +125,10 @@ namespace Gosuji.Controllers
 
         public void SetKomi(float komi)
         {
-            if (G.Log) Console.WriteLine("KataGo.SetKomi " + komi);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.SetKomi " + komi);
+            }
 
             Write("komi " + komi);
             ClearReader();
@@ -114,7 +136,10 @@ namespace Gosuji.Controllers
 
         public void SetHandicap(int handicap)
         {
-            if (G.Log) Console.WriteLine("KataGo.SetHandicap " + handicap);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.SetHandicap " + handicap);
+            }
 
             Write("fixed_handicap " + handicap);
             ClearReader();
@@ -122,7 +147,10 @@ namespace Gosuji.Controllers
 
         public MoveSuggestion AnalyzeMove(string color, string coord)
         {
-            if (G.Log) Console.WriteLine("KataGo.AnalyzeMove " + color + " " + coord);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.AnalyzeMove " + color + " " + coord);
+            }
 
             int maxVisits = 100;
             if (lastMaxVisits != maxVisits)
@@ -154,7 +182,10 @@ namespace Gosuji.Controllers
 
         public List<MoveSuggestion> Analyze(string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
         {
-            if (G.Log) Console.WriteLine("KataGo.Analyze " + color + " " + maxVisits + " " + minVisitsPerc + " " + maxVisitDiffPerc);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.Analyze " + color + " " + maxVisits + " " + minVisitsPerc + " " + maxVisitDiffPerc);
+            }
 
             if (lastMaxVisits != maxVisits)
             {
@@ -173,7 +204,7 @@ namespace Gosuji.Controllers
             Write("undo");
             ClearReader();
 
-            List<MoveSuggestion> suggestions = new();
+            List<MoveSuggestion> suggestions = [];
             MoveSuggestion? suggestion = null;
             for (int i = 0; i < analysis.Length; i++)
             {
@@ -216,7 +247,7 @@ namespace Gosuji.Controllers
             int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(maxVisits, highestVisits));
             int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * maxVisits);
 
-            List<MoveSuggestion> filteredSuggestions = new();
+            List<MoveSuggestion> filteredSuggestions = [];
             int lastSuggestionVisits = int.MaxValue;
             foreach (MoveSuggestion moveSuggestion in suggestions)
             {
@@ -239,7 +270,10 @@ namespace Gosuji.Controllers
 
         public void Play(string color, string coord)
         {
-            if (G.Log) Console.WriteLine("KataGo.Play " + color + " " + coord);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.Play " + color + " " + coord);
+            }
 
             Write("play " + color + " " + coord);
             ClearReader();
@@ -247,7 +281,10 @@ namespace Gosuji.Controllers
 
         public void PlayRange(Moves moves)
         {
-            if (G.Log) Console.WriteLine("KataGo.PlayRange " + moves);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.PlayRange " + moves);
+            }
 
             foreach (Move move in moves.moves)
             {
@@ -257,7 +294,10 @@ namespace Gosuji.Controllers
 
         public string SGF(bool shouldWriteFile)
         {
-            if (G.Log) Console.WriteLine("KataGo.SGF " + shouldWriteFile);
+            if (G.Log)
+            {
+                Console.WriteLine("KataGo.SGF " + shouldWriteFile);
+            }
 
             Write("printsgf");
             string sgfStr = Read()[2..];

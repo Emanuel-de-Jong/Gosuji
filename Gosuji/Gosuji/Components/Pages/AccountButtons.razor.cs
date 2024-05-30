@@ -6,9 +6,9 @@ namespace Gosuji.Components.Pages
     public partial class AccountButtons : ComponentBase
     {
         [Inject]
-        private IHttpContextAccessor httpContextAccessor { get; set; }
+        private IHttpContextAccessor? httpContextAccessor { get; set; }
         [Inject]
-        private IAntiforgery antiforgery { get; set; }
+        private IAntiforgery? antiforgery { get; set; }
 
         private string? antiforgeryToken;
 

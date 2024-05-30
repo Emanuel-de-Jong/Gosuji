@@ -12,7 +12,7 @@ namespace Gosuji.Controllers
             List<UserMoveCount> moveCounts = await dbContext.UserMoveCounts.Where(mc => mc.UserId == userId).ToListAsync();
             UserMoveCount? moveCount = moveCounts.OrderBy(mc => mc.CreateDate).LastOrDefault();
 
-            DateTimeOffset lastMonday = DateTimeOffset.UtcNow.AddDays(-(int)(DateTimeOffset.UtcNow.DayOfWeek - DayOfWeek.Monday + 7) % 7);
+            DateTimeOffset lastMonday = DateTimeOffset.UtcNow.AddDays(-(DateTimeOffset.UtcNow.DayOfWeek - DayOfWeek.Monday + 7) % 7);
             if (moveCount == null || moveCount.CreateDate < lastMonday)
             {
                 moveCount = new UserMoveCount(userId);
@@ -33,7 +33,7 @@ namespace Gosuji.Controllers
             List<UserMoveCount> moveCounts = await dbContext.UserMoveCounts.Where(mc => mc.UserId == userId).ToListAsync();
             UserMoveCount? moveCount = moveCounts.OrderBy(mc => mc.CreateDate).LastOrDefault();
 
-            DateTimeOffset lastMonday = DateTimeOffset.UtcNow.AddDays(-(int)(DateTimeOffset.UtcNow.DayOfWeek - DayOfWeek.Monday + 7) % 7);
+            DateTimeOffset lastMonday = DateTimeOffset.UtcNow.AddDays(-(DateTimeOffset.UtcNow.DayOfWeek - DayOfWeek.Monday + 7) % 7);
             if (moveCount == null || moveCount.CreateDate < lastMonday)
             {
                 return 0;

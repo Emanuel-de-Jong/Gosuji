@@ -4,6 +4,7 @@ using Gosuji.Controllers;
 using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
 using IGOEnchi.SmartGameLib;
+using IGOEnchi.SmartGameLib.models;
 
 namespace Gosuji.Services
 {
@@ -18,11 +19,11 @@ namespace Gosuji.Services
         {
             httpContextAccessor = _httpContextAccessor;
 
-            JosekisGoNodes = new();
+            JosekisGoNodes = [];
 
-            using var fileStream = File.OpenRead(@"Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf");
+            using FileStream fileStream = File.OpenRead(@"Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf");
 
-            var gameTree = SgfReader.LoadFromStream(fileStream);
+            SGFTree gameTree = SgfReader.LoadFromStream(fileStream);
             baseGame = SgfCompiler.Compile(gameTree);
         }
 
@@ -101,7 +102,7 @@ namespace Gosuji.Services
 
         public async Task<bool> ToChild(int sessionId, JosekisNode childToGo)
         {
-            foreach (var childNode in JosekisGoNodes[sessionId].ChildNodes)
+            foreach (GoNode? childNode in JosekisGoNodes[sessionId].ChildNodes)
             {
                 if (childNode is GoMoveNode)
                 {
