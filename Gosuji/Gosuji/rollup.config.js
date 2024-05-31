@@ -7,7 +7,7 @@ export default {
     input: 'wwwroot/js/pages/josekis/**/*.js',
     output: {
         file: 'wwwroot/js/pages/josekis/bundle.min.js',
-        format: 'es',
+        format: 'esm',
         sourcemap: true,
         plugins: [terser()]
     },

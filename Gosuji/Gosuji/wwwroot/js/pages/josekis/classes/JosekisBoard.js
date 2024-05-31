@@ -1,4 +1,4 @@
-class JosekisBoard extends Board {
+export class JosekisBoard extends Board {
     constructor() {
         super();
 
@@ -58,5 +58,3 @@ class JosekisBoard extends Board {
         }
     }
 }
-
-export { JosekisBoard };
