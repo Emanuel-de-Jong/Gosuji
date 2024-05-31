@@ -7,6 +7,10 @@
     <UserSecretsId>aspnet-Gosuji-e43d5407-c9fc-4dd5-af94-bbb5a9dd8fa1</UserSecretsId>
   </PropertyGroup>
 
+  <Target Name="PrepublishScript" BeforeTargets="Build">
+    <Exec Command="npm run build:js" />
+  </Target>
+
   <ItemGroup>
     <ProjectReference Include="..\Gosuji.Client\Gosuji.Client.csproj" />
     <PackageReference Include="IGOEnchi.GoGameSgf" Version="1.0.7" />

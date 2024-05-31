@@ -1,0 +1,13 @@
+{
+    "scripts": {
+        "build:js": "rollup -c"
+    },
+    "devDependencies": {
+        "@rollup/plugin-multi-entry": "^6.0.1",
+        "@rollup/plugin-terser": "^0.4.4",
+        "rollup": "^4.18.0",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0"
+    },
+    "type": "module"
+}
