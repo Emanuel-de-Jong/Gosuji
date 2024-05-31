@@ -1,4 +1,4 @@
-export class JosekisBoard extends Board {
+export default class JosekisBoard extends Board {
     constructor() {
         super();
 

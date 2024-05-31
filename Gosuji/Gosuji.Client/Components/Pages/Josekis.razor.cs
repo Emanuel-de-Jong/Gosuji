@@ -52,12 +52,12 @@ namespace Gosuji.Client.Components.Pages
                 return;
             }
 
-            await js.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
-            await js.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
+            await jsRef.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
+            await jsRef.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
 
             await AddMarkups(node);
 
-            await js.InvokeVoidAsync($"{EDITOR}.setTool", "cross");
+            await jsRef.InvokeVoidAsync($"{EDITOR}.setTool", "cross");
         }
 
         private async Task AddMarkups()
@@ -89,7 +89,7 @@ namespace Gosuji.Client.Components.Pages
                 StateHasChanged();
             }
 
-            await js.InvokeVoidAsync($"{BOARD}.redraw");
+            await jsRef.InvokeVoidAsync($"{BOARD}.redraw");
         }
 
         private async Task AddMark(JosekisMark mark)
@@ -112,12 +112,12 @@ namespace Gosuji.Client.Components.Pages
                     break;
             }
 
-            await js.InvokeVoidAsync($"{BOARD}.addMarkup", mark.X + 1, mark.Y + 1, markId);
+            await jsRef.InvokeVoidAsync($"{BOARD}.addMarkup", mark.X + 1, mark.Y + 1, markId);
         }
 
         private async Task AddLabel(JosekisLabel textLabel)
         {
-            await js.InvokeVoidAsync($"{BOARD}.addMarkup", textLabel.X + 1, textLabel.Y + 1, textLabel.Text);
+            await jsRef.InvokeVoidAsync($"{BOARD}.addMarkup", textLabel.X + 1, textLabel.Y + 1, textLabel.Text);
         }
 
         [JSInvokable]
@@ -131,7 +131,7 @@ namespace Gosuji.Client.Components.Pages
         public async Task Prev()
         {
             await josekisService.ToParent(sessionId);
-            await js.InvokeVoidAsync($"{BOARD}.clearFuture");
+            await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
 
@@ -139,9 +139,9 @@ namespace Gosuji.Client.Components.Pages
         public async Task LastBranch()
         {
             int returnCount = await josekisService.ToLastBranch(sessionId);
-            await js.InvokeVoidAsync($"{EDITOR}.prevNode", returnCount);
+            await jsRef.InvokeVoidAsync($"{EDITOR}.prevNode", returnCount);
 
-            await js.InvokeVoidAsync($"{BOARD}.clearFuture");
+            await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
 
@@ -149,7 +149,7 @@ namespace Gosuji.Client.Components.Pages
         public async Task First()
         {
             await josekisService.ToFirst(sessionId);
-            await js.InvokeVoidAsync($"{BOARD}.clearFuture");
+            await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
 
