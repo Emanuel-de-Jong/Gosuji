@@ -31,7 +31,7 @@ namespace Gosuji.Client.Components.Pages
         public Game[] Games { get; set; }
         public Game[] FinishedGames { get; set; }
 
-        private IJSObjectReference profilePage;
+        private IJSObjectReference jsRef;
         private bool isGamesFilled = false;
 
         public async Task DownloadSGF(long gameId)
@@ -40,7 +40,7 @@ namespace Gosuji.Client.Components.Pages
             {
                 if (game.Id == gameId)
                 {
-                    await profilePage.InvokeVoidAsync("profilePage.downloadSGF", game.Name, game.SGF);
+                    await jsRef.InvokeVoidAsync("profilePage.downloadSGF", game.Name, game.SGF);
                     break;
                 }
             }
@@ -66,11 +66,11 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            profilePage ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/profile.js");
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/profile.js");
 
             if (firstRender)
             {
-                await profilePage.InvokeVoidAsync("profilePage.init", GameStat.RIGHT_COLOR.ToCSS(), GameStat.PERFECT_COLOR.ToCSS());
+                await jsRef.InvokeVoidAsync("profilePage.init", GameStat.RIGHT_COLOR.ToCSS(), GameStat.PERFECT_COLOR.ToCSS());
             }
 
             if (!isGamesFilled && Games != null)
@@ -88,7 +88,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task CreateGameTable()
         {
-            await profilePage.InvokeVoidAsync("profilePage.createGameTable");
+            await jsRef.InvokeVoidAsync("profilePage.createGameTable");
         }
 
         private async Task CreatePercentPerGameLineChart()
@@ -106,7 +106,7 @@ namespace Gosuji.Client.Components.Pages
                 perfectPercents.Add(game.GameStat.PerfectPercent);
             }
 
-            await profilePage.InvokeVoidAsync("profilePage.createPercentPerGameLineChart", rightPercents, perfectPercents);
+            await jsRef.InvokeVoidAsync("profilePage.createPercentPerGameLineChart", rightPercents, perfectPercents);
         }
 
         private async Task CreateGameStageBarChart()
@@ -161,7 +161,7 @@ namespace Gosuji.Client.Components.Pages
             perfectMidgame = perfectMidgame > 0 ? (int)Math.Round((double)perfectMidgame / perfectMidgames) : 0;
             perfectEndgame = perfectEndgame > 0 ? (int)Math.Round((double)perfectEndgame / perfectEndgames) : 0;
 
-            await profilePage.InvokeVoidAsync("profilePage.createGameStageBarChart",
+            await jsRef.InvokeVoidAsync("profilePage.createGameStageBarChart",
                 new int[] { rightOpening, rightMidgame, rightEndgame },
                 new int[] { perfectOpening, perfectMidgame, perfectEndgame });
         }
@@ -172,7 +172,7 @@ namespace Gosuji.Client.Components.Pages
 
             if (FinishedGames.Length == 0)
             {
-                await profilePage.InvokeVoidAsync("profilePage.createDaysChart", days);
+                await jsRef.InvokeVoidAsync("profilePage.createDaysChart", days);
                 return;
             }
 
@@ -215,7 +215,7 @@ namespace Gosuji.Client.Components.Pages
                 canCatchUpCount--;
             }
 
-            await profilePage.InvokeVoidAsync("profilePage.createDaysChart", days);
+            await jsRef.InvokeVoidAsync("profilePage.createDaysChart", days);
         }
     }
 }

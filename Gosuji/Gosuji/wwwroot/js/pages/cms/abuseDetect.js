@@ -8,3 +8,5 @@ if (typeof abuseDetect === "undefined") {
         });
     };
 }
+
+export { abuseDetect };

@@ -10,8 +10,7 @@ namespace Gosuji.Components.Shared.CMS
     public partial class CTranslation : ComponentBase
     {
         [Inject]
-        private IJSRuntime JS { get; set; }
-
+        private IJSRuntime js { get; set; }
         [Inject]
         private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
@@ -36,7 +35,7 @@ namespace Gosuji.Components.Shared.CMS
         {
             if (textValues != null)
             {
-                await JS.InvokeVoidAsync("cms.resizeTranslationTextareas");
+                await js.InvokeVoidAsync("translation.resizeTranslationTextareas");
             }
         }
 

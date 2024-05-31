@@ -10,7 +10,7 @@ namespace Gosuji.Components.Shared.CMS
     public partial class CAbuseDetect : ComponentBase
     {
         [Inject]
-        private IJSRuntime JS { get; set; }
+        private IJSRuntime js { get; set; }
         [Inject]
         private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
@@ -51,7 +51,7 @@ namespace Gosuji.Components.Shared.CMS
         {
             if (firstRender)
             {
-                await JS.InvokeVoidAsync("abuseDetect.init");
+                await js.InvokeVoidAsync("abuseDetect.init");
             }
         }
     }

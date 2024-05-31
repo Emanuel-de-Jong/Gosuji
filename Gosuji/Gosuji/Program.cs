@@ -54,7 +54,12 @@ namespace Gosuji
 
             builder.Services.AddWebOptimizer(p =>
             {
+                //p.AddJavaScriptBundle("/js/pages/cms/bundle.js", "js/pages/cms/**/*.js");
                 //p.AddJavaScriptBundle("/js/pages/josekis/bundle.js", "js/pages/josekis/**/*.js");
+                //p.AddJavaScriptBundle("/js/pages/trainer/bundle.js", "js/pages/trainer/**/*.js");
+
+                //p.MinifyCssFiles();
+                //p.MinifyJsFiles();
             });
 
             // Custom services
