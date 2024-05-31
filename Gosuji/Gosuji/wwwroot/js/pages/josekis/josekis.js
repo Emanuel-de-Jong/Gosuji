@@ -10,3 +10,5 @@ if (typeof josekisPage === "undefined") {
         document.querySelector('button[title="Previous node"]').addEventListener("click", async () => { await josekisRef.invokeMethodAsync("Prev") });
     };
 }
+
+export { josekisPage };

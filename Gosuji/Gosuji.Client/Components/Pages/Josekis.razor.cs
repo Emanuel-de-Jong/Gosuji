@@ -17,6 +17,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IJosekisService josekisService { get; set; }
 
+        private IJSObjectReference jsRef;
         private int sessionId;
         private DotNetObjectReference<Josekis>? josekisRef;
 
@@ -29,13 +30,15 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/josekis/bundle.min.js");
+
             if (firstRender)
             {
                 await josekisService.AddSession(sessionId);
 
                 josekisRef = DotNetObjectReference.Create(this);
 
-                await js.InvokeVoidAsync("josekisPage.init", josekisRef);
+                await jsRef.InvokeVoidAsync("josekisPage.init", josekisRef);
 
                 await AddMarkups();
             }

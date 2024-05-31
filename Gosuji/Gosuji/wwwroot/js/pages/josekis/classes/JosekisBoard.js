@@ -58,3 +58,5 @@ class JosekisBoard extends Board {
         }
     }
 }
+
+export { JosekisBoard };
