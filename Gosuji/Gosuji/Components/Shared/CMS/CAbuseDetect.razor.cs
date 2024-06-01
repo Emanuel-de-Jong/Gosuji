@@ -14,6 +14,7 @@ namespace Gosuji.Components.Shared.CMS
         [Inject]
         private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
+        private IJSObjectReference jsRef;
         private List<User>? users;
         private Dictionary<string, UserSubscription>? subscriptions;
         private Dictionary<string, long>? totalKataGoVisits;
@@ -49,9 +50,11 @@ namespace Gosuji.Components.Shared.CMS
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/cms/bundle.min.js");
+
             if (firstRender)
             {
-                await js.InvokeVoidAsync("abuseDetect.init");
+                await jsRef.InvokeVoidAsync("abuseDetect.init");
             }
         }
     }

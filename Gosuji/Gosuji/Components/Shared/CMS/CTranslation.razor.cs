@@ -14,6 +14,7 @@ namespace Gosuji.Components.Shared.CMS
         [Inject]
         private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
+        private IJSObjectReference jsRef;
         private List<TextKey> textKeys;
         private Dictionary<long, Language> languages;
         private Dictionary<long, TextValue>? textValues;
@@ -33,9 +34,11 @@ namespace Gosuji.Components.Shared.CMS
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/cms/bundle.min.js");
+
             if (textValues != null)
             {
-                await js.InvokeVoidAsync("translation.resizeTranslationTextareas");
+                await jsRef.InvokeVoidAsync("translation.resizeTranslationTextareas");
             }
         }
 

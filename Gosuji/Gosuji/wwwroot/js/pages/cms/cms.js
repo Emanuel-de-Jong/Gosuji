@@ -1,5 +1,6 @@
-if (typeof cms === "undefined") {
-    var cms = {};
-}
+import { abuseDetect } from "./abuseDetect";
+import { translation } from "./translation";
 
-export { cms };
+let cms = {};
+
+export { cms, abuseDetect, translation };

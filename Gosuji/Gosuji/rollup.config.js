@@ -1,13 +1,22 @@
 import terser from '@rollup/plugin-terser';
 
-export default {
-    input: 'wwwroot/js/pages/josekis/josekis.js',
+const createPageBundle = (input, output) => ({
+    input,
     output: {
-        file: 'wwwroot/js/pages/josekis/bundle.min.js',
+        ...output,
         format: 'es',
         sourcemap: true
     },
     plugins: [
         terser()
     ]
-};
+});
+
+export default [
+    createPageBundle('wwwroot/js/pages/josekis/josekis.js', {
+        file: 'wwwroot/js/pages/josekis/bundle.min.js'
+    }),
+    createPageBundle('wwwroot/js/pages/cms/cms.js', {
+        file: 'wwwroot/js/pages/cms/bundle.min.js'
+    }),
+];
