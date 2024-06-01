@@ -1,4 +1,2 @@
-bundle.js
-bundle.js.map
-bundle.min.js
-bundle.min.js.map
+*.min.js
+*.min.js.map
