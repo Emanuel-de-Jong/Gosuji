@@ -1,4 +1,4 @@
-class Coord {
+export class Coord {
     x;
     y;
 

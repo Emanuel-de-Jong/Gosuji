@@ -40,3 +40,5 @@ if (typeof G === "undefined") {
         return name == G.COLOR_FULL_NAME_TYPE.W ? G.COLOR_TYPE.W : G.COLOR_TYPE.B;
     };
 }
+
+export { G };

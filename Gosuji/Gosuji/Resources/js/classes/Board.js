@@ -1,4 +1,4 @@
-class Board {
+export class Board {
     HANDICAP_SGFS = {
         19: {
             2: "[pd][dp]",

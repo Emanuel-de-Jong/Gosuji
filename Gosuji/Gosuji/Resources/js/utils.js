@@ -71,3 +71,5 @@ if (typeof utils === "undefined") {
         }
     };
 }
+
+export { utils };

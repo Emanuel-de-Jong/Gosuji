@@ -51,3 +51,5 @@ if (typeof custom === "undefined") {
         textarea.style.height = textarea.scrollHeight + 5 + "px";
     };
 }
+
+export { custom };

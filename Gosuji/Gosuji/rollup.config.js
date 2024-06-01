@@ -1,22 +1,60 @@
+import fs from 'fs';
+import path from 'path';
 import terser from '@rollup/plugin-terser';
 
-const createPageBundle = (input, output) => ({
-    input,
+const createPageBundle = (filePath, fileName = filePath) => ({
+    input: 'Resources/js/pages/' + filePath + '/' + fileName + '.js',
     output: {
-        ...output,
+        file: 'wwwroot/js/pages/' + filePath + '/bundle.min.js',
         format: 'es',
-        sourcemap: true
+        sourcemap: false
     },
     plugins: [
         terser()
     ]
 });
 
-export default [
-    createPageBundle('wwwroot/js/pages/josekis/josekis.js', {
-        file: 'wwwroot/js/pages/josekis/bundle.min.js'
-    }),
-    createPageBundle('wwwroot/js/pages/cms/cms.js', {
-        file: 'wwwroot/js/pages/cms/bundle.min.js'
-    }),
+let config = [
+    createPageBundle('josekis'),
+    createPageBundle('cms'),
 ];
+
+function getJavaScriptFiles(dir, fileList = []) {
+    const files = fs.readdirSync(dir);
+    files.forEach(file => {
+        const filePath = path.join(dir, file);
+        const fileStat = fs.statSync(filePath);
+        if (fileStat.isDirectory()) {
+            getJavaScriptFiles(filePath, fileList);
+        } else if (filePath.endsWith('.js')) {
+            fileList.push(filePath);
+        }
+    });
+    return fileList;
+}
+
+const files = getJavaScriptFiles('Resources/js/');
+
+config = [ ...config, ...files.map(file => {
+    const outputFileName = file.replace('Resources\\js\\', 'wwwroot\\js\\').replace(/\.js$/, '.min.js');
+
+    return {
+        input: file,
+        output: {
+            file: outputFileName,
+            format: 'es',
+            sourcemap: false
+        },
+        plugins: [
+            terser({
+                mangle: false,
+                compress: {
+                    unused: false,
+                    side_effects: false
+                }
+            })
+        ]
+    };
+})];
+
+export default config;

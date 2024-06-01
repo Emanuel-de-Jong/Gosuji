@@ -66,7 +66,7 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/profile.js");
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/profile.min.js");
 
             if (firstRender)
             {

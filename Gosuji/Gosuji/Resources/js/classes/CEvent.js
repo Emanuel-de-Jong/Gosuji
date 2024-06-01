@@ -1,4 +1,4 @@
-class CEvent {
+export class CEvent {
     listeners;
 
 

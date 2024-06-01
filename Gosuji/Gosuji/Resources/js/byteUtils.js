@@ -53,3 +53,5 @@ if (typeof byteUtils === "undefined") {
         console.log(convertedNums);
     };
 }
+
+export { byteUtils };
