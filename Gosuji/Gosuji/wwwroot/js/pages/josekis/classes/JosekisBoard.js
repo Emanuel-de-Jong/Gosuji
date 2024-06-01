@@ -1,4 +1,6 @@
-export default class JosekisBoard extends Board {
+import { josekisPage } from "../josekis.js"
+
+export class JosekisBoard extends Board {
     constructor() {
         super();
 
