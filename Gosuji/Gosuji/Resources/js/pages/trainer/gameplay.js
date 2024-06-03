@@ -7,7 +7,7 @@ import { trainerG } from "./utils/trainerG";
 import { cornerPlacer } from "./cornerPlacer";
 import { debug } from "./debug";
 
-let gameplay = {};
+let gameplay = { id: "gameplay" };
 
 
 gameplay.OPPONENT_MIN_VISITS_PERC = 10;

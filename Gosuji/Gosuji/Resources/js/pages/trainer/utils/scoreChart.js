@@ -3,7 +3,7 @@ import { Score } from "../classes/Score";
 import { trainerG } from "./trainerG";
 import { debug } from "../debug";
 
-let scoreChart = {};
+let scoreChart = { id: "scoreChart" };
 
 
 scoreChart.SCORE_Y_INDICATOR = -1;

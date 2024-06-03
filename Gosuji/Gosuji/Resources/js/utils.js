@@ -1,7 +1,7 @@
 let utils = window.utils;
 
 if (typeof utils === "undefined") {
-    utils = {};
+    utils = { id: "utils" };
 
     utils.TYPE = {
         NONE: 0,

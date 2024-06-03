@@ -1,7 +1,7 @@
 import { sgf } from "./sgf";
 import { trainerG } from "./trainerG";
 
-let settings = {};
+let settings = { id: "settings" };
 
 
 settings.SETTINGS = {

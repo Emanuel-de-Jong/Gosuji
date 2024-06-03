@@ -9,7 +9,7 @@ import { utils } from "./utils";
 let custom = window.custom;
 
 if (typeof custom === "undefined") {
-    custom = {};
+    custom = { id: "custom" };
 
     custom.THEME_TYPES = {
         DARK: 0,

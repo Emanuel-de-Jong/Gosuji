@@ -1,7 +1,7 @@
 let G = window.G;
 
 if (typeof G === "undefined") {
-    G = {};
+    G = { id: "g" };
 
     G.VERSION = "0.3";
     G.LOG = false;

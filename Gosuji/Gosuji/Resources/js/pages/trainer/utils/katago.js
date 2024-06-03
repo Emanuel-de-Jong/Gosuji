@@ -4,7 +4,7 @@ import { settings } from "./settings";
 import { sgf } from "./sgf";
 import { trainerG } from "./trainerG";
 
-let katago = {};
+let katago = { id: "katago" };
 
 
 katago.init = async function (userId) {

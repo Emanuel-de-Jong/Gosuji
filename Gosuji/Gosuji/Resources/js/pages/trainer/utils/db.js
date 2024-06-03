@@ -4,7 +4,7 @@ import { stats } from "./stats";
 import { trainerG } from "./trainerG";
 import { gameplay } from "../gameplay";
 
-let db = {};
+let db = { id: "db" };
 
 
 db.OPENING_RATIO_MOVENUMBER = 40;

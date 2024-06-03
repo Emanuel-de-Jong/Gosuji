@@ -3,7 +3,7 @@ import { sgf } from "./utils/sgf";
 import { trainerG } from "./utils/trainerG";
 import { gameplay } from "./gameplay";
 
-let selfplay = {};
+let selfplay = { id: "selfplay" };
 
 
 selfplay.init = async function () {

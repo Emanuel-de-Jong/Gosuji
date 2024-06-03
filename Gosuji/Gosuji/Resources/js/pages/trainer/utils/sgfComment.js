@@ -4,7 +4,7 @@ import { sgf } from "./sgf";
 import { stats } from "./stats";
 import { trainerG } from "./trainerG";
 
-let sgfComment = {};
+let sgfComment = { id: "sgfComment" };
 
 
 sgfComment.init = function () {

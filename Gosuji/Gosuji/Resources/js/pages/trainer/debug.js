@@ -12,7 +12,7 @@ import { init } from "./init";
 import { preMovePlacer } from "./preMovePlacer";
 import { selfplay } from "./selfplay";
 
-let debug = {};
+let debug = { id: "debug" };
 
 // 0: none
 // 1: tree
@@ -36,22 +36,25 @@ debug.clear = function () { };
 
 debug.logAllFuncCalls = function () {
     let objs = [
+        byteUtils,
+        custom,
+        G,
+        utils,
+
         db,
-        trainerG,
         katago,
         scoreChart,
         settings,
         sgf,
         sgfComment,
         stats,
+        trainerG,
+
         cornerPlacer,
         gameplay,
         init,
         preMovePlacer,
         selfplay,
-        byteUtils,
-        custom,
-        utils,
     ];
 
     for (let i = 0; i < objs.length; i++) {
@@ -64,7 +67,7 @@ debug.logAllFuncCalls = function () {
                 let cachedFunc = obj[funcName];
 
                 return function () {
-                    let log = funcName + "(";
+                    let log = obj.id + "." + funcName + "(";
                     for (let x = 0; x < arguments.length; x++) {
                         let argument = arguments[x];
                         switch (typeof argument) {

@@ -4,7 +4,7 @@ import { Ratio } from "../classes/Ratio";
 import { trainerG } from "./trainerG";
 import { debug } from "../debug";
 
-let stats = {};
+let stats = { id: "stats" };
 
 
 stats.RATIO_TYPE = {

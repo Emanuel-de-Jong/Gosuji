@@ -5,7 +5,7 @@ import { cornerPlacer } from "./cornerPlacer";
 import { gameplay } from "./gameplay";
 import { selfplay } from "./selfplay";
 
-let preMovePlacer = {};
+let preMovePlacer = { id: "preMovePlacer" };
 
 
 preMovePlacer.MIN_VISITS_PERC = 10;

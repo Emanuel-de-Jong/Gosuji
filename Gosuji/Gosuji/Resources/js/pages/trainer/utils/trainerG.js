@@ -8,7 +8,7 @@ import { stats } from "./stats";
 import { debug } from "../debug";
 import { gameplay } from "../gameplay";
 
-let trainerG = {};
+let trainerG = { id: "trainerG" };
 
 
 trainerG.MOVE_TYPE = {

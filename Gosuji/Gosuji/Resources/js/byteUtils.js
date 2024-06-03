@@ -1,7 +1,7 @@
 let byteUtils = window.byteUtils;
 
 if (typeof byteUtils === "undefined") {
-    byteUtils = {};
+    byteUtils = { id: "byteUtils" };
 
     byteUtils.numToBytes = function (num, byteCount = 4, arr) {
         let bytes = [];

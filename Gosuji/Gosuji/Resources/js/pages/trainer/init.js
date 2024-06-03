@@ -21,7 +21,7 @@ import { gameplay } from "./gameplay";
 import { preMovePlacer } from "./preMovePlacer";
 import { selfplay } from "./selfplay";
 
-let init = {};
+let init = { id: "init" };
 
 
 init.init = async function (
