@@ -1,7 +1,7 @@
 import { CNode } from "./classes/CNode";
 import { History } from "./classes/History";
-import { MoveSuggestion } from "./classes/MoveSuggestion";
 import { MoveSuggestionList } from "./classes/MoveSuggestionList";
+import { MoveSuggestion } from "./classes/MoveSuggestion";
 import { Ratio } from "./classes/Ratio";
 import { Score } from "./classes/Score";
 import { TrainerBoard } from "./classes/TrainerBoard";
@@ -10,8 +10,8 @@ import { db } from "./utils/db";
 import { katago } from "./utils/katago";
 import { scoreChart } from "./utils/scoreChart";
 import { settings } from "./utils/settings";
-import { sgf } from "./utils/sgf";
 import { sgfComment } from "./utils/sgfComment";
+import { sgf } from "./utils/sgf";
 import { stats } from "./utils/stats";
 import { trainerG } from "./utils/trainerG";
 

@@ -1,6 +1,6 @@
 import { History } from "../classes/History";
-import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { MoveSuggestionList } from "../classes/MoveSuggestionList";
+import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { TrainerBoard } from "../classes/TrainerBoard";
 import { katago } from "./katago";
 import { sgf } from "./sgf";

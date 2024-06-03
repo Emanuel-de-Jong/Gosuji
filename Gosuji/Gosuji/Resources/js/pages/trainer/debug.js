@@ -2,11 +2,13 @@ import { db } from "./utils/db";
 import { katago } from "./utils/katago";
 import { scoreChart } from "./utils/scoreChart";
 import { settings } from "./utils/settings";
-import { sgf } from "./utils/sgf";
 import { sgfComment } from "./utils/sgfComment";
+import { sgf } from "./utils/sgf";
 import { stats } from "./utils/stats";
+import { trainerG } from "./utils/trainerG";
 import { cornerPlacer } from "./cornerPlacer";
 import { gameplay } from "./gameplay";
+import { init } from "./init";
 import { preMovePlacer } from "./preMovePlacer";
 import { selfplay } from "./selfplay";
 
@@ -35,7 +37,7 @@ debug.clear = function () { };
 debug.logAllFuncCalls = function () {
     let objs = [
         db,
-        G,
+        trainerG,
         katago,
         scoreChart,
         settings,

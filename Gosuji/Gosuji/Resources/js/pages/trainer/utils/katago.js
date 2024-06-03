@@ -1,9 +1,8 @@
-import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { MoveSuggestionList } from "../classes/MoveSuggestionList";
+import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { settings } from "./settings";
 import { sgf } from "./sgf";
 import { trainerG } from "./trainerG";
-
 
 let katago = {};
 
