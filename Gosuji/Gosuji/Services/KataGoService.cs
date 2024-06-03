@@ -83,67 +83,67 @@ namespace Gosuji.Services
         [JSInvokable]
         public async Task ClearBoard(string userId)
         {
-            pool.Get(userId).ClearBoard();
+            (await pool.Get(userId)).ClearBoard();
         }
 
         [JSInvokable]
         public async Task Restart(string userId)
         {
-            await pool.Get(userId).Restart();
+            await (await pool.Get(userId)).Restart();
         }
 
         [JSInvokable]
         public async Task SetBoardsize(string userId, int boardsize)
         {
-            pool.Get(userId).SetBoardsize(boardsize);
+            (await pool.Get(userId)).SetBoardsize(boardsize);
         }
 
         [JSInvokable]
         public async Task SetRuleset(string userId, string ruleset)
         {
-            pool.Get(userId).SetRuleset(ruleset);
+            (await pool.Get(userId)).SetRuleset(ruleset);
         }
 
         [JSInvokable]
         public async Task SetKomi(string userId, float komi)
         {
-            pool.Get(userId).SetKomi(komi);
+            (await pool.Get(userId)).SetKomi(komi);
         }
 
         [JSInvokable]
         public async Task SetHandicap(string userId, int handicap)
         {
-            pool.Get(userId).SetHandicap(handicap);
+            (await pool.Get(userId)).SetHandicap(handicap);
         }
 
         [JSInvokable]
         public async Task<MoveSuggestion> AnalyzeMove(string userId, string color, string coord)
         {
-            return pool.Get(userId).AnalyzeMove(color, coord);
+            return (await pool.Get(userId)).AnalyzeMove(color, coord);
         }
 
         [JSInvokable]
         public async Task<List<MoveSuggestion>> Analyze(string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
         {
-            return pool.Get(userId).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+            return (await pool.Get(userId)).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
         }
 
         [JSInvokable]
         public async Task Play(string userId, string color, string coord)
         {
-            pool.Get(userId).Play(color, coord);
+            (await pool.Get(userId)).Play(color, coord);
         }
 
         [JSInvokable]
         public async Task PlayRange(string userId, Moves moves)
         {
-            pool.Get(userId).PlayRange(moves);
+            (await pool.Get(userId)).PlayRange(moves);
         }
 
         [JSInvokable]
         public async Task<string> SGF(string userId, bool shouldWriteFile)
         {
-            return pool.Get(userId).SGF(shouldWriteFile);
+            return (await pool.Get(userId)).SGF(shouldWriteFile);
         }
 
         public void Dispose()

@@ -43,7 +43,7 @@ namespace Gosuji.Controllers
             }
         }
 
-        public KataGo Get(string userId)
+        public async Task<KataGo> Get(string userId)
         {
             if (instances.ContainsKey(userId))
             {
@@ -52,7 +52,7 @@ namespace Gosuji.Controllers
 
             if (freeInstances.Count == 0)
             {
-                ManageFreeInstances();
+                await ManageFreeInstances();
             }
 
             KataGo instance = freeInstances.Pop();
@@ -87,13 +87,16 @@ namespace Gosuji.Controllers
             return instances.ContainsKey(userId);
         }
 
-        private void ManageFreeInstances()
+        private async Task ManageFreeInstances()
         {
             if (freeInstances.Count < MIN_INSTANCES)
             {
                 for (int i = 0; i < MIN_INSTANCES - freeInstances.Count; i++)
                 {
-                    freeInstances.Push(new KataGo());
+                    KataGo newInstance = new();
+                    freeInstances.Push(newInstance);
+
+                    await newInstance.Start();
                 }
             }
             else if (freeInstances.Count > MAX_INSTANCES)

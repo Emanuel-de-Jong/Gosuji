@@ -19,12 +19,7 @@ namespace Gosuji.Controllers
 
         private int lastMaxVisits;
 
-        public KataGo()
-        {
-            Start();
-        }
-
-        private async Task Start()
+        public async Task Start()
         {
             if (G.Log)
             {
