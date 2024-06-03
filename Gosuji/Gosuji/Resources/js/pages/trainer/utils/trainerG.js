@@ -1,3 +1,13 @@
+import { History } from "../classes/History";
+import { MoveSuggestion } from "../classes/MoveSuggestion";
+import { MoveSuggestionList } from "../classes/MoveSuggestionList";
+import { TrainerBoard } from "../classes/TrainerBoard";
+import { katago } from "./katago";
+import { sgf } from "./sgf";
+import { stats } from "./stats";
+import { debug } from "../debug";
+import { gameplay } from "../gameplay";
+
 let trainerG = {};
 
 

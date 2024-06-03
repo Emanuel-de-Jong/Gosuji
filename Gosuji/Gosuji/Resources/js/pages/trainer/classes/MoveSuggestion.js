@@ -1,3 +1,5 @@
+import { Score } from "./Score";
+
 export class MoveSuggestion {
     coord;
     visits;
@@ -26,7 +28,7 @@ export class MoveSuggestion {
 
 
     static fromKataGo(kataGoSuggestion) {
-        return new MoveSuggestion(
+        return new this(
             katago.coordNameToNum(kataGoSuggestion.move.coord),
             kataGoSuggestion.visits,
             kataGoSuggestion.winrate,
@@ -35,7 +37,7 @@ export class MoveSuggestion {
     }
 
     static fromServer(serverSuggestion) {
-        return new MoveSuggestion(
+        return new this(
             Coord.fromServer(serverSuggestion.coord),
             serverSuggestion.visits,
             serverSuggestion.score.winrate,

@@ -1,3 +1,15 @@
+import { db } from "./utils/db";
+import { katago } from "./utils/katago";
+import { scoreChart } from "./utils/scoreChart";
+import { settings } from "./utils/settings";
+import { sgf } from "./utils/sgf";
+import { sgfComment } from "./utils/sgfComment";
+import { stats } from "./utils/stats";
+import { cornerPlacer } from "./cornerPlacer";
+import { gameplay } from "./gameplay";
+import { preMovePlacer } from "./preMovePlacer";
+import { selfplay } from "./selfplay";
+
 let debug = {};
 
 // 0: none

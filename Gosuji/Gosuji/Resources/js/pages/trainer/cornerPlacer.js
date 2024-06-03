@@ -1,3 +1,6 @@
+import { settings } from "./utils/settings";
+import { trainerG } from "./utils/trainerG";
+
 let cornerPlacer = {};
 
 

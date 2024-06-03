@@ -1,3 +1,8 @@
+import { katago } from "./katago";
+import { settings } from "./settings";
+import { stats } from "./stats";
+import { trainerG } from "./trainerG";
+
 let sgf = {};
 
 

@@ -8,12 +8,12 @@ const createPageBundle = (filePath, fileName = filePath) => ({
         sourcemap: false
     },
     plugins: [
-        terser({
-            compress: {
-                unused: false,       // Prevents removal of unused variables and functions
-                side_effects: false  // Avoids dropping code that Terser thinks has no side effects
-            },
-        })
+        // terser({
+        //     compress: {
+        //         unused: false,       // Prevents removal of unused variables and functions
+        //         side_effects: false  // Avoids dropping code that Terser thinks has no side effects
+        //     },
+        // })
     ]
 });
 

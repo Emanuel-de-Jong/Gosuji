@@ -32,7 +32,7 @@ export class Score {
     }
 
     copy() {
-        return new Score(this.winrate, this.scoreLead);
+        return new this(this.winrate, this.scoreLead);
     }
 
     encode() {
@@ -44,6 +44,6 @@ export class Score {
 
 
     static fromServer(serverScore) {
-        return new Score(serverScore.winrate, serverScore.scoreLead);
+        return new this(serverScore.winrate, serverScore.scoreLead);
     }
 }

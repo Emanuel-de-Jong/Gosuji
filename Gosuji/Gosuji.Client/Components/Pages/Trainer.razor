@@ -1,5 +1,5 @@
 ﻿@page "/trainer/{GameId:long?}"
-@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@rendermode @(new InteractiveServerRenderMode(prerender: true))
 
 @using Gosuji.Client.Components.Shared
 

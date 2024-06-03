@@ -1,3 +1,8 @@
+import { settings } from "./utils/settings";
+import { sgf } from "./utils/sgf";
+import { trainerG } from "./utils/trainerG";
+import { gameplay } from "./gameplay";
+
 let selfplay = {};
 
 

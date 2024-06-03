@@ -34,7 +34,7 @@ namespace Gosuji.Components.Shared.CMS
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/cms/bundle.js");
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/cms/bundle.js?v=03-06-24");
 
             if (textValues != null)
             {

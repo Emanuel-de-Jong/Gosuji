@@ -1,3 +1,6 @@
+import { sgf } from "./sgf";
+import { trainerG } from "./trainerG";
+
 let settings = {};
 
 

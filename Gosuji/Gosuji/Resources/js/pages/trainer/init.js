@@ -1,25 +1,25 @@
-
 import { CNode } from "./classes/CNode";
 import { History } from "./classes/History";
-import { Score } from "./classes/Score";
 import { MoveSuggestion } from "./classes/MoveSuggestion";
 import { MoveSuggestionList } from "./classes/MoveSuggestionList";
 import { Ratio } from "./classes/Ratio";
+import { Score } from "./classes/Score";
 import { TrainerBoard } from "./classes/TrainerBoard";
 
-import { trainerG } from "./utils/trainerG";
+import { db } from "./utils/db";
+import { katago } from "./utils/katago";
+import { scoreChart } from "./utils/scoreChart";
 import { settings } from "./utils/settings";
 import { sgf } from "./utils/sgf";
 import { sgfComment } from "./utils/sgfComment";
-import { scoreChart } from "./utils/scoreChart";
 import { stats } from "./utils/stats";
+import { trainerG } from "./utils/trainerG";
+
+import { cornerPlacer } from "./cornerPlacer";
 import { debug } from "./debug";
 import { gameplay } from "./gameplay";
-import { cornerPlacer } from "./cornerPlacer";
 import { preMovePlacer } from "./preMovePlacer";
 import { selfplay } from "./selfplay";
-import { katago } from "./utils/katago";
-import { db } from "./utils/db";
 
 let init = {};
 
@@ -148,24 +148,25 @@ init.sgfLoadedListener = async function () {
 export {
     CNode,
     History,
-    Score,
     MoveSuggestion,
     MoveSuggestionList,
     Ratio,
+    Score,
     TrainerBoard,
 
-    trainerG,
+    db,
+    katago,
+    scoreChart,
     settings,
     sgf,
     sgfComment,
-    scoreChart,
     stats,
+    trainerG,
+
+    cornerPlacer,
     debug,
     gameplay,
-    cornerPlacer,
+    init,
     preMovePlacer,
     selfplay,
-    katago,
-    db,
-    init
 };

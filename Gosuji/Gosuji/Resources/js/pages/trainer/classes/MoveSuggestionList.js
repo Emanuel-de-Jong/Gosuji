@@ -1,3 +1,5 @@
+import { MoveSuggestion } from "./MoveSuggestion";
+
 export class MoveSuggestionList {
     static ENCODE_ANALYZE_MOVE_INDICATOR = -2;
 
@@ -107,7 +109,7 @@ export class MoveSuggestionList {
         let encoded = [];
 
         if (this.analyzeMoveSuggestion) {
-            encoded = byteUtils.numToBytes(MoveSuggestionList.ENCODE_ANALYZE_MOVE_INDICATOR, 2, encoded);
+            encoded = byteUtils.numToBytes(this.ENCODE_ANALYZE_MOVE_INDICATOR, 2, encoded);
             encoded = encoded.concat(this.analyzeMoveSuggestion.encode());
         }
 
@@ -144,11 +146,11 @@ export class MoveSuggestionList {
 
         console.log(nameCoords);
 
-        return new MoveSuggestionList(suggestions);
+        return new this(suggestions);
     }
 
     static fromServer(serverSuggestions) {
-        let suggestionList = new MoveSuggestionList(null, serverSuggestions.analyzeMoveSuggestion);
+        let suggestionList = new this(null, serverSuggestions.analyzeMoveSuggestion);
 
         for (let i = 0; i < serverSuggestions.suggestions.length; i++) {
             if (!serverSuggestions.suggestions[i]) continue;

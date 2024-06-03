@@ -33,7 +33,7 @@ export class History {
 
         for (const gridPoint of this.iterateGrid()) {
             if (!gridPoint.data) {
-                encoded = byteUtils.numToBytes(History.ENCODE_Y_INDICATOR, 2, encoded);
+                encoded = byteUtils.numToBytes(this.ENCODE_Y_INDICATOR, 2, encoded);
                 encoded = byteUtils.numToBytes(gridPoint.y, 2, encoded);
             } else {
                 encoded = byteUtils.numToBytes(gridPoint.x, 2, encoded);
@@ -82,7 +82,7 @@ export class History {
 
 
     static fromServer(serverHistory, dataClass) {
-        let history = new History();
+        let history = new this();
         for (let y in serverHistory) {
             for (let x in serverHistory[y]) {
                 let data = serverHistory[y][x];

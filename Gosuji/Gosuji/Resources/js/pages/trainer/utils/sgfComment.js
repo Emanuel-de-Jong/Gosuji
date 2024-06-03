@@ -1,3 +1,9 @@
+import { scoreChart } from "./scoreChart";
+import { settings } from "./settings";
+import { sgf } from "./sgf";
+import { stats } from "./stats";
+import { trainerG } from "./trainerG";
+
 let sgfComment = {};
 
 

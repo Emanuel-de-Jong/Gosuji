@@ -1,3 +1,12 @@
+import { History } from "./classes/History";
+import { scoreChart } from "./utils/scoreChart";
+import { settings } from "./utils/settings";
+import { sgf } from "./utils/sgf";
+import { stats } from "./utils/stats";
+import { trainerG } from "./utils/trainerG";
+import { cornerPlacer } from "./cornerPlacer";
+import { debug } from "./debug";
+
 let gameplay = {};
 
 
