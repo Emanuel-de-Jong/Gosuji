@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import terser from '@rollup/plugin-terser';
 
 const createPageBundle = (filePath, fileName = filePath) => ({
@@ -10,51 +8,36 @@ const createPageBundle = (filePath, fileName = filePath) => ({
         sourcemap: false
     },
     plugins: [
-        terser()
+        terser({
+            compress: {
+                unused: false,       // Prevents removal of unused variables and functions
+                side_effects: false  // Avoids dropping code that Terser thinks has no side effects
+            },
+        })
     ]
 });
 
 let config = [
-    createPageBundle('josekis'),
-    createPageBundle('cms'),
-];
-
-function getJavaScriptFiles(dir, fileList = []) {
-    const files = fs.readdirSync(dir);
-    files.forEach(file => {
-        const filePath = path.join(dir, file);
-        const fileStat = fs.statSync(filePath);
-        if (fileStat.isDirectory()) {
-            getJavaScriptFiles(filePath, fileList);
-        } else if (filePath.endsWith('.js')) {
-            fileList.push(filePath);
-        }
-    });
-    return fileList;
-}
-
-const files = getJavaScriptFiles('Resources/js/');
-
-config = [ ...config, ...files.map(file => {
-    const outputFileName = file.replace('Resources\\js\\', 'wwwroot\\js\\');
-
-    return {
-        input: file,
+    {
+        input: 'Resources/js/custom.js',
         output: {
-            file: outputFileName,
-            format: 'es',
+            file: 'wwwroot/js/bundle.js',
+            format: 'iife',
             sourcemap: false
         },
         plugins: [
             terser({
-                mangle: false,
                 compress: {
-                    unused: false,
-                    side_effects: false
-                }
+                    unused: false,       // Prevents removal of unused variables and functions
+                    side_effects: false  // Avoids dropping code that Terser thinks has no side effects
+                },
             })
         ]
-    };
-})];
+    },
+    createPageBundle('trainer', 'init'),
+    createPageBundle('josekis'),
+    createPageBundle('profile'),
+    createPageBundle('cms'),
+];
 
 export default config;

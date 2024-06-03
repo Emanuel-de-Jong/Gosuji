@@ -1,6 +1,7 @@
-if (typeof G === "undefined") {
-    var G = {};
+let G = window.G;
 
+if (typeof G === "undefined") {
+    G = {};
 
     G.VERSION = "0.3";
     G.LOG = false;
@@ -39,6 +40,8 @@ if (typeof G === "undefined") {
     G.colorFullNameToNum = function (name) {
         return name == G.COLOR_FULL_NAME_TYPE.W ? G.COLOR_TYPE.W : G.COLOR_TYPE.B;
     };
+
+    window.G = G;
 }
 
 export { G };

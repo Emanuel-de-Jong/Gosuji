@@ -1,6 +1,7 @@
-if (typeof utils === "undefined") {
-    var utils = {};
+let utils = window.utils;
 
+if (typeof utils === "undefined") {
+    utils = {};
 
     utils.TYPE = {
         NONE: 0,
@@ -16,7 +17,7 @@ if (typeof utils === "undefined") {
                 resolve();
                 return;
             }
-    
+
             const link = document.createElement("link");
             link.rel = "stylesheet"
             link.href = url;
@@ -37,7 +38,7 @@ if (typeof utils === "undefined") {
                 resolve();
                 return;
             }
-    
+
             const script = document.createElement("script");
             script.src = url;
             script.onload = () => {
@@ -110,6 +111,8 @@ if (typeof utils === "undefined") {
             sibling = sibling.nextElementSibling;
         }
     };
+
+    window.utils = utils;
 }
 
 export { utils };

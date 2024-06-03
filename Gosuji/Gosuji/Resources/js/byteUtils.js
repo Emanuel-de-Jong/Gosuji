@@ -1,5 +1,7 @@
+let byteUtils = window.byteUtils;
+
 if (typeof byteUtils === "undefined") {
-    var byteUtils = {};
+    byteUtils = {};
 
     byteUtils.numToBytes = function (num, byteCount = 4, arr) {
         let bytes = [];
@@ -52,6 +54,8 @@ if (typeof byteUtils === "undefined") {
         console.log("Converted nums:");
         console.log(convertedNums);
     };
+
+    window.byteUtils = byteUtils;
 }
 
 export { byteUtils };

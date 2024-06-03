@@ -1,4 +1,4 @@
-import { JosekisBoard } from "./classes/JosekisBoard.js"
+import { JosekisBoard } from "./classes/JosekisBoard"
 
 let josekisPage = {};
 

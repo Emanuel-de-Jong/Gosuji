@@ -23,6 +23,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IDataService dataService { get; set; }
 
+        private IJSObjectReference jsRef;
         private string? userId;
         private string? userName;
 
@@ -57,6 +58,8 @@ namespace Gosuji.Client.Components.Pages
             {
                 Console.WriteLine($"Error loading library: {ex.Message}");
             }
+
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js");
 
             if (firstRender)
             {
@@ -94,7 +97,7 @@ namespace Gosuji.Client.Components.Pages
                 Dictionary<short, Dictionary<short, EMoveType>> decodedMoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
                 Dictionary<short, Dictionary<short, Coord>> decodedChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords);
 
-                js.InvokeVoidAsync("init.init",
+                jsRef.InvokeVoidAsync("init.init",
                     trainerRef,
                     kataGoServiceRef,
                     userId,
@@ -114,7 +117,7 @@ namespace Gosuji.Client.Components.Pages
             }
             else
             {
-                js.InvokeVoidAsync("init.init",
+                jsRef.InvokeVoidAsync("init.init",
                     trainerRef,
                     kataGoServiceRef,
                     userId,

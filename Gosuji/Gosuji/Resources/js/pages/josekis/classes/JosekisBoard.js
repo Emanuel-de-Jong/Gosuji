@@ -1,4 +1,4 @@
-import { josekisPage } from "../josekis.js"
+import { josekisPage } from "../josekis"
 
 export class JosekisBoard extends Board {
     constructor() {
