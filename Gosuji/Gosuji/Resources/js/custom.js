@@ -2,7 +2,7 @@ import { Board } from "./classes/Board";
 import { CEvent } from "./classes/CEvent";
 import { Coord } from "./classes/Coord";
 import { byteUtils } from "./byteUtils";
-import { G } from "./G";
+import { g } from "./g";
 import { utils } from "./utils";
 
 
@@ -63,4 +63,4 @@ if (typeof custom === "undefined") {
     window.custom = custom;
 }
 
-export { Board, CEvent, Coord, byteUtils, G, utils, custom };
+export { Board, CEvent, Coord, byteUtils, g, utils, custom };

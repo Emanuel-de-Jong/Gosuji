@@ -102,16 +102,16 @@ sgf.setKomi = async function (komi) {
 
 
 sgf.setPlayersMeta = function () {
-    trainerG.board.editor.setGameInfo(sgf.userName ? sgf.userName : "Player", "P" + G.colorNumToName(trainerG.color));
-    trainerG.board.editor.setGameInfo("AI", "P" + G.colorNumToName(trainerG.color * -1));
+    trainerG.board.editor.setGameInfo(sgf.userName ? sgf.userName : "Player", "P" + g.colorNumToName(trainerG.color));
+    trainerG.board.editor.setGameInfo("AI", "P" + g.colorNumToName(trainerG.color * -1));
 };
 
 sgf.setRankPlayerMeta = function () {
-    trainerG.board.editor.setGameInfo(settings.suggestionVisits + "", G.colorNumToName(trainerG.color) + "R");
+    trainerG.board.editor.setGameInfo(settings.suggestionVisits + "", g.colorNumToName(trainerG.color) + "R");
 };
 
 sgf.setRankAIMeta = function () {
-    trainerG.board.editor.setGameInfo(settings.opponentVisits + "", G.colorNumToName(trainerG.color * -1) + "R");
+    trainerG.board.editor.setGameInfo(settings.opponentVisits + "", g.colorNumToName(trainerG.color * -1) + "R");
 };
 
 sgf.setHandicapMeta = function () {

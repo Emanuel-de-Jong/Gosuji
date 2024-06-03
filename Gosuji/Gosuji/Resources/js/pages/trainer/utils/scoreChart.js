@@ -221,7 +221,7 @@ scoreChart.update = function (suggestion) {
     scoreChart.labels.splice(index, 0, moveNumber);
 
     let point = suggestion.score.copy();
-    if (scoreChart.colorElement.value != G.COLOR_TYPE.B) point.reverse();
+    if (scoreChart.colorElement.value != g.COLOR_TYPE.B) point.reverse();
     scoreChart.history.add(point, moveNumber);
 
     let winrate = point.formatWinrate();

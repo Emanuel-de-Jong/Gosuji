@@ -105,8 +105,8 @@ trainerG.setPhase = function (phase) {
 };
 
 trainerG.setColor = function (color = trainerG.board.getNextColor()) {
-    if (color == G.COLOR_TYPE.RANDOM) {
-        color = utils.randomInt(2) == 0 ? G.COLOR_TYPE.B : G.COLOR_TYPE.W;
+    if (color == g.COLOR_TYPE.RANDOM) {
+        color = utils.randomInt(2) == 0 ? g.COLOR_TYPE.B : g.COLOR_TYPE.W;
     }
 
     trainerG.color = color;
@@ -155,9 +155,9 @@ trainerG.pass = async function (suggestion) {
 
 trainerG.getResultStr = function () {
     if (trainerG.result.scoreLead >= 0) {
-        return G.COLOR_NAME_TYPE.B + "+" + trainerG.result.formatScoreLead();
+        return g.COLOR_NAME_TYPE.B + "+" + trainerG.result.formatScoreLead();
     }
-    return G.COLOR_NAME_TYPE.W + "+" + trainerG.result.formatScoreLead(true);
+    return g.COLOR_NAME_TYPE.W + "+" + trainerG.result.formatScoreLead(true);
 };
 
 export { trainerG };

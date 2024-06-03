@@ -103,10 +103,10 @@ if (typeof Board === "undefined") {
             }
 
             if (currentMove.moveNumber == 0) {
-                return !this.handicap ? G.COLOR_TYPE.W : G.COLOR_TYPE.B;
+                return !this.handicap ? g.COLOR_TYPE.W : g.COLOR_TYPE.B;
             }
 
-            return G.COLOR_TYPE.B;
+            return g.COLOR_TYPE.B;
         }
 
         getNextColor() {

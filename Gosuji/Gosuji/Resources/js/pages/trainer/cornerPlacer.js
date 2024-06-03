@@ -33,11 +33,11 @@ cornerPlacer.shouldForce = function (moveNumber = trainerG.board.getMoveNumber()
     if (trainerG.board.handicap != 0 || (trainerG.board.boardsize != 19 && trainerG.board.boardsize != 13)) return false;
 
     if ((settings.forceOpponentCorners == "First" || settings.forceOpponentCorners == "Both") && (
-        trainerG.color == G.COLOR_TYPE.W && moveNumber == 0 ||
-        trainerG.color == G.COLOR_TYPE.B && moveNumber == 1) ||
+        trainerG.color == g.COLOR_TYPE.W && moveNumber == 0 ||
+        trainerG.color == g.COLOR_TYPE.B && moveNumber == 1) ||
         (settings.forceOpponentCorners == "Second" || settings.forceOpponentCorners == "Both") && (
-            trainerG.color == G.COLOR_TYPE.W && moveNumber == 2 ||
-            trainerG.color == G.COLOR_TYPE.B && moveNumber == 3)) {
+            trainerG.color == g.COLOR_TYPE.W && moveNumber == 2 ||
+            trainerG.color == g.COLOR_TYPE.B && moveNumber == 3)) {
         return true;
     }
 

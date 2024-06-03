@@ -1,47 +1,47 @@
-let G = window.G;
+let g = window.g;
 
-if (typeof G === "undefined") {
-    G = { id: "g" };
+if (typeof g === "undefined") {
+    g = { id: "g" };
 
-    G.VERSION = "0.3";
-    G.LOG = false;
+    g.VERSION = "0.3";
+    g.LOG = false;
 
-    G.COLOR_TYPE = {
+    g.COLOR_TYPE = {
         B: -1,
         RANDOM: 0,
         W: 1,
     };
 
-    G.COLOR_NAME_TYPE = {
+    g.COLOR_NAME_TYPE = {
         B: "B",
         RANDOM: "R",
         W: "W",
     };
 
-    G.COLOR_FULL_NAME_TYPE = {
+    g.COLOR_FULL_NAME_TYPE = {
         B: "Black",
         RANDOM: "Random",
         W: "White",
     };
 
 
-    G.colorNumToName = function (num) {
-        return num == G.COLOR_TYPE.W ? G.COLOR_NAME_TYPE.W : G.COLOR_NAME_TYPE.B;
+    g.colorNumToName = function (num) {
+        return num == g.COLOR_TYPE.W ? g.COLOR_NAME_TYPE.W : g.COLOR_NAME_TYPE.B;
     };
 
-    G.colorNumToFullName = function (num) {
-        return num == G.COLOR_TYPE.W ? G.COLOR_FULL_NAME_TYPE.W : G.COLOR_FULL_NAME_TYPE.B;
+    g.colorNumToFullName = function (num) {
+        return num == g.COLOR_TYPE.W ? g.COLOR_FULL_NAME_TYPE.W : g.COLOR_FULL_NAME_TYPE.B;
     };
 
-    G.colorNameToNum = function (name) {
-        return name == G.COLOR_NAME_TYPE.W ? G.COLOR_TYPE.W : G.COLOR_TYPE.B;
+    g.colorNameToNum = function (name) {
+        return name == g.COLOR_NAME_TYPE.W ? g.COLOR_TYPE.W : g.COLOR_TYPE.B;
     };
 
-    G.colorFullNameToNum = function (name) {
-        return name == G.COLOR_FULL_NAME_TYPE.W ? G.COLOR_TYPE.W : G.COLOR_TYPE.B;
+    g.colorFullNameToNum = function (name) {
+        return name == g.COLOR_FULL_NAME_TYPE.W ? g.COLOR_TYPE.W : g.COLOR_TYPE.B;
     };
 
-    window.G = G;
+    window.g = g;
 }
 
-export { G };
+export { g };

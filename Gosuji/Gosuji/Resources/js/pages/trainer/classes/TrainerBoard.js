@@ -97,9 +97,9 @@ export class TrainerBoard extends Board {
                 if (tool == "auto") {
                     await katago.play(coord);
                 } else if (tool == "playB") {
-                    await katago.play(coord, G.COLOR_TYPE.B);
+                    await katago.play(coord, g.COLOR_TYPE.B);
                 } else if (tool == "playW") {
-                    await katago.play(coord, G.COLOR_TYPE.W);
+                    await katago.play(coord, g.COLOR_TYPE.W);
                 }
             }
         }

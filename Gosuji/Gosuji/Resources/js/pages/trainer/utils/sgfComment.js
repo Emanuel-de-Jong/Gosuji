@@ -48,10 +48,10 @@ sgfComment.setComment = function (moveType) {
 };
 
 sgfComment.createInitComment = function () {
-    return "GOSUJI " + G.VERSION +
+    return "GOSUJI " + g.VERSION +
         "\nBoard size: " + trainerG.board.boardsize +
         "\nHandicap: " + trainerG.board.handicap +
-        "\nColor: " + G.colorNumToFullName(trainerG.color) +
+        "\nColor: " + g.colorNumToFullName(trainerG.color) +
         "\nPre moves switch: " + settings.preMovesSwitch +
         "\nPre moves: " + settings.preMoves +
         "\nPre move strength: " + settings.preVisits +
@@ -164,7 +164,7 @@ sgfComment.createCommentScore = function () {
     let score = scoreChart.history.get();
     if (score == null) return "";
 
-    return "\nScore " + G.colorNumToName(scoreChart.colorElement.value) +
+    return "\nScore " + g.colorNumToName(scoreChart.colorElement.value) +
         "\nWinrate: " + score.formatWinrate() + "%" +
         "\nScore: " + score.formatScoreLead();
 };
