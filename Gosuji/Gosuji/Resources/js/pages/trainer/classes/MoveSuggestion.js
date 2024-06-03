@@ -1,4 +1,4 @@
-class MoveSuggestion {
+export class MoveSuggestion {
     coord;
     visits;
     score;

@@ -1,4 +1,4 @@
-class TrainerBoard extends Board {
+export class TrainerBoard extends Board {
     constructor() {
         super();
 

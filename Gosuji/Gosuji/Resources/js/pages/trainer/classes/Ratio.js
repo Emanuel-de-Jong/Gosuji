@@ -1,4 +1,4 @@
-class Ratio {
+export class Ratio {
     moveNumber;
     total;
 

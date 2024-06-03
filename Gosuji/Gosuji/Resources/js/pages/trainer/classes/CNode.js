@@ -1,4 +1,4 @@
-class CNode {
+export class CNode {
     y;
     x;
 

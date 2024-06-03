@@ -1,4 +1,4 @@
-class MoveSuggestionList {
+export class MoveSuggestionList {
     static ENCODE_ANALYZE_MOVE_INDICATOR = -2;
 
     suggestions = [];
