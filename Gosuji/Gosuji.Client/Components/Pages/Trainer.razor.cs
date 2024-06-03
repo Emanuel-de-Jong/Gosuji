@@ -49,6 +49,15 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            try
+            {
+                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["ChartJS"]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading library: {ex.Message}");
+            }
+
             if (firstRender)
             {
                 if (userId == null)

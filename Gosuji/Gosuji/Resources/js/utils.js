@@ -10,6 +10,46 @@ if (typeof utils === "undefined") {
         STRING: 4,
     };
 
+    utils.lazyLoadCSSLibrary = (url) => {
+        return new Promise((resolve, reject) => {
+            if (document.querySelector(`link[href="${url}"]`)) {
+                resolve();
+                return;
+            }
+    
+            const link = document.createElement("link");
+            link.rel = "stylesheet"
+            link.href = url;
+            link.onload = () => {
+                resolve();
+            };
+            link.onerror = (e) => {
+                reject(e);
+            };
+            
+            document.head.appendChild(link);
+        });
+    };
+
+    utils.lazyLoadJSLibrary = (url) => {
+        return new Promise((resolve, reject) => {
+            if (document.querySelector(`script[src="${url}"]`)) {
+                resolve();
+                return;
+            }
+    
+            const script = document.createElement("script");
+            script.src = url;
+            script.onload = () => {
+                resolve();
+            };
+            script.onerror = (e) => {
+                reject(e);
+            };
+
+            document.head.appendChild(script);
+        });
+    };
 
     // min to (max-1)
     utils.randomInt = function (max, min = 0) {

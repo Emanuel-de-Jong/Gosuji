@@ -66,6 +66,19 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            try
+            {
+                await js.InvokeVoidAsync("utils.lazyLoadCSSLibrary", G.CSSLibUrls["DataTablesBootstrap"]);
+                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["JQuery"]);
+                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["DataTables"]);
+                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["DataTablesBootstrap"]);
+                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["ChartJS"]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading library: {ex.Message}");
+            }
+
             jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/profile.js");
 
             if (firstRender)

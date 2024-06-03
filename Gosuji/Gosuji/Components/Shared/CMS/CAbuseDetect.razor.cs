@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Data;
+﻿using Gosuji.Client;
+using Gosuji.Client.Data;
 using Gosuji.Controllers;
 using Gosuji.Data;
 using Microsoft.AspNetCore.Components;
@@ -50,6 +51,18 @@ namespace Gosuji.Components.Shared.CMS
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            try
+            {
+                await js.InvokeVoidAsync("utils.lazyLoadCSSLibrary", G.CSSLibUrls["DataTablesBootstrap"]);
+                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["JQuery"]);
+                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["DataTables"]);
+                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["DataTablesBootstrap"]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading library: {ex.Message}");
+            }
+
             jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/cms/bundle.js");
 
             if (firstRender)
