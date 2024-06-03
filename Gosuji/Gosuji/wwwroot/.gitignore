@@ -2,4 +2,4 @@
 **/*.js
 
 # But do not ignore .js files in the libs subfolder
-!libs/**/*.js
+!js/libs/**/*.js
