@@ -30,7 +30,7 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/josekis/bundle.min.js");
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/josekis/bundle.js");
 
             if (firstRender)
             {

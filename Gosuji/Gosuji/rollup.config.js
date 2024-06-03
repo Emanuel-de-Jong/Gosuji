@@ -5,7 +5,7 @@ import terser from '@rollup/plugin-terser';
 const createPageBundle = (filePath, fileName = filePath) => ({
     input: 'Resources/js/pages/' + filePath + '/' + fileName + '.js',
     output: {
-        file: 'wwwroot/js/pages/' + filePath + '/bundle.min.js',
+        file: 'wwwroot/js/pages/' + filePath + '/bundle.js',
         format: 'es',
         sourcemap: false
     },
@@ -36,7 +36,7 @@ function getJavaScriptFiles(dir, fileList = []) {
 const files = getJavaScriptFiles('Resources/js/');
 
 config = [ ...config, ...files.map(file => {
-    const outputFileName = file.replace('Resources\\js\\', 'wwwroot\\js\\').replace(/\.js$/, '.min.js');
+    const outputFileName = file.replace('Resources\\js\\', 'wwwroot\\js\\');
 
     return {
         input: file,
