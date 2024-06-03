@@ -1,3 +1,5 @@
+import { trainerG } from "../utils/trainerG";
+
 export class History {
     static ENCODE_Y_INDICATOR = -1;
 

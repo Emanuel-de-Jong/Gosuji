@@ -1,4 +1,7 @@
 import { MoveSuggestion } from "./MoveSuggestion";
+import { settings } from "../utils/settings";
+import { trainerG } from "../utils/trainerG";
+import { gameplay } from "../gameplay";
 
 export class MoveSuggestionList {
     static ENCODE_ANALYZE_MOVE_INDICATOR = -2;
