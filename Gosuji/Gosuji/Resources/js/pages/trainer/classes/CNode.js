@@ -27,7 +27,7 @@ export class CNode {
     add(value, x, y) {
         if (y == null) y = this.y;
 
-        let newNode = new this(this, value, x, y);
+        let newNode = new CNode(this, value, x, y);
         this.children.push(newNode);
 
         return newNode;

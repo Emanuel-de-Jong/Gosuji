@@ -30,7 +30,7 @@ if (typeof Coord === "undefined") {
 
 
         static fromServer(serverCoord) {
-            return new this(serverCoord.x, serverCoord.y);
+            return new Coord(serverCoord.x, serverCoord.y);
         }
     }
 

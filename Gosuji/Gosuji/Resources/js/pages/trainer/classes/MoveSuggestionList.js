@@ -149,11 +149,11 @@ export class MoveSuggestionList {
 
         console.log(nameCoords);
 
-        return new this(suggestions);
+        return new MoveSuggestionList(suggestions);
     }
 
     static fromServer(serverSuggestions) {
-        let suggestionList = new this(null, serverSuggestions.analyzeMoveSuggestion);
+        let suggestionList = new MoveSuggestionList(null, serverSuggestions.analyzeMoveSuggestion);
 
         for (let i = 0; i < serverSuggestions.suggestions.length; i++) {
             if (!serverSuggestions.suggestions[i]) continue;

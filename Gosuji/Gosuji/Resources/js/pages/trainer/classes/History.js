@@ -84,7 +84,7 @@ export class History {
 
 
     static fromServer(serverHistory, dataClass) {
-        let history = new this();
+        let history = new History();
         for (let y in serverHistory) {
             for (let x in serverHistory[y]) {
                 let data = serverHistory[y][x];
