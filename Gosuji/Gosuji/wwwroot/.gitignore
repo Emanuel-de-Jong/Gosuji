@@ -1,2 +1,5 @@
-*.min.js
-*.min.js.map
+# Ignore all .js files in the root directory and subfolders
+**/*.js
+
+# But do not ignore .js files in the libs subfolder
+!libs/**/*.js
