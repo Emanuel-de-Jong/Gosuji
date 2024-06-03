@@ -134,7 +134,7 @@ sgfComment.createCommentVisits = function () {
     let suggestions = trainerG.suggestions;
     if (suggestions == null) return "";
 
-    comment = "\nVisits";
+    let comment = "\nVisits";
     for (let i = 0; i < suggestions.length(); i++) {
         let suggestion = suggestions.get(i);
         if (i != 0 && suggestion.visits == suggestions.get(i - 1).visits) continue;
