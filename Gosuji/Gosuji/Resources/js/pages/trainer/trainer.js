@@ -21,10 +21,10 @@ import { gameplay } from "./gameplay";
 import { preMovePlacer } from "./preMovePlacer";
 import { selfplay } from "./selfplay";
 
-let init = { id: "init" };
+let trainerPage = { id: "trainerPage" };
 
 
-init.init = async function (
+trainerPage.init = async function (
     trainerRef,
     kataGoServiceRef,
     userId,
@@ -62,8 +62,8 @@ init.init = async function (
     trainerG.init(trainerRef, kataGoServiceRef, kataGoVersion, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
-    init.restartButton = document.getElementById("restart");
-    init.restartButton.addEventListener("click", init.restartButtonClickListener);
+    trainerPage.restartButton = document.getElementById("restart");
+    trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
     settings.init(serverColor);
     trainerG.board.init(serverBoardsize, serverHandicap, serverSGF);
@@ -85,13 +85,13 @@ init.init = async function (
     // console.log(gameplay.chosenNotPlayedCoordHistory);
     // console.log(scoreChart.history);
 
-    sgf.sgfLoadingEvent.add(init.sgfLoadingListener);
-    sgf.sgfLoadedEvent.add(init.sgfLoadedListener);
+    sgf.sgfLoadingEvent.add(trainerPage.sgfLoadingListener);
+    sgf.sgfLoadedEvent.add(trainerPage.sgfLoadedListener);
 
-    await init.start();
+    await trainerPage.start();
 };
 
-init.clear = async function () {
+trainerPage.clear = async function () {
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
     trainerG.clear();
@@ -109,11 +109,11 @@ init.clear = async function () {
     await katago.clear();
     db.clear();
 
-    await init.start();
+    await trainerPage.start();
 };
 
 
-init.start = async function () {
+trainerPage.start = async function () {
     if (trainerG.isLoadingServerData || debug.testData) {
         trainerG.isLoadingServerData = false;
         gameplay.givePlayerControl(false);
@@ -122,17 +122,17 @@ init.start = async function () {
     }
 };
 
-init.restartButtonClickListener = async function () {
-    await init.clear();
+trainerPage.restartButtonClickListener = async function () {
+    await trainerPage.clear();
 };
 
-init.sgfLoadingListener = async function () {
+trainerPage.sgfLoadingListener = async function () {
     preMovePlacer.clear();
     await selfplay.clear();
     trainerG.clear();
 };
 
-init.sgfLoadedListener = async function () {
+trainerPage.sgfLoadedListener = async function () {
     sgfComment.clear();
     scoreChart.clear();
     stats.clear();
@@ -166,7 +166,7 @@ export {
     cornerPlacer,
     debug,
     gameplay,
-    init,
+    trainerPage,
     preMovePlacer,
     selfplay,
 };

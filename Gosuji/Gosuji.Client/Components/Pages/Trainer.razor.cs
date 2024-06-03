@@ -97,7 +97,7 @@ namespace Gosuji.Client.Components.Pages
                 Dictionary<short, Dictionary<short, EMoveType>> decodedMoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
                 Dictionary<short, Dictionary<short, Coord>> decodedChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords);
 
-                jsRef.InvokeVoidAsync("init.init",
+                jsRef.InvokeVoidAsync("trainerPage.init",
                     trainerRef,
                     kataGoServiceRef,
                     userId,
@@ -117,7 +117,7 @@ namespace Gosuji.Client.Components.Pages
             }
             else
             {
-                jsRef.InvokeVoidAsync("init.init",
+                jsRef.InvokeVoidAsync("trainerPage.init",
                     trainerRef,
                     kataGoServiceRef,
                     userId,

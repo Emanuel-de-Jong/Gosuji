@@ -8,7 +8,7 @@ import { stats } from "./utils/stats";
 import { trainerG } from "./utils/trainerG";
 import { cornerPlacer } from "./cornerPlacer";
 import { gameplay } from "./gameplay";
-import { init } from "./init";
+import { trainerPage } from "./trainer";
 import { preMovePlacer } from "./preMovePlacer";
 import { selfplay } from "./selfplay";
 
@@ -52,7 +52,7 @@ debug.logAllFuncCalls = function () {
 
         cornerPlacer,
         gameplay,
-        init,
+        trainerPage,
         preMovePlacer,
         selfplay,
     ];

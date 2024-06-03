@@ -34,7 +34,7 @@ let config = [
             })
         ]
     },
-    createPageBundle('trainer', 'init'),
+    createPageBundle('trainer'),
     createPageBundle('josekis'),
     createPageBundle('profile'),
     createPageBundle('cms'),
