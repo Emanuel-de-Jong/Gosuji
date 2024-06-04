@@ -5,15 +5,15 @@ const createPageBundle = (filePath, fileName = filePath) => ({
     output: {
         file: 'wwwroot/js/pages/' + filePath + '/bundle.js',
         format: 'es',
-        sourcemap: false
+        sourcemap: true
     },
     plugins: [
-        // terser({
-        //     compress: {
-        //         unused: false,       // Prevents removal of unused variables and functions
-        //         side_effects: false  // Avoids dropping code that Terser thinks has no side effects
-        //     },
-        // })
+        terser({
+            compress: {
+                unused: false,       // Prevents removal of unused variables and functions
+                side_effects: false  // Avoids dropping code that Terser thinks has no side effects
+            },
+        })
     ]
 });
 
@@ -23,7 +23,7 @@ let config = [
         output: {
             file: 'wwwroot/js/bundle.js',
             format: 'iife',
-            sourcemap: false
+            sourcemap: true
         },
         plugins: [
             terser({
