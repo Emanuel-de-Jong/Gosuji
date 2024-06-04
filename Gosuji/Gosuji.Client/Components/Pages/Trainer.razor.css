@@ -22,8 +22,8 @@
 }
 
 #trainerPage .flex-item {
-    display: contents;
     flex: auto;
+    overflow: hidden;
 }
 
 

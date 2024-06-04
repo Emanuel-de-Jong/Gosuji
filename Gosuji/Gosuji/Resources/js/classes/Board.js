@@ -141,6 +141,30 @@ if (typeof Board === "undefined") {
             }
         }
 
+        addGhostStone(x, y, color) {
+            let colorClass = "besogo-svg-";
+            if (color == g.COLOR_TYPE.B) {
+                colorClass += "blackStone";
+            } else {
+                colorClass += "whiteStone";
+            }
+
+            let stoneElement = besogo.svgEl("circle", {
+                cx: besogo.svgPos(x),
+                cy: besogo.svgPos(y),
+                r: 42,
+                'class': colorClass
+            });
+            stoneElement.classList.add("ghostStone");
+        
+            let svgElement = document.querySelector(".besogo-board svg");
+            svgElement.appendChild(stoneElement);
+        }
+
+        removeGhostStones() {
+            document.querySelectorAll(".besogo-board .ghostStone").forEach(gs => gs.remove());
+        }
+
         getMoveNumber() {
             return this.editor.getCurrent().moveNumber;
         }

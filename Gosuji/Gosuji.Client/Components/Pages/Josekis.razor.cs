@@ -67,11 +67,13 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddMarkups(JosekisNode node)
         {
+            await RemoveMarkups();
+
             if (node.Marks != null)
             {
                 foreach (JosekisMark mark in node.Marks)
                 {
-                    await AddMark(mark);
+                    await AddGhostStone(mark);
                 }
             }
 
@@ -90,6 +92,13 @@ namespace Gosuji.Client.Components.Pages
             }
 
             await jsRef.InvokeVoidAsync($"{BOARD}.redraw");
+        }
+
+        private async Task AddGhostStone(JosekisMark mark)
+        {
+            int color = mark.MarkType == JosekisMarkType.Mark ? -1 : 1;
+
+            await jsRef.InvokeVoidAsync($"{BOARD}.addGhostStone", mark.X + 1, mark.Y + 1, color);
         }
 
         private async Task AddMark(JosekisMark mark)
@@ -118,6 +127,11 @@ namespace Gosuji.Client.Components.Pages
         private async Task AddLabel(JosekisLabel textLabel)
         {
             await jsRef.InvokeVoidAsync($"{BOARD}.addMarkup", textLabel.X + 1, textLabel.Y + 1, textLabel.Text);
+        }
+
+        private async Task RemoveMarkups()
+        {
+            await jsRef.InvokeVoidAsync($"{BOARD}.removeGhostStones");
         }
 
         [JSInvokable]

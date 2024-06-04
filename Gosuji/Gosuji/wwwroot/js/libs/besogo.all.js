@@ -991,6 +991,8 @@ besogo.makeBoardDisplay = function(container, editor) {
         return BOARD_MARGIN + CELL_SIZE/2 + (x-1) * CELL_SIZE;
     }
 
+    besogo.svgPos = svgPos;
+
     function fromXY(x, y) { // Converts (x, y) coordinates to linear index
         return (x - 1)*sizeY + (y - 1);
     }
