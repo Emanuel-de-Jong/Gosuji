@@ -31,22 +31,39 @@ stats.BASE_CONFIG = {
 };
 
 
-stats.init = function (dayLabels, monthLabels, users, newUsers) {
-    let userChartConfig = utils.deepCopyObject(stats.BASE_CONFIG);
-    userChartConfig.data.labels = dayLabels;
-    userChartConfig.data.datasets.push({
+stats.init = function (dayLabels, monthLabels, dayUsers, dayNewUsers, monthUsers, monthNewUsers) {
+    let dayUserChartConfig = utils.deepCopyObject(stats.BASE_CONFIG);
+    dayUserChartConfig.data.labels = dayLabels;
+    dayUserChartConfig.data.datasets.push({
         label: 'Users',
-        data: users,
+        data: dayUsers,
         borderColor: 'rgb(75, 192, 192)',
     });
-    userChartConfig.data.datasets.push({
+    dayUserChartConfig.data.datasets.push({
         label: 'New users',
-        data: newUsers,
+        data: dayNewUsers,
         borderColor: 'rgb(200, 192, 50)',
     });
 
-    stats.userChartElement = document.getElementById("userChart");
-    stats.userChart = new Chart(stats.userChartElement, userChartConfig);
+    stats.dayUserChartElement = document.getElementById("dayUserChart");
+    stats.dayUserChart = new Chart(stats.dayUserChartElement, dayUserChartConfig);
+    
+
+    let monthUserChartConfig = utils.deepCopyObject(stats.BASE_CONFIG);
+    monthUserChartConfig.data.labels = monthLabels;
+    monthUserChartConfig.data.datasets.push({
+        label: 'Users',
+        data: monthUsers,
+        borderColor: 'rgb(75, 192, 192)',
+    });
+    monthUserChartConfig.data.datasets.push({
+        label: 'New users',
+        data: monthNewUsers,
+        borderColor: 'rgb(200, 192, 50)',
+    });
+
+    stats.monthUserChartElement = document.getElementById("monthUserChart");
+    stats.monthUserChart = new Chart(stats.monthUserChartElement, monthUserChartConfig);
 };
 
 export { stats };
