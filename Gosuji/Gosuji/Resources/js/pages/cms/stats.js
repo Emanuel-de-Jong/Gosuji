@@ -31,17 +31,17 @@ stats.BASE_CONFIG = {
 };
 
 
-stats.init = function () {
+stats.init = function (dayLabels, monthLabels, users, newUsers) {
     let userChartConfig = utils.deepCopyObject(stats.BASE_CONFIG);
-    userChartConfig.data.labels = [ 1, 2, 3 ];
+    userChartConfig.data.labels = dayLabels;
     userChartConfig.data.datasets.push({
         label: 'Users',
-        data: [65, 59, 80],
+        data: users,
         borderColor: 'rgb(75, 192, 192)',
     });
     userChartConfig.data.datasets.push({
         label: 'New users',
-        data: [20, 59, 40],
+        data: newUsers,
         borderColor: 'rgb(200, 192, 50)',
     });
 
