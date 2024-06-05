@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
-namespace Gosuji.Components.Shared.CMS
+namespace Gosuji.Components.Pages.CMS
 {
-    public partial class CStats : ComponentBase
+    public partial class Stats : ComponentBase
     {
         [Inject]
         private IJSRuntime js { get; set; }
