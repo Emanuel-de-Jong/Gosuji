@@ -15,8 +15,20 @@
                 <div id="cmsStatsPage">
                     <div class="cmsFlexContainer">
                         <div class="cmsFlexItem">
-                            <canvas id="dayUserChart"></canvas>
-                            <canvas id="monthUserChart"></canvas>
+                            <nav>
+                                <div class="nav nav-tabs">
+                                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#dayUserChartTab" type="button">Days</button>
+                                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#monthUserChartTab" type="button">Months</button>
+                                </div>
+                            </nav>
+                            <div class="tab-content">
+                                <div class="tab-pane show active" id="dayUserChartTab">
+                                    <canvas id="dayUserChart"></canvas>
+                                </div>
+                                <div class="tab-pane" id="monthUserChartTab">
+                                    <canvas id="monthUserChart"></canvas>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

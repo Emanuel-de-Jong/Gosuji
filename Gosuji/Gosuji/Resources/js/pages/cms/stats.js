@@ -44,23 +44,20 @@ stats.init = function (dayLabels, monthLabels, dayUsers, dayNewUsers, monthUsers
         data: dayNewUsers,
         borderColor: 'rgb(200, 192, 50)',
     });
+    dayUserChartConfig.options.scales.y = {
+        ticks: {
+            stepSize: 1,
+        },
+    };
 
     stats.dayUserChartElement = document.getElementById("dayUserChart");
     stats.dayUserChart = new Chart(stats.dayUserChartElement, dayUserChartConfig);
     
 
-    let monthUserChartConfig = utils.deepCopyObject(stats.BASE_CONFIG);
+    let monthUserChartConfig = utils.deepCopyObject(dayUserChartConfig);
     monthUserChartConfig.data.labels = monthLabels;
-    monthUserChartConfig.data.datasets.push({
-        label: 'Users',
-        data: monthUsers,
-        borderColor: 'rgb(75, 192, 192)',
-    });
-    monthUserChartConfig.data.datasets.push({
-        label: 'New users',
-        data: monthNewUsers,
-        borderColor: 'rgb(200, 192, 50)',
-    });
+    monthUserChartConfig.data.datasets[0].data = monthUsers;
+    monthUserChartConfig.data.datasets[1].data = monthNewUsers;
 
     stats.monthUserChartElement = document.getElementById("monthUserChart");
     stats.monthUserChart = new Chart(stats.monthUserChartElement, monthUserChartConfig);
