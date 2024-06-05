@@ -38,7 +38,7 @@ namespace Gosuji.Components.Shared.CMS
 
             if (textValues != null)
             {
-                await jsRef.InvokeVoidAsync("translation.resizeTranslationTextareas");
+                await jsRef.InvokeVoidAsync("cTranslation.resizeTranslationTextareas");
             }
         }
 

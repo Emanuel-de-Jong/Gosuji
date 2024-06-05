@@ -1,6 +1,7 @@
-import { abuseDetect } from "./abuseDetect";
-import { translation } from "./translation";
+import { cAbuseDetect } from "./cAbuseDetect";
+import { cTranslation } from "./cTranslation";
+import { stats } from "./stats";
 
 let cmsPage = {};
 
-export { cmsPage, abuseDetect, translation };
+export { cmsPage, cAbuseDetect, cTranslation, stats };

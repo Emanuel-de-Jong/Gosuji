@@ -67,7 +67,7 @@ namespace Gosuji.Components.Shared.CMS
 
             if (firstRender)
             {
-                await jsRef.InvokeVoidAsync("abuseDetect.init");
+                await jsRef.InvokeVoidAsync("cAbuseDetect.init");
             }
         }
     }

@@ -1,9 +1,9 @@
-let abuseDetect = {};
+let cAbuseDetect = {};
 
-abuseDetect.init = function () {
+cAbuseDetect.init = function () {
     this.table = new DataTable("#abuseTable", {
         order: [[2, "desc"]]
     });
 };
 
-export { abuseDetect };
+export { cAbuseDetect };
