@@ -18,6 +18,25 @@ const createPageBundle = (filePath, fileName = filePath) => ({
 });
 
 let config = [
+    // Besogo minify
+    {
+        input: 'Resources/js/libs/besogo.all.js',
+        output: {
+            file: 'wwwroot/js/libs/besogo.all.js',
+            format: 'iife',
+            sourcemap: true
+        },
+        plugins: [
+            terser({
+                compress: {
+                    unused: false,
+                    side_effects: false
+                },
+            })
+        ]
+    },
+
+    // Custom globals bundle
     {
         input: 'Resources/js/custom.js',
         output: {
@@ -28,12 +47,14 @@ let config = [
         plugins: [
             terser({
                 compress: {
-                    unused: false,       // Prevents removal of unused variables and functions
-                    side_effects: false  // Avoids dropping code that Terser thinks has no side effects
+                    unused: false,
+                    side_effects: false
                 },
             })
         ]
     },
+
+    // Page bundles
     createPageBundle('trainer'),
     createPageBundle('josekis'),
     createPageBundle('profile'),
