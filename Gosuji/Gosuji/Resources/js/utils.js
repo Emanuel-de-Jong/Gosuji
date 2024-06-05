@@ -11,6 +11,18 @@ if (typeof utils === "undefined") {
         STRING: 4,
     };
 
+    utils.deepCopyObject = function (obj) {
+        let clone = Array.isArray(obj) ? [] : {};
+        for (let key in obj) {
+            if (typeof obj[key] === "object" && obj[key] !== null) {
+                clone[key] = utils.deepCopyObject(obj[key]);
+            } else {
+                clone[key] = obj[key];
+            }
+        }
+        return clone;
+    };
+
     utils.lazyLoadCSSLibrary = (url) => {
         return new Promise((resolve, reject) => {
             if (document.querySelector(`link[href="${url}"]`)) {

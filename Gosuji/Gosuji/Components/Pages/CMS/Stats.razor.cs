@@ -39,6 +39,7 @@ namespace Gosuji.Components.Pages.CMS
 
             if (firstRender)
             {
+                await jsRef.InvokeVoidAsync("cmsPage.init");
                 await jsRef.InvokeVoidAsync("stats.init");
             }
         }

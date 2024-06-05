@@ -8,6 +8,7 @@
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject IDataService dataService
 @inject ITranslateService translateService;
+@inject NavigationManager navigationManager;
 
 <PageTitle>Gosuji</PageTitle>
 
@@ -54,6 +55,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // navigationManager.NavigateTo("cms/stats");
+        // return;
+
         await translateService.Init();
 
         userId = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

@@ -18,21 +18,24 @@ if (typeof custom === "undefined") {
 
 
     custom.init = function () {
+        custom.themeChangedEvent = new CEvent();
+        custom.theme = custom.THEME_TYPES.DARK;
+
+        custom.clear();
+    };
+
+    custom.clear = function () {
         custom.htmlElement = document.getElementsByTagName("html")[0];
 
         custom.darkThemeSwitch = document.getElementById("darkThemeSwitch");
         if (custom.darkThemeSwitch) {
-            custom.darkThemeSwitch.addEventListener("input", custom.darkThemeSwitchInputListener);
+            custom.darkThemeSwitch.addEventListener("input", () => { this.switchTheme(this.darkThemeSwitch.checked) });
         }
-
-        custom.themeChangedEvent = new CEvent();
-
-        custom.theme = custom.THEME_TYPES.DARK;
     };
 
 
-    custom.darkThemeSwitchInputListener = function () {
-        if (custom.darkThemeSwitch.checked) {
+    custom.switchTheme = function (toDarkTheme) {
+        if (toDarkTheme) {
             custom.enableDarkTheme();
         } else {
             custom.disableDarkTheme();
