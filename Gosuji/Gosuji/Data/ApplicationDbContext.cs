@@ -29,7 +29,9 @@ namespace Gosuji.Data
             base.OnModelCreating(builder);
 
             builder.Entity<User>()
-                .HasOne(e => e.CurrentSubscription);
+                .HasOne(e => e.CurrentSubscription)
+                .WithMany()
+                .HasForeignKey(e => e.CurrentSubscriptionId);
 
             builder.Entity<SettingConfig>();
             builder.Entity<UserSubscription>();
