@@ -1,37 +1,8 @@
-let stats = {};
+import { stats } from "./stats";
 
-// https://www.chartjs.org/docs/3.9.1/
-stats.BASE_DATA = {
-    datasets: [
-        
-    ],
-};
+let cUserChart = {};
 
-stats.BASE_PLUGINS = {
-};
-
-stats.BASE_SCALES = {
-};
-
-stats.BASE_CONFIG = {
-    type: "line",
-    data: stats.BASE_DATA,
-    options: {
-        responsive: true,
-        interaction: {
-            intersect: false,
-            mode: "index",
-        },
-        animation: {
-            duration: 0,
-        },
-        plugins: stats.BASE_PLUGINS,
-        scales: stats.BASE_SCALES,
-    },
-};
-
-
-stats.init = function (dayLabels, monthLabels, dayUsers, dayActiveUsers, dayNewUsers, monthUsers, monthActiveUsers, monthNewUsers) {
+cUserChart.init = function (dayLabels, monthLabels, dayUsers, dayActiveUsers, dayNewUsers, monthUsers, monthActiveUsers, monthNewUsers) {
     let dayUserChartConfig = utils.deepCopyObject(stats.BASE_CONFIG);
     dayUserChartConfig.data.labels = dayLabels;
     dayUserChartConfig.data.datasets.push({
@@ -55,8 +26,8 @@ stats.init = function (dayLabels, monthLabels, dayUsers, dayActiveUsers, dayNewU
         },
     };
 
-    stats.dayUserChartElement = document.getElementById("dayUserChart");
-    stats.dayUserChart = new Chart(stats.dayUserChartElement, dayUserChartConfig);
+    cUserChart.dayUserChartElement = document.getElementById("dayUserChart");
+    cUserChart.dayUserChart = new Chart(cUserChart.dayUserChartElement, dayUserChartConfig);
     
 
     let monthUserChartConfig = utils.deepCopyObject(dayUserChartConfig);
@@ -65,8 +36,8 @@ stats.init = function (dayLabels, monthLabels, dayUsers, dayActiveUsers, dayNewU
     monthUserChartConfig.data.datasets[1].data = monthActiveUsers;
     monthUserChartConfig.data.datasets[2].data = monthNewUsers;
 
-    stats.monthUserChartElement = document.getElementById("monthUserChart");
-    stats.monthUserChart = new Chart(stats.monthUserChartElement, monthUserChartConfig);
+    cUserChart.monthUserChartElement = document.getElementById("monthUserChart");
+    cUserChart.monthUserChart = new Chart(cUserChart.monthUserChartElement, monthUserChartConfig);
 };
 
-export { stats };
+export { cUserChart };

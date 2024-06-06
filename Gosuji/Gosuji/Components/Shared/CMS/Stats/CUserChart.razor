@@ -1,0 +1,18 @@
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<h3>Users</h3>
+
+<nav>
+    <div class="nav nav-tabs">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#dayUserChartTab" type="button">Days</button>
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#monthUserChartTab" type="button">Months</button>
+    </div>
+</nav>
+<div class="tab-content">
+    <div class="tab-pane show active" id="dayUserChartTab">
+        <canvas id="dayUserChart"></canvas>
+    </div>
+    <div class="tab-pane" id="monthUserChartTab">
+        <canvas id="monthUserChart"></canvas>
+    </div>
+</div>
