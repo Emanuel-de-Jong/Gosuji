@@ -10,7 +10,6 @@ namespace Gosuji.Data
     {
         public DbSet<SettingConfig> SettingConfigs { get; set; }
         public DbSet<UserSubscription> UserSubscriptions { get; set; }
-        public DbSet<SubscriptionType> SubscriptionTypes { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<UserActivity> UserActivities { get; set; }
         public DbSet<UserMoveCount> UserMoveCounts { get; set; }
@@ -20,7 +19,6 @@ namespace Gosuji.Data
         public DbSet<Preset> Presets { get; set; }
         public DbSet<GameStat> GameStats { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
-        public DbSet<FeedbackType> FeedbackTypes { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<TextKey> TextKeys { get; set; }
         public DbSet<TextValue> TextValues { get; set; }
@@ -37,7 +35,6 @@ namespace Gosuji.Data
 
             builder.Entity<SettingConfig>();
             builder.Entity<UserSubscription>();
-            builder.Entity<SubscriptionType>();
             builder.Entity<Discount>();
 
             builder.Entity<UserActivity>(b =>
@@ -72,7 +69,6 @@ namespace Gosuji.Data
             builder.Entity<Preset>();
             builder.Entity<GameStat>();
             builder.Entity<Feedback>();
-            builder.Entity<FeedbackType>();
             builder.Entity<Language>();
             builder.Entity<TextKey>();
 

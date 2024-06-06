@@ -16,7 +16,7 @@
         {
             <tr>
                 <td title="@user.Id">@user.UserName</td>
-                <td>@(subscriptions.ContainsKey(user.Id) ? subscriptions[user.Id] : "Free")</td>
+                <td>@(subscriptions.ContainsKey(user.Id) ? subscriptions[user.Id].SubscriptionType : "Free")</td>
                 <td>@weekKataGoVisits[user.Id]</td>
                 <td>@(totalKataGoVisits.ContainsKey(user.Id) ? totalKataGoVisits[user.Id] : "0")</td>
             </tr>

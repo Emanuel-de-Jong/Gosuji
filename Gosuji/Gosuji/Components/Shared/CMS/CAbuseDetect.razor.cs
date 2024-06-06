@@ -25,7 +25,7 @@ namespace Gosuji.Components.Shared.CMS
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             users = await dbContext.Users.ToListAsync();
-            subscriptions = await dbContext.UserSubscriptions.Include(us => us.SubscriptionType).ToDictionaryAsync(us => us.UserId);
+            subscriptions = await dbContext.UserSubscriptions.ToDictionaryAsync(us => us.UserId);
 
             totalKataGoVisits = [];
             foreach (UserMoveCount moveCount in await dbContext.UserMoveCounts.ToListAsync())
