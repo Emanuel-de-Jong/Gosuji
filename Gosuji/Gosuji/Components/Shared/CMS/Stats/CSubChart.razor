@@ -1,0 +1,18 @@
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+<h3>Subscriptions</h3>
+
+<nav>
+    <div class="nav nav-tabs">
+        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#daySubChartTab" type="button">Days</button>
+        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#monthSubChartTab" type="button">Months</button>
+    </div>
+</nav>
+<div class="tab-content">
+    <div class="tab-pane show active" id="daySubChartTab">
+        <canvas id="daySubChart"></canvas>
+    </div>
+    <div class="tab-pane" id="monthSubChartTab">
+        <canvas id="monthSubChart"></canvas>
+    </div>
+</div>

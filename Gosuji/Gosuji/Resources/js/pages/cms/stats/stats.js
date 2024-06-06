@@ -1,5 +1,3 @@
-import { cUserChart } from "./cUserChart";
-
 let stats = {};
 
 // https://www.chartjs.org/docs/3.9.1/
@@ -32,4 +30,4 @@ stats.BASE_CONFIG = {
     },
 };
 
-export { stats, cUserChart };
+export { stats };

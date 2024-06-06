@@ -10,8 +10,14 @@ namespace Gosuji.Components.Shared.CMS.Stats
 {
     public partial class CUserChart : ComponentBase
     {
-        private static int DAY_COUNT = 14;
-        private static int MONTH_COUNT = 12;
+        [Parameter]
+        public List<DateTime> GraphDays { get; set; }
+        [Parameter]
+        public List<DateTime> GraphMonths { get; set; }
+        [Parameter]
+        public List<string> DayLabels { get; set; }
+        [Parameter]
+        public List<string> MonthLabels { get; set; }
 
         [Inject]
         private IJSRuntime js { get; set; }
@@ -20,113 +26,93 @@ namespace Gosuji.Components.Shared.CMS.Stats
 
         private IJSObjectReference jsRef;
 
-        private List<string> dayLabels = [];
-        private List<string> monthLabels = [];
-
-        private int[] dayUserChartUsers = new int[DAY_COUNT];
-        private int[] dayUserChartActiveUsers = new int[DAY_COUNT];
-        private int[] dayUserChartNewUsers = new int[DAY_COUNT];
-        private int[] monthUserChartUsers = new int[MONTH_COUNT];
-        private int[] monthUserChartActiveUsers = new int[MONTH_COUNT];
-        private int[] monthUserChartNewUsers = new int[MONTH_COUNT];
+        private int[] dayChartUsers;
+        private int[] dayChartActiveUsers;
+        private int[] dayChartNewUsers;
+        private int[] monthChartUsers;
+        private int[] monthChartActiveUsers;
+        private int[] monthChartNewUsers;
 
         protected override async Task OnInitializedAsync()
         {
-            List<DateTime> graphDays = [];
-            DateTime dateNow = DateTimeOffset.UtcNow.Date;
-            for (int i = DAY_COUNT - 1; i >= 0; i--)
-            {
-                graphDays.Add(dateNow.AddDays(-i));
-            }
-
-            List<DateTime> graphMonths = [];
-            dateNow = new(DateTimeOffset.UtcNow.Year, DateTimeOffset.UtcNow.Month, 1);
-            for (int i = MONTH_COUNT - 1; i >= 0; i--)
-            {
-                graphMonths.Add(dateNow.AddMonths(-i));
-            }
-
-            // dayLabels
-            foreach (DateTime day in graphDays)
-            {
-                dayLabels.Add(day.ToString("dd-MM"));
-            }
-
-            // monthLabels
-            foreach (DateTime month in graphMonths)
-            {
-                monthLabels.Add(month.ToString("MMMM"));
-            }
+            int dayCount = GraphDays.Count;
+            int monthCount = GraphMonths.Count;
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-            List<UserActivity> monthUserActivities = (await dbContext.UserActivities.ToListAsync()).Where(ua => ua.CreateDate.Date >= graphMonths.First()).ToList();
+            List<UserActivity> monthUserActivities = (await dbContext.UserActivities.ToListAsync()).Where(ua => ua.CreateDate.Date >= GraphMonths.First()).ToList();
             List<User> users = await dbContext.Users.ToListAsync();
 
-            int dayUserCount = users.Count(u => u.CreateDate.Date < graphDays.First());
-            int monthUserCount = users.Count(u => u.CreateDate.Date < graphMonths.First());
+            int dayUserCount = users.Count(u => u.CreateDate.Date < GraphDays.First());
+            int monthUserCount = users.Count(u => u.CreateDate.Date < GraphMonths.First());
 
             await dbContext.DisposeAsync();
 
-            // dayUserChartActiveUsers
-            List<UserActivity> daysUserActivities = monthUserActivities.Where(ua => ua.CreateDate >= graphDays.First()).ToList();
-            for (int i = 0; i < graphDays.Count; i++)
+            // dayChartActiveUsers
+            dayChartActiveUsers = new int[dayCount];
+            List<UserActivity> daysUserActivities = monthUserActivities.Where(ua => ua.CreateDate >= GraphDays.First()).ToList();
+            for (int i = 0; i < GraphDays.Count; i++)
             {
-                DateTime time = graphDays[i];
+                DateTime time = GraphDays[i];
 
                 List<UserActivity> tempActivities = daysUserActivities.Where(ua => ua.CreateDate.Date == time || ua.EndDate == time).ToList();
                 HashSet<string> tempUserIds = tempActivities.Select(ua => ua.UserId).ToHashSet();
 
-                dayUserChartActiveUsers[i] = tempUserIds.Count;
+                dayChartActiveUsers[i] = tempUserIds.Count;
             }
 
-            // dayUserChartNewUsers
-            List<User> monthUsers = users.Where(u => u.CreateDate.Date >= graphMonths.First()).ToList();
-            List<User> daysUsers = monthUsers.Where(u => u.CreateDate.Date >= graphDays.First()).ToList();
-            for (int i = 0; i < graphDays.Count; i++)
+            // dayChartNewUsers
+            dayChartNewUsers = new int[dayCount];
+            List<User> monthUsers = users.Where(u => u.CreateDate.Date >= GraphMonths.First()).ToList();
+            List<User> daysUsers = monthUsers.Where(u => u.CreateDate.Date >= GraphDays.First()).ToList();
+            for (int i = 0; i < GraphDays.Count; i++)
             {
-                DateTime time = graphDays[i];
+                DateTime time = GraphDays[i];
 
                 List<User> tempUsers = daysUsers.Where(u => u.CreateDate.Date == time).ToList();
 
-                dayUserChartNewUsers[i] = tempUsers.Count;
+                dayChartNewUsers[i] = tempUsers.Count;
             }
 
-            // dayUserChartUsers
-            for (int i = 0; i < dayUserChartNewUsers.Length; i++)
+            // dayChartUsers
+            dayChartUsers = new int[dayCount];
+            for (int i = 0; i < dayChartNewUsers.Length; i++)
             {
-                dayUserCount += dayUserChartNewUsers[i];
-                dayUserChartUsers[i] = dayUserCount;
+                dayUserCount += dayChartNewUsers[i];
+                dayChartUsers[i] = dayUserCount;
             }
 
-            // monthUserChartActiveUsers
-            for (int i = 0; i < graphMonths.Count; i++)
+            // monthChartActiveUsers
+            monthChartActiveUsers = new int[monthCount];
+            for (int i = 0; i < GraphMonths.Count; i++)
             {
-                DateTime time = graphMonths[i];
+                DateTime time = GraphMonths[i];
 
                 List<UserActivity> tempActivities = monthUserActivities.Where(ua =>
                     (ua.CreateDate.Year == time.Year && ua.CreateDate.Month == time.Month) ||
                     (ua.EndDate?.Year == time.Year && ua.EndDate?.Month == time.Month)).ToList();
                 HashSet<string> tempUserIds = tempActivities.Select(ua => ua.UserId).ToHashSet();
 
-                monthUserChartActiveUsers[i] = tempUserIds.Count;
+                monthChartActiveUsers[i] = tempUserIds.Count;
             }
 
-            // monthUserChartNewUsers
-            for (int i = 0; i < graphMonths.Count; i++)
+            // monthChartNewUsers
+            monthChartNewUsers = new int[monthCount];
+            for (int i = 0; i < GraphMonths.Count; i++)
             {
-                DateTime time = graphMonths[i];
+                DateTime time = GraphMonths[i];
 
                 List<User> tempUsers = monthUsers.Where(u => u.CreateDate.Year == time.Year && u.CreateDate.Month == time.Month).ToList();
 
-                monthUserChartNewUsers[i] = tempUsers.Count;
+                monthChartNewUsers[i] = tempUsers.Count;
             }
 
-            // monthUserChartUsers
-            for (int i = 0; i < monthUserChartNewUsers.Length; i++)
+            // monthChartUsers
+            monthChartUsers = new int[monthCount];
+            for (int i = 0; i < monthChartNewUsers.Length; i++)
             {
-                monthUserCount += monthUserChartNewUsers[i];
-                monthUserChartUsers[i] = monthUserCount;
+                monthUserCount += monthChartNewUsers[i];
+                monthChartUsers[i] = monthUserCount;
             }
         }
 
@@ -146,14 +132,14 @@ namespace Gosuji.Components.Shared.CMS.Stats
             if (firstRender)
             {
                 await jsRef.InvokeVoidAsync("cUserChart.init",
-                    dayLabels,
-                    monthLabels,
-                    dayUserChartUsers,
-                    dayUserChartActiveUsers,
-                    dayUserChartNewUsers,
-                    monthUserChartUsers,
-                    monthUserChartActiveUsers,
-                    monthUserChartNewUsers);
+                    DayLabels,
+                    MonthLabels,
+                    dayChartUsers,
+                    dayChartActiveUsers,
+                    dayChartNewUsers,
+                    monthChartUsers,
+                    monthChartActiveUsers,
+                    monthChartNewUsers);
             }
         }
     }
