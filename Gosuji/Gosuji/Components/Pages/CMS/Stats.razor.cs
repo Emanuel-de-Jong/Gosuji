@@ -6,7 +6,7 @@ namespace Gosuji.Components.Pages.CMS
     public partial class Stats : ComponentBase
     {
         private static int DAY_COUNT = 14;
-        private static int MONTH_COUNT = 12;
+        private static int MONTH_COUNT = 13;
 
         private List<DateTime> graphDays = [];
         private List<DateTime> graphMonths = [];

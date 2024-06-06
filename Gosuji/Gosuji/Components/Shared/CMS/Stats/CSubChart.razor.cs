@@ -1,4 +1,6 @@
 ﻿using Gosuji.Client;
+using Gosuji.Client.Components.Pages;
+using Gosuji.Client.Data;
 using Gosuji.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
@@ -36,14 +38,52 @@ namespace Gosuji.Components.Shared.CMS.Stats
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-
+            List<UserSubscription> subs = (await dbContext.Users
+                .Where(u => u.CurrentSubscriptionId != null)
+                .Include(u => u.CurrentSubscription)
+                .ToListAsync())
+                .Select(u => u.CurrentSubscription)
+                .ToList();
 
             await dbContext.DisposeAsync();
 
-            dayChartSubs = new int[dayCount];
+            int daySubCount = subs.Count(s => s.CreateDate.Date < GraphDays.First());
+            int monthSubCount = subs.Count(s => s.CreateDate.Date < GraphMonths.First());
+
+            List<UserSubscription> monthSubs = subs.Where(s => s.CreateDate.Date >= GraphMonths.First()).ToList();
+
+            // dayChartNewSubs
             dayChartNewSubs = new int[dayCount];
-            monthChartSubs = new int[monthCount];
+            List<UserSubscription> daySubs = monthSubs.Where(s => s.CreateDate.Date >= GraphDays.First()).ToList();
+            for (int i = 0; i < GraphDays.Count; i++)
+            {
+                DateTime time = GraphDays[i];
+                dayChartNewSubs[i] = daySubs.Count(s => s.CreateDate.Date == time);
+            }
+
+            // dayChartSubs
+            dayChartSubs = new int[dayCount];
+            for (int i = 0; i < dayChartNewSubs.Length; i++)
+            {
+                daySubCount += dayChartNewSubs[i];
+                dayChartSubs[i] = daySubCount;
+            }
+
+            // monthChartNewSubs
             monthChartNewSubs = new int[monthCount];
+            for (int i = 0; i < GraphMonths.Count; i++)
+            {
+                DateTime time = GraphMonths[i];
+                monthChartNewSubs[i] = monthSubs.Count(s => s.CreateDate.Year == time.Year && s.CreateDate.Month == time.Month);
+            }
+
+            // monthChartSubs
+            monthChartSubs = new int[monthCount];
+            for (int i = 0; i < monthChartNewSubs.Length; i++)
+            {
+                monthSubCount += monthChartNewSubs[i];
+                monthChartSubs[i] = monthSubCount;
+            }
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

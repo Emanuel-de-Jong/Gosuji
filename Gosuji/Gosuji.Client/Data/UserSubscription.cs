@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gosuji.Client.Data
 {
     public enum ESubscriptionType
     {
-        Free = 1,
-        Level1 = 2,
-        Level2 = 3,
-        Level3 = 4,
+        Level1 = 1,
+        Level2 = 2,
+        Level3 = 3,
     }
 
     public class UserSubscription : DbModel
@@ -18,6 +18,8 @@ namespace Gosuji.Client.Data
         public long? DiscountId { get; set; }
         public Discount? Discount { get; set; }
         public int Months { get; set; }
+        [NotMapped]
+        public DateTimeOffset EndDate => CreateDate.AddMonths(Months);
 
         public override string ToString()
         {

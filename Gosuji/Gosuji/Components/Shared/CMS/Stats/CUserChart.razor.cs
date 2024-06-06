@@ -43,10 +43,10 @@ namespace Gosuji.Components.Shared.CMS.Stats
             List<UserActivity> monthUserActivities = (await dbContext.UserActivities.ToListAsync()).Where(ua => ua.CreateDate.Date >= GraphMonths.First()).ToList();
             List<User> users = await dbContext.Users.ToListAsync();
 
+            await dbContext.DisposeAsync();
+
             int dayUserCount = users.Count(u => u.CreateDate.Date < GraphDays.First());
             int monthUserCount = users.Count(u => u.CreateDate.Date < GraphMonths.First());
-
-            await dbContext.DisposeAsync();
 
             // dayChartActiveUsers
             dayChartActiveUsers = new int[dayCount];
@@ -61,17 +61,15 @@ namespace Gosuji.Components.Shared.CMS.Stats
                 dayChartActiveUsers[i] = tempUserIds.Count;
             }
 
+            List<User> monthUsers = users.Where(u => u.CreateDate.Date >= GraphMonths.First()).ToList();
+
             // dayChartNewUsers
             dayChartNewUsers = new int[dayCount];
-            List<User> monthUsers = users.Where(u => u.CreateDate.Date >= GraphMonths.First()).ToList();
             List<User> daysUsers = monthUsers.Where(u => u.CreateDate.Date >= GraphDays.First()).ToList();
             for (int i = 0; i < GraphDays.Count; i++)
             {
                 DateTime time = GraphDays[i];
-
-                List<User> tempUsers = daysUsers.Where(u => u.CreateDate.Date == time).ToList();
-
-                dayChartNewUsers[i] = tempUsers.Count;
+                dayChartNewUsers[i] = daysUsers.Count(u => u.CreateDate.Date == time);
             }
 
             // dayChartUsers
@@ -101,10 +99,7 @@ namespace Gosuji.Components.Shared.CMS.Stats
             for (int i = 0; i < GraphMonths.Count; i++)
             {
                 DateTime time = GraphMonths[i];
-
-                List<User> tempUsers = monthUsers.Where(u => u.CreateDate.Year == time.Year && u.CreateDate.Month == time.Month).ToList();
-
-                monthChartNewUsers[i] = tempUsers.Count;
+                monthChartNewUsers[i] = monthUsers.Count(u => u.CreateDate.Year == time.Year && u.CreateDate.Month == time.Month);
             }
 
             // monthChartUsers
