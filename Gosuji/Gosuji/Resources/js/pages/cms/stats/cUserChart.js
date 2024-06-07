@@ -1,9 +1,9 @@
-import { stats } from "./stats";
+import { statsPage } from "./stats";
 
 let cUserChart = {};
 
 cUserChart.init = function (dayLabels, monthLabels, dayUsers, dayActiveUsers, dayNewUsers, monthUsers, monthActiveUsers, monthNewUsers) {
-    let dayChartConfig = utils.deepCopyObject(stats.BASE_CONFIG);
+    let dayChartConfig = utils.deepCopyObject(statsPage.BASE_CONFIG);
     dayChartConfig.data.labels = dayLabels;
     dayChartConfig.data.datasets.push({
         label: 'Users',

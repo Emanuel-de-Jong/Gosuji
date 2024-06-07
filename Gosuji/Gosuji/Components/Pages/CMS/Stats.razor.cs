@@ -14,9 +14,6 @@ namespace Gosuji.Components.Pages.CMS
         private List<string> dayLabels = [];
         private List<string> monthLabels = [];
 
-        [Inject]
-        private IJSRuntime js { get; set; }
-
         protected override async Task OnInitializedAsync()
         {
             // graphDays
@@ -43,18 +40,6 @@ namespace Gosuji.Components.Pages.CMS
             foreach (DateTime month in graphMonths)
             {
                 monthLabels.Add(month.ToString("MMMM"));
-            }
-        }
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            try
-            {
-                await js.InvokeVoidAsync("utils.lazyLoadCSSLibrary", "css/cms.css");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading library: {ex.Message}");
             }
         }
     }

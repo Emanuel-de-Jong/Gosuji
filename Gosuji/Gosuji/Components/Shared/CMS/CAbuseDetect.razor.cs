@@ -17,15 +17,13 @@ namespace Gosuji.Components.Shared.CMS
 
         private IJSObjectReference jsRef;
         private List<User>? users;
-        private Dictionary<string, UserSubscription>? subscriptions;
         private Dictionary<string, long>? totalKataGoVisits;
         private Dictionary<string, long>? weekKataGoVisits;
 
         protected override async Task OnInitializedAsync()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            users = await dbContext.Users.ToListAsync();
-            subscriptions = await dbContext.UserSubscriptions.ToDictionaryAsync(us => us.UserId);
+            users = await dbContext.Users.Include(u => u.CurrentSubscription).ToListAsync();
 
             totalKataGoVisits = [];
             foreach (UserMoveCount moveCount in await dbContext.UserMoveCounts.ToListAsync())
