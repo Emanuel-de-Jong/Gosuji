@@ -1,8 +1,19 @@
 ﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
+@using Gosuji.Client.Data;
+
 <h3>Subscriptions</h3>
 
 <nav>
+    @if (subs != null)
+    {
+        @foreach (ESubscriptionType subType in Enum.GetValues<ESubscriptionType>())
+        {
+            <p>
+                @subType: @subs.Count(s => s.SubscriptionType == subType)
+            </p>
+        }
+    }
     <div class="nav nav-tabs">
         <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#daySubChartTab" type="button">Days</button>
         <button class="nav-link" data-bs-toggle="tab" data-bs-target="#monthSubChartTab" type="button">Months</button>

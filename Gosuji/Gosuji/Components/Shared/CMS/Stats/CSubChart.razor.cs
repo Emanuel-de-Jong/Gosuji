@@ -26,6 +26,8 @@ namespace Gosuji.Components.Shared.CMS.Stats
 
         private IJSObjectReference jsRef;
 
+        private List<UserSubscription> subs;
+
         private int[] dayChartSubs;
         private int[] dayChartNewSubs;
         private int[] monthChartSubs;
@@ -38,7 +40,7 @@ namespace Gosuji.Components.Shared.CMS.Stats
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-            List<UserSubscription> subs = (await dbContext.Users
+            subs = (await dbContext.Users
                 .Where(u => u.CurrentSubscriptionId != null)
                 .Include(u => u.CurrentSubscription)
                 .ToListAsync())
