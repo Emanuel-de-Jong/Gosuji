@@ -26,7 +26,7 @@
                 <div class="feedback-subsubcontainer">
                     <h4 class="feedback-header">Feedback</h4>
                     <label for="subject-input" class="subject-label">Subject</label>
-                    <input type="text" class="subject-content" name="subject-input" id="subject-input" />
+                    <input type="text" @bind="subject" class="subject-content" name="subject-input" id="subject-input" />
                 </div>
                 <div class="feedback-type-container">
                     <h5 class="feedback-type-header">Type</h5>
@@ -51,8 +51,8 @@
                 </div>
             </div>
             <div class="text-submit-container">
-                <textarea class="feedback-content-input" name="feedback-content" id="feedback-content" placeholder="Please enter your Feedback here" cols="40" rows="7"></textarea>
-                <button class="btn btn-primary feedback__submit">Confirm</button>
+                <textarea @bind="message" class="feedback-content-input" name="feedback-content" id="feedback-content" placeholder="Please enter your Feedback here" cols="40" rows="7"></textarea>
+                <button type="button" @onclick="SendFeedback" class="btn btn-primary feedback_submit">Confirm</button>
             </div>
         </form>
     </div>
