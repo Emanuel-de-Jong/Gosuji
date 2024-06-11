@@ -14,10 +14,11 @@ namespace Gosuji.Client.Components.Pages
         private IDataService dataService { get; set; }
 
         private string? userId;
+        private bool isNotLoggedIn => userId == null;
 
         private string? subject;
         private string? message;
-        private EFeedbackType feedbackType;
+        private EFeedbackType feedbackType = EFeedbackType.Support;
 
         protected override async Task OnInitializedAsync()
         {
@@ -30,7 +31,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task SendFeedback()
         {
-            if (userId == null)
+            if (isNotLoggedIn)
             {
                 return;
             }
