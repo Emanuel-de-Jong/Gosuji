@@ -1,7 +1,7 @@
 ﻿using Gosuji.Client.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace Gosuji.Data
+namespace Gosuji.Client.Data
 {
     public enum EFeedbackType
     {
@@ -16,7 +16,7 @@ namespace Gosuji.Data
         [Key] public long Id { get; set; }
         public string UserId { get; set; }
         public EFeedbackType FeedbackType { get; set; }
-        public string? Subject { get; set; }
-        public string Message { get; set; }
+        public string Subject { get; set; }
+        public string? Message { get; set; }
     }
 }

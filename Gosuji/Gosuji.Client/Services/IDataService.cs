@@ -14,5 +14,6 @@ namespace Gosuji.Client.Services
         Task PutGameStat(GameStat gameStat);
         Task<long> PostGame(Game game);
         Task PutGame(Game game);
+        Task PostFeedback(Feedback feedback);
     }
 }

@@ -56,5 +56,10 @@ namespace Gosuji.Client.Services
         {
             await http.PostAsJsonAsync($"{MAP_GROUP}/PutGame", game);
         }
+
+        public async Task PostFeedback(Feedback feedback)
+        {
+            await http.PostAsJsonAsync($"{MAP_GROUP}/PostFeedback", feedback);
+        }
     }
 }

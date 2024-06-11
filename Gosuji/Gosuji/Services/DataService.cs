@@ -22,7 +22,13 @@ namespace Gosuji.Services
             group.MapGet("/GetKeyValuesByLanguage", (IDataService service) => service.GetKeyValuesByLanguage());
             group.MapGet("/GetUserLanguageIds", (IDataService service) => service.GetUserLanguageIds());
             group.MapGet("/GetUserGames/{userId}", (string userId, IDataService service) => service.GetUserGames(userId));
+            group.MapGet("/GetGame/{gameId}", (long gameId, IDataService service) => service.GetGame(gameId));
             group.MapPost("/PostTrainerSettingConfig", (TrainerSettingConfig config, IDataService service) => service.PostTrainerSettingConfig(config));
+            group.MapPost("/PostGameStat", (GameStat gamestat, IDataService service) => service.PostGameStat(gamestat));
+            group.MapPut("/PutGameStat", (GameStat gamestat, IDataService service) => service.PutGameStat(gamestat));
+            group.MapPost("/PostGame", (Game game, IDataService service) => service.PostGame(game));
+            group.MapPut("/PutGame", (Game game, IDataService service) => service.PutGame(game));
+            group.MapPost("/PostFeedback", (Feedback feedback, IDataService service) => service.PostFeedback(feedback));
         }
 
         public async Task<Changelog[]> GetChangelogs()
@@ -155,6 +161,14 @@ namespace Gosuji.Services
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             dbContext.Games.Update(game);
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+        }
+
+        public async Task PostFeedback(Feedback feedback)
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            await dbContext.Feedbacks.AddAsync(feedback);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
         }
