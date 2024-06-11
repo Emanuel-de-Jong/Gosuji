@@ -22,46 +22,55 @@
             <div>Company: Crystal Panda Studio</div>
         </div>
 
+        @if (isNotLoggedIn)
+        {
+            <div>
+                <p class="notLoggedInMessage">You need an account to send a message.</p>
+            </div>
+        }
+        
         <!-- Feedback and Questions form -->
-        <form class="feedback-container">
-            @if (isNotLoggedIn)
-            {
-                <div>
-                    <p class="notLoggedInMessage">You need an account to send a message.</p>
+        <EditForm Model="input" method="post" OnValidSubmit="SendFeedback" FormName="FeedbackForm">
+            <DataAnnotationsValidator />
+            <div class="feedback-container">
+                <div class="feedback-subcontainer">
+                    <div class="feedback-subsubcontainer">
+                        <h4 class="feedback-header">Feedback</h4>
+                        <label for="subject-input" class="subject-label">Subject</label>
+                        <InputText @bind-Value="input.Subject" type="text" class="subject-content" name="subject-input" id="subject-input" disabled="@isNotLoggedIn" />
+                        <ValidationMessage For="() => input.Subject" class="text-danger" />
+                    </div>
+
+                    <div class="feedback-type-container">
+                        <h5 class="feedback-type-header">Type</h5>
+                        <ul class="feedback-type-list">
+                            <li class="feedback-element">
+                                <input type="radio" id="support" name="feedback" @onchange="() => feedbackType = EFeedbackType.Support" disabled="@isNotLoggedIn" checked>
+                                <label for="support">Support</label>
+                            </li>
+                            <li class="feedback-element">
+                                <input type="radio" id="suggestion" name="feedback" @onchange="() => feedbackType = EFeedbackType.Suggestion" disabled="@isNotLoggedIn">
+                                <label for="suggestion">Suggestion</label>
+                            </li>
+                            <li class="feedback-element">
+                                <input type="radio" id="reportBug" name="feedback" @onchange="() => feedbackType = EFeedbackType.ReportBug" disabled="@isNotLoggedIn">
+                                <label for="reportBug">Report bug</label>
+                            </li>
+                            <li class="feedback-element">
+                                <input type="radio" id="other" name="feedback" @onchange="() => feedbackType = EFeedbackType.Other" disabled="@isNotLoggedIn">
+                                <label for="other">Other</label>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            }
-            <div class="feedback-subcontainer">
-                <div class="feedback-subsubcontainer">
-                    <h4 class="feedback-header">Feedback</h4>
-                    <label for="subject-input" class="subject-label">Subject</label>
-                    <input type="text" @bind="subject" class="subject-content" name="subject-input" id="subject-input" disabled="@isNotLoggedIn" />
-                </div>
-                <div class="feedback-type-container">
-                    <h5 class="feedback-type-header">Type</h5>
-                    <ul class="feedback-type-list">
-                        <li class="feedback-element">
-                            <input type="radio" id="support" name="feedback" @onchange="() => feedbackType = EFeedbackType.Support" disabled="@isNotLoggedIn" checked>
-                            <label for="support">Support</label>
-                        </li>
-                        <li class="feedback-element">
-                            <input type="radio" id="suggestion" name="feedback" @onchange="() => feedbackType = EFeedbackType.Suggestion" disabled="@isNotLoggedIn">
-                            <label for="suggestion">Suggestion</label>
-                        </li>
-                        <li class="feedback-element">
-                            <input type="radio" id="reportBug" name="feedback" @onchange="() => feedbackType = EFeedbackType.ReportBug" disabled="@isNotLoggedIn">
-                            <label for="reportBug">Report bug</label>
-                        </li>
-                        <li class="feedback-element">
-                            <input type="radio" id="other" name="feedback" @onchange="() => feedbackType = EFeedbackType.Other" disabled="@isNotLoggedIn">
-                            <label for="other">Other</label>
-                        </li>
-                    </ul>
+
+                <div class="text-submit-container">
+                    <InputTextArea @bind-Value="input.Message" class="feedback-content-input" name="feedback-content" id="feedback-content" placeholder="Please enter your Feedback here" cols="40" rows="7" disabled="@isNotLoggedIn"></InputTextArea>
+                    <ValidationMessage For="() => input.Message" class="text-danger" />
+
+                    <button type="submit" class="btn btn-primary feedback_submit" disabled="@isNotLoggedIn">Confirm</button>
                 </div>
             </div>
-            <div class="text-submit-container">
-                <textarea @bind="message" class="feedback-content-input" name="feedback-content" id="feedback-content" placeholder="Please enter your Feedback here" cols="40" rows="7" disabled="@isNotLoggedIn"></textarea>
-                <button type="button" @onclick="SendFeedback" class="btn btn-primary feedback_submit" disabled="@isNotLoggedIn">Confirm</button>
-            </div>
-        </form>
+        </EditForm>
     </div>
 </div>

@@ -2,6 +2,7 @@
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
@@ -13,11 +14,12 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IDataService dataService { get; set; }
 
+        [SupplyParameterFromForm]
+        private InputModel input { get; set; } = new();
+
         private string? userId;
         private bool isNotLoggedIn => userId == null;
 
-        private string? subject;
-        private string? message;
         private EFeedbackType feedbackType = EFeedbackType.Support;
 
         protected override async Task OnInitializedAsync()
@@ -39,12 +41,19 @@ namespace Gosuji.Client.Components.Pages
             Feedback feedback = new()
             {
                 UserId = userId,
-                Subject = subject,
-                Message = message,
+                Subject = input.Subject,
+                Message = input.Message,
                 FeedbackType = feedbackType
             };
 
             await dataService.PostFeedback(feedback);
+        }
+
+        private sealed class InputModel
+        {
+            [Required]
+            public string Subject { get; set; } = "";
+            public string? Message { get; set; } = "";
         }
     }
 }
