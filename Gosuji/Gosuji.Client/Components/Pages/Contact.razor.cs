@@ -20,8 +20,6 @@ namespace Gosuji.Client.Components.Pages
         private string? userId;
         private bool isNotLoggedIn => userId == null;
 
-        private EFeedbackType feedbackType = EFeedbackType.Support;
-
         protected override async Task OnInitializedAsync()
         {
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -43,17 +41,21 @@ namespace Gosuji.Client.Components.Pages
                 UserId = userId,
                 Subject = input.Subject,
                 Message = input.Message,
-                FeedbackType = feedbackType
+                FeedbackType = input.FeedbackType
             };
 
             await dataService.PostFeedback(feedback);
+
+            input = new();
         }
 
         private sealed class InputModel
         {
             [Required]
-            public string Subject { get; set; } = "";
-            public string? Message { get; set; } = "";
+            public string Subject { get; set; }
+            public string? Message { get; set; }
+            [Required, EnumDataType(typeof(EFeedbackType))]
+            public EFeedbackType FeedbackType { get; set; } = EFeedbackType.Support;
         }
     }
 }

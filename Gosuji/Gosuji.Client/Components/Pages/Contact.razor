@@ -30,7 +30,7 @@
         }
         
         <!-- Feedback and Questions form -->
-        <EditForm Model="input" method="post" OnValidSubmit="SendFeedback" FormName="FeedbackForm">
+        <EditForm Model="input" OnValidSubmit="SendFeedback" FormName="send-feedback" method="post">
             <DataAnnotationsValidator />
             <div class="feedback-container">
                 <div class="feedback-subcontainer">
@@ -44,22 +44,15 @@
                     <div class="feedback-type-container">
                         <h5 class="feedback-type-header">Type</h5>
                         <ul class="feedback-type-list">
-                            <li class="feedback-element">
-                                <input type="radio" id="support" name="feedback" @onchange="() => feedbackType = EFeedbackType.Support" disabled="@isNotLoggedIn" checked>
-                                <label for="support">Support</label>
-                            </li>
-                            <li class="feedback-element">
-                                <input type="radio" id="suggestion" name="feedback" @onchange="() => feedbackType = EFeedbackType.Suggestion" disabled="@isNotLoggedIn">
-                                <label for="suggestion">Suggestion</label>
-                            </li>
-                            <li class="feedback-element">
-                                <input type="radio" id="reportBug" name="feedback" @onchange="() => feedbackType = EFeedbackType.ReportBug" disabled="@isNotLoggedIn">
-                                <label for="reportBug">Report bug</label>
-                            </li>
-                            <li class="feedback-element">
-                                <input type="radio" id="other" name="feedback" @onchange="() => feedbackType = EFeedbackType.Other" disabled="@isNotLoggedIn">
-                                <label for="other">Other</label>
-                            </li>
+                            <InputRadioGroup @bind-Value="input.FeedbackType">
+                                @foreach (EFeedbackType feedbackType in Enum.GetValues<EFeedbackType>())
+                                {
+                                    <li class="feedback-element">
+                                        <InputRadio Value="feedbackType" id="@feedbackType" disabled="@isNotLoggedIn" />
+                                        <label for="@feedbackType">@feedbackType</label>
+                                    </li>
+                                }
+                            </InputRadioGroup>
                         </ul>
                     </div>
                 </div>
