@@ -24,7 +24,6 @@ namespace Gosuji.Client
             builder.Services.AddSingleton<IDataService, ClientDataService>();
             builder.Services.AddSingleton<IKataGoService, ClientKataGoService>();
             builder.Services.AddSingleton<IJosekisService, ClientJosekisService>();
-            builder.Services.AddSingleton<ITranslateService, TranslateService>();
 
             await builder.Build().RunAsync();
         }

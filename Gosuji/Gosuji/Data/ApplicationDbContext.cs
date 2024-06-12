@@ -20,8 +20,6 @@ namespace Gosuji.Data
         public DbSet<GameStat> GameStats { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Language> Languages { get; set; }
-        public DbSet<TextKey> TextKeys { get; set; }
-        public DbSet<TextValue> TextValues { get; set; }
         public DbSet<Changelog> Changelogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -70,13 +68,6 @@ namespace Gosuji.Data
             builder.Entity<GameStat>();
             builder.Entity<Feedback>();
             builder.Entity<Language>();
-            builder.Entity<TextKey>();
-
-            builder.Entity<TextValue>(b =>
-            {
-                b.HasKey(r => new { r.LanguageId, r.TextKeyId });
-            });
-
             builder.Entity<Changelog>();
         }
     }

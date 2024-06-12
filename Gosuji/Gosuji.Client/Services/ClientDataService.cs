@@ -12,11 +12,6 @@ namespace Gosuji.Client.Services
             return await http.GetFromJsonAsync<Changelog[]>($"{MAP_GROUP}/GetChangelogs");
         }
 
-        public async Task<Dictionary<long, Dictionary<string, string>>> GetKeyValuesByLanguage()
-        {
-            return await http.GetFromJsonAsync<Dictionary<long, Dictionary<string, string>>>($"{MAP_GROUP}/GetKeyValuesByLanguage");
-        }
-
         public async Task<Dictionary<string, long>> GetUserLanguageIds()
         {
             return await http.GetFromJsonAsync<Dictionary<string, long>>($"{MAP_GROUP}/GetUserLanguageIds");

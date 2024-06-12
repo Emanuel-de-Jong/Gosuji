@@ -19,7 +19,6 @@ namespace Gosuji.Services
         {
             RouteGroupBuilder group = app.MapGroup("/api/DataService");
             group.MapGet("/GetChangelogs", (IDataService service) => service.GetChangelogs());
-            group.MapGet("/GetKeyValuesByLanguage", (IDataService service) => service.GetKeyValuesByLanguage());
             group.MapGet("/GetUserLanguageIds", (IDataService service) => service.GetUserLanguageIds());
             group.MapGet("/GetUserGames/{userId}", (string userId, IDataService service) => service.GetUserGames(userId));
             group.MapGet("/GetGame/{gameId}", (long gameId, IDataService service) => service.GetGame(gameId));
@@ -37,26 +36,6 @@ namespace Gosuji.Services
             Changelog[] changelogs = await dbContext.Changelogs.ToArrayAsync();
             await dbContext.DisposeAsync();
             return changelogs;
-        }
-
-        public async Task<Dictionary<long, Dictionary<string, string>>> GetKeyValuesByLanguage()
-        {
-            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-
-            Dictionary<long, Dictionary<string, string>> translations = [];
-            foreach (TextValue val in dbContext.TextValues.Include(tv => tv.TextKey))
-            {
-                if (!translations.ContainsKey(val.LanguageId))
-                {
-                    translations[val.LanguageId] = [];
-                }
-
-                translations[val.LanguageId][val.TextKey.Key] = val.Value;
-            }
-
-            await dbContext.DisposeAsync();
-
-            return translations;
         }
 
         public async Task<Dictionary<string, long>> GetUserLanguageIds()
