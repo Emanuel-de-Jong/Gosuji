@@ -18,5 +18,7 @@ namespace Gosuji.Client.Data
         public EFeedbackType FeedbackType { get; set; }
         public string Subject { get; set; }
         public string? Message { get; set; }
+        public bool IsRead { get; set; } = false;
+        public bool IsResolved { get; set; } = false;
     }
 }

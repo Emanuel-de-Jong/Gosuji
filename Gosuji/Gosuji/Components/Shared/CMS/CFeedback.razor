@@ -1,0 +1,39 @@
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: true))
+
+@using Gosuji.Client.Data;
+
+<h3>Feedback</h3>
+
+<div id="feedbackTableContainer">
+    <table id="feedbackTable" class="table">
+        <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Type</th>
+                <th>User</th>
+                <th>Sub</th>
+                <th>Date</th>
+                <th>Resolved</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Feedback feedback in feedbacks.Values)
+            {
+                <tr id="@feedback.Id" class="@(feedback.IsRead ? "read" : "")" @onclick="() => Read(feedback)">
+                    <td>@feedback.Subject</td>
+                    <td>@feedback.FeedbackType</td>
+                    <td>@users[feedback.UserId].UserName</td>
+                    <td>@(users[feedback.UserId].CurrentSubscription != null ? users[feedback.UserId].CurrentSubscription.SubscriptionType : "Free")</td>
+                    <td>@feedback.CreateDate.ToString("dd-MM-yy HH:mm")</td>
+                    <td>
+                        <input type="checkbox" class="form-check-input" checked="@feedback.IsResolved" @onchange="(e) => ResolveChanged(e, feedback)">
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div id="feedbackMessage">
+    @selectedFeedback?.Message
+</div>

@@ -46,6 +46,9 @@ namespace Gosuji.Client.Components.Pages
                 userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
             }
+
+            trainerRef = DotNetObjectReference.Create(this);
+            kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -73,9 +76,6 @@ namespace Gosuji.Client.Components.Pages
                     await js.InvokeVoidAsync("alert", "You already use this page somewhere else!");
                     return;
                 }
-
-                trainerRef = DotNetObjectReference.Create(this);
-                kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 
                 await Start();
             }

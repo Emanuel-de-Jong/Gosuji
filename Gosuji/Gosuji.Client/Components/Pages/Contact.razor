@@ -49,7 +49,7 @@
                                 {
                                     <li class="feedback-element">
                                         <InputRadio Value="feedbackType" id="@feedbackType" disabled="@isNotLoggedIn" />
-                                        <label for="@feedbackType">@feedbackType</label>
+                                        <label for="@feedbackType">@(feedbackType == EFeedbackType.ReportBug ? "Report Bug" : feedbackType)</label>
                                     </li>
                                 }
                             </InputRadioGroup>

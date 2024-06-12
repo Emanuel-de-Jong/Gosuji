@@ -68,10 +68,9 @@ namespace Gosuji.Client.Components.Pages
         {
             try
             {
-                await js.InvokeVoidAsync("utils.lazyLoadCSSLibrary", G.CSSLibUrls["DataTablesBootstrap"]);
+                await js.InvokeVoidAsync("utils.lazyLoadCSSLibrary", G.CSSLibUrls["DataTables"]);
                 await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["JQuery"]);
                 await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["DataTables"]);
-                await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["DataTablesBootstrap"]);
                 await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["ChartJS"]);
             }
             catch (Exception ex)

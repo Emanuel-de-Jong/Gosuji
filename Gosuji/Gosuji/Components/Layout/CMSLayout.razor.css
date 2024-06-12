@@ -14,3 +14,8 @@
     max-width: 850px;
     margin-bottom: 20px;
 }
+
+::deep .cmsFlexItemXL {
+    min-width: 1700px;
+    max-width: 1700px;
+}

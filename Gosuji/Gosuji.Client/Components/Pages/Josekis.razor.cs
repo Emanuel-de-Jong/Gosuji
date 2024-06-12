@@ -25,6 +25,7 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            josekisRef = DotNetObjectReference.Create(this);
             sessionId = random.Next(100_000_000, 999_999_999);
         }
 
@@ -35,8 +36,6 @@ namespace Gosuji.Client.Components.Pages
             if (firstRender)
             {
                 await josekisService.AddSession(sessionId);
-
-                josekisRef = DotNetObjectReference.Create(this);
 
                 await jsRef.InvokeVoidAsync("josekisPage.init", josekisRef);
 
