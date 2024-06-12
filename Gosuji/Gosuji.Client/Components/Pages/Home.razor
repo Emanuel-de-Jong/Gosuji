@@ -4,10 +4,12 @@
 @using System.Security.Claims
 @using Gosuji.Client.Data
 @using Gosuji.Client.Services
+@using Gosuji.Client.Resources.Translations
 
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject IDataService dataService
-@inject NavigationManager navigationManager;
+@inject NavigationManager navigationManager
+@inject IStringLocalizer<General> Translate
 
 <PageTitle>Gosuji</PageTitle>
 
@@ -24,7 +26,7 @@
 
         <!-- Explanation and Description of the page -->
         <p class="description">
-            Lorem ipsum.
+            @Translate["Home_Description"]
         </p>
 
         <!-- Changelog -->
