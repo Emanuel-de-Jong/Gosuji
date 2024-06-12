@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-namespace Gosuji.Client
+namespace Gosuji.Client.Components.Account
 {
     // This is a client-side AuthenticationStateProvider that determines the user's authentication state by
     // looking for data persisted in the page when it was rendered on the server. This authentication state will
@@ -21,7 +21,7 @@ namespace Gosuji.Client
 
         public PersistentAuthenticationStateProvider(PersistentComponentState state)
         {
-            if (!state.TryTakeFromJson<UserInfo>(nameof(UserInfo), out UserInfo? userInfo) || userInfo is null)
+            if (!state.TryTakeFromJson(nameof(UserInfo), out UserInfo? userInfo) || userInfo is null)
             {
                 return;
             }

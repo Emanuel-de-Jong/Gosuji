@@ -1,9 +1,9 @@
 import terser from '@rollup/plugin-terser';
 
 const createPageBundle = (filePath, fileName = filePath) => ({
-    input: 'Resources/js/pages/' + filePath + '/' + fileName + '.js',
+    input: '../js/pages/' + filePath + '/' + fileName + '.js',
     output: {
-        file: 'wwwroot/js/pages/' + filePath + '/bundle.js',
+        file: '../../wwwroot/js/pages/' + filePath + '/bundle.js',
         format: 'es',
         sourcemap: true
     },
@@ -20,9 +20,9 @@ const createPageBundle = (filePath, fileName = filePath) => ({
 let config = [
     // Besogo minify
     {
-        input: 'Resources/js/libs/besogo.all.js',
+        input: '../js/libs/besogo.all.js',
         output: {
-            file: 'wwwroot/js/libs/besogo.all.js',
+            file: '../../wwwroot/js/libs/besogo.all.js',
             format: 'iife',
             sourcemap: true
         },
@@ -38,9 +38,9 @@ let config = [
 
     // Custom globals bundle
     {
-        input: 'Resources/js/custom.js',
+        input: '../js/custom.js',
         output: {
-            file: 'wwwroot/js/bundle.js',
+            file: '../../wwwroot/js/bundle.js',
             format: 'iife',
             sourcemap: true
         },
