@@ -1,0 +1,36 @@
+﻿@page "/test"
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@using System.ComponentModel.DataAnnotations;
+@using Gosuji.Client.Controllers.Translations;
+
+@inject IStringLocalizer<ValidationErrors> Loc
+
+<h2>Greeting</h2>
+
+<p>
+    @Loc["Required"]
+</p>
+
+<EditForm Model="input" OnValidSubmit="SendFeedback" FormName="send-feedback" method="post">
+    <DataAnnotationsValidator />
+    <InputText @bind-Value="input.Subject" />
+    <ValidationMessage For="() => input.Subject" class="text-danger" />
+    <button type="submit">Confirm</button>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private InputModel input { get; set; } = new();
+
+    private async Task SendFeedback()
+    {
+        
+    }
+
+    private sealed class InputModel
+    {
+        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationErrors))]
+        public string Subject { get; set; }
+    }
+}

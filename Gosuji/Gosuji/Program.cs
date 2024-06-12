@@ -45,6 +45,8 @@ namespace Gosuji
 
             builder.Services.AddSingleton<IEmailSender<User>, IdentityNoOpEmailSender>();
 
+            builder.Services.AddLocalization();
+
             builder.Services.AddSignalR(hubOptions =>
             {
                 hubOptions.MaximumReceiveMessageSize = 10 * 1024 * 1024; // 10MB
@@ -72,6 +74,14 @@ namespace Gosuji
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            string[] supportedCultures = { "en-US", "zh-Hans", "ko", "ja" };
+            RequestLocalizationOptions localizationOptions = new RequestLocalizationOptions()
+                .SetDefaultCulture(supportedCultures[0])
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
+
+            app.UseRequestLocalization(localizationOptions);
 
             app.UseHttpsRedirection();
 

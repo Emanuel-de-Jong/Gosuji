@@ -15,6 +15,8 @@ namespace Gosuji.Client
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
 
+            builder.Services.AddLocalization();
+
             // Preconfigure an HttpClient for web API calls
             builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
