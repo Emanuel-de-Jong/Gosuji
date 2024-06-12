@@ -59,7 +59,6 @@ namespace Gosuji.Components.Shared.CMS
         public async Task SetSelectedFeedback(long feedbackId)
         {
             selectedFeedback = feedbacks[feedbackId];
-            await InvokeAsync(StateHasChanged);
         }
 
         private async Task Read(Feedback feedback)
