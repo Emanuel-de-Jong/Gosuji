@@ -2,14 +2,14 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 @using System.ComponentModel.DataAnnotations;
-@using Gosuji.Client.Controllers.Translations;
+@using Gosuji.Client.Resources.Translations;
 
-@inject IStringLocalizer<ValidationErrors> Loc
+@inject IStringLocalizer<ValidateMessages> Loc
 
 <h2>Greeting</h2>
 
 <p>
-    @Loc["Required"]
+    @Loc["RequiredError"]
 </p>
 
 <EditForm Model="input" OnValidSubmit="SendFeedback" FormName="send-feedback" method="post">
@@ -30,7 +30,7 @@
 
     private sealed class InputModel
     {
-        [Required(ErrorMessageResourceName = "Required", ErrorMessageResourceType = typeof(ValidationErrors))]
+        [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
         public string Subject { get; set; }
     }
 }

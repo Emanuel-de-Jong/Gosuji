@@ -1,5 +1,4 @@
-﻿using Gosuji.Client.Annotations;
-using Gosuji.Client.Data;
+﻿using Gosuji.Client.Data;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -56,7 +55,7 @@ namespace Gosuji.Client.Components.Pages
 
         private sealed class InputModel
         {
-            [TranslatedRequired]
+            [Required]
             public string Subject { get; set; }
             public string? Message { get; set; }
             [Required]
