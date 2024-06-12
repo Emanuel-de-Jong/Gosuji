@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using Gosuji.Client.Resources.Translations;
 
 namespace Gosuji.Client.Components.Pages
 {
@@ -13,8 +14,6 @@ namespace Gosuji.Client.Components.Pages
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
         private IDataService dataService { get; set; }
-        [Inject]
-        private ITranslateService translateService { get; set; }
 
         [SupplyParameterFromForm]
         private InputModel input { get; set; } = new();
@@ -24,8 +23,6 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            await translateService.Init();
-
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
@@ -55,10 +52,10 @@ namespace Gosuji.Client.Components.Pages
 
         private sealed class InputModel
         {
-            [Required]
+            [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string Subject { get; set; }
             public string? Message { get; set; }
-            [Required]
+            [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [EnumDataType(typeof(EFeedbackType))]
             public EFeedbackType FeedbackType { get; set; } = EFeedbackType.Support;
         }
