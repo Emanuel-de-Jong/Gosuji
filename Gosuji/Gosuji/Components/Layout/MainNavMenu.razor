@@ -3,48 +3,53 @@
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authenticationStateProvider
 
-<div id="mainNavBar" class="top-row px-4 auth">
-    <div class="navItem">
-        <a href="">Home</a>
-    </div>
-
-    <div class="navItem">
-        <a href="learn">Learn</a>
-    </div>
-
-    <div class="navItem">
-        <a href="subscription">Subscriptions</a>
-    </div>
-
-    <div class="navItem">
-        <a href="contact">Contact</a>
-    </div>
-
-    <AuthorizeView>
-        <Authorized>
-            <div class="navItem">
-                <a href="user/@claimsPrincipal.Identity?.Name">Profile</a>
-            </div>
-        </Authorized>
-        <NotAuthorized>
-
-            <div class="navItem">
-                <a href="Account/Register">Register</a>
+<header class="mb-5 border-bottom bg-light-subtle">
+    <div class="container">
+        <div class="d-flex justify-content-between flex-wrap py-2">
+            <div class="flexItem">
+                <a href="/" class="link-body-emphasis nav-link fs-2 mb-2 mb-md-0">Gosuji</a>
             </div>
 
-            <div class="navItem">
-                <a href="Account/Login">Login</a>
-            </div>
-        </NotAuthorized>
-    </AuthorizeView>
+            <div class="flexItem d-flex align-items-center justify-content-start justify-content-md-end flex-wrap">
+                <div class="px-2">
+                    <a href="/" class="link-body-emphasis nav-link">Home</a>
+                </div>
+                <div class="px-2">
+                    <a href="learn" class="link-body-emphasis nav-link">Learn</a>
+                </div>
+                <div class="px-2">
+                    <a href="subscription" class="link-body-emphasis nav-link">Subscriptions</a>
+                </div>
+                <div class="px-2">
+                    <a href="contact" class="link-body-emphasis nav-link">Contact</a>
+                </div>
 
-    <div class="navItem">
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" id="darkThemeSwitch" checked>
-            <label class="form-check-label" for="darkThemeSwitch">Dark theme</label>
+                <AuthorizeView>
+                    <Authorized>
+                        <div class="px-2">
+                            <a href="user/@claimsPrincipal.Identity?.Name" class="link-body-emphasis nav-link">Profile</a>
+                        </div>
+                    </Authorized>
+                    <NotAuthorized>
+                        <div class="px-2">
+                            <a href="Account/Register" class="link-body-emphasis nav-link">Register</a>
+                        </div>
+                        <div class="px-2">
+                            <a href="Account/Login" class="link-body-emphasis nav-link">Login</a>
+                        </div>
+                    </NotAuthorized>
+                </AuthorizeView>
+
+                <div class="ps-4 pe-2">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="darkThemeSwitch" checked>
+                        <label class="form-check-label text-body-emphasis" for="darkThemeSwitch">Dark theme</label>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</header>
 
 @code {
     private ClaimsPrincipal claimsPrincipal;

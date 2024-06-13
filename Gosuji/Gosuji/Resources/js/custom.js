@@ -25,6 +25,9 @@ if (typeof custom === "undefined") {
     };
 
     custom.clear = function () {
+        let copyrightYearElement = document.getElementById("copyrightYear");
+        copyrightYearElement.innerHTML = new Date().getFullYear();
+
         custom.htmlElement = document.getElementsByTagName("html")[0];
 
         custom.darkThemeSwitch = document.getElementById("darkThemeSwitch");
