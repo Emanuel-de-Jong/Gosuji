@@ -1,4 +1,6 @@
-﻿@using System.Security.Claims
+﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+@using System.Security.Claims
 
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authenticationStateProvider
@@ -56,6 +58,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("MainNavMenu.razor OnInitializedAsync");
         claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
     }
 }
