@@ -1,6 +1,7 @@
 ﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 @using System.Security.Claims
+@using System.Globalization
 
 @inject NavigationManager navigationManager
 @inject AuthenticationStateProvider authenticationStateProvider
@@ -42,11 +43,42 @@
                     </NotAuthorized>
                 </AuthorizeView>
 
-                <div class="ps-4 pe-2">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="darkThemeSwitch" checked>
-                        <label class="form-check-label text-body-emphasis" for="darkThemeSwitch">Dark theme</label>
-                    </div>
+                <div class="languageSelect dropdown px-2">
+                    <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img id="currentLanguage" src="@currentLanguageSrc" />
+                    </a>
+                    <ul class="dropdown-menu text-small px-2">
+                        <li>
+                            <img src="@(BASE_LANGUAGE_SRC)en.svg" @onclick='() => ChangeLanguage("en")' />
+                        </li>
+                        <li>
+                            <img src="@(BASE_LANGUAGE_SRC)zh.svg" @onclick='() => ChangeLanguage("zh")' />
+                        </li>
+                        <li>
+                            <img src="@(BASE_LANGUAGE_SRC)ko.svg" @onclick='() => ChangeLanguage("ko")' />
+                        </li>
+                        <li>
+                            <img src="@(BASE_LANGUAGE_SRC)ja.svg" @onclick='() => ChangeLanguage("ja")' />
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="dropdown px-2">
+                    <a href="#" class="link-body-emphasis text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-gear"></i>
+                    </a>
+                    <ul class="dropdown-menu text-small px-2">
+                        <li>
+                            <label for="volumeRange" class="form-label">Volume</label>
+                            <input type="range" class="form-range" id="volumeRange" max="100">
+                        </li>
+                        <li>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="darkThemeSwitch" checked>
+                                <label class="form-check-label text-body-emphasis" for="darkThemeSwitch">Dark</label>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -54,12 +86,23 @@
 </header>
 
 @code {
+    private static readonly string BASE_LANGUAGE_SRC = "resources/imgs/flags/";
+
     private ClaimsPrincipal claimsPrincipal;
+    private string currentLanguageSrc;
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("MainNavMenu.razor OnInitializedAsync");
         claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+        currentLanguageSrc = BASE_LANGUAGE_SRC + CultureInfo.CurrentCulture.TwoLetterISOLanguageName + ".svg";
+    }
+
+    private void ChangeLanguage(string language)
+    {
+        CultureInfo culture = new(language);
+        CultureInfo.CurrentCulture = culture;
+        CultureInfo.CurrentUICulture = culture;
+        currentLanguageSrc = BASE_LANGUAGE_SRC + language + ".svg";
     }
 }
 

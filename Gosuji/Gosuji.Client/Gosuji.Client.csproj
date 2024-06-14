@@ -30,16 +30,28 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Resources\Translations\General.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>General.Designer.cs</LastGenOutput>
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>General.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Translations\ValidateMessages.en.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
+    <EmbeddedResource Update="Resources\Translations\General.en.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Translations\General.zh.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Translations\General.ko.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Translations\General.ja.resx">
+	    <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Translations\ValidateMessages.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ValidateMessages.Designer.cs</LastGenOutput>
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	    <LastGenOutput>ValidateMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+	<EmbeddedResource Update="Resources\Translations\ValidateMessages.en.resx">
+		<Generator>PublicResXFileCodeGenerator</Generator>
+	</EmbeddedResource>
   </ItemGroup>
 
 </Project>
