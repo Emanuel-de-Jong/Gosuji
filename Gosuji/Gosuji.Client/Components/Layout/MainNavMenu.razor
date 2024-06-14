@@ -1,11 +1,5 @@
 ﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@using System.Security.Claims
-@using System.Globalization
-
-@inject NavigationManager navigationManager
-@inject AuthenticationStateProvider authenticationStateProvider
-
 <header class="mb-5 border-bottom bg-light-subtle">
     <div class="container">
         <div class="d-flex justify-content-between flex-wrap py-2">
@@ -84,25 +78,3 @@
         </div>
     </div>
 </header>
-
-@code {
-    private static readonly string BASE_LANGUAGE_SRC = "resources/imgs/flags/";
-
-    private ClaimsPrincipal claimsPrincipal;
-    private string currentLanguageSrc;
-
-    protected override async Task OnInitializedAsync()
-    {
-        claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
-        currentLanguageSrc = BASE_LANGUAGE_SRC + CultureInfo.CurrentCulture.TwoLetterISOLanguageName + ".svg";
-    }
-
-    private void ChangeLanguage(string language)
-    {
-        CultureInfo culture = new(language);
-        CultureInfo.CurrentCulture = culture;
-        CultureInfo.CurrentUICulture = culture;
-        currentLanguageSrc = BASE_LANGUAGE_SRC + language + ".svg";
-    }
-}
-
