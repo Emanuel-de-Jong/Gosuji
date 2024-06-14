@@ -64,7 +64,7 @@
                     <ul class="dropdown-menu text-small px-2">
                         <li>
                             <label for="volumeRange" class="form-label">Volume</label>
-                            <input type="range" class="form-range" id="volumeRange" max="100">
+                            <input type="range" class="form-range" id="volumeRange" max="100" value="@(settingConfig != null ? settingConfig.Volume : 100)">
                         </li>
                         <li>
                             <div class="form-check form-switch">

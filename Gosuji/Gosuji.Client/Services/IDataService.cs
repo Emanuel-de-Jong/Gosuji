@@ -14,5 +14,8 @@ namespace Gosuji.Client.Services
         Task<long> PostGame(Game game);
         Task PutGame(Game game);
         Task PostFeedback(Feedback feedback);
+        Task<SettingConfig> GetSettingConfig(string userId);
+        Task PutSettingConfig(SettingConfig settingConfig);
+        Task<Dictionary<string, Language>> GetLanguages();
     }
 }

@@ -28,6 +28,9 @@ namespace Gosuji.Services
             group.MapPost("/PostGame", (Game game, IDataService service) => service.PostGame(game));
             group.MapPut("/PutGame", (Game game, IDataService service) => service.PutGame(game));
             group.MapPost("/PostFeedback", (Feedback feedback, IDataService service) => service.PostFeedback(feedback));
+            group.MapGet("/GetSettingConfig/{userId}", (string userId, IDataService service) => service.GetSettingConfig(userId));
+            group.MapPut("/PutSettingConfig", (SettingConfig settingConfig, IDataService service) => service.PutSettingConfig(settingConfig));
+            group.MapGet("/GetLanguages", (IDataService service) => service.GetLanguages());
         }
 
         public async Task<Changelog[]> GetChangelogs()
@@ -150,6 +153,34 @@ namespace Gosuji.Services
             await dbContext.Feedbacks.AddAsync(feedback);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
+        }
+
+        public async Task<SettingConfig> GetSettingConfig(string userId)
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            SettingConfig settingConfig = await dbContext.Users
+                .Where(u => u.Id == userId)
+                .Include(u => u.SettingConfig.Language)
+                .Select(u => u.SettingConfig)
+                .FirstOrDefaultAsync();
+            await dbContext.DisposeAsync();
+            return settingConfig;
+        }
+
+        public async Task PutSettingConfig(SettingConfig settingConfig)
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            dbContext.SettingConfigs.Update(settingConfig);
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+        }
+
+        public async Task<Dictionary<string, Language>> GetLanguages()
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            Dictionary<string, Language> languages = await dbContext.Languages.ToDictionaryAsync(l => l.Short);
+            await dbContext.DisposeAsync();
+            return languages;
         }
     }
 }

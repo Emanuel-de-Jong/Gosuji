@@ -56,5 +56,20 @@ namespace Gosuji.Client.Services
         {
             await http.PostAsJsonAsync($"{MAP_GROUP}/PostFeedback", feedback);
         }
+
+        public async Task<SettingConfig> GetSettingConfig(string userId)
+        {
+            return await http.GetFromJsonAsync<SettingConfig>($"{MAP_GROUP}/GetSettingConfig/{userId}");
+        }
+
+        public async Task PutSettingConfig(SettingConfig settingConfig)
+        {
+            await http.PostAsJsonAsync($"{MAP_GROUP}/PutSettingConfig", settingConfig);
+        }
+
+        public async Task<Dictionary<string, Language>> GetLanguages()
+        {
+            return await http.GetFromJsonAsync<Dictionary<string, Language>>($"{MAP_GROUP}/GetLanguages");
+        }
     }
 }
