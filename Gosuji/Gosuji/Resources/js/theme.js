@@ -18,6 +18,8 @@ if (typeof theme === "undefined") {
         if (tempTheme == null || tempTheme == "") {
             tempTheme = theme.TYPES.DARK;
             utils.setCookie("theme", tempTheme);
+        } else {
+            tempTheme = parseInt(tempTheme);
         }
         
         theme.set(tempTheme);
@@ -44,6 +46,8 @@ if (typeof theme === "undefined") {
 
         theme.theme = newTheme;
         theme.themeChangedEvent.dispatch({ theme: theme.theme });
+
+        utils.setCookie("theme", theme.theme);
     };
 
     theme.init();

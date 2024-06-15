@@ -65,21 +65,28 @@ namespace Gosuji.Client.Components.Layout
             CultureInfo.CurrentCulture = culture;
             currentLanguageSrc = BASE_LANGUAGE_SRC + language + ".svg";
 
-            currentLanguage = languages[language];
-            settingConfig.LanguageId = languages[language].Id;
-            await dataService.PutSettingConfig(settingConfig);
+            if (settingConfig != null)
+            {
+                currentLanguage = languages[language];
+                settingConfig.LanguageId = languages[language].Id;
+                await dataService.PutSettingConfig(settingConfig);
+            }
         }
 
         private async Task ChangeVolume(ChangeEventArgs e)
         {
             int volume = Convert.ToInt32(e.Value);
-            if (settingConfig.Volume == volume)
-            {
-                return;
-            }
 
-            settingConfig.Volume = volume;
-            await dataService.PutSettingConfig(settingConfig);
+            if (settingConfig != null)
+            {
+                if (settingConfig.Volume == volume)
+                {
+                    return;
+                }
+
+                settingConfig.Volume = volume;
+                await dataService.PutSettingConfig(settingConfig);
+            }
         }
 
         private async Task ChangeIsDarkMode(ChangeEventArgs e)
@@ -87,13 +94,16 @@ namespace Gosuji.Client.Components.Layout
             bool isDarkMode = (bool)e.Value;
             await SetTheme(isDarkMode);
 
-            if (settingConfig.IsDarkMode == isDarkMode)
+            if (settingConfig != null)
             {
-                return;
-            }
+                if (settingConfig.IsDarkMode == isDarkMode)
+                {
+                    return;
+                }
 
-            settingConfig.IsDarkMode = isDarkMode;
-            await dataService.PutSettingConfig(settingConfig);
+                settingConfig.IsDarkMode = isDarkMode;
+                await dataService.PutSettingConfig(settingConfig);
+            }
         }
 
         private async Task SetTheme(bool isDarkTheme)
