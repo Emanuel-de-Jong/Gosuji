@@ -35,8 +35,8 @@ namespace Gosuji.Components.Account
         [DoesNotReturn]
         public void RedirectTo(string uri, Dictionary<string, object?> queryParameters)
         {
-            var uriWithoutQuery = navigationManager.ToAbsoluteUri(uri).GetLeftPart(UriPartial.Path);
-            var newUri = navigationManager.GetUriWithQueryParameters(uriWithoutQuery, queryParameters);
+            string uriWithoutQuery = navigationManager.ToAbsoluteUri(uri).GetLeftPart(UriPartial.Path);
+            string newUri = navigationManager.GetUriWithQueryParameters(uriWithoutQuery, queryParameters);
             RedirectTo(newUri);
         }
 
@@ -50,10 +50,15 @@ namespace Gosuji.Components.Account
         private string CurrentPath => navigationManager.ToAbsoluteUri(navigationManager.Uri).GetLeftPart(UriPartial.Path);
 
         [DoesNotReturn]
-        public void RedirectToCurrentPage() => RedirectTo(CurrentPath);
+        public void RedirectToCurrentPage()
+        {
+            RedirectTo(CurrentPath);
+        }
 
         [DoesNotReturn]
         public void RedirectToCurrentPageWithStatus(string message, HttpContext context)
-            => RedirectToWithStatus(CurrentPath, message, context);
+        {
+            RedirectToWithStatus(CurrentPath, message, context);
+        }
     }
 }

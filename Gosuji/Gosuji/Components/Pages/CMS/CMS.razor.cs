@@ -1,8 +1,4 @@
-﻿using Gosuji.Client;
-using Gosuji.Data;
-using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace Gosuji.Components.Pages.CMS
 {

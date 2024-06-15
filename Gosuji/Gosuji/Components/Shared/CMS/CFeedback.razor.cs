@@ -1,7 +1,5 @@
 ﻿using Gosuji.Client;
-using Gosuji.Client.Components.Pages;
 using Gosuji.Client.Data;
-using Gosuji.Controllers;
 using Gosuji.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;

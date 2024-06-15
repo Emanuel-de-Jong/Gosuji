@@ -9,12 +9,12 @@
                 false;
 #endif
 
-        public static Dictionary<string, string> CSSLibUrls = new Dictionary<string, string>()
+        public static Dictionary<string, string> CSSLibUrls = new()
         {
             { "DataTables", "https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.css" },
         };
 
-        public static Dictionary<string, string> JSLibUrls = new Dictionary<string, string>()
+        public static Dictionary<string, string> JSLibUrls = new()
         {
             { "JQuery", "https://code.jquery.com/jquery-3.7.0.min.js" },
             { "DataTables", "https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.js" },

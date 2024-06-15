@@ -42,10 +42,10 @@ namespace Gosuji.Client.Components.Layout
 
                     await js.InvokeVoidAsync("blazorCulture.set", culture!.Name);
 
-                    var uri = new Uri(navigationManager.Uri)
+                    string uri = new Uri(navigationManager.Uri)
                         .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
-                    var cultureEscaped = Uri.EscapeDataString(culture.Name);
-                    var uriEscaped = Uri.EscapeDataString(uri);
+                    string cultureEscaped = Uri.EscapeDataString(culture.Name);
+                    string uriEscaped = Uri.EscapeDataString(uri);
 
                     navigationManager.NavigateTo(
                         $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
@@ -84,10 +84,10 @@ namespace Gosuji.Client.Components.Layout
 
             await js.InvokeVoidAsync("blazorCulture.set", culture!.Name);
 
-            var uri = new Uri(navigationManager.Uri)
+            string uri = new Uri(navigationManager.Uri)
                 .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
-            var cultureEscaped = Uri.EscapeDataString(culture.Name);
-            var uriEscaped = Uri.EscapeDataString(uri);
+            string cultureEscaped = Uri.EscapeDataString(culture.Name);
+            string uriEscaped = Uri.EscapeDataString(uri);
 
             navigationManager.NavigateTo(
                 $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",

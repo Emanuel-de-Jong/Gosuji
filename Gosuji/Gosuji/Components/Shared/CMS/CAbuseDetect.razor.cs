@@ -1,5 +1,4 @@
 ﻿using Gosuji.Client;
-using Gosuji.Client.Data;
 using Gosuji.Controllers;
 using Gosuji.Data;
 using Microsoft.AspNetCore.Components;

@@ -1,5 +1,4 @@
-﻿using Gosuji.Client.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
 {

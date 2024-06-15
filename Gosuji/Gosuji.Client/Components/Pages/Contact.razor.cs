@@ -1,10 +1,10 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using Gosuji.Client.Resources.Translations;
 
 namespace Gosuji.Client.Components.Pages
 {

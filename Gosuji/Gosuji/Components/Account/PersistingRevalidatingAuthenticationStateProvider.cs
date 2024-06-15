@@ -45,14 +45,14 @@ namespace Gosuji.Components.Account
             AuthenticationState authenticationState, CancellationToken cancellationToken)
         {
             // Get the user manager from a new scope to ensure it fetches fresh data
-            await using var scope = scopeFactory.CreateAsyncScope();
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            await using AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
+            UserManager<User> userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
             return await ValidateSecurityStampAsync(userManager, authenticationState.User);
         }
 
         private async Task<bool> ValidateSecurityStampAsync(UserManager<User> userManager, ClaimsPrincipal principal)
         {
-            var user = await userManager.GetUserAsync(principal);
+            User? user = await userManager.GetUserAsync(principal);
             if (user is null)
             {
                 return false;
@@ -63,8 +63,8 @@ namespace Gosuji.Components.Account
             }
             else
             {
-                var principalStamp = principal.FindFirstValue(options.ClaimsIdentity.SecurityStampClaimType);
-                var userStamp = await userManager.GetSecurityStampAsync(user);
+                string? principalStamp = principal.FindFirstValue(options.ClaimsIdentity.SecurityStampClaimType);
+                string userStamp = await userManager.GetSecurityStampAsync(user);
                 return principalStamp == userStamp;
             }
         }
@@ -81,14 +81,14 @@ namespace Gosuji.Components.Account
                 throw new UnreachableException($"Authentication state not set in {nameof(OnPersistingAsync)}().");
             }
 
-            var authenticationState = await authenticationStateTask;
-            var principal = authenticationState.User;
+            AuthenticationState authenticationState = await authenticationStateTask;
+            ClaimsPrincipal principal = authenticationState.User;
 
             if (principal.Identity?.IsAuthenticated == true)
             {
-                var userId = principal.FindFirst(options.ClaimsIdentity.UserIdClaimType)?.Value;
-                var email = principal.FindFirst(options.ClaimsIdentity.EmailClaimType)?.Value;
-                var userName = principal.FindFirst(options.ClaimsIdentity.UserNameClaimType)?.Value;
+                string? userId = principal.FindFirst(options.ClaimsIdentity.UserIdClaimType)?.Value;
+                string? email = principal.FindFirst(options.ClaimsIdentity.EmailClaimType)?.Value;
+                string? userName = principal.FindFirst(options.ClaimsIdentity.UserNameClaimType)?.Value;
 
                 if (userId != null && email != null)
                 {

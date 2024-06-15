@@ -2,8 +2,8 @@ using Gosuji.Client.Components.Account;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using System.Globalization;
 using Microsoft.JSInterop;
+using System.Globalization;
 
 namespace Gosuji.Client
 {
@@ -27,13 +27,13 @@ namespace Gosuji.Client
 
             builder.Services.AddLocalization();
 
-            var host = builder.Build();
+            WebAssemblyHost host = builder.Build();
 
             const string defaultCulture = "en";
 
-            var js = host.Services.GetRequiredService<IJSRuntime>();
-            var result = await js.InvokeAsync<string>("blazorCulture.get");
-            var culture = CultureInfo.GetCultureInfo(result ?? defaultCulture);
+            IJSRuntime js = host.Services.GetRequiredService<IJSRuntime>();
+            string? result = await js.InvokeAsync<string>("blazorCulture.get");
+            CultureInfo culture = CultureInfo.GetCultureInfo(result ?? defaultCulture);
 
             if (result == null)
             {
