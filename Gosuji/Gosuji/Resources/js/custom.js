@@ -29,15 +29,15 @@ if (typeof custom === "undefined") {
         copyrightYearElement.innerHTML = new Date().getFullYear();
 
         custom.htmlElement = document.getElementsByTagName("html")[0];
-
-        custom.darkThemeSwitch = document.getElementById("darkThemeSwitch");
-        if (custom.darkThemeSwitch) {
-            custom.darkThemeSwitch.addEventListener("input", () => { this.switchTheme(this.darkThemeSwitch.checked) });
-        }
     };
 
 
     custom.switchTheme = function (toDarkTheme) {
+        if ((custom.theme == custom.THEME_TYPES.DARK && toDarkTheme) ||
+                (custom.theme == custom.THEME_TYPES.LIGHT && !toDarkTheme)) {
+            return;
+        }
+        
         if (toDarkTheme) {
             custom.enableDarkTheme();
         } else {

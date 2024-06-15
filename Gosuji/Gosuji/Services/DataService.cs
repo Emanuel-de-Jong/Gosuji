@@ -160,7 +160,6 @@ namespace Gosuji.Services
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             SettingConfig settingConfig = await dbContext.Users
                 .Where(u => u.Id == userId)
-                .Include(u => u.SettingConfig.Language)
                 .Select(u => u.SettingConfig)
                 .FirstOrDefaultAsync();
             await dbContext.DisposeAsync();

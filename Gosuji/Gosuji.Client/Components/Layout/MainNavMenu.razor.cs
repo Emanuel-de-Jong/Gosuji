@@ -2,6 +2,7 @@
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop;
 using System.Globalization;
 using System.Security.Claims;
 
@@ -17,11 +18,14 @@ namespace Gosuji.Client.Components.Layout
         private NavigationManager navigationManager { get; set; }
         [Inject]
         private IDataService dataService { get; set; }
+        [Inject]
+        private IJSRuntime js { get; set; }
 
         private ClaimsPrincipal claimsPrincipal;
         private string currentLanguageSrc;
         private SettingConfig? settingConfig;
         private Dictionary<string, Language>? languages;
+        private Language? currentLanguage;
 
         protected override async Task OnInitializedAsync()
         {
@@ -30,22 +34,71 @@ namespace Gosuji.Client.Components.Layout
             {
                 settingConfig = await dataService.GetSettingConfig(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
                 languages = await dataService.GetLanguages();
+                currentLanguage = languages.Where(kv => kv.Value.Id == settingConfig.LanguageId).FirstOrDefault().Value;
 
-                CultureInfo culture = new(settingConfig.Language.Short);
+                CultureInfo culture = new(currentLanguage.Short);
                 CultureInfo.CurrentCulture = culture;
             }
 
             currentLanguageSrc = BASE_LANGUAGE_SRC + CultureInfo.CurrentCulture.TwoLetterISOLanguageName + ".svg";
         }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                if (settingConfig != null)
+                {
+                    await SwitchTheme(settingConfig.IsDarkMode);
+                }
+            }
+        }
+
         private async Task ChangeLanguage(string language)
         {
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == language)
+            {
+                return;
+            }
+
             CultureInfo culture = new(language);
             CultureInfo.CurrentCulture = culture;
             currentLanguageSrc = BASE_LANGUAGE_SRC + language + ".svg";
 
+            currentLanguage = languages[language];
             settingConfig.LanguageId = languages[language].Id;
             await dataService.PutSettingConfig(settingConfig);
+        }
+
+        private async Task ChangeVolume(ChangeEventArgs e)
+        {
+            int volume = Convert.ToInt32(e.Value);
+            if (settingConfig.Volume == volume)
+            {
+                return;
+            }
+
+            settingConfig.Volume = volume;
+            await dataService.PutSettingConfig(settingConfig);
+        }
+
+        private async Task ChangeIsDarkMode(ChangeEventArgs e)
+        {
+            bool isDarkMode = (bool)e.Value;
+            await SwitchTheme(isDarkMode);
+
+            if (settingConfig.IsDarkMode == isDarkMode)
+            {
+                return;
+            }
+
+            settingConfig.IsDarkMode = isDarkMode;
+            await dataService.PutSettingConfig(settingConfig);
+        }
+
+        private async Task SwitchTheme(bool toDarkTheme)
+        {
+            await js.InvokeVoidAsync("custom.switchTheme", toDarkTheme);
         }
     }
 }
