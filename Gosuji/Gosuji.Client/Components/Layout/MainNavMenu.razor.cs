@@ -50,6 +50,7 @@ namespace Gosuji.Client.Components.Layout
                     CultureInfo culture = new(language);
                     CultureInfo.CurrentCulture = culture;
                     CultureInfo.CurrentUICulture = culture;
+                    //navigationManager.NavigateTo(navigationManager.Uri, true);
                 }
             }
 
@@ -69,23 +70,23 @@ namespace Gosuji.Client.Components.Layout
 
         private async Task ChangeLanguage(string language)
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != language)
-            {
-                CultureInfo culture = new(language);
-                CultureInfo.CurrentCulture = culture;
-                CultureInfo.CurrentUICulture = culture;
-            }
-            
-            currentLanguageSrc = BASE_LANGUAGE_SRC + language + ".svg";
-
             await js.InvokeVoidAsync("utils.setCookie", "lang", language);
+
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == language)
+            {
+                return;
+            }
 
             if (settingConfig != null)
             {
-                currentLanguage = languages[language];
                 settingConfig.LanguageId = languages[language].Id;
                 await dataService.PutSettingConfig(settingConfig);
             }
+
+            CultureInfo culture = new(language);
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
+            navigationManager.NavigateTo(navigationManager.Uri, true);
         }
 
         private async Task ChangeVolume(ChangeEventArgs e)
