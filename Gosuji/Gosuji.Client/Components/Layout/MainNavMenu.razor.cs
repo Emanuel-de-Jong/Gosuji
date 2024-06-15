@@ -29,6 +29,7 @@ namespace Gosuji.Client.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
+            string? language;
             claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
@@ -36,19 +37,19 @@ namespace Gosuji.Client.Components.Layout
                 languages = await dataService.GetLanguages();
                 currentLanguage = languages.Where(kv => kv.Value.Id == settingConfig.LanguageId).FirstOrDefault().Value;
 
-                if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != currentLanguage.Short)
-                {
-                    CultureInfo.CurrentCulture = new(currentLanguage.Short);
-                }
+                language = currentLanguage.Short;
             } else
             {
-                string? language = await js.InvokeAsync<string>("utils.getCookie", "lang");
-                if (language != null && language != "")
+                language = await js.InvokeAsync<string?>("utils.getCookie", "lang");
+            }
+
+            if (language != null && language != "")
+            {
+                if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != language)
                 {
-                    if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != language)
-                    {
-                        CultureInfo.CurrentCulture = new(language);
-                    }
+                    CultureInfo culture = new(language);
+                    CultureInfo.CurrentCulture = culture;
+                    CultureInfo.CurrentUICulture = culture;
                 }
             }
 
@@ -70,7 +71,9 @@ namespace Gosuji.Client.Components.Layout
         {
             if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != language)
             {
-                CultureInfo.CurrentCulture = new(language);
+                CultureInfo culture = new(language);
+                CultureInfo.CurrentCulture = culture;
+                CultureInfo.CurrentUICulture = culture;
             }
             
             currentLanguageSrc = BASE_LANGUAGE_SRC + language + ".svg";
