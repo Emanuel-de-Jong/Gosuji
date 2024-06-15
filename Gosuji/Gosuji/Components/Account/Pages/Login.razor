@@ -101,7 +101,7 @@
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo(ReturnUrl);
+            NavigationManager.NavigateTo(ReturnUrl != null ? ReturnUrl : "/", true);
         }
         else if (result.RequiresTwoFactor)
         {

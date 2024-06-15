@@ -17,7 +17,6 @@ if (typeof theme === "undefined") {
         let tempTheme = utils.getCookie("theme");
         if (tempTheme == null || tempTheme == "") {
             tempTheme = theme.TYPES.DARK;
-            utils.setCookie("theme", tempTheme);
         } else {
             tempTheme = parseInt(tempTheme);
         }
