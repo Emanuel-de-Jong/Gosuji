@@ -26,6 +26,7 @@ namespace Gosuji.Client.Components.Layout
         private SettingConfig? settingConfig;
         private Dictionary<string, Language>? languages;
         private Language? currentLanguage;
+        private bool isDarkMode = true;
 
         protected override async Task OnInitializedAsync()
         {
@@ -50,6 +51,15 @@ namespace Gosuji.Client.Components.Layout
                     navigationManager.NavigateTo(
                         $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
                         forceLoad: true);
+                }
+            }
+            else
+            {
+                string? theme = await js.InvokeAsync<string?>("utils.getCookie", "theme");
+                if (theme != null && int.TryParse(theme, out int themeNum))
+                {
+                    string themeName = await js.InvokeAsync<string>("theme.numToName", themeNum);
+                    isDarkMode = themeName == "DARK";
                 }
             }
 
