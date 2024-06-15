@@ -29,16 +29,9 @@ namespace Gosuji.Client
 
             WebAssemblyHost host = builder.Build();
 
-            const string defaultCulture = "en";
-
             IJSRuntime js = host.Services.GetRequiredService<IJSRuntime>();
             string? result = await js.InvokeAsync<string>("blazorCulture.get");
-            CultureInfo culture = CultureInfo.GetCultureInfo(result ?? defaultCulture);
-
-            if (result == null)
-            {
-                await js.InvokeVoidAsync("blazorCulture.set", defaultCulture);
-            }
+            CultureInfo culture = result != null ? CultureInfo.GetCultureInfo(result) : CultureInfo.CurrentCulture;
 
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
