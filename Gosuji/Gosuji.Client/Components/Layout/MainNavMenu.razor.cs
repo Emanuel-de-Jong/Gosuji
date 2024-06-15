@@ -36,8 +36,20 @@ namespace Gosuji.Client.Components.Layout
                 languages = await dataService.GetLanguages();
                 currentLanguage = languages.Where(kv => kv.Value.Id == settingConfig.LanguageId).FirstOrDefault().Value;
 
-                CultureInfo culture = new(currentLanguage.Short);
-                CultureInfo.CurrentCulture = culture;
+                if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != currentLanguage.Short)
+                {
+                    CultureInfo.CurrentCulture = new(currentLanguage.Short);
+                }
+            } else
+            {
+                string? language = await js.InvokeAsync<string>("utils.getCookie", "lang");
+                if (language != null && language != "")
+                {
+                    if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != language)
+                    {
+                        CultureInfo.CurrentCulture = new(language);
+                    }
+                }
             }
 
             currentLanguageSrc = BASE_LANGUAGE_SRC + CultureInfo.CurrentCulture.TwoLetterISOLanguageName + ".svg";
@@ -56,14 +68,14 @@ namespace Gosuji.Client.Components.Layout
 
         private async Task ChangeLanguage(string language)
         {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == language)
+            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != language)
             {
-                return;
+                CultureInfo.CurrentCulture = new(language);
             }
-
-            CultureInfo culture = new(language);
-            CultureInfo.CurrentCulture = culture;
+            
             currentLanguageSrc = BASE_LANGUAGE_SRC + language + ".svg";
+
+            await js.InvokeVoidAsync("utils.setCookie", "lang", language);
 
             if (settingConfig != null)
             {
