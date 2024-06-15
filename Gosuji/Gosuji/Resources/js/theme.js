@@ -1,4 +1,5 @@
 import { CEvent } from "./classes/CEvent";
+import { utils } from "./utils";
 
 let theme = window.theme;
 
@@ -10,35 +11,42 @@ if (typeof theme === "undefined") {
         LIGHT: 1,
     };
     
+    theme.init = function () {
+        theme.themeChangedEvent = new CEvent();
     
-    theme.theme = theme.TYPES.DARK;
-    theme.themeChangedEvent = new CEvent();
+        let tempTheme = utils.getCookie("theme");
+        if (tempTheme == null || tempTheme == "") {
+            tempTheme = theme.TYPES.DARK;
+            utils.setCookie("theme", tempTheme);
+        }
+        
+        theme.set(tempTheme);
+    };
 
+    theme.nameToNum = function (name) {
+        return theme.TYPES[name];
+    };
 
-    theme.switch = function (toDarkTheme) {
-        if ((theme.theme == theme.TYPES.DARK && toDarkTheme) ||
-                (theme.theme == theme.TYPES.LIGHT && !toDarkTheme)) {
+    theme.numToName = function (num) {
+        for (const [key, value] of Object.entries(theme.TYPES)) {
+            if (value === num) {
+                return key;
+            }
+        }
+    };
+
+    theme.set = (newTheme) => {
+        if (theme.theme === newTheme) {
             return;
         }
         
-        if (toDarkTheme) {
-            theme.enableDarkTheme();
-        } else {
-            theme.disableDarkTheme();
-        }
+        document.getElementsByTagName("html")[0].dataset.bsTheme = theme.numToName(newTheme).toLowerCase();
 
+        theme.theme = newTheme;
         theme.themeChangedEvent.dispatch({ theme: theme.theme });
     };
 
-    theme.enableDarkTheme = function () {
-        theme.theme = theme.TYPES.DARK;
-        document.getElementsByTagName("html")[0].dataset.bsTheme = "dark";
-    };
-
-    theme.disableDarkTheme = function () {
-        theme.theme = theme.TYPES.LIGHT;
-        document.getElementsByTagName("html")[0].dataset.bsTheme = "light";
-    };
+    theme.init();
 
     window.theme = theme;
 }

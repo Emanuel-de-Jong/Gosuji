@@ -49,7 +49,7 @@ namespace Gosuji.Client.Components.Layout
             {
                 if (settingConfig != null)
                 {
-                    await SwitchTheme(settingConfig.IsDarkMode);
+                    await SetTheme(settingConfig.IsDarkMode);
                 }
             }
         }
@@ -85,7 +85,7 @@ namespace Gosuji.Client.Components.Layout
         private async Task ChangeIsDarkMode(ChangeEventArgs e)
         {
             bool isDarkMode = (bool)e.Value;
-            await SwitchTheme(isDarkMode);
+            await SetTheme(isDarkMode);
 
             if (settingConfig.IsDarkMode == isDarkMode)
             {
@@ -96,9 +96,10 @@ namespace Gosuji.Client.Components.Layout
             await dataService.PutSettingConfig(settingConfig);
         }
 
-        private async Task SwitchTheme(bool toDarkTheme)
+        private async Task SetTheme(bool isDarkTheme)
         {
-            await js.InvokeVoidAsync("theme.switch", toDarkTheme);
+            int theme = await js.InvokeAsync<int>("theme.nameToNum", isDarkTheme ? "DARK" : "LIGHT");
+            await js.InvokeVoidAsync("theme.set", theme);
         }
     }
 }
