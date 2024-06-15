@@ -32,6 +32,8 @@ namespace Gosuji
                 })
                 .AddIdentityCookies();
 
+            builder.Services.AddControllers();
+
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
                 options.UseSqlite(connectionString));
@@ -94,6 +96,8 @@ namespace Gosuji
 
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
+
+            app.MapControllers();
 
             // Endpoints
             DataService.CreateEndpoints(app);

@@ -29,7 +29,6 @@ namespace Gosuji.Client.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
-            string? language;
             claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
@@ -37,20 +36,20 @@ namespace Gosuji.Client.Components.Layout
                 languages = await dataService.GetLanguages();
                 currentLanguage = languages.Where(kv => kv.Value.Id == settingConfig.LanguageId).FirstOrDefault().Value;
 
-                language = currentLanguage.Short;
-            } else
-            {
-                language = await js.InvokeAsync<string?>("utils.getCookie", "lang");
-            }
-
-            if (language != null && language != "")
-            {
-                if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != language)
+                if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != currentLanguage.Short)
                 {
-                    CultureInfo culture = new(language);
-                    CultureInfo.CurrentCulture = culture;
-                    CultureInfo.CurrentUICulture = culture;
-                    //navigationManager.NavigateTo(navigationManager.Uri, true);
+                    CultureInfo culture = new(currentLanguage.Short);
+
+                    await js.InvokeVoidAsync("blazorCulture.set", culture!.Name);
+
+                    var uri = new Uri(navigationManager.Uri)
+                        .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+                    var cultureEscaped = Uri.EscapeDataString(culture.Name);
+                    var uriEscaped = Uri.EscapeDataString(uri);
+
+                    navigationManager.NavigateTo(
+                        $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
+                        forceLoad: true);
                 }
             }
 
@@ -70,8 +69,6 @@ namespace Gosuji.Client.Components.Layout
 
         private async Task ChangeLanguage(string language)
         {
-            await js.InvokeVoidAsync("utils.setCookie", "lang", language);
-
             if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == language)
             {
                 return;
@@ -84,9 +81,17 @@ namespace Gosuji.Client.Components.Layout
             }
 
             CultureInfo culture = new(language);
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
-            navigationManager.NavigateTo(navigationManager.Uri, true);
+
+            await js.InvokeVoidAsync("blazorCulture.set", culture!.Name);
+
+            var uri = new Uri(navigationManager.Uri)
+                .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+            var cultureEscaped = Uri.EscapeDataString(culture.Name);
+            var uriEscaped = Uri.EscapeDataString(uri);
+
+            navigationManager.NavigateTo(
+                $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
+                forceLoad: true);
         }
 
         private async Task ChangeVolume(ChangeEventArgs e)

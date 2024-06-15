@@ -2,6 +2,8 @@ using Gosuji.Client.Components.Account;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using System.Globalization;
+using Microsoft.JSInterop;
 
 namespace Gosuji.Client
 {
@@ -15,8 +17,6 @@ namespace Gosuji.Client
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
 
-            builder.Services.AddLocalization();
-
             // Preconfigure an HttpClient for web API calls
             builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
@@ -25,7 +25,25 @@ namespace Gosuji.Client
             builder.Services.AddSingleton<IKataGoService, ClientKataGoService>();
             builder.Services.AddSingleton<IJosekisService, ClientJosekisService>();
 
-            await builder.Build().RunAsync();
+            builder.Services.AddLocalization();
+
+            var host = builder.Build();
+
+            const string defaultCulture = "en";
+
+            var js = host.Services.GetRequiredService<IJSRuntime>();
+            var result = await js.InvokeAsync<string>("blazorCulture.get");
+            var culture = CultureInfo.GetCultureInfo(result ?? defaultCulture);
+
+            if (result == null)
+            {
+                await js.InvokeVoidAsync("blazorCulture.set", defaultCulture);
+            }
+
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+
+            await host.RunAsync();
         }
     }
 }

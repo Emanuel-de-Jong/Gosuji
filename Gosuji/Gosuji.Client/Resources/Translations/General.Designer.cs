@@ -68,5 +68,14 @@ namespace Gosuji.Client.Resources.Translations {
                 return ResourceManager.GetString("Home_Description", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Login_Title {
+            get {
+                return ResourceManager.GetString("Login_Title", resourceCulture);
+            }
+        }
     }
 }
