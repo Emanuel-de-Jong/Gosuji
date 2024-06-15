@@ -14,7 +14,7 @@ profilePage.init = function (rightColor, perfectColor) {
     profilePage.rightColor = rightColor;
     profilePage.perfectColor = perfectColor;
 
-    custom.themeChangedEvent.add(profilePage.themeChangedListener);
+    theme.themeChangedEvent.add(profilePage.themeChangedListener);
 };
 
 

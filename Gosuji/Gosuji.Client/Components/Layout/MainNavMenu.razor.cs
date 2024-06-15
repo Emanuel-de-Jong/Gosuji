@@ -98,7 +98,7 @@ namespace Gosuji.Client.Components.Layout
 
         private async Task SwitchTheme(bool toDarkTheme)
         {
-            await js.InvokeVoidAsync("custom.switchTheme", toDarkTheme);
+            await js.InvokeVoidAsync("theme.switch", toDarkTheme);
         }
     }
 }

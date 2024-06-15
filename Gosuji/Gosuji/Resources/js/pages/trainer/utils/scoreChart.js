@@ -140,7 +140,7 @@ scoreChart.init = function () {
     scoreChart.chart.canvas.onclick = scoreChart.canvasClickListener;
     scoreChart.colorElement.addEventListener("input", scoreChart.colorElementInputListener);
 
-    custom.themeChangedEvent.add(scoreChart.themeChangedListener);
+    theme.themeChangedEvent.add(scoreChart.themeChangedListener);
 
     scoreChart.clear();
 };
