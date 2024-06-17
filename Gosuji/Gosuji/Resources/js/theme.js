@@ -12,7 +12,6 @@ if (typeof theme === "undefined") {
     };
     
     theme.init = function () {
-        console.log("theme.init");
         theme.themeChangedEvent = new CEvent();
 
         let tempTheme = utils.getCookie("theme");

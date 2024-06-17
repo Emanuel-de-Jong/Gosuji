@@ -148,7 +148,7 @@ stats.decodeRatioHistory = function (encoded) {
 stats.printDecodedRatioHistory = function (node) {
     for (let i = 0; i < node.children.length; i++) {
         let childNode = node.children[i];
-        console.log(childNode.y + ", " + childNode.x + ": " + childNode.value);
+        // console.log(childNode.y + ", " + childNode.x + ": " + childNode.value);
         stats.printDecodedRatioHistory(childNode);
     }
 };
