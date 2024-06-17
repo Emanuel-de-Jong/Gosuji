@@ -95,9 +95,9 @@ scoreChart.SCALES = {
         grid: {
             color: function (context) {
                 if (context.tick.value == 0) {
-                    return custom.theme == custom.THEME_TYPES.DARK ? "rgb(200, 200, 200)" : "rgb(0, 0, 0)";
+                    return theme.theme == theme.theme_TYPES.DARK ? "rgb(200, 200, 200)" : "rgb(0, 0, 0)";
                 }
-                return custom.theme == custom.THEME_TYPES.DARK ? "rgb(33, 37, 41)" : "rgb(255, 255, 255)";
+                return theme.theme == theme.theme_TYPES.DARK ? "rgb(33, 37, 41)" : "rgb(255, 255, 255)";
             },
         },
         afterDataLimits: function (axis) {

@@ -12,8 +12,9 @@ if (typeof theme === "undefined") {
     };
     
     theme.init = function () {
+        console.log("theme.init");
         theme.themeChangedEvent = new CEvent();
-    
+
         let tempTheme = utils.getCookie("theme");
         if (tempTheme == null || tempTheme == "") {
             tempTheme = theme.TYPES.DARK;
@@ -36,11 +37,7 @@ if (typeof theme === "undefined") {
         }
     };
 
-    theme.set = (newTheme) => {
-        if (theme.theme === newTheme) {
-            return;
-        }
-        
+    theme.set = (newTheme = theme.theme) => {
         document.getElementsByTagName("html")[0].dataset.bsTheme = theme.numToName(newTheme).toLowerCase();
 
         theme.theme = newTheme;
@@ -49,9 +46,9 @@ if (typeof theme === "undefined") {
         utils.setCookie("theme", theme.theme);
     };
 
-    theme.init();
-
     window.theme = theme;
+
+    theme.init();
 }
 
 export { theme };

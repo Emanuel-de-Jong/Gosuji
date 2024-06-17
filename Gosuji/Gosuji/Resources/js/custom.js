@@ -31,6 +31,8 @@ if (typeof custom === "undefined") {
     };
 
     window.custom = custom;
+
+    window.onload = () => custom.init();
 }
 
 export { Board, CEvent, Coord, byteUtils, g, theme, utils, custom };

@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Models;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -139,7 +140,7 @@ namespace Gosuji.Client.Components.Layout
 
         private async Task SetTheme(bool isDarkTheme)
         {
-            int theme = await js.InvokeAsync<int>("theme.nameToNum", isDarkTheme ? "DARK" : "LIGHT");
+            EThemeType theme = isDarkTheme ? EThemeType.DARK : EThemeType.LIGHT;
             await js.InvokeVoidAsync("theme.set", theme);
         }
     }
