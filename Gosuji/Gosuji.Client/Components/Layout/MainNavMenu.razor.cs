@@ -42,7 +42,7 @@ namespace Gosuji.Client.Components.Layout
                 {
                     CultureInfo culture = new(currentLanguage.Short);
 
-                    await js.InvokeVoidAsync("utils.setCookie", "lang", culture.TwoLetterISOLanguageName);
+                    await js.InvokeVoidAsync("blazorCulture.set", culture!.Name);
 
                     string uri = new Uri(navigationManager.Uri)
                         .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
@@ -93,7 +93,7 @@ namespace Gosuji.Client.Components.Layout
 
             CultureInfo culture = new(language);
 
-            await js.InvokeVoidAsync("utils.setCookie", "lang", culture.TwoLetterISOLanguageName);
+            await js.InvokeVoidAsync("blazorCulture.set", culture!.Name);
 
             string uri = new Uri(navigationManager.Uri)
                 .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);

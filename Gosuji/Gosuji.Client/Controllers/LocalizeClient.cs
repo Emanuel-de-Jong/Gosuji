@@ -9,7 +9,7 @@ namespace Gosuji.Client.Controllers
         public static async Task Setup(WebAssemblyHost host)
         {
             IJSRuntime js = host.Services.GetRequiredService<IJSRuntime>();
-            string? result = await js.InvokeAsync<string>("utils.getCookie", "lang");
+            string? result = await js.InvokeAsync<string>("blazorCulture.get");
             CultureInfo culture = result != null ? CultureInfo.GetCultureInfo(result) : CultureInfo.CurrentCulture;
 
             CultureInfo.DefaultThreadCurrentCulture = culture;

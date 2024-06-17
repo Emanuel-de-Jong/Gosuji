@@ -27,15 +27,10 @@ namespace Gosuji.Controllers
 
         private static async Task DefaultCulturePicker(HttpContext context, Func<Task> next)
         {
+            IRequestCultureFeature? requestCulture = context.Features.Get<IRequestCultureFeature>();
             string defaultCulture = supportedCultures[0];
 
-            string? cookie = context.Request.Cookies["lang"];
-            IRequestCultureFeature? requestCulture = context.Features.Get<IRequestCultureFeature>();
-            if (!string.IsNullOrEmpty(cookie) && supportedCultures.Contains(cookie))
-            {
-                defaultCulture = cookie;
-            }
-            else if (requestCulture?.RequestCulture.Culture != null)
+            if (requestCulture?.RequestCulture.Culture != null)
             {
                 CultureInfo userLanguage = requestCulture.RequestCulture.Culture;
                 if (supportedCultures.Contains(userLanguage.Name))
