@@ -59,8 +59,8 @@ namespace Gosuji.Client.Components.Layout
                 string? theme = await js.InvokeAsync<string?>("utils.getCookie", "theme");
                 if (theme != null && int.TryParse(theme, out int themeNum))
                 {
-                    string themeName = await js.InvokeAsync<string>("theme.numToName", themeNum);
-                    isDarkMode = themeName == "DARK";
+                    EThemeType themeType = (EThemeType)themeNum;
+                    isDarkMode = themeType == EThemeType.DARK;
                 }
             }
 
