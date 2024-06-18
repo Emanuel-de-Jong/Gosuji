@@ -22,24 +22,6 @@ namespace Gosuji
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
-            builder.Services.AddRateLimiter(options =>
-            {
-                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-                {
-                    string ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-                    return RateLimitPartition.GetFixedWindowLimiter(
-                        partitionKey: ip,
-                        factory: partition => new FixedWindowRateLimiterOptions
-                        {
-                            PermitLimit = 100,
-                            Window = TimeSpan.FromSeconds(10),
-                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                            QueueLimit = 10
-                        });
-                });
-                options.RejectionStatusCode = 429;
-            });
-
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
@@ -113,8 +95,6 @@ namespace Gosuji
 
             app.MapControllers();
 
-            app.UseRateLimiter();
-
             // Endpoints
             DataService.CreateEndpoints(app);
             JosekisService.CreateEndpoints(app);
@@ -122,13 +102,29 @@ namespace Gosuji
 
             app.Use(async (context, next) =>
             {
-                RateLimiter rateLimiter = context.RequestServices.GetRequiredService<RateLimiter>();
-                RateLimitLease lease = await rateLimiter.AcquireAsync(1);
+                PartitionedRateLimiter<HttpContext> rateLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                {
+                    string ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                    return RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: ip,
+                        factory: partition => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 100,
+                            Window = TimeSpan.FromSeconds(10),
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueLimit = 10
+                        });
+                });
+
+                RateLimitLease lease = await rateLimiter.AcquireAsync(context);
                 if (lease.IsAcquired)
                 {
                     await next.Invoke();
                     return;
                 }
+
+                context.Response.StatusCode = 429;
+                await context.Response.WriteAsync("Too Many Requests");
 
                 IDbContextFactory<ApplicationDbContext> dbContextFactory = context.RequestServices.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
                 ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
