@@ -123,7 +123,7 @@ namespace Gosuji
                 {
                     Ip = context.Connection.RemoteIpAddress?.ToString() ?? "",
                     Endpoint = context.Request.Path,
-                    Method = context.Request.Method
+                    Method = Enum.Parse<HTTPMethod>(context.Request.Method)
                 };
 
                 dbContext.RateLimitViolations.Add(violation);

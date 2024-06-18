@@ -7,6 +7,13 @@ using Microsoft.JSInterop;
 
 namespace Gosuji.Components.Shared.CMS
 {
+    class RateLimitViolator
+    {
+        public string Ip { get; set; }
+        public int Violations { get; set; }
+        public string MostCommonEndpoint { get; set; }
+    }
+
     public partial class CAbuseDetect : ComponentBase
     {
         [Inject]
@@ -15,9 +22,12 @@ namespace Gosuji.Components.Shared.CMS
         private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
         private IJSObjectReference jsRef;
+
         private List<User>? users;
         private Dictionary<string, long>? totalKataGoVisits;
         private Dictionary<string, long>? weekKataGoVisits;
+
+        private List<RateLimitViolator> rateLimitViolators;
 
         protected override async Task OnInitializedAsync()
         {
@@ -42,6 +52,18 @@ namespace Gosuji.Components.Shared.CMS
             {
                 weekKataGoVisits[user.Id] = await MoveCountManager.GetWeekKataGoVisits(dbContextFactory, user.Id);
             }
+
+            rateLimitViolators = await dbContext.RateLimitViolations
+                .GroupBy(v => v.Ip)
+                .Select(g => new RateLimitViolator
+                {
+                    Ip = g.Key,
+                    Violations = g.Count(),
+                    MostCommonEndpoint = g.GroupBy(v => v.Endpoint)
+                        .OrderByDescending(g => g.Count())
+                        .Select(g => g.Key)
+                        .FirstOrDefault()
+                }).ToListAsync();
 
             await dbContext.DisposeAsync();
         }
