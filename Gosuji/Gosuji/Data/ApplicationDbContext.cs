@@ -21,6 +21,7 @@ namespace Gosuji.Data
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Changelog> Changelogs { get; set; }
+        public DbSet<RateLimitViolation> RateLimitViolations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -69,6 +70,7 @@ namespace Gosuji.Data
             builder.Entity<Feedback>();
             builder.Entity<Language>();
             builder.Entity<Changelog>();
+            builder.Entity<RateLimitViolation>();
         }
     }
 }

@@ -26,16 +26,16 @@ namespace Gosuji
             {
                 options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
                 {
-                    string userAgent = httpContext.Request.Headers.UserAgent.ToString();
-                    return RateLimitPartition.GetFixedWindowLimiter
-                        (userAgent, _ =>
-                            new FixedWindowRateLimiterOptions
-                            {
-                                PermitLimit = 100,
-                                Window = TimeSpan.FromSeconds(10),
-                                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                                QueueLimit = 10
-                            });
+                    string ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                    return RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: ip,
+                        factory: partition => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 100,
+                            Window = TimeSpan.FromSeconds(10),
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueLimit = 10
+                        });
                 });
                 options.RejectionStatusCode = 429;
             });
@@ -119,6 +119,31 @@ namespace Gosuji
             DataService.CreateEndpoints(app);
             JosekisService.CreateEndpoints(app);
             KataGoService.CreateEndpoints(app);
+
+            app.Use(async (context, next) =>
+            {
+                RateLimiter rateLimiter = context.RequestServices.GetRequiredService<RateLimiter>();
+                RateLimitLease lease = await rateLimiter.AcquireAsync(1);
+                if (lease.IsAcquired)
+                {
+                    await next.Invoke();
+                    return;
+                }
+
+                IDbContextFactory<ApplicationDbContext> dbContextFactory = context.RequestServices.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
+                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+                RateLimitViolation violation = new()
+                {
+                    Ip = context.Connection.RemoteIpAddress?.ToString() ?? "",
+                    Endpoint = context.Request.Path,
+                    Method = context.Request.Method
+                };
+
+                dbContext.RateLimitViolations.Add(violation);
+                await dbContext.SaveChangesAsync();
+                await dbContext.DisposeAsync();
+            });
 
             app.Run();
         }
