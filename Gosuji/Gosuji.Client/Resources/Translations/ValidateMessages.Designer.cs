@@ -68,5 +68,14 @@ namespace Gosuji.Client.Resources.Translations {
                 return ResourceManager.GetString("RequiredError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string StringLengthError {
+            get {
+                return ResourceManager.GetString("StringLengthError", resourceCulture);
+            }
+        }
     }
 }

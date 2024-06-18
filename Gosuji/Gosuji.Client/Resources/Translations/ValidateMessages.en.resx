@@ -120,4 +120,7 @@
   <data name="RequiredError" xml:space="preserve">
     <value>This field is required.</value>
   </data>
+  <data name="StringLengthError" xml:space="preserve">
+    <value>Character limit of {1} reached.</value>
+  </data>
 </root>

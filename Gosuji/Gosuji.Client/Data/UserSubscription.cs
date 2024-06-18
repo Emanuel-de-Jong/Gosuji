@@ -13,6 +13,7 @@ namespace Gosuji.Client.Data
     public class UserSubscription : DbModel
     {
         [Key] public long Id { get; set; }
+        [StringLength(100)]
         public string UserId { get; set; }
         public ESubscriptionType SubscriptionType { get; set; }
         public long? DiscountId { get; set; }

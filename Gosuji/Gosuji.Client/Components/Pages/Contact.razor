@@ -59,7 +59,7 @@
                     </div>
 
                     <div class="text-submit-container">
-                        <InputTextArea @bind-Value="input.Message" class="feedback-content-input" name="feedback-content" id="feedback-content" placeholder="Please enter your Feedback here" cols="40" rows="7"></InputTextArea>
+                        <InputTextArea @bind-Value="input.Message" class="feedback-content-input" name="feedback-content" id="feedback-content" placeholder="Please enter your Feedback here" maxlength="1000" cols="40" rows="7"></InputTextArea>
                         <ValidationMessage For="() => input.Message" class="text-danger" />
 
                         <button type="submit" class="btn btn-primary feedback_submit">Confirm</button>

@@ -53,9 +53,11 @@ namespace Gosuji.Client.Components.Pages
         private sealed class InputModel
         {
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [StringLength(250, ErrorMessageResourceName = "StringLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string Subject { get; set; }
             public string? Message { get; set; }
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [StringLength(1000, ErrorMessageResourceName = "StringLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [EnumDataType(typeof(EFeedbackType))]
             public EFeedbackType FeedbackType { get; set; } = EFeedbackType.Support;
         }

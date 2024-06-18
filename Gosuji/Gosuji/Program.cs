@@ -7,6 +7,7 @@ using Gosuji.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.RateLimiting;
 
 namespace Gosuji
 {
@@ -20,6 +21,24 @@ namespace Gosuji
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
+
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                {
+                    string userAgent = httpContext.Request.Headers.UserAgent.ToString();
+                    return RateLimitPartition.GetFixedWindowLimiter
+                        (userAgent, _ =>
+                            new FixedWindowRateLimiterOptions
+                            {
+                                PermitLimit = 100,
+                                Window = TimeSpan.FromSeconds(10),
+                                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                                QueueLimit = 10
+                            });
+                });
+                options.RejectionStatusCode = 429;
+            });
 
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
@@ -93,6 +112,8 @@ namespace Gosuji
             app.MapAdditionalIdentityEndpoints();
 
             app.MapControllers();
+
+            app.UseRateLimiter();
 
             // Endpoints
             DataService.CreateEndpoints(app);
