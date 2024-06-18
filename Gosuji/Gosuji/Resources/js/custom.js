@@ -18,7 +18,7 @@ if (typeof custom === "undefined") {
 
     custom.clear = function () {
         let copyrightYearElement = document.getElementById("copyrightYear");
-        copyrightYearElement.innerHTML = new Date().getFullYear();
+        copyrightYearElement.textContent = new Date().getFullYear();
     };
 
     custom.fitTextareaToContent = function (textarea) {

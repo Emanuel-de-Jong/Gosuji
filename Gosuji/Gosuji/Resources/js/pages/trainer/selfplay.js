@@ -44,7 +44,7 @@ selfplay.start = async function () {
 selfplay.buttonClickListener = async function () {
     if (!selfplay.isPlaying) {
         selfplay.isPlaying = true;
-        selfplay.button.innerHTML = "Stop selfplay";
+        selfplay.button.textContent = "Stop selfplay";
 
         gameplay.takePlayerControl();
         trainerG.board.nextButton.disabled = true;
@@ -52,7 +52,7 @@ selfplay.buttonClickListener = async function () {
         selfplay.startPromise = selfplay.start();
     } else {
         selfplay.isPlaying = false;
-        selfplay.button.innerHTML = "Start selfplay";
+        selfplay.button.textContent = "Start selfplay";
 
         await selfplay.startPromise;
 

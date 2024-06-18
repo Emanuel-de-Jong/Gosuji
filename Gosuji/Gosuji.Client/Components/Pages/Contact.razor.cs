@@ -55,9 +55,9 @@ namespace Gosuji.Client.Components.Pages
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [StringLength(250, ErrorMessageResourceName = "StringLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string Subject { get; set; }
+            [StringLength(1000, ErrorMessageResourceName = "StringLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string? Message { get; set; }
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
-            [StringLength(1000, ErrorMessageResourceName = "StringLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [EnumDataType(typeof(EFeedbackType))]
             public EFeedbackType FeedbackType { get; set; } = EFeedbackType.Support;
         }

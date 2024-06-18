@@ -254,23 +254,23 @@ stats.setRatio = function () {
         return;
     }
 
-    stats.rightPercentElement.innerHTML = stats.ratio.getRightPercent();
-    stats.rightStreakElement.innerHTML = stats.ratio.rightStreak;
-    stats.rightTopStreakElement.innerHTML = stats.ratio.rightTopStreak;
+    stats.rightPercentElement.textContent = stats.ratio.getRightPercent();
+    stats.rightStreakElement.textContent = stats.ratio.rightStreak;
+    stats.rightTopStreakElement.textContent = stats.ratio.rightTopStreak;
 
-    stats.perfectPercentElement.innerHTML = stats.ratio.getPerfectPercent();
-    stats.perfectStreakElement.innerHTML = stats.ratio.perfectStreak;
-    stats.perfectTopStreakElement.innerHTML = stats.ratio.perfectTopStreak;
+    stats.perfectPercentElement.textContent = stats.ratio.getPerfectPercent();
+    stats.perfectStreakElement.textContent = stats.ratio.perfectStreak;
+    stats.perfectTopStreakElement.textContent = stats.ratio.perfectTopStreak;
 };
 
 stats.clearRatio = function () {
-    stats.rightPercentElement.innerHTML = "-";
-    stats.rightStreakElement.innerHTML = 0;
-    stats.rightTopStreakElement.innerHTML = 0;
+    stats.rightPercentElement.textContent = "-";
+    stats.rightStreakElement.textContent = 0;
+    stats.rightTopStreakElement.textContent = 0;
 
-    stats.perfectPercentElement.innerHTML = "-";
-    stats.perfectStreakElement.innerHTML = 0;
-    stats.perfectTopStreakElement.innerHTML = 0;
+    stats.perfectPercentElement.textContent = "-";
+    stats.perfectStreakElement.textContent = 0;
+    stats.perfectTopStreakElement.textContent = 0;
 };
 
 
@@ -288,17 +288,17 @@ stats.setVisits = function (suggestionList) {
 };
 
 stats.clearVisits = function () {
-    stats.visitsElement.innerHTML = "";
+    stats.visitsElement.textContent = "";
 };
 
 
 stats.setResult = function (result) {
-    stats.resultElement.innerHTML = result;
+    stats.resultElement.textContent = result;
     stats.resultDivElement.hidden = false;
 };
 
 stats.clearResult = function () {
-    stats.resultElement.innerHTML = "";
+    stats.resultElement.textContent = "";
     stats.resultDivElement.hidden = true;
 };
 

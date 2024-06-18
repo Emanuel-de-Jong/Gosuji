@@ -129,14 +129,14 @@ settings.showInvalidMessage = function (input) {
     input.classList.add("form-invalid");
 
     let messageDiv = utils.getSiblingByClass(input, "form-invalid-message");
-    messageDiv.innerHTML = input.validationMessage;
+    messageDiv.textContent = input.validationMessage;
 };
 
 settings.hideInvalidMessage = function (input) {
     input.classList.remove("form-invalid");
 
     let messageDiv = utils.getSiblingByClass(input, "form-invalid-message");
-    messageDiv.innerHTML = "";
+    messageDiv.textContent = "";
 };
 
 settings.suggestionVisitsElementInputListener = function () {

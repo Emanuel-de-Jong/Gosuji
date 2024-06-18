@@ -151,7 +151,7 @@ export class TrainerBoard extends Board {
     setHandicap(handicap) {
         super.setHandicap(handicap);
 
-        this.handicapElement.innerHTML = handicap;
+        this.handicapElement.textContent = handicap;
         if (trainerG.phase != trainerG.PHASE_TYPE.NONE && trainerG.phase != trainerG.PHASE_TYPE.INIT) sgf.setHandicapMeta();
     }
 
