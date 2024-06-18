@@ -49,6 +49,23 @@ namespace Gosuji
 
             builder.Services.AddSingleton<IEmailSender<User>, IdentityNoOpEmailSender>();
 
+            builder.Services.AddSingleton(serviceProvider =>
+            {
+                return PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                {
+                    string ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                    return RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: ip,
+                        factory: partition => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 100,
+                            Window = TimeSpan.FromSeconds(10),
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueLimit = 10
+                        });
+                });
+            });
+
             builder.Services.AddLocalization();
 
             builder.Services.AddSignalR(hubOptions =>
@@ -85,36 +102,9 @@ namespace Gosuji
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode()
-                .AddInteractiveWebAssemblyRenderMode()
-                .AddAdditionalAssemblies(typeof(Client.Components._Imports).Assembly);
-
-            // Add additional endpoints required by the Identity /Account Razor components.
-            app.MapAdditionalIdentityEndpoints();
-
-            app.MapControllers();
-
-            // Endpoints
-            DataService.CreateEndpoints(app);
-            JosekisService.CreateEndpoints(app);
-            KataGoService.CreateEndpoints(app);
-
             app.Use(async (context, next) =>
             {
-                PartitionedRateLimiter<HttpContext> rateLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-                {
-                    string ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-                    return RateLimitPartition.GetFixedWindowLimiter(
-                        partitionKey: ip,
-                        factory: partition => new FixedWindowRateLimiterOptions
-                        {
-                            PermitLimit = 100,
-                            Window = TimeSpan.FromSeconds(10),
-                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                            QueueLimit = 10
-                        });
-                });
+                PartitionedRateLimiter<HttpContext> rateLimiter = context.RequestServices.GetRequiredService<PartitionedRateLimiter<HttpContext>>();
 
                 RateLimitLease lease = await rateLimiter.AcquireAsync(context);
                 if (lease.IsAcquired)
@@ -140,6 +130,21 @@ namespace Gosuji
                 await dbContext.SaveChangesAsync();
                 await dbContext.DisposeAsync();
             });
+
+            app.MapRazorComponents<App>()
+                .AddInteractiveServerRenderMode()
+                .AddInteractiveWebAssemblyRenderMode()
+                .AddAdditionalAssemblies(typeof(Client.Components._Imports).Assembly);
+
+            // Add additional endpoints required by the Identity /Account Razor components.
+            app.MapAdditionalIdentityEndpoints();
+
+            app.MapControllers();
+
+            // Endpoints
+            DataService.CreateEndpoints(app);
+            JosekisService.CreateEndpoints(app);
+            KataGoService.CreateEndpoints(app);
 
             app.Run();
         }
