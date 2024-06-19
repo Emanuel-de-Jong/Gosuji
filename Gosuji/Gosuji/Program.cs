@@ -151,9 +151,6 @@ namespace Gosuji
 
             app.MapControllers();
 
-            // Endpoints
-            DataService.CreateEndpoints(app);
-
             Sanitizer.Init();
 
             app.Run();

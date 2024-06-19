@@ -18,6 +18,7 @@ namespace Gosuji.MVC
             pool = kataGoPoolService;
         }
 
+        [HttpGet]
         public async Task<KataGoVersion> GetVersion()
         {
             return await pool.GetVersion();

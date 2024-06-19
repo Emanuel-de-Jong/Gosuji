@@ -4,9 +4,9 @@ using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services
 {
-    public class ClientDataService(HttpClient http) : IDataService
+    public class DataService(HttpClient http) : IDataService
     {
-        private static string MAP_GROUP = "/api/DataService";
+        private static string MAP_GROUP = "/api/Data";
 
         public async Task<Changelog[]> GetChangelogs()
         {

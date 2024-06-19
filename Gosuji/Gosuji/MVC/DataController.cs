@@ -5,38 +5,25 @@ using Gosuji.Client.ViewModels;
 using Gosuji.Components.Shared.CMS;
 using Gosuji.Controllers;
 using Gosuji.Data;
+using Gosuji.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Gosuji.Services
+namespace Gosuji.MVC
 {
-    public class DataService : IServerService, IDataService
+    [ApiController]
+    [Route("api/[controller]/[action]")]
+    public class DataController : IDataService
     {
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
 
-        public DataService(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
+        public DataController(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
         {
             dbContextFactory = _dbContextFactory;
         }
 
-        public static void CreateEndpoints(WebApplication app)
-        {
-            RouteGroupBuilder group = app.MapGroup("/api/DataService");
-            group.MapGet("/GetChangelogs", (IDataService service) => service.GetChangelogs());
-            group.MapGet("/GetUserLanguageIds", (IDataService service) => service.GetUserLanguageIds());
-            group.MapGet("/GetUserGames/{userId}", (string userId, IDataService service) => service.GetUserGames(userId));
-            group.MapGet("/GetGame/{gameId}", (long gameId, IDataService service) => service.GetGame(gameId));
-            group.MapPost("/PostTrainerSettingConfig", (TrainerSettingConfig config, IDataService service) => service.PostTrainerSettingConfig(config));
-            group.MapPost("/PostGameStat", (GameStat gamestat, IDataService service) => service.PostGameStat(gamestat));
-            group.MapPut("/PutGameStat", (GameStat gamestat, IDataService service) => service.PutGameStat(gamestat));
-            group.MapPost("/PostGame", (Game game, IDataService service) => service.PostGame(game));
-            group.MapPut("/PutGame", (Game game, IDataService service) => service.PutGame(game));
-            group.MapPost("/PostFeedback", (Feedback feedback, IDataService service) => service.PostFeedback(feedback));
-            group.MapGet("/GetSettingConfig/{userId}", (string userId, IDataService service) => service.GetSettingConfig(userId));
-            group.MapPut("/PutSettingConfig", (SettingConfig settingConfig, IDataService service) => service.PutSettingConfig(settingConfig));
-            group.MapGet("/GetLanguages", (IDataService service) => service.GetLanguages());
-        }
-
+        [HttpGet]
         public async Task<Changelog[]> GetChangelogs()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -45,6 +32,7 @@ namespace Gosuji.Services
             return changelogs;
         }
 
+        [HttpGet]
         public async Task<Dictionary<string, long>> GetUserLanguageIds()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -60,6 +48,7 @@ namespace Gosuji.Services
             return userLanguageIds;
         }
 
+        [HttpGet("{userId}")]
         public async Task<VMGame[]> GetUserGames(string userId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -92,6 +81,7 @@ namespace Gosuji.Services
             return games;
         }
 
+        [HttpGet("{gameId}")]
         public async Task<Game?> GetGame(long gameId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -100,6 +90,7 @@ namespace Gosuji.Services
             return game;
         }
 
+        [HttpPost]
         public async Task<long> PostTrainerSettingConfig(TrainerSettingConfig config)
         {
             Sanitizer.Sanitize(config);
@@ -130,6 +121,7 @@ namespace Gosuji.Services
             return config.Id;
         }
 
+        [HttpPost]
         public async Task<long> PostGameStat(GameStat gameStat)
         {
             Sanitizer.Sanitize(gameStat);
@@ -141,6 +133,7 @@ namespace Gosuji.Services
             return gameStat.Id;
         }
 
+        [HttpPut]
         public async Task PutGameStat(GameStat gameStat)
         {
             Sanitizer.Sanitize(gameStat);
@@ -151,6 +144,7 @@ namespace Gosuji.Services
             await dbContext.DisposeAsync();
         }
 
+        [HttpPost]
         public async Task<long> PostGame(Game game)
         {
             Sanitizer.Sanitize(game);
@@ -162,6 +156,7 @@ namespace Gosuji.Services
             return game.Id;
         }
 
+        [HttpPut]
         public async Task PutGame(Game game)
         {
             Sanitizer.Sanitize(game);
@@ -172,6 +167,7 @@ namespace Gosuji.Services
             await dbContext.DisposeAsync();
         }
 
+        [HttpPost]
         public async Task PostFeedback(Feedback feedback)
         {
             Sanitizer.Sanitize(feedback);
@@ -182,6 +178,7 @@ namespace Gosuji.Services
             await dbContext.DisposeAsync();
         }
 
+        [HttpGet("{userId}")]
         public async Task<SettingConfig> GetSettingConfig(string userId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -193,6 +190,7 @@ namespace Gosuji.Services
             return settingConfig;
         }
 
+        [HttpPut]
         public async Task PutSettingConfig(SettingConfig settingConfig)
         {
             Sanitizer.Sanitize(settingConfig);
@@ -203,6 +201,7 @@ namespace Gosuji.Services
             await dbContext.DisposeAsync();
         }
 
+        [HttpGet]
         public async Task<Dictionary<string, Language>> GetLanguages()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
