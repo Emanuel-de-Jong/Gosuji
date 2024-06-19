@@ -17,23 +17,12 @@ namespace Gosuji.Client.Data
         public string Version { get; set; }
         [StringLength(100)]
         public string Model { get; set; }
-        [StringLength(150)]
+        [StringLength(50_000)]
         public string Config { get; set; }
 
         public static string GetConfig()
         {
-            string config = File.ReadAllText(@"Resources\KataGo\default_gtp.cfg");
-
-            using MD5 hasher = MD5.Create();
-            byte[] bytes = hasher.ComputeHash(Encoding.UTF8.GetBytes(config));
-
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                builder.Append(bytes[i].ToString("x2"));
-            }
-
-            return builder.ToString();
+            return File.ReadAllText(@"Resources\KataGo\default_gtp.cfg");
         }
 
         public static KataGoVersion GetCurrent()
