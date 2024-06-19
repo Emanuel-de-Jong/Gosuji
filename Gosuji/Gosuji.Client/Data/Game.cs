@@ -6,10 +6,13 @@ namespace Gosuji.Client.Data
     {
         [Key] public long Id { get; set; }
 
+        [Required]
         [StringLength(36)]
         public string UserId { get; set; }
+        [Required]
         public long TrainerSettingConfigId { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
+        [Required]
         public long KataGoVersionId { get; set; }
         public KataGoVersion? kataGoVersion { get; set; }
         public long? GameStatId { get; set; }
@@ -21,19 +24,27 @@ namespace Gosuji.Client.Data
         public long? EndgameStatId { get; set; }
         public GameStat? EndgameStat { get; set; }
 
+        [Required]
         [MaxLength(250)]
         [MinLength(1)]
         public string Name { get; set; }
         public int? Result { get; set; }
+        [Required]
         public int PrevNodeX { get; set; }
+        [Required]
         public int PrevNodeY { get; set; }
 
+        [Required]
         public int Boardsize { get; set; }
+        [Required]
         [Range(0, 9)]
         public int Handicap { get; set; }
+        [Required]
         public int Color { get; set; }
+        [Required]
         [MaxLength(100)]
         public string Ruleset { get; set; }
+        [Required]
         [Range(-150, 150)]
         public float Komi { get; set; }
 

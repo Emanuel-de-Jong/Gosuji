@@ -14,7 +14,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         Task Restart(string userId);
         [JSInvokable]
-        Task SetBoardsize(string userId, int boardsize);
+        Task SetBoardsize(string userId, string boardsize);
         [JSInvokable]
         Task SetRuleset(string userId, string ruleset);
         [JSInvokable]

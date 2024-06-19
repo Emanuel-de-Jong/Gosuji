@@ -46,6 +46,11 @@ namespace Gosuji.Controllers
         [HttpGet("{sessionId}")]
         public async Task<JosekisNode> Current(int sessionId)
         {
+            if (!josekisGoNodes.ContainsKey(sessionId))
+            {
+                return null;
+            }
+
             GoNode node = josekisGoNodes[sessionId];
             return node is GoMoveNode moveNode ? JosekisNodeConverter.Convert(moveNode) : JosekisNodeConverter.Convert(node);
         }
@@ -53,6 +58,11 @@ namespace Gosuji.Controllers
         [HttpGet("{sessionId}")]
         public async Task ToParent(int sessionId)
         {
+            if (!josekisGoNodes.ContainsKey(sessionId))
+            {
+                return;
+            }
+
             GoNode node = josekisGoNodes[sessionId];
             if (node.ParentNode == null)
             {
@@ -65,6 +75,11 @@ namespace Gosuji.Controllers
         [HttpGet("{sessionId}")]
         public async Task<int> ToLastBranch(int sessionId)
         {
+            if (!josekisGoNodes.ContainsKey(sessionId))
+            {
+                return 0;
+            }
+
             GoNode node = josekisGoNodes[sessionId];
 
             int returnCount = 0;
@@ -89,12 +104,22 @@ namespace Gosuji.Controllers
         [HttpGet("{sessionId}")]
         public async Task ToFirst(int sessionId)
         {
+            if (!josekisGoNodes.ContainsKey(sessionId))
+            {
+                return;
+            }
+
             josekisGoNodes[sessionId] = baseGame.RootNode;
         }
 
         [HttpPost("{sessionId}")]
         public async Task<bool> ToChild(int sessionId, JosekisNode childToGo)
         {
+            if (!josekisGoNodes.ContainsKey(sessionId))
+            {
+                return false;
+            }
+
             sanitizeService.Sanitize(childToGo);
 
             foreach (GoNode? childNode in josekisGoNodes[sessionId].ChildNodes)

@@ -3,6 +3,7 @@ using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Controllers
 {
@@ -50,9 +51,9 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{userId}/{boardsize}")]
-        public async Task SetBoardsize(string userId, int boardsize)
+        public async Task SetBoardsize(string userId, [RegularExpression(@"(9|13|19)")] string boardsize)
         {
-            (await pool.Get(userId)).SetBoardsize(boardsize);
+            (await pool.Get(userId)).SetBoardsize(int.Parse(boardsize));
         }
 
         [HttpGet("{userId}/{ruleset}")]
@@ -63,45 +64,43 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{userId}/{komi}")]
-        public async Task SetKomi(string userId, float komi)
+        public async Task SetKomi(string userId, [Range(-150, 150)] float komi)
         {
             (await pool.Get(userId)).SetKomi(komi);
         }
 
         [HttpGet("{userId}/{handicap}")]
-        public async Task SetHandicap(string userId, int handicap)
+        public async Task SetHandicap(string userId, [Range(0, 9)] int handicap)
         {
             (await pool.Get(userId)).SetHandicap(handicap);
         }
 
         [HttpGet("{userId}/{color}/{coord}")]
-        public async Task<MoveSuggestion> AnalyzeMove(string userId, string color, string coord)
+        public async Task<MoveSuggestion> AnalyzeMove(string userId, [RegularExpression(@"(B|W)")] string color,
+            [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
         {
-            color = sanitizeService.Sanitize(color);
-            coord = sanitizeService.Sanitize(coord);
             return (await pool.Get(userId)).AnalyzeMove(color, coord);
         }
 
         [HttpGet("{userId}/{color}")]
-        public async Task<List<MoveSuggestion>> Analyze(string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
+        public async Task<List<MoveSuggestion>> Analyze(string userId, [RegularExpression(@"(B|W)")] string color,
+            [Range(2, 100_000)] int maxVisits,
+            [Range(0, 100)] float minVisitsPerc,
+            [Range(0, 100)] float maxVisitDiffPerc)
         {
-            color = sanitizeService.Sanitize(color);
             return (await pool.Get(userId)).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
         }
 
         [HttpGet("{userId}/{color}/{coord}")]
-        public async Task Play(string userId, string color, string coord)
+        public async Task Play(string userId, [RegularExpression(@"(B|W)")] string color,
+            [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
         {
-            color = sanitizeService.Sanitize(color);
-            coord = sanitizeService.Sanitize(coord);
             (await pool.Get(userId)).Play(color, coord);
         }
 
         [HttpPost("{userId}")]
         public async Task PlayRange(string userId, Moves moves)
         {
-            sanitizeService.Sanitize(moves);
-
             (await pool.Get(userId)).PlayRange(moves);
         }
 

@@ -19,10 +19,13 @@ namespace Gosuji.Data
     public class RateLimitViolation : DbModel
     {
         [Key] public long Id { get; set; }
+        [Required]
         [MaxLength(120)]
         public string Ip { get; set; }
+        [Required]
         [MaxLength(250)]
         public string Endpoint { get; set; }
+        [Required]
         public HTTPMethod Method { get; set; }
     }
 }

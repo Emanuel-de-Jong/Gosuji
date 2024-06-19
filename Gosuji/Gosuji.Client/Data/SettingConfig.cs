@@ -5,12 +5,13 @@ namespace Gosuji.Client.Data
     public class SettingConfig : DbModel
     {
         [Key] public long Id { get; set; }
+        [Required]
         public long LanguageId { get; set; }
         public Language? Language { get; set; }
-        public bool IsDarkMode { get; set; }
+        public bool IsDarkMode { get; set; } = true;
         [Range(0, 100)]
         public int Volume { get; set; } = 100;
-        public bool IsGetChangelogEmail { get; set; } = true;
+        public bool IsGetChangelogEmail { get; set; }
         [Range(-150, 150)]
         public float? KomiJP19 { get; set; }
         [Range(-150, 150)]

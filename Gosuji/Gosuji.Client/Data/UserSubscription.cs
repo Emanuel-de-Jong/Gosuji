@@ -13,11 +13,14 @@ namespace Gosuji.Client.Data
     public class UserSubscription : DbModel
     {
         [Key] public long Id { get; set; }
+        [Required]
         [StringLength(36)]
         public string UserId { get; set; }
+        [Required]
         public ESubscriptionType SubscriptionType { get; set; }
         public long? DiscountId { get; set; }
         public Discount? Discount { get; set; }
+        [Required]
         public int Months { get; set; }
         [NotMapped]
         public DateTimeOffset EndDate => CreateDate.AddMonths(Months);

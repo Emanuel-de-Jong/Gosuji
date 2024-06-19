@@ -34,6 +34,8 @@ namespace Gosuji
                 })
                 .AddIdentityCookies();
 
+            builder.Services.AddControllers();
+
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
                 options.UseSqlite(connectionString));
@@ -88,8 +90,6 @@ namespace Gosuji
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddSingleton<IKataGoService, KataGoService>();
             builder.Services.AddSingleton<IJosekisService, JosekisService>();
-
-            builder.Services.AddControllers();
 
             WebApplication app = builder.Build();
 

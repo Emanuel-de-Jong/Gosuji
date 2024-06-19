@@ -6,11 +6,13 @@ namespace Gosuji.Client.Data
     {
         [Key] public long Id { get; set; }
         [MaxLength(100)]
-        public string Version { get; set; }
+        public string? Version { get; set; }
+        [Required]
         [MaxLength(250)]
         public string Name { get; set; }
         [MaxLength(2500)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
+        [Required]
         public DateTimeOffset Date { get; set; }
     }
 }
