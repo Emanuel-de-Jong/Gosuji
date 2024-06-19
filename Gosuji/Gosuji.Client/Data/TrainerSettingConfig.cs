@@ -8,7 +8,7 @@ namespace Gosuji.Client.Data
     {
         [Key] public long Id { get; set; }
 
-        [StringLength(150)]
+        [MaxLength(150)]
         public string Hash { get; set; }
 
         public int Boardsize { get; set; } = 19;
@@ -22,15 +22,15 @@ namespace Gosuji.Client.Data
         public int OpponentVisits { get; set; } = 1500;
         public bool DisableAICorrection { get; set; } = false;
 
-        [StringLength(100)]
+        [MaxLength(100)]
         public string? Ruleset { get; set; } = "Japanese";
-        [StringLength(100)]
+        [MaxLength(100)]
         public string? KomiChangeStyle { get; set; } = "Automatic";
         public float Komi { get; set; } = 6.5f;
 
         public int PreOptions { get; set; } = 2;
         public float PreOptionPerc { get; set; } = 20;
-        [StringLength(100)]
+        [MaxLength(100)]
         public string? ForceOpponentCorners { get; set; } = "Both";
         public bool CornerSwitch44 { get; set; } = true;
         public bool CornerSwitch34 { get; set; } = true;

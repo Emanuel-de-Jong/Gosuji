@@ -11,14 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gosuji.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240606125134_SubscriptionUserIdNotUnique")]
-    partial class SubscriptionUserIdNotUnique
+    [Migration("20240619115540_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
             modelBuilder.Entity("Gosuji.Client.Data.Changelog", b =>
                 {
@@ -34,6 +34,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(2500)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset?>("ModifyDate")
@@ -41,10 +42,12 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Version")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -60,6 +63,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Code")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("CreateDate")
@@ -77,6 +81,46 @@ namespace Gosuji.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Discounts");
+                });
+
+            modelBuilder.Entity("Gosuji.Client.Data.Feedback", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FeedbackType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsResolved")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(1000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("ModifyDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("Gosuji.Client.Data.Game", b =>
@@ -134,6 +178,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<long?>("OpeningStatId")
@@ -154,24 +199,24 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Ruleset")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("SGF")
                         .IsRequired()
+                        .HasMaxLength(100000)
                         .HasColumnType("TEXT");
 
                     b.Property<byte[]>("Suggestions")
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<string>("Thumbnail")
-                        .HasColumnType("TEXT");
-
                     b.Property<long>("TrainerSettingConfigId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -246,6 +291,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Config")
                         .IsRequired()
+                        .HasMaxLength(50000)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("CreateDate")
@@ -253,6 +299,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Model")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset?>("ModifyDate")
@@ -260,6 +307,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Version")
                         .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -276,19 +324,17 @@ namespace Gosuji.Migrations
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Flag")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTimeOffset?>("ModifyDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Short")
                         .IsRequired()
+                        .HasMaxLength(10)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -394,6 +440,7 @@ namespace Gosuji.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ForceOpponentCorners")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Handicap")
@@ -401,12 +448,14 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Hash")
                         .IsRequired()
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.Property<float>("Komi")
                         .HasColumnType("REAL");
 
                     b.Property<string>("KomiChangeStyle")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<float>("MaxVisitDiffPerc")
@@ -452,6 +501,7 @@ namespace Gosuji.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Ruleset")
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("SelfplayVisits")
@@ -503,6 +553,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -510,37 +561,6 @@ namespace Gosuji.Migrations
                     b.HasIndex("DiscountId");
 
                     b.ToTable("UserSubscriptions");
-                });
-
-            modelBuilder.Entity("Gosuji.Data.Feedback", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTimeOffset>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("FeedbackType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset?>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Subject")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("Gosuji.Data.Preset", b =>
@@ -560,6 +580,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<long>("TrainerSettingConfigId")
@@ -567,6 +588,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -578,7 +600,7 @@ namespace Gosuji.Migrations
                     b.ToTable("Presets");
                 });
 
-            modelBuilder.Entity("Gosuji.Data.TextKey", b =>
+            modelBuilder.Entity("Gosuji.Data.RateLimitViolation", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -587,41 +609,25 @@ namespace Gosuji.Migrations
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Key")
+                    b.Property<string>("Endpoint")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("Ip")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Method")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset?>("ModifyDate")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TextKeys");
-                });
-
-            modelBuilder.Entity("Gosuji.Data.TextValue", b =>
-                {
-                    b.Property<long>("LanguageId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long>("TextKeyId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTimeOffset>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset?>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("LanguageId", "TextKeyId");
-
-                    b.HasIndex("TextKeyId");
-
-                    b.ToTable("TextValues");
+                    b.ToTable("RateLimitViolations");
                 });
 
             modelBuilder.Entity("Gosuji.Data.User", b =>
@@ -640,9 +646,6 @@ namespace Gosuji.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<long?>("CurrentSubscriptionId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<long?>("CurrentSubscriptionId1")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
@@ -699,7 +702,7 @@ namespace Gosuji.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurrentSubscriptionId1");
+                    b.HasIndex("CurrentSubscriptionId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -727,6 +730,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Ip")
                         .IsRequired()
+                        .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset?>("ModifyDate")
@@ -734,6 +738,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -763,6 +768,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -992,30 +998,11 @@ namespace Gosuji.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Gosuji.Data.TextValue", b =>
-                {
-                    b.HasOne("Gosuji.Client.Data.Language", "Language")
-                        .WithMany()
-                        .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Gosuji.Data.TextKey", "TextKey")
-                        .WithMany()
-                        .HasForeignKey("TextKeyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Language");
-
-                    b.Navigation("TextKey");
-                });
-
             modelBuilder.Entity("Gosuji.Data.User", b =>
                 {
                     b.HasOne("Gosuji.Client.Data.UserSubscription", "CurrentSubscription")
                         .WithMany()
-                        .HasForeignKey("CurrentSubscriptionId1");
+                        .HasForeignKey("CurrentSubscriptionId");
 
                     b.HasOne("Gosuji.Client.Data.SettingConfig", "SettingConfig")
                         .WithMany()

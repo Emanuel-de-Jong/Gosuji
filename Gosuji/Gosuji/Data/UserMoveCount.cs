@@ -6,7 +6,7 @@ namespace Gosuji.Data
     public class UserMoveCount : DbModel
     {
         [Key] public long Id { get; set; }
-        [StringLength(100)]
+        [MaxLength(100)]
         public string UserId { get; set; }
         public User User { get; set; }
         public int Moves { get; set; }

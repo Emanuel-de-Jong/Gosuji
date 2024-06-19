@@ -15,7 +15,7 @@ namespace Gosuji.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.5");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
             modelBuilder.Entity("Gosuji.Client.Data.Changelog", b =>
                 {
@@ -288,7 +288,7 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Config")
                         .IsRequired()
-                        .HasMaxLength(150)
+                        .HasMaxLength(50000)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("CreateDate")
@@ -608,10 +608,12 @@ namespace Gosuji.Migrations
 
                     b.Property<string>("Endpoint")
                         .IsRequired()
+                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Ip")
                         .IsRequired()
+                        .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Method")

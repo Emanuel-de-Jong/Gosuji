@@ -6,7 +6,7 @@ namespace Gosuji.Client.Data
     {
         [Key] public long Id { get; set; }
 
-        [StringLength(100)]
+        [MaxLength(100)]
         public string UserId { get; set; }
         public long TrainerSettingConfigId { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
@@ -21,7 +21,7 @@ namespace Gosuji.Client.Data
         public long? EndgameStatId { get; set; }
         public GameStat? EndgameStat { get; set; }
 
-        [StringLength(250)]
+        [MaxLength(250)]
         public string Name { get; set; }
         public int? Result { get; set; }
         public int PrevNodeX { get; set; }
@@ -30,11 +30,11 @@ namespace Gosuji.Client.Data
         public int Boardsize { get; set; }
         public int Handicap { get; set; }
         public int Color { get; set; }
-        [StringLength(100)]
+        [MaxLength(100)]
         public string Ruleset { get; set; }
         public float Komi { get; set; }
 
-        [StringLength(100_000)]
+        [MaxLength(100_000)]
         public string SGF { get; set; }
         public byte[] Ratios { get; set; }
         public byte[] Suggestions { get; set; }

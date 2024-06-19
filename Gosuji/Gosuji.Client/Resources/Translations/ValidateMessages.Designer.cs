@@ -63,18 +63,18 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string RequiredError {
+        public static string MaxLength {
             get {
-                return ResourceManager.GetString("RequiredError", resourceCulture);
+                return ResourceManager.GetString("MaxLength", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string StringLengthError {
+        public static string RequiredError {
             get {
-                return ResourceManager.GetString("StringLengthError", resourceCulture);
+                return ResourceManager.GetString("RequiredError", resourceCulture);
             }
         }
     }

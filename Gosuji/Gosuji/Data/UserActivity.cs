@@ -6,10 +6,10 @@ namespace Gosuji.Data
     public class UserActivity : DbModel
     {
         [Key] public long Id { get; set; }
-        [StringLength(100)]
+        [MaxLength(100)]
         public string UserId { get; set; }
         public User User { get; set; }
-        [StringLength(120)]
+        [MaxLength(120)]
         public string Ip { get; set; }
         public DateTimeOffset? EndDate { get; set; }
     }
