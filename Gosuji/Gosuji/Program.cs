@@ -75,6 +75,15 @@ namespace Gosuji
 
             builder.Services.AddHttpContextAccessor();
 
+            // Preconfigure an HttpClient for web API calls
+            builder.Services.AddSingleton<HttpClient>(sp =>
+            {
+                var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+                var request = httpContextAccessor.HttpContext.Request;
+                var baseAddress = $"{request.Scheme}://{request.Host.Value}";
+                return new HttpClient { BaseAddress = new Uri(baseAddress) };
+            });
+
             // Custom services
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddSingleton<IKataGoService, KataGoService>();
@@ -144,7 +153,6 @@ namespace Gosuji
             // Endpoints
             DataService.CreateEndpoints(app);
             JosekisService.CreateEndpoints(app);
-            KataGoService.CreateEndpoints(app);
 
             Sanitizer.Init();
 

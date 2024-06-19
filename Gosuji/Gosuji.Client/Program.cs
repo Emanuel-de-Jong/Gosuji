@@ -21,7 +21,7 @@ namespace Gosuji.Client
 
             // Custom services
             builder.Services.AddSingleton<IDataService, ClientDataService>();
-            builder.Services.AddSingleton<IKataGoService, ClientKataGoService>();
+            builder.Services.AddSingleton<IKataGoService, KataGoService>();
             builder.Services.AddSingleton<IJosekisService, ClientJosekisService>();
 
             builder.Services.AddLocalization();

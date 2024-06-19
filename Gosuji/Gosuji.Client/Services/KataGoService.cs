@@ -5,14 +5,9 @@ using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services
 {
-    public class ClientKataGoService(HttpClient http) : IKataGoService
+    public class KataGoService(HttpClient http) : IKataGoService
     {
-        private static string MAP_GROUP = "/api/KataGoService";
-
-        public bool Validate(object obj)
-        {
-            return false;
-        }
+        private static string MAP_GROUP = "/api/KataGo";
 
         public async Task<KataGoVersion> GetVersion()
         {
@@ -74,7 +69,10 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<List<MoveSuggestion>> Analyze(string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
         {
-            return await http.GetFromJsonAsync<List<MoveSuggestion>>($"{MAP_GROUP}/Analyze/{userId}/{color}/{maxVisits}/{minVisitsPerc}/{maxVisitDiffPerc}");
+            return await http.GetFromJsonAsync<List<MoveSuggestion>>($"{MAP_GROUP}/Analyze/{userId}/{color}" +
+                $"?maxVisits={maxVisits}" +
+                $"&minVisitsPerc={minVisitsPerc}" +
+                $"&minVisitsPerc={maxVisitDiffPerc}");
         }
 
         [JSInvokable]
@@ -87,12 +85,6 @@ namespace Gosuji.Client.Services
         public async Task PlayRange(string userId, Moves moves)
         {
             await http.PostAsJsonAsync($"{MAP_GROUP}/PlayRange/{userId}", moves);
-        }
-
-        [JSInvokable]
-        public async Task<string> SGF(string userId, bool shouldWriteFile)
-        {
-            return await (await http.GetAsync($"{MAP_GROUP}/SGF/{userId}/{shouldWriteFile}")).Content.ReadAsStringAsync();
         }
     }
 }
