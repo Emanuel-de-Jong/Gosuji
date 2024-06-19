@@ -13,10 +13,11 @@ namespace Gosuji.Client.Data
     public class Feedback : DbModel
     {
         [Key] public long Id { get; set; }
-        [MaxLength(100)]
+        [StringLength(36)]
         public string UserId { get; set; }
         public EFeedbackType FeedbackType { get; set; }
         [MaxLength(250)]
+        [MinLength(3)]
         public string Subject { get; set; }
         [MaxLength(1000)]
         public string? Message { get; set; }

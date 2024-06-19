@@ -7,7 +7,7 @@ namespace Gosuji.Client.Data
         [Key] public long Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; }
-        [MaxLength(10)]
+        [MaxLength(15)]
         public string Short { get; set; }
     }
 }

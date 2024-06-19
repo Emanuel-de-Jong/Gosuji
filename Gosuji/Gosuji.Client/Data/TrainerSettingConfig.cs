@@ -9,9 +9,11 @@ namespace Gosuji.Client.Data
         [Key] public long Id { get; set; }
 
         [MaxLength(150)]
+        [MinLength(10)]
         public string Hash { get; set; }
 
         public int Boardsize { get; set; } = 19;
+        [Range(0, 9)]
         public int Handicap { get; set; } = 0;
         public int ColorType { get; set; } = 0;
         public bool PreMovesSwitch { get; set; } = false;
@@ -26,6 +28,7 @@ namespace Gosuji.Client.Data
         public string? Ruleset { get; set; } = "Japanese";
         [MaxLength(100)]
         public string? KomiChangeStyle { get; set; } = "Automatic";
+        [Range(-150, 150)]
         public float Komi { get; set; } = 6.5f;
 
         public int PreOptions { get; set; } = 2;

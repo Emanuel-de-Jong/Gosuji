@@ -118,7 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MaxLength" xml:space="preserve">
-    <value>Character limit of {1} reached.</value>
+    <value>This field can't have more than {1} characters.</value>
+  </data>
+  <data name="MinLengthError" xml:space="preserve">
+    <value>This field must have at least {1} characters.</value>
   </data>
   <data name="RequiredError" xml:space="preserve">
     <value>This field is required.</value>

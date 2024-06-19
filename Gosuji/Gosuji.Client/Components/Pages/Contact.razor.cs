@@ -54,6 +54,7 @@ namespace Gosuji.Client.Components.Pages
         {
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [MaxLength(250, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [MinLength(3, ErrorMessageResourceName = "MinLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string Subject { get; set; }
             [MaxLength(1000, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string? Message { get; set; }
