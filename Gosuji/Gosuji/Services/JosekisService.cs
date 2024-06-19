@@ -96,6 +96,8 @@ namespace Gosuji.Services
 
         public async Task<bool> ToChild(int sessionId, JosekisNode childToGo)
         {
+            Sanitizer.Sanitize(childToGo);
+
             foreach (GoNode? childNode in JosekisGoNodes[sessionId].ChildNodes)
             {
                 if (childNode is GoMoveNode childMove)

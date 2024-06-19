@@ -146,6 +146,8 @@ namespace Gosuji
             JosekisService.CreateEndpoints(app);
             KataGoService.CreateEndpoints(app);
 
+            Sanitizer.Init();
+
             app.Run();
         }
     }

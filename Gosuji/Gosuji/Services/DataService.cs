@@ -1,5 +1,8 @@
-﻿using Gosuji.Client.Data;
+﻿using Ganss.Xss;
+using Gosuji.Client.Data;
 using Gosuji.Client.Services;
+using Gosuji.Components.Shared.CMS;
+using Gosuji.Controllers;
 using Gosuji.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -87,6 +90,8 @@ namespace Gosuji.Services
 
         public async Task<long> PostTrainerSettingConfig(TrainerSettingConfig config)
         {
+            Sanitizer.Sanitize(config);
+
             if (config.Hash.IsNullOrEmpty())
             {
                 config.SetHash();
@@ -115,6 +120,8 @@ namespace Gosuji.Services
 
         public async Task<long> PostGameStat(GameStat gameStat)
         {
+            Sanitizer.Sanitize(gameStat);
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             await dbContext.GameStats.AddAsync(gameStat);
             await dbContext.SaveChangesAsync();
@@ -124,6 +131,8 @@ namespace Gosuji.Services
 
         public async Task PutGameStat(GameStat gameStat)
         {
+            Sanitizer.Sanitize(gameStat);
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             dbContext.GameStats.Update(gameStat);
             await dbContext.SaveChangesAsync();
@@ -132,6 +141,8 @@ namespace Gosuji.Services
 
         public async Task<long> PostGame(Game game)
         {
+            Sanitizer.Sanitize(game);
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             await dbContext.Games.AddAsync(game);
             await dbContext.SaveChangesAsync();
@@ -141,6 +152,8 @@ namespace Gosuji.Services
 
         public async Task PutGame(Game game)
         {
+            Sanitizer.Sanitize(game);
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             dbContext.Games.Update(game);
             await dbContext.SaveChangesAsync();
@@ -149,6 +162,8 @@ namespace Gosuji.Services
 
         public async Task PostFeedback(Feedback feedback)
         {
+            Sanitizer.Sanitize(feedback);
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             await dbContext.Feedbacks.AddAsync(feedback);
             await dbContext.SaveChangesAsync();
@@ -168,6 +183,8 @@ namespace Gosuji.Services
 
         public async Task PutSettingConfig(SettingConfig settingConfig)
         {
+            Sanitizer.Sanitize(settingConfig);
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             dbContext.SettingConfigs.Update(settingConfig);
             await dbContext.SaveChangesAsync();

@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Gosuji.Client\Gosuji.Client.csproj" />
+    <PackageReference Include="HtmlSanitizer" Version="8.0.865" />
     <PackageReference Include="IGOEnchi.GoGameSgf" Version="1.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.5" />

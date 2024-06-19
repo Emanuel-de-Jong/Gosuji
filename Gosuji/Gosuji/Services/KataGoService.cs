@@ -1,8 +1,10 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services;
 using Gosuji.Controllers;
 using Gosuji.Data;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
@@ -101,6 +103,7 @@ namespace Gosuji.Services
         [JSInvokable]
         public async Task SetRuleset(string userId, string ruleset)
         {
+            ruleset = Sanitizer.Sanitize(ruleset);
             (await pool.Get(userId)).SetRuleset(ruleset);
         }
 
@@ -119,24 +122,31 @@ namespace Gosuji.Services
         [JSInvokable]
         public async Task<MoveSuggestion> AnalyzeMove(string userId, string color, string coord)
         {
+            color = Sanitizer.Sanitize(color);
+            coord = Sanitizer.Sanitize(coord);
             return (await pool.Get(userId)).AnalyzeMove(color, coord);
         }
 
         [JSInvokable]
         public async Task<List<MoveSuggestion>> Analyze(string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
         {
+            color = Sanitizer.Sanitize(color);
             return (await pool.Get(userId)).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
         }
 
         [JSInvokable]
         public async Task Play(string userId, string color, string coord)
         {
+            color = Sanitizer.Sanitize(color);
+            coord = Sanitizer.Sanitize(coord);
             (await pool.Get(userId)).Play(color, coord);
         }
 
         [JSInvokable]
         public async Task PlayRange(string userId, Moves moves)
         {
+            Sanitizer.Sanitize(moves);
+
             (await pool.Get(userId)).PlayRange(moves);
         }
 
