@@ -153,7 +153,6 @@ namespace Gosuji
 
             // Endpoints
             DataService.CreateEndpoints(app);
-            JosekisService.CreateEndpoints(app);
 
             Sanitizer.Init();
 

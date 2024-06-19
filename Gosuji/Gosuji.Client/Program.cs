@@ -22,7 +22,7 @@ namespace Gosuji.Client
             // Custom services
             builder.Services.AddSingleton<IDataService, ClientDataService>();
             builder.Services.AddSingleton<IKataGoService, KataGoService>();
-            builder.Services.AddSingleton<IJosekisService, ClientJosekisService>();
+            builder.Services.AddSingleton<IJosekisService, JosekisService>();
 
             builder.Services.AddLocalization();
 

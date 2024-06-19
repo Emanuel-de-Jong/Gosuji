@@ -3,9 +3,9 @@ using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services
 {
-    public class ClientJosekisService(HttpClient http) : IJosekisService
+    public class JosekisService(HttpClient http) : IJosekisService
     {
-        private static string MAP_GROUP = "/api/JosekisService";
+        private static string MAP_GROUP = "/api/Josekis";
 
         public async Task AddSession(int sessionId)
         {
