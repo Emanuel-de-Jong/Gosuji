@@ -1,7 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services;
-using Gosuji.Controllers;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +10,12 @@ namespace Gosuji.MVC
     [Route("api/[controller]/[action]")]
     public class KataGoController : ControllerBase, IKataGoService
     {
+        private SanitizeService sanitizeService;
         private KataGoPoolService pool;
 
-        public KataGoController(KataGoPoolService kataGoPoolService)
+        public KataGoController(SanitizeService _sanitizeService, KataGoPoolService kataGoPoolService)
         {
+            sanitizeService = _sanitizeService;
             pool = kataGoPoolService;
         }
 
@@ -57,7 +58,7 @@ namespace Gosuji.MVC
         [HttpGet("{userId}/{ruleset}")]
         public async Task SetRuleset(string userId, string ruleset)
         {
-            ruleset = Sanitizer.Sanitize(ruleset);
+            ruleset = sanitizeService.Sanitize(ruleset);
             (await pool.Get(userId)).SetRuleset(ruleset);
         }
 
@@ -76,30 +77,30 @@ namespace Gosuji.MVC
         [HttpGet("{userId}/{color}/{coord}")]
         public async Task<MoveSuggestion> AnalyzeMove(string userId, string color, string coord)
         {
-            color = Sanitizer.Sanitize(color);
-            coord = Sanitizer.Sanitize(coord);
+            color = sanitizeService.Sanitize(color);
+            coord = sanitizeService.Sanitize(coord);
             return (await pool.Get(userId)).AnalyzeMove(color, coord);
         }
 
         [HttpGet("{userId}/{color}")]
         public async Task<List<MoveSuggestion>> Analyze(string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
         {
-            color = Sanitizer.Sanitize(color);
+            color = sanitizeService.Sanitize(color);
             return (await pool.Get(userId)).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
         }
 
         [HttpGet("{userId}/{color}/{coord}")]
         public async Task Play(string userId, string color, string coord)
         {
-            color = Sanitizer.Sanitize(color);
-            coord = Sanitizer.Sanitize(coord);
+            color = sanitizeService.Sanitize(color);
+            coord = sanitizeService.Sanitize(coord);
             (await pool.Get(userId)).Play(color, coord);
         }
 
         [HttpPost("{userId}")]
         public async Task PlayRange(string userId, Moves moves)
         {
-            Sanitizer.Sanitize(moves);
+            sanitizeService.Sanitize(moves);
 
             (await pool.Get(userId)).PlayRange(moves);
         }

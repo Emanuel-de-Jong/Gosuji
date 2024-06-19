@@ -4,28 +4,28 @@ using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Models.KataGo;
 using System.Reflection;
 
-namespace Gosuji.Controllers
+namespace Gosuji.Services
 {
-    public class Sanitizer
+    public class SanitizeService
     {
-        private static HtmlSanitizer htmlSanitizer = new();
-        private static Dictionary<Type, List<FieldInfo>> fieldsToSanitize = new();
-        private static Dictionary<Type, List<PropertyInfo>> propertiesToSanitize = new();
+        private HtmlSanitizer htmlSanitizer = new();
+        private Dictionary<Type, List<FieldInfo>> fieldsToSanitize = new();
+        private Dictionary<Type, List<PropertyInfo>> propertiesToSanitize = new();
 
-        public static void Init()
+        public SanitizeService()
         {
             Type[] typesPosted = {
-                // DataService
+                // DataController
                 typeof(TrainerSettingConfig),
                 typeof(GameStat),
                 typeof(Game),
                 typeof(Feedback),
                 typeof(SettingConfig),
 
-                // JosekisService
+                // JosekisController
                 typeof(JosekisNode),
 
-                // KataGoService
+                // KataGoController
                 typeof(Moves),
             };
 
@@ -53,12 +53,12 @@ namespace Gosuji.Controllers
             }
         }
 
-        public static string Sanitize(string str)
+        public string Sanitize(string str)
         {
             return htmlSanitizer.Sanitize(str);
         }
 
-        public static void Sanitize<T>(T obj)
+        public void Sanitize<T>(T obj)
         {
             Type type = typeof(T);
 

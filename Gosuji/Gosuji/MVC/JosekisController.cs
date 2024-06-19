@@ -1,6 +1,7 @@
 ﻿using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Services;
 using Gosuji.Controllers;
+using Gosuji.Services;
 using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
 using IGOEnchi.SmartGameLib;
@@ -13,11 +14,15 @@ namespace Gosuji.MVC
     [Route("api/[controller]/[action]")]
     public class JosekisController : IJosekisService
     {
+        private SanitizeService sanitizeService;
+
         private static Dictionary<int, GoNode> josekisGoNodes = [];
         private static GoGame baseGame;
 
-        public JosekisController()
+        public JosekisController(SanitizeService _sanitizeService)
         {
+            sanitizeService = _sanitizeService;
+
             if (baseGame == null)
             {
                 using FileStream fileStream = File.OpenRead(@"Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf");
@@ -90,7 +95,7 @@ namespace Gosuji.MVC
         [HttpPost("{sessionId}")]
         public async Task<bool> ToChild(int sessionId, JosekisNode childToGo)
         {
-            Sanitizer.Sanitize(childToGo);
+            sanitizeService.Sanitize(childToGo);
 
             foreach (GoNode? childNode in josekisGoNodes[sessionId].ChildNodes)
             {

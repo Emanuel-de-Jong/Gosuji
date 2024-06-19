@@ -2,8 +2,6 @@
 using Gosuji.Client.Data;
 using Gosuji.Client.Services;
 using Gosuji.Client.ViewModels;
-using Gosuji.Components.Shared.CMS;
-using Gosuji.Controllers;
 using Gosuji.Data;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +15,12 @@ namespace Gosuji.MVC
     public class DataController : IDataService
     {
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
+        private SanitizeService sanitizeService;
 
-        public DataController(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
+        public DataController(IDbContextFactory<ApplicationDbContext> _dbContextFactory, SanitizeService _sanitizeService)
         {
             dbContextFactory = _dbContextFactory;
+            sanitizeService = _sanitizeService;
         }
 
         [HttpGet]
@@ -93,7 +93,7 @@ namespace Gosuji.MVC
         [HttpPost]
         public async Task<long> PostTrainerSettingConfig(TrainerSettingConfig config)
         {
-            Sanitizer.Sanitize(config);
+            sanitizeService.Sanitize(config);
 
             if (config.Hash.IsNullOrEmpty())
             {
@@ -124,7 +124,7 @@ namespace Gosuji.MVC
         [HttpPost]
         public async Task<long> PostGameStat(GameStat gameStat)
         {
-            Sanitizer.Sanitize(gameStat);
+            sanitizeService.Sanitize(gameStat);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             await dbContext.GameStats.AddAsync(gameStat);
@@ -136,7 +136,7 @@ namespace Gosuji.MVC
         [HttpPut]
         public async Task PutGameStat(GameStat gameStat)
         {
-            Sanitizer.Sanitize(gameStat);
+            sanitizeService.Sanitize(gameStat);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             dbContext.GameStats.Update(gameStat);
@@ -147,7 +147,7 @@ namespace Gosuji.MVC
         [HttpPost]
         public async Task<long> PostGame(Game game)
         {
-            Sanitizer.Sanitize(game);
+            sanitizeService.Sanitize(game);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             await dbContext.Games.AddAsync(game);
@@ -159,7 +159,7 @@ namespace Gosuji.MVC
         [HttpPut]
         public async Task PutGame(Game game)
         {
-            Sanitizer.Sanitize(game);
+            sanitizeService.Sanitize(game);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             dbContext.Games.Update(game);
@@ -170,7 +170,7 @@ namespace Gosuji.MVC
         [HttpPost]
         public async Task PostFeedback(Feedback feedback)
         {
-            Sanitizer.Sanitize(feedback);
+            sanitizeService.Sanitize(feedback);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             await dbContext.Feedbacks.AddAsync(feedback);
@@ -193,7 +193,7 @@ namespace Gosuji.MVC
         [HttpPut]
         public async Task PutSettingConfig(SettingConfig settingConfig)
         {
-            Sanitizer.Sanitize(settingConfig);
+            sanitizeService.Sanitize(settingConfig);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             dbContext.SettingConfigs.Update(settingConfig);

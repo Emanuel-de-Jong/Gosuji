@@ -34,8 +34,6 @@ namespace Gosuji
                 })
                 .AddIdentityCookies();
 
-            builder.Services.AddControllers();
-
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
                 options.UseSqlite(connectionString));
@@ -85,10 +83,13 @@ namespace Gosuji
             });
 
             // Custom services
+            builder.Services.AddSingleton<SanitizeService>();
+            builder.Services.AddSingleton<KataGoPoolService>();
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddSingleton<IKataGoService, KataGoService>();
             builder.Services.AddSingleton<IJosekisService, JosekisService>();
-            builder.Services.AddSingleton<KataGoPoolService>();
+
+            builder.Services.AddControllers();
 
             WebApplication app = builder.Build();
 
@@ -150,8 +151,6 @@ namespace Gosuji
             app.MapAdditionalIdentityEndpoints();
 
             app.MapControllers();
-
-            Sanitizer.Init();
 
             app.Run();
         }
