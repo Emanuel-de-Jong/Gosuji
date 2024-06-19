@@ -2,6 +2,7 @@ using Gosuji.Client.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Data
 {
@@ -71,6 +72,31 @@ namespace Gosuji.Data
             builder.Entity<Language>();
             builder.Entity<Changelog>();
             builder.Entity<RateLimitViolation>();
+        }
+
+        public override int SaveChanges()
+        {
+            Validate();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            Validate();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void Validate()
+        {
+            var entries = ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified)
+                .Select(e => e.Entity);
+
+            foreach (var entity in entries)
+            {
+                ValidationContext validationContext = new(entity);
+                Validator.ValidateObject(entity, validationContext, validateAllProperties: true);
+            }
         }
     }
 }

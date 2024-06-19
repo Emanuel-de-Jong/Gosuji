@@ -88,8 +88,8 @@
 
         SettingConfig settingConfig = new();
         settingConfig.LanguageId = languageId.Value;
-        dbContext.SettingConfigs.Add(settingConfig);
-        dbContext.SaveChanges();
+        await dbContext.SettingConfigs.AddAsync(settingConfig);
+        await dbContext.SaveChangesAsync();
 
         user.SettingConfigId = settingConfig.Id;
 

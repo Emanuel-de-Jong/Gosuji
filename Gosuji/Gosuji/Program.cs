@@ -126,7 +126,7 @@ namespace Gosuji
                     Method = Enum.Parse<HTTPMethod>(context.Request.Method)
                 };
 
-                dbContext.RateLimitViolations.Add(violation);
+                await dbContext.RateLimitViolations.AddAsync(violation);
                 await dbContext.SaveChangesAsync();
                 await dbContext.DisposeAsync();
             });
