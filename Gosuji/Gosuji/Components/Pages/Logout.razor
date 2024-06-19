@@ -1,6 +1,8 @@
 ﻿@page "/logout"
 @layout EmptyLayout
 
+<PageTitle>Logout</PageTitle>
+
 <form method="post" action="Account/Logout">
     <AntiforgeryToken />
     <input type="hidden" name="ReturnUrl" />
