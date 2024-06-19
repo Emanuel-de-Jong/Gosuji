@@ -15,7 +15,9 @@ namespace Gosuji.Controllers
         private Stack<KataGo> freeInstances = new();
         private Dictionary<string, KataGo> instances = [];
 
-        KataGo? instance;
+        // TEMP START
+        private KataGo? tempInstance;
+        // TEMP END
 
         public KataGoPool(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
         {
@@ -47,11 +49,29 @@ namespace Gosuji.Controllers
 
         public async Task<KataGo> Get(string userId)
         {
-            if (instance == null)
+            // TEMP START
+            if (tempInstance == null)
             {
-                instance = new();
-                await instance.Start();
+                tempInstance = new();
+                await tempInstance.Start();
             }
+            return tempInstance;
+            // TEMP END
+
+            if (instances.ContainsKey(userId))
+            {
+                return instances[userId];
+            }
+
+            if (freeInstances.Count == 0)
+            {
+                await ManageFreeInstances();
+            }
+
+            KataGo instance = freeInstances.Pop();
+            instances[userId] = instance;
+
+            ManageFreeInstances();
 
             return instance;
         }
