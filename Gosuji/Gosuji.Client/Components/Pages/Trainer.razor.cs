@@ -1,4 +1,4 @@
-﻿using Gosuji.Client.Controllers.GameDecoder;
+﻿using Gosuji.Client.Helpers.GameDecoder;
 using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Services;

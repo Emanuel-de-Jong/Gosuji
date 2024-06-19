@@ -1,6 +1,6 @@
 ﻿using Gosuji.Client.Models;
 
-namespace Gosuji.Client.Controllers.GameDecoder
+namespace Gosuji.Client.Helpers.GameDecoder
 {
     public class GameDecoder
     {

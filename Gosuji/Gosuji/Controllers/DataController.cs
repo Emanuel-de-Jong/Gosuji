@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Gosuji.MVC
+namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

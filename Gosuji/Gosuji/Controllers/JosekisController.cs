@@ -1,6 +1,6 @@
 ﻿using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Services;
-using Gosuji.Controllers;
+using Gosuji.Helpers;
 using Gosuji.Services;
 using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
@@ -8,7 +8,7 @@ using IGOEnchi.SmartGameLib;
 using IGOEnchi.SmartGameLib.models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Gosuji.MVC
+namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

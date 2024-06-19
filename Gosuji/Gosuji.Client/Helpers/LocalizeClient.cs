@@ -2,7 +2,7 @@
 using Microsoft.JSInterop;
 using System.Globalization;
 
-namespace Gosuji.Client.Controllers
+namespace Gosuji.Client.Helpers
 {
     public class LocalizeClient
     {

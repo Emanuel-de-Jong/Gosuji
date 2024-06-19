@@ -1,5 +1,5 @@
 using Gosuji.Client.Components.Account;
-using Gosuji.Client.Controllers;
+using Gosuji.Client.Helpers;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

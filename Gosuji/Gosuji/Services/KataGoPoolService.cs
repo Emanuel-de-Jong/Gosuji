@@ -1,6 +1,7 @@
 ﻿using Gosuji.Client.Data;
-using Gosuji.Controllers;
+using Gosuji.Helpers;
 using Gosuji.Data;
+using Gosuji.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gosuji.Services
@@ -154,7 +155,7 @@ namespace Gosuji.Services
 
         private async Task CashIn(string userId)
         {
-            UserMoveCount? moveCount = await MoveCountManager.Get(dbContextFactory, userId);
+            UserMoveCount? moveCount = await MoveCountHelper.Get(dbContextFactory, userId);
             moveCount.KataGoVisits += instances[userId].TotalVisits;
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();

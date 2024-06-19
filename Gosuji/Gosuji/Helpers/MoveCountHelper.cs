@@ -1,9 +1,9 @@
 ﻿using Gosuji.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gosuji.Controllers
+namespace Gosuji.Helpers
 {
-    public class MoveCountManager
+    public class MoveCountHelper
     {
         public static async Task<UserMoveCount> Get(IDbContextFactory<ApplicationDbContext> dbContextFactory, string userId)
         {

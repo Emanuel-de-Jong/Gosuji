@@ -1,5 +1,5 @@
 ﻿using Gosuji.Client;
-using Gosuji.Controllers;
+using Gosuji.Helpers;
 using Gosuji.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
@@ -50,7 +50,7 @@ namespace Gosuji.Components.Shared.CMS
             weekKataGoVisits = [];
             foreach (User user in users)
             {
-                weekKataGoVisits[user.Id] = await MoveCountManager.GetWeekKataGoVisits(dbContextFactory, user.Id);
+                weekKataGoVisits[user.Id] = await MoveCountHelper.GetWeekKataGoVisits(dbContextFactory, user.Id);
             }
 
             rateLimitViolators = await dbContext.RateLimitViolations

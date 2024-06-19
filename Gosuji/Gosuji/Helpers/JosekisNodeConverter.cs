@@ -1,7 +1,7 @@
 ﻿using Gosuji.Client.Models.Josekis;
 using IGOEnchi.GoGameLogic;
 
-namespace Gosuji.Controllers
+namespace Gosuji.Helpers
 {
     public class JosekisNodeConverter
     {

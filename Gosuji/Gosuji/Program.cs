@@ -1,7 +1,7 @@
 using Gosuji.Client.Services;
 using Gosuji.Components;
 using Gosuji.Components.Account;
-using Gosuji.Controllers;
+using Gosuji.Helpers;
 using Gosuji.Data;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Components.Authorization;

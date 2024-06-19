@@ -4,7 +4,7 @@ using Gosuji.Client.Services;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Gosuji.MVC
+namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

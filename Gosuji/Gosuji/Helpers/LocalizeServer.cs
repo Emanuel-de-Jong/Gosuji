@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.Json;
 
-namespace Gosuji.Controllers
+namespace Gosuji.Helpers
 {
     public class LocationInfo
     {

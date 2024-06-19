@@ -1,4 +1,4 @@
-﻿using Gosuji.Client.Controllers.GameDecoder;
+﻿using Gosuji.Client.Helpers.GameDecoder;
 
 namespace Gosuji.Client.Models
 {
