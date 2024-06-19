@@ -9,6 +9,11 @@ namespace Gosuji.Client.Services
     {
         private static string MAP_GROUP = "/api/KataGoService";
 
+        public bool Validate(object obj)
+        {
+            return false;
+        }
+
         public async Task<KataGoVersion> GetVersion()
         {
             return await http.GetFromJsonAsync<KataGoVersion>($"{MAP_GROUP}/GetVersion");

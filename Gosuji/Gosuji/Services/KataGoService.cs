@@ -1,15 +1,41 @@
-﻿using Gosuji.Client.Data;
+﻿using AngleSharp.Dom;
+using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services;
 using Gosuji.Controllers;
 using Gosuji.Data;
-using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Gosuji.Services
 {
+    class VBoardsize : IParsable<VBoardsize>
+    {
+        [Range(9, 19)]
+        public int Boardsize { get; set; }
+
+        public static VBoardsize Parse(string s, IFormatProvider? provider)
+        {
+            TryParse(s, provider, out VBoardsize result);
+            return result;
+        }
+
+        public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out VBoardsize result)
+        {
+            result = new();
+            if (int.TryParse(s, provider, out int parsedS))
+            {
+                result.Boardsize = parsedS;
+                return true;
+            }
+            return false;
+        }
+    }
+
     public class KataGoService : IServerService, IKataGoService, IDisposable
     {
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
@@ -32,7 +58,15 @@ namespace Gosuji.Services
             group.MapGet("/UserHasInstance/{userId}", (string userId, IKataGoService service) => service.UserHasInstance(userId));
             group.MapGet("/ClearBoard/{userId}", (string userId, IKataGoService service) => service.ClearBoard(userId));
             group.MapGet("/Restart/{userId}", (string userId, IKataGoService service) => service.Restart(userId));
-            group.MapGet("/SetBoardsize/{userId}/{boardsize}", (string userId, int boardsize, IKataGoService service) => service.SetBoardsize(userId, boardsize));
+            group.MapGet("/SetBoardsize/{userId}", async (string userId, [FromQuery] VBoardsize boardsize, IKataGoService service) =>
+            {
+                if (!service.Validate(boardsize))
+                {
+                    return Results.Problem("Invalid boardsize", statusCode: 400);
+                }
+                await service.SetBoardsize(userId, boardsize.Boardsize);
+                return Results.Ok();
+            });
             group.MapGet("/SetRuleset/{userId}/{ruleset}", (string userId, string ruleset, IKataGoService service) => service.SetRuleset(userId, ruleset));
             group.MapGet("/SetKomi/{userId}/{komi}", (string userId, float komi, IKataGoService service) => service.SetKomi(userId, komi));
             group.MapGet("/SetHandicap/{userId}/{handicap}", (string userId, int handicap, IKataGoService service) => service.SetHandicap(userId, handicap));
@@ -43,6 +77,21 @@ namespace Gosuji.Services
             group.MapGet("/Play/{userId}/{color}/{coord}", (string userId, string color, string coord, IKataGoService service) => service.Play(userId, color, coord));
             group.MapPost("/PlayRange/{userId}", (string userId, Moves moves, IKataGoService service) => service.PlayRange(userId, moves));
             group.MapGet("/SGF/{userId}/{shouldWriteFile}", (string userId, bool shouldWriteFile, IKataGoService service) => service.SGF(userId, shouldWriteFile));
+        }
+
+        public bool Validate(object obj)
+        {
+            try
+            {
+                ValidationContext validationContext = new(obj);
+                Validator.ValidateObject(obj, validationContext, validateAllProperties: true);
+            }
+            catch (Exception _)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<KataGoVersion> GetVersion()

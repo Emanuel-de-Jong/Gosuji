@@ -6,6 +6,7 @@ namespace Gosuji.Client.Services
 {
     public interface IKataGoService
     {
+        bool Validate(object obj);
         Task<KataGoVersion> GetVersion();
         Task Return(string userId);
         Task<bool> UserHasInstance(string userId);
