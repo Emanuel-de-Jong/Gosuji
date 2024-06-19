@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.ViewModels;
 using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services
@@ -17,9 +18,9 @@ namespace Gosuji.Client.Services
             return await http.GetFromJsonAsync<Dictionary<string, long>>($"{MAP_GROUP}/GetUserLanguageIds");
         }
 
-        public async Task<Game[]> GetUserGames(string userId)
+        public async Task<VMGame[]> GetUserGames(string userId)
         {
-            return await http.GetFromJsonAsync<Game[]>($"{MAP_GROUP}/GetUserGames/{userId}");
+            return await http.GetFromJsonAsync<VMGame[]>($"{MAP_GROUP}/GetUserGames/{userId}");
         }
 
         public async Task<Game?> GetGame(long gameId)

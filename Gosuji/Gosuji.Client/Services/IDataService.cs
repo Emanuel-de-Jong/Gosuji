@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.ViewModels;
 
 namespace Gosuji.Client.Services
 {
@@ -6,7 +7,7 @@ namespace Gosuji.Client.Services
     {
         Task<Changelog[]> GetChangelogs();
         Task<Dictionary<string, long>> GetUserLanguageIds();
-        Task<Game[]> GetUserGames(string userId);
+        Task<VMGame[]> GetUserGames(string userId);
         Task<Game?> GetGame(long gameId);
         Task<long> PostTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig);
         Task<long> PostGameStat(GameStat gameStat);

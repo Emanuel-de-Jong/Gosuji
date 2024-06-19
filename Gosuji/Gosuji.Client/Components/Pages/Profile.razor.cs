@@ -1,5 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Services;
+using Gosuji.Client.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
@@ -28,22 +29,21 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IDataService dataService { get; set; }
 
-        public Game[] Games { get; set; }
-        public Game[] FinishedGames { get; set; }
+        public VMGame[] Games { get; set; }
+        public VMGame[] FinishedGames { get; set; }
 
         private IJSObjectReference jsRef;
         private bool isGamesFilled = false;
 
         public async Task DownloadSGF(long gameId)
         {
-            foreach (Game game in Games)
+            Game? fullGame = await dataService.GetGame(gameId);
+            if (fullGame == null)
             {
-                if (game.Id == gameId)
-                {
-                    await jsRef.InvokeVoidAsync("profilePage.downloadSGF", game.Name, game.SGF);
-                    break;
-                }
+                return;
             }
+
+            await jsRef.InvokeVoidAsync("profilePage.downloadSGF", fullGame.Name, fullGame.SGF);
         }
 
         protected override async Task OnInitializedAsync()
@@ -107,7 +107,7 @@ namespace Gosuji.Client.Components.Pages
         {
             List<int> rightPercents = [];
             List<int> perfectPercents = [];
-            foreach (Game game in FinishedGames)
+            foreach (VMGame game in FinishedGames)
             {
                 if (game.GameStat == null || game.GameStat.Total < 5)
                 {
@@ -131,7 +131,7 @@ namespace Gosuji.Client.Components.Pages
 
             for (int i = FinishedGames.Length - 1; i >= 0; i--)
             {
-                Game game = FinishedGames[i];
+                VMGame game = FinishedGames[i];
                 if (rightOpenings < 5 && game.OpeningStat != null && game.OpeningStat.Right >= 5)
                 {
                     rightOpenings++;
@@ -195,7 +195,7 @@ namespace Gosuji.Client.Components.Pages
             }
 
             int canCatchUpCount = 0;
-            foreach (Game game in FinishedGames)
+            foreach (VMGame game in FinishedGames)
             {
                 string date = game.CreateDate.ToString("dd-MM-yy");
                 if (days[date] == DaysChartDayTypes.NONE)

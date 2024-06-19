@@ -1,7 +1,7 @@
 ﻿@page "/user/{Name}"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-@using Gosuji.Client.Data
+@using Gosuji.Client.ViewModels
 
 <PageTitle>Profile</PageTitle>
 
@@ -41,7 +41,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (Game game in Games)
+                        @foreach (VMGame game in Games)
                         {
                             <tr>
                                 <td><a href="/trainer/@game.Id">@game.Name</a></td>

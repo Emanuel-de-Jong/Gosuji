@@ -126,6 +126,11 @@ namespace Gosuji.Client.Components.Pages
             }
         }
 
+        private async Task Save()
+        {
+            await jsRef.InvokeVoidAsync("db.save");
+        }
+
 
         [JSInvokable]
         public async Task SaveTrainerSettingConfig(

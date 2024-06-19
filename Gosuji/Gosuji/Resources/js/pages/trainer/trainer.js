@@ -154,7 +154,7 @@ export {
     // Score,
     // TrainerBoard,
 
-    // db,
+    db,
     // katago,
     // scoreChart,
     // settings,

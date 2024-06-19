@@ -1,6 +1,7 @@
 ﻿using Ganss.Xss;
 using Gosuji.Client.Data;
 using Gosuji.Client.Services;
+using Gosuji.Client.ViewModels;
 using Gosuji.Components.Shared.CMS;
 using Gosuji.Controllers;
 using Gosuji.Data;
@@ -59,16 +60,33 @@ namespace Gosuji.Services
             return userLanguageIds;
         }
 
-        public async Task<Game[]> GetUserGames(string userId)
+        public async Task<VMGame[]> GetUserGames(string userId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Game[] games = await dbContext.Games
+            VMGame[] games = await dbContext.Games
                 .Where(g => g.UserId == userId)
                 .Where(g => g.IsDeleted == false)
                 .Include(g => g.GameStat)
                 .Include(g => g.OpeningStat)
                 .Include(g => g.MidgameStat)
                 .Include(g => g.EndgameStat)
+                .Select(g => new VMGame
+                {
+                    Id = g.Id,
+                    GameStat = g.GameStat,
+                    OpeningStat = g.OpeningStat,
+                    MidgameStat = g.MidgameStat,
+                    EndgameStat = g.EndgameStat,
+                    Name = g.Name,
+                    Result = g.Result,
+                    Boardsize = g.Boardsize,
+                    Handicap = g.Handicap,
+                    Color = g.Color,
+                    IsFinished = g.IsFinished,
+                    IsThirdPartySGF = g.IsThirdPartySGF,
+                    CreateDate = g.CreateDate,
+                    ModifyDate = g.ModifyDate
+                })
                 .ToArrayAsync();
             await dbContext.DisposeAsync();
             return games;
@@ -77,13 +95,7 @@ namespace Gosuji.Services
         public async Task<Game?> GetGame(long gameId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Game? game = await dbContext.Games
-                .Where(g => g.Id == gameId)
-                .Include(g => g.Ratios)
-                .Include(g => g.Suggestions)
-                .Include(g => g.MoveTypes)
-                .Include(g => g.ChosenNotPlayedCoords)
-                .FirstOrDefaultAsync();
+            Game? game = await dbContext.Games.Where(g => g.Id == gameId).FirstOrDefaultAsync();
             await dbContext.DisposeAsync();
             return game;
         }
