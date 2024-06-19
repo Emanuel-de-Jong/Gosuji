@@ -2,9 +2,8 @@
 using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services;
 using Gosuji.Controllers;
-using Gosuji.Data;
+using Gosuji.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Gosuji.MVC
 {
@@ -12,43 +11,16 @@ namespace Gosuji.MVC
     [Route("api/[controller]/[action]")]
     public class KataGoController : ControllerBase, IKataGoService
     {
-        private IDbContextFactory<ApplicationDbContext> dbContextFactory;
+        private KataGoPoolService pool;
 
-        private KataGoPool pool;
-        private KataGoVersion? version;
-
-        public KataGoController(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
+        public KataGoController(KataGoPoolService kataGoPoolService)
         {
-            dbContextFactory = _dbContextFactory;
-
-            pool = new(dbContextFactory);
+            pool = kataGoPoolService;
         }
 
         public async Task<KataGoVersion> GetVersion()
         {
-            if (version == null)
-            {
-                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-
-                version = await dbContext.KataGoVersions
-                    .Where(k => k.Model == KataGoVersion.MODEL)
-                    .Where(k => k.Version == KataGoVersion.VERSION)
-                    .Where(k => k.Config == KataGoVersion.GetConfig())
-                .FirstOrDefaultAsync();
-
-                if (version == null)
-                {
-                    version = KataGoVersion.GetCurrent();
-                    await dbContext.AddAsync(version);
-                    await dbContext.SaveChangesAsync();
-                }
-
-                await dbContext.DisposeAsync();
-
-                version.Config = "";
-            }
-
-            return version;
+            return await pool.GetVersion();
         }
 
         [HttpGet("{userId}")]
@@ -123,7 +95,7 @@ namespace Gosuji.MVC
             (await pool.Get(userId)).Play(color, coord);
         }
 
-        [HttpGet("{userId}")]
+        [HttpPost("{userId}")]
         public async Task PlayRange(string userId, Moves moves)
         {
             Sanitizer.Sanitize(moves);

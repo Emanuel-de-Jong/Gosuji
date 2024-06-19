@@ -1,9 +1,11 @@
-﻿using Gosuji.Data;
+﻿using Gosuji.Client.Data;
+using Gosuji.Controllers;
+using Gosuji.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gosuji.Controllers
+namespace Gosuji.Services
 {
-    public class KataGoPool : IDisposable
+    public class KataGoPoolService : IDisposable
     {
         private const int MIN_INSTANCES = 1;
         private const int MAX_INSTANCES = 8;
@@ -15,11 +17,13 @@ namespace Gosuji.Controllers
         private Stack<KataGo> freeInstances = new();
         private Dictionary<string, KataGo> instances = [];
 
+        private KataGoVersion? version;
+
         // TEMP START
         private KataGo? tempInstance;
         // TEMP END
 
-        public KataGoPool(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
+        public KataGoPoolService(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
         {
             dbContextFactory = _dbContextFactory;
 
@@ -29,6 +33,33 @@ namespace Gosuji.Controllers
             cashInTimer.Enabled = true;
 
             ManageFreeInstances();
+        }
+
+        public async Task<KataGoVersion> GetVersion()
+        {
+            if (version == null)
+            {
+                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+                version = await dbContext.KataGoVersions
+                    .Where(k => k.Model == KataGoVersion.MODEL)
+                    .Where(k => k.Version == KataGoVersion.VERSION)
+                    .Where(k => k.Config == KataGoVersion.GetConfig())
+                    .FirstOrDefaultAsync();
+
+                if (version == null)
+                {
+                    version = KataGoVersion.GetCurrent();
+                    await dbContext.AddAsync(version);
+                    await dbContext.SaveChangesAsync();
+                }
+
+                await dbContext.DisposeAsync();
+
+                version.Config = "";
+            }
+
+            return version;
         }
 
         private async Task CashInTimerElapsed()

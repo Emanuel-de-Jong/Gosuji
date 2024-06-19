@@ -88,6 +88,7 @@ namespace Gosuji
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddSingleton<IKataGoService, KataGoService>();
             builder.Services.AddSingleton<IJosekisService, JosekisService>();
+            builder.Services.AddSingleton<KataGoPoolService>();
 
             WebApplication app = builder.Build();
 
