@@ -1,10 +1,15 @@
-﻿namespace Gosuji.Client.Models.Josekis
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Gosuji.Client.Models.Josekis
 {
     public class JosekisNode
     {
+        [Range(0, 20)]
         public int? X { get; set; }
+        [Range(0, 20)]
         public int? Y { get; set; }
         public bool IsBlack { get; set; }
+        [MaxLength(1000)]
         public string? Comment { get; set; }
         public List<JosekisLabel>? Labels { get; set; }
         public List<JosekisMark>? Marks { get; set; }
