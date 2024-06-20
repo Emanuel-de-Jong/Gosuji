@@ -18,7 +18,7 @@ namespace Gosuji.Client.Components.Layout
         [Inject]
         private NavigationManager navigationManager { get; set; }
         [Inject]
-        private IDataService dataService { get; set; }
+        private DataService dataService { get; set; }
         [Inject]
         private IJSRuntime js { get; set; }
 

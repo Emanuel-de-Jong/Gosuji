@@ -27,13 +27,13 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
-        private IDataService dataService { get; set; }
+        private DataService dataService { get; set; }
 
-        public VMGame[] Games { get; set; }
-        public VMGame[] FinishedGames { get; set; }
+        public List<VMGame>? Games { get; set; }
+        public List<VMGame>? FinishedGames { get; set; }
 
         private IJSObjectReference jsRef;
-        private bool isGamesFilled = false;
+        private bool isChartsLoaded = false;
 
         public async Task DownloadSGF(long gameId)
         {
@@ -61,7 +61,23 @@ namespace Gosuji.Client.Components.Pages
                 return;
             }
 
-            Games = await dataService.GetUserGames(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value, 1, 500);
+            Games = [];
+
+            int rangeStart = 1;
+            int rangeStep = 500;
+            List<VMGame>? tempGames;
+            do
+            {
+                tempGames = await dataService.GetUserGames(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value, rangeStart, rangeStart + rangeStep - 1);
+                if (tempGames != null)
+                {
+                    Games.AddRange(tempGames);
+                    rangeStart += rangeStep;
+                }
+            } while (tempGames != null);
+
+            //FinishedGames = Games.FindAll(g => g.IsFinished).ToList();
+            FinishedGames = Games.ToList();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -85,11 +101,9 @@ namespace Gosuji.Client.Components.Pages
                 await jsRef.InvokeVoidAsync("profilePage.init", GameStat.RIGHT_COLOR.ToCSS(), GameStat.PERFECT_COLOR.ToCSS());
             }
 
-            if (!isGamesFilled && Games != null)
+            if (!isChartsLoaded && FinishedGames != null)
             {
-                isGamesFilled = true;
-                //FinishedGames = Games.FindAll(g => g.IsFinished).ToList();
-                FinishedGames = Games;
+                isChartsLoaded = true;
 
                 CreateGameTable();
                 CreatePercentPerGameLineChart();
@@ -129,7 +143,7 @@ namespace Gosuji.Client.Components.Pages
             int perfectOpenings = 0, perfectMidgames = 0, perfectEndgames = 0;
             int perfectOpening = 0, perfectMidgame = 0, perfectEndgame = 0;
 
-            for (int i = FinishedGames.Length - 1; i >= 0; i--)
+            for (int i = FinishedGames.Count - 1; i >= 0; i--)
             {
                 VMGame game = FinishedGames[i];
                 if (rightOpenings < 5 && game.OpeningStat != null && game.OpeningStat.Right >= 5)
@@ -182,7 +196,7 @@ namespace Gosuji.Client.Components.Pages
         {
             Dictionary<string, DaysChartDayTypes> days = [];
 
-            if (FinishedGames.Length == 0)
+            if (FinishedGames.Count == 0)
             {
                 await jsRef.InvokeVoidAsync("profilePage.createDaysChart", days);
                 return;

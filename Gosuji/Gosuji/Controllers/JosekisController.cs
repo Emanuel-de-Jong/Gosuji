@@ -12,7 +12,7 @@ namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class JosekisController : IJosekisService
+    public class JosekisController : ControllerBase, IJosekisService
     {
         private SanitizeService sanitizeService;
 
@@ -25,7 +25,7 @@ namespace Gosuji.Controllers
 
             if (baseGame == null)
             {
-                using FileStream fileStream = File.OpenRead(@"Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf");
+                using FileStream fileStream = System.IO.File.OpenRead(@"Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf");
                 SGFTree gameTree = SgfReader.LoadFromStream(fileStream);
                 baseGame = SgfCompiler.Compile(gameTree);
             }

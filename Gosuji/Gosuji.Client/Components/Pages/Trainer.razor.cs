@@ -21,7 +21,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
-        private IDataService dataService { get; set; }
+        private DataService dataService { get; set; }
 
         private IJSObjectReference jsRef;
         private string? userId;

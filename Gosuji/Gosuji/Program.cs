@@ -87,7 +87,7 @@ namespace Gosuji
             // Custom services
             builder.Services.AddSingleton<SanitizeService>();
             builder.Services.AddSingleton<KataGoPoolService>();
-            builder.Services.AddSingleton<IDataService, DataService>();
+            builder.Services.AddSingleton<DataService, DataService>();
             builder.Services.AddSingleton<IKataGoService, KataGoService>();
             builder.Services.AddSingleton<IJosekisService, JosekisService>();
 

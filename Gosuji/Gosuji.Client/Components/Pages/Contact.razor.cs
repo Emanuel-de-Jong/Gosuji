@@ -13,7 +13,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
-        private IDataService dataService { get; set; }
+        private DataService dataService { get; set; }
 
         [SupplyParameterFromForm]
         private InputModel input { get; set; } = new();

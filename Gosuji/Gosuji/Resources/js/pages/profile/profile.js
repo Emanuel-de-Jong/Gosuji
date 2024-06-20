@@ -38,7 +38,9 @@ profilePage.themeChangedListener = function (e) {
 };
 
 profilePage.createGameTable = function () {
-    profilePage.gameTable = new DataTable("#gameTable", {});
+    profilePage.gameTable = new DataTable("#gameTable", {
+        order: [[12, "desc"]]
+    });
 };
 
 profilePage.downloadSGF = function (name, sgf) {

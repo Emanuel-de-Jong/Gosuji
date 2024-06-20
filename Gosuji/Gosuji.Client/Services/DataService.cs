@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services
 {
-    public class DataService(HttpClient http) : IDataService
+    public class DataService(HttpClient http)
     {
         private static string MAP_GROUP = "/api/Data";
 
@@ -13,9 +13,18 @@ namespace Gosuji.Client.Services
             return await http.GetFromJsonAsync<Changelog[]>($"{MAP_GROUP}/GetChangelogs");
         }
 
-        public async Task<VMGame[]> GetUserGames(string userId, int start, int end)
+        public async Task<List<VMGame>?> GetUserGames(string userId, int start, int end)
         {
-            return await http.GetFromJsonAsync<VMGame[]>($"{MAP_GROUP}/GetUserGames/{userId}/{start}/{end}");
+            HttpResponseMessage response = await http.GetAsync($"{MAP_GROUP}/GetUserGames/{userId}/{start}/{end}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<VMGame>>();
+            }
+            else
+            {
+                Console.WriteLine($"DataService.GetUserGames: {response.StatusCode} {response.ReasonPhrase}");
+                return null;
+            }
         }
 
         public async Task<Game?> GetGame(long gameId)
