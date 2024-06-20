@@ -22,7 +22,6 @@ namespace Gosuji.Client.Components.Layout
         [Inject]
         private IJSRuntime js { get; set; }
 
-        private ClaimsPrincipal claimsPrincipal;
         private string currentLanguageSrc;
         private SettingConfig? settingConfig;
         private Dictionary<string, Language>? languages;
@@ -31,7 +30,7 @@ namespace Gosuji.Client.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
-            claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
                 settingConfig = await dataService.GetSettingConfig(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);

@@ -17,9 +17,6 @@ namespace Gosuji.Client.Components.Pages
 
     public partial class Profile : ComponentBase
     {
-        [Parameter]
-        public string? Name { get; set; }
-
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
@@ -29,6 +26,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private DataService dataService { get; set; }
 
+        public string? name;
         public List<VMGame>? Games { get; set; }
         public List<VMGame>? FinishedGames { get; set; }
 
@@ -55,11 +53,7 @@ namespace Gosuji.Client.Components.Pages
                 return;
             }
 
-            if (claimsPrincipal.Identity.Name != Name)
-            {
-                navigationManager.NavigateTo("user/" + claimsPrincipal.Identity.Name);
-                return;
-            }
+            name = claimsPrincipal.Identity.Name;
 
             Games = [];
 

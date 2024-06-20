@@ -1,6 +1,6 @@
 ﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-<header class="mb-5 border-bottom bg-light-subtle">
+<header id="mainNavMenu" class="mb-5 border-bottom bg-light-subtle">
     <div class="container">
         <div class="d-flex justify-content-between flex-wrap py-2">
             <div class="flexItem">
@@ -9,30 +9,30 @@
 
             <div class="flexItem d-flex align-items-center justify-content-start justify-content-md-end flex-wrap">
                 <div class="px-2">
-                    <a href="/" class="link-body-emphasis nav-link">Home</a>
+                    <NavLink Match="NavLinkMatch.All" href="/" class="link-body-emphasis nav-link">Home</NavLink>
                 </div>
                 <div class="px-2">
-                    <a href="learn" class="link-body-emphasis nav-link">Learn</a>
+                    <NavLink href="learn" class="link-body-emphasis nav-link">Learn</NavLink>
                 </div>
                 <div class="px-2">
-                    <a href="subscription" class="link-body-emphasis nav-link">Subscriptions</a>
+                    <NavLink href="subscription" class="link-body-emphasis nav-link">Subscriptions</NavLink>
                 </div>
                 <div class="px-2">
-                    <a href="contact" class="link-body-emphasis nav-link">Contact</a>
+                    <NavLink href="contact" class="link-body-emphasis nav-link">Contact</NavLink>
                 </div>
 
                 <AuthorizeView>
                     <Authorized>
                         <div class="px-2">
-                            <a href="user/@claimsPrincipal.Identity?.Name" class="link-body-emphasis nav-link">Profile</a>
+                            <NavLink href="profile" class="link-body-emphasis nav-link">Profile</NavLink>
                         </div>
                     </Authorized>
                     <NotAuthorized>
                         <div class="px-2">
-                            <a href="Account/Register" class="link-body-emphasis nav-link">Register</a>
+                            <NavLink href="Account/Register" class="link-body-emphasis nav-link">Register</NavLink>
                         </div>
                         <div class="px-2">
-                            <a href="Account/Login" class="link-body-emphasis nav-link">Login</a>
+                            <NavLink href="Account/Login" class="link-body-emphasis nav-link">Login</NavLink>
                         </div>
                     </NotAuthorized>
                 </AuthorizeView>

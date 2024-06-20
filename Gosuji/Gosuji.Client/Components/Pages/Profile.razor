@@ -1,4 +1,4 @@
-﻿@page "/user/{Name}"
+﻿@page "/profile"
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 @using Gosuji.Client.ViewModels
@@ -6,7 +6,7 @@
 <PageTitle>Profile</PageTitle>
 
 <div id="profilePage">
-    <h1 class="pageTitle">@Name</h1>
+    <h1 class="pageTitle">@name</h1>
 
     <a class="btn btn-primary" href="Account/Manage">Settings</a>
     <a class="btn btn-primary" href="logout">Logout</a>

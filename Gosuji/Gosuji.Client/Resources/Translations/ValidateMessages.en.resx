@@ -123,6 +123,9 @@
   <data name="MinLengthError" xml:space="preserve">
     <value>This field must have at least {1} characters.</value>
   </data>
+  <data name="PasswordCharError" xml:space="preserve">
+    <value>The password should have at least one number and one special character.</value>
+  </data>
   <data name="RequiredError" xml:space="preserve">
     <value>This field is required.</value>
   </data>

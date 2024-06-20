@@ -1,3 +1,8 @@
+#mainNavMenu .active {
+    font-weight: 600;
+}
+
+
 .content {
     min-height: 100vh;
 }

@@ -123,6 +123,9 @@
   <data name="MinLengthError" xml:space="preserve">
     <value />
   </data>
+  <data name="PasswordCharError" xml:space="preserve">
+    <value />
+  </data>
   <data name="RequiredError" xml:space="preserve">
     <value />
   </data>
