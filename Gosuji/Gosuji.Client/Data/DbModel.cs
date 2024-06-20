@@ -1,7 +1,10 @@
-﻿namespace Gosuji.Client.Data
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Gosuji.Client.Data
 {
     public class DbModel : IDbModel
     {
+        [Required]
         public DateTimeOffset CreateDate { get; set; } = DateTimeOffset.Now;
         public DateTimeOffset? ModifyDate { get; set; }
 

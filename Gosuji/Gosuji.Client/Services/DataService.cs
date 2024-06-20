@@ -40,7 +40,7 @@ namespace Gosuji.Client.Services
 
         public async Task PutGameStat(GameStat gameStat)
         {
-            await http.PostAsJsonAsync($"{MAP_GROUP}/PutGameStat", gameStat);
+            await http.PutAsJsonAsync($"{MAP_GROUP}/PutGameStat", gameStat);
         }
 
         public async Task<long> PostGame(Game game)
@@ -50,7 +50,7 @@ namespace Gosuji.Client.Services
 
         public async Task PutGame(Game game)
         {
-            await http.PostAsJsonAsync($"{MAP_GROUP}/PutGame", game);
+            await http.PutAsJsonAsync($"{MAP_GROUP}/PutGame", game);
         }
 
         public async Task PostFeedback(Feedback feedback)
@@ -65,7 +65,7 @@ namespace Gosuji.Client.Services
 
         public async Task PutSettingConfig(SettingConfig settingConfig)
         {
-            await http.PostAsJsonAsync($"{MAP_GROUP}/PutSettingConfig", settingConfig);
+            await http.PutAsJsonAsync($"{MAP_GROUP}/PutSettingConfig", settingConfig);
         }
 
         public async Task<Dictionary<string, Language>> GetLanguages()
