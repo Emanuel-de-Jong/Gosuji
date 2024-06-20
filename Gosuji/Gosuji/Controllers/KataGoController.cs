@@ -9,7 +9,7 @@ namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class KataGoController : ControllerBase, IKataGoService
+    public class KataGoController : ControllerBase
     {
         private SanitizeService sanitizeService;
         private KataGoPoolService pool;

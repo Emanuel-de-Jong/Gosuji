@@ -24,16 +24,16 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet]
-        public async Task<Changelog[]> GetChangelogs()
+        public async Task<ActionResult<Changelog[]>> GetChangelogs()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             Changelog[] changelogs = await dbContext.Changelogs.ToArrayAsync();
             await dbContext.DisposeAsync();
-            return changelogs;
+            return Ok(changelogs);
         }
 
         [HttpGet("{userId}/{start}/{end}")]
-        public async Task<ActionResult<List<VMGame>?>> GetUserGames(string userId,
+        public async Task<ActionResult<List<VMGame>>> GetUserGames(string userId,
             [Range(1, 100_000)] int start = 1,
             [Range(1, 100_000)] int end = 500)
         {
@@ -73,25 +73,20 @@ namespace Gosuji.Controllers
                 .ToListAsync();
             await dbContext.DisposeAsync();
 
-            if (games.Count == 0)
-            {
-                return NotFound("No games found");
-            }
-
             return Ok(games);
         }
 
         [HttpGet("{gameId}")]
-        public async Task<Game?> GetGame(long gameId)
+        public async Task<ActionResult<Game>> GetGame(long gameId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             Game? game = await dbContext.Games.Where(g => g.Id == gameId).FirstOrDefaultAsync();
             await dbContext.DisposeAsync();
-            return game;
+            return Ok(game);
         }
 
         [HttpPost]
-        public async Task<long> PostTrainerSettingConfig(TrainerSettingConfig config)
+        public async Task<ActionResult<long>> PostTrainerSettingConfig(TrainerSettingConfig config)
         {
             sanitizeService.Sanitize(config);
 
@@ -118,11 +113,11 @@ namespace Gosuji.Controllers
 
             await dbContext.DisposeAsync();
 
-            return config.Id;
+            return Ok(config.Id);
         }
 
         [HttpPost]
-        public async Task<long> PostGameStat(GameStat gameStat)
+        public async Task<ActionResult<long>> PostGameStat(GameStat gameStat)
         {
             sanitizeService.Sanitize(gameStat);
 
@@ -130,11 +125,11 @@ namespace Gosuji.Controllers
             await dbContext.GameStats.AddAsync(gameStat);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
-            return gameStat.Id;
+            return Ok(gameStat.Id);
         }
 
         [HttpPut]
-        public async Task PutGameStat(GameStat gameStat)
+        public async Task<ActionResult> PutGameStat(GameStat gameStat)
         {
             sanitizeService.Sanitize(gameStat);
 
@@ -142,10 +137,11 @@ namespace Gosuji.Controllers
             dbContext.GameStats.Update(gameStat);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
+            return Ok();
         }
 
         [HttpPost]
-        public async Task<long> PostGame(Game game)
+        public async Task<ActionResult<long>> PostGame(Game game)
         {
             sanitizeService.Sanitize(game);
 
@@ -153,11 +149,11 @@ namespace Gosuji.Controllers
             await dbContext.Games.AddAsync(game);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
-            return game.Id;
+            return Ok(game.Id);
         }
 
         [HttpPut]
-        public async Task PutGame(Game game)
+        public async Task<ActionResult> PutGame(Game game)
         {
             sanitizeService.Sanitize(game);
 
@@ -165,10 +161,11 @@ namespace Gosuji.Controllers
             dbContext.Games.Update(game);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
+            return Ok();
         }
 
         [HttpPost]
-        public async Task PostFeedback(Feedback feedback)
+        public async Task<ActionResult> PostFeedback(Feedback feedback)
         {
             sanitizeService.Sanitize(feedback);
 
@@ -176,10 +173,11 @@ namespace Gosuji.Controllers
             await dbContext.Feedbacks.AddAsync(feedback);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
+            return Ok();
         }
 
         [HttpGet("{userId}")]
-        public async Task<SettingConfig> GetSettingConfig(string userId)
+        public async Task<ActionResult<SettingConfig>> GetSettingConfig(string userId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             SettingConfig settingConfig = await dbContext.Users
@@ -187,11 +185,11 @@ namespace Gosuji.Controllers
                 .Select(u => u.SettingConfig)
                 .FirstOrDefaultAsync();
             await dbContext.DisposeAsync();
-            return settingConfig;
+            return Ok(settingConfig);
         }
 
         [HttpPut]
-        public async Task PutSettingConfig(SettingConfig settingConfig)
+        public async Task<ActionResult> PutSettingConfig(SettingConfig settingConfig)
         {
             sanitizeService.Sanitize(settingConfig);
 
@@ -199,15 +197,16 @@ namespace Gosuji.Controllers
             dbContext.SettingConfigs.Update(settingConfig);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
+            return Ok();
         }
 
         [HttpGet]
-        public async Task<Dictionary<string, Language>> GetLanguages()
+        public async Task<ActionResult<Dictionary<string, Language>>> GetLanguages()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             Dictionary<string, Language> languages = await dbContext.Languages.ToDictionaryAsync(l => l.Short);
             await dbContext.DisposeAsync();
-            return languages;
+            return Ok(languages);
         }
     }
 }

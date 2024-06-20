@@ -2,20 +2,23 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-[Route("[controller]/[action]")]
-public class CultureController : Controller
+namespace Gosuji.Controllers
 {
-    public IActionResult Set([Required, MinLength(1), MaxLength(100)] string culture,
-        [Required, MinLength(1), MaxLength(100)] string redirectUri)
+    [Route("[controller]/[action]")]
+    public class CultureController : Controller
     {
-        if (culture != null)
+        public IActionResult Set([Required, MinLength(1), MaxLength(100)] string culture,
+            [Required, MinLength(1), MaxLength(100)] string redirectUri)
         {
-            HttpContext.Response.Cookies.Append(
-                CookieRequestCultureProvider.DefaultCookieName,
-                CookieRequestCultureProvider.MakeCookieValue(
-                    new RequestCulture(culture, culture)));
-        }
+            if (culture != null)
+            {
+                HttpContext.Response.Cookies.Append(
+                    CookieRequestCultureProvider.DefaultCookieName,
+                    CookieRequestCultureProvider.MakeCookieValue(
+                        new RequestCulture(culture, culture)));
+            }
 
-        return LocalRedirect(redirectUri);
+            return LocalRedirect(redirectUri);
+        }
     }
 }

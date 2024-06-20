@@ -17,7 +17,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
-        private IKataGoService kataGoService { get; set; }
+        private KataGoService kataGoService { get; set; }
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
@@ -28,7 +28,7 @@ namespace Gosuji.Client.Components.Pages
         private string? userName;
 
         private DotNetObjectReference<Trainer>? trainerRef;
-        private DotNetObjectReference<IKataGoService>? kataGoServiceRef;
+        private DotNetObjectReference<KataGoService>? kataGoServiceRef;
 
         private Game? game;
         private TrainerSettingConfig? trainerSettingConfig;
@@ -71,7 +71,7 @@ namespace Gosuji.Client.Components.Pages
                     return;
                 }
 
-                if (await kataGoService.UserHasInstance(userId))
+                if ((await kataGoService.UserHasInstance(userId)).Value)
                 {
                     await js.InvokeVoidAsync("alert", "You already use this page somewhere else!");
                     return;
@@ -226,7 +226,13 @@ namespace Gosuji.Client.Components.Pages
                 ShowOpponentOptions = showOpponentOptions,
             };
 
-            newConfig.Id = await dataService.PostTrainerSettingConfig(newConfig);
+            long? newId = await dataService.PostTrainerSettingConfig(newConfig);
+            if (newId == null)
+            {
+                return;
+            }
+
+            newConfig.Id = newId.Value;
             trainerSettingConfig = newConfig;
         }
 
@@ -287,7 +293,13 @@ namespace Gosuji.Client.Components.Pages
 
             if (gameStat == null)
             {
-                newGameStat.Id = await dataService.PostGameStat(newGameStat);
+                long? newGameStatId = await dataService.PostGameStat(newGameStat);
+                if (newGameStatId == null)
+                {
+                    return null;
+                }
+
+                newGameStat.Id = newGameStatId.Value;
             }
             else
             {
@@ -360,7 +372,13 @@ namespace Gosuji.Client.Components.Pages
 
             if (game == null)
             {
-                newGame.Id = await dataService.PostGame(newGame);
+                long? newGameId = await dataService.PostGame(newGame);
+                if (newGameId == null)
+                {
+                    return;
+                }
+
+                newGame.Id = newGameId.Value;
             }
             else
             {

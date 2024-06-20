@@ -12,7 +12,7 @@ namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    public class JosekisController : ControllerBase, IJosekisService
+    public class JosekisController : ControllerBase
     {
         private SanitizeService sanitizeService;
 

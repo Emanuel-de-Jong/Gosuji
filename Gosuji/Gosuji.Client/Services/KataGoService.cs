@@ -5,11 +5,11 @@ using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services
 {
-    public class KataGoService(HttpClient http) : IKataGoService
+    public class KataGoService(HttpClient http)
     {
         private static string MAP_GROUP = "/api/KataGo";
 
-        public async Task<KataGoVersion> GetVersion()
+        public async Task<KataGoVersion?> GetVersion()
         {
             return await http.GetFromJsonAsync<KataGoVersion>($"{MAP_GROUP}/GetVersion");
         }
@@ -19,7 +19,7 @@ namespace Gosuji.Client.Services
             await http.GetAsync($"{MAP_GROUP}/Return/{userId}");
         }
 
-        public async Task<bool> UserHasInstance(string userId)
+        public async Task<bool?> UserHasInstance(string userId)
         {
             return bool.Parse(await (await http.GetAsync($"{MAP_GROUP}/UserHasInstance/{userId}")).Content.ReadAsStringAsync());
         }
@@ -61,13 +61,13 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<MoveSuggestion> AnalyzeMove(string userId, string color, string coord)
+        public async Task<MoveSuggestion?> AnalyzeMove(string userId, string color, string coord)
         {
             return await http.GetFromJsonAsync<MoveSuggestion>($"{MAP_GROUP}/AnalyzeMove/{userId}/{color}/{coord}");
         }
 
         [JSInvokable]
-        public async Task<List<MoveSuggestion>> Analyze(string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
+        public async Task<List<MoveSuggestion>?> Analyze(string userId, string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
         {
             return await http.GetFromJsonAsync<List<MoveSuggestion>>($"{MAP_GROUP}/Analyze/{userId}/{color}" +
                 $"?maxVisits={maxVisits}" +

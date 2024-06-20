@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers;
 using Gosuji.Client.ViewModels;
 using System.Net.Http.Json;
 
@@ -8,23 +9,15 @@ namespace Gosuji.Client.Services
     {
         private static string MAP_GROUP = "/api/Data";
 
-        public async Task<Changelog[]> GetChangelogs()
+        public async Task<Changelog[]?> GetChangelogs()
         {
             return await http.GetFromJsonAsync<Changelog[]>($"{MAP_GROUP}/GetChangelogs");
         }
 
         public async Task<List<VMGame>?> GetUserGames(string userId, int start, int end)
         {
-            HttpResponseMessage response = await http.GetAsync($"{MAP_GROUP}/GetUserGames/{userId}/{start}/{end}");
-            if (response.IsSuccessStatusCode)
-            {
-                return await response.Content.ReadFromJsonAsync<List<VMGame>>();
-            }
-            else
-            {
-                Console.WriteLine($"DataService.GetUserGames: {response.StatusCode} {response.ReasonPhrase}");
-                return null;
-            }
+            return await HttpResponseHandler.Get<List<VMGame>>(http,
+                $"{MAP_GROUP}/GetUserGames/{userId}/{start}/{end}");
         }
 
         public async Task<Game?> GetGame(long gameId)
@@ -32,12 +25,12 @@ namespace Gosuji.Client.Services
             return await http.GetFromJsonAsync<Game?>($"{MAP_GROUP}/GetGame/{gameId}");
         }
 
-        public async Task<long> PostTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
+        public async Task<long?> PostTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
         {
             return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostTrainerSettingConfig", trainerSettingConfig)).Content.ReadAsStringAsync());
         }
 
-        public async Task<long> PostGameStat(GameStat gameStat)
+        public async Task<long?> PostGameStat(GameStat gameStat)
         {
             return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostGameStat", gameStat)).Content.ReadAsStringAsync());
         }
@@ -47,7 +40,7 @@ namespace Gosuji.Client.Services
             await http.PutAsJsonAsync($"{MAP_GROUP}/PutGameStat", gameStat);
         }
 
-        public async Task<long> PostGame(Game game)
+        public async Task<long?> PostGame(Game game)
         {
             return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostGame", game)).Content.ReadAsStringAsync());
         }
@@ -62,7 +55,7 @@ namespace Gosuji.Client.Services
             await http.PostAsJsonAsync($"{MAP_GROUP}/PostFeedback", feedback);
         }
 
-        public async Task<SettingConfig> GetSettingConfig(string userId)
+        public async Task<SettingConfig?> GetSettingConfig(string userId)
         {
             return await http.GetFromJsonAsync<SettingConfig>($"{MAP_GROUP}/GetSettingConfig/{userId}");
         }
@@ -72,7 +65,7 @@ namespace Gosuji.Client.Services
             await http.PutAsJsonAsync($"{MAP_GROUP}/PutSettingConfig", settingConfig);
         }
 
-        public async Task<Dictionary<string, Language>> GetLanguages()
+        public async Task<Dictionary<string, Language>?> GetLanguages()
         {
             return await http.GetFromJsonAsync<Dictionary<string, Language>>($"{MAP_GROUP}/GetLanguages");
         }

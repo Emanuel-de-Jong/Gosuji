@@ -69,12 +69,17 @@ namespace Gosuji.Client.Components.Pages
             do
             {
                 tempGames = await dataService.GetUserGames(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value, rangeStart, rangeStart + rangeStep - 1);
-                if (tempGames != null)
+                if (tempGames == null)
+                {
+                    break;
+                }
+
+                if (tempGames.Count != 0)
                 {
                     Games.AddRange(tempGames);
                     rangeStart += rangeStep;
                 }
-            } while (tempGames != null);
+            } while (tempGames.Count != 0);
 
             //FinishedGames = Games.FindAll(g => g.IsFinished).ToList();
             FinishedGames = Games.ToList();

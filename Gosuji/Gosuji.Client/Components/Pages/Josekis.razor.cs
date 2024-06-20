@@ -15,7 +15,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
-        private IJosekisService josekisService { get; set; }
+        private JosekisService josekisService { get; set; }
 
         private IJSObjectReference jsRef;
         private int sessionId;
@@ -151,7 +151,7 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task LastBranch()
         {
-            int returnCount = await josekisService.ToLastBranch(sessionId);
+            int returnCount = (await josekisService.ToLastBranch(sessionId)).Value;
             await jsRef.InvokeVoidAsync($"{EDITOR}.prevNode", returnCount);
 
             await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
@@ -169,7 +169,7 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task Next(int x, int y)
         {
-            if (!await josekisService.ToChild(sessionId, new JosekisNode(x, y)))
+            if (!(await josekisService.ToChild(sessionId, new JosekisNode(x, y))).Value)
             {
                 return;
             }

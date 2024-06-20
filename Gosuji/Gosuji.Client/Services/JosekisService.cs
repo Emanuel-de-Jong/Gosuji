@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services
 {
-    public class JosekisService(HttpClient http) : IJosekisService
+    public class JosekisService(HttpClient http)
     {
         private static string MAP_GROUP = "/api/Josekis";
 
@@ -17,7 +17,7 @@ namespace Gosuji.Client.Services
             await http.GetAsync($"{MAP_GROUP}/RemoveSession/{sessionId}");
         }
 
-        public async Task<JosekisNode> Current(int sessionId)
+        public async Task<JosekisNode?> Current(int sessionId)
         {
             return await http.GetFromJsonAsync<JosekisNode>($"{MAP_GROUP}/Current/{sessionId}");
         }
@@ -27,7 +27,7 @@ namespace Gosuji.Client.Services
             await http.GetAsync($"{MAP_GROUP}/AddSession/{sessionId}");
         }
 
-        public async Task<int> ToLastBranch(int sessionId)
+        public async Task<int?> ToLastBranch(int sessionId)
         {
             return int.Parse(await (await http.GetAsync($"{MAP_GROUP}/ToLastBranch/{sessionId}")).Content.ReadAsStringAsync());
         }
@@ -37,7 +37,7 @@ namespace Gosuji.Client.Services
             await http.GetAsync($"{MAP_GROUP}/ToFirst/{sessionId}");
         }
 
-        public async Task<bool> ToChild(int sessionId, JosekisNode childToGo)
+        public async Task<bool?> ToChild(int sessionId, JosekisNode childToGo)
         {
             return bool.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/ToChild/{sessionId}", childToGo)).Content.ReadAsStringAsync());
         }
