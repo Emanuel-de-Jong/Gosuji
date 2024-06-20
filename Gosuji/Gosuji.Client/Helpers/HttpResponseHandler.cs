@@ -2,16 +2,34 @@
 
 namespace Gosuji.Client.Helpers
 {
+
     public class HttpResponseHandler
     {
+        private class NoValue() { }
+
+        public static async Task<bool> Get(HttpClient http, string uri)
+        {
+            return (await Get<NoValue>(http, uri)) != null ? true : false;
+        }
+
         public static async Task<T?> Get<T>(HttpClient http, string uri)
         {
             return await TryCatch<T>(http.GetAsync(uri), uri);
         }
 
+        public static async Task<bool> Post(HttpClient http, string uri, object obj)
+        {
+            return (await Post<NoValue>(http, uri, obj)) != null ? true : false;
+        }
+
         public static async Task<T?> Post<T>(HttpClient http, string uri, object obj)
         {
             return await TryCatch<T>(http.PostAsJsonAsync(uri, obj), uri);
+        }
+
+        public static async Task<bool> Put(HttpClient http, string uri, object obj)
+        {
+            return (await Put<NoValue>(http, uri, obj)) != null ? true : false;
         }
 
         public static async Task<T?> Put<T>(HttpClient http, string uri, object obj)
@@ -41,6 +59,10 @@ namespace Gosuji.Client.Helpers
                 return default;
             }
 
+            if (typeof(T) == typeof(NoValue))
+            {
+                return (T)(object)new NoValue();
+            }
             if (typeof(T) == typeof(string))
             {
                 return (T)(object)await response.Content.ReadAsStringAsync();

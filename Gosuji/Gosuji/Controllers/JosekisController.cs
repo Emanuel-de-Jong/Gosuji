@@ -14,6 +14,8 @@ namespace Gosuji.Controllers
     [Route("api/[controller]/[action]")]
     public class JosekisController : ControllerBase
     {
+        private static readonly string SESSION_UNKNOWN_ERR = "SessionId unknown.";
+
         private SanitizeService sanitizeService;
 
         private static Dictionary<int, GoNode> josekisGoNodes = [];
@@ -32,52 +34,56 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{sessionId}")]
-        public async Task AddSession(int sessionId)
+        public async Task<ActionResult> AddSession(int sessionId)
         {
             josekisGoNodes[sessionId] = baseGame.RootNode;
+            return Ok();
         }
 
         [HttpGet("{sessionId}")]
-        public async Task RemoveSession(int sessionId)
+        public async Task<ActionResult> RemoveSession(int sessionId)
         {
             josekisGoNodes.Remove(sessionId);
+            return Ok();
         }
 
         [HttpGet("{sessionId}")]
-        public async Task<JosekisNode> Current(int sessionId)
+        public async Task<ActionResult<JosekisNode>> Current(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
-                return null;
+                return BadRequest(SESSION_UNKNOWN_ERR);
             }
 
             GoNode node = josekisGoNodes[sessionId];
-            return node is GoMoveNode moveNode ? JosekisNodeConverter.Convert(moveNode) : JosekisNodeConverter.Convert(node);
+            JosekisNode result = node is GoMoveNode moveNode ? JosekisNodeConverter.Convert(moveNode) : JosekisNodeConverter.Convert(node);
+            return Ok(result);
         }
 
         [HttpGet("{sessionId}")]
-        public async Task ToParent(int sessionId)
+        public async Task<ActionResult> ToParent(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
-                return;
+                return BadRequest(SESSION_UNKNOWN_ERR);
             }
 
             GoNode node = josekisGoNodes[sessionId];
             if (node.ParentNode == null)
             {
-                return;
+                return Ok();
             }
 
             josekisGoNodes[sessionId] = node.ParentNode;
+            return Ok();
         }
 
         [HttpGet("{sessionId}")]
-        public async Task<int> ToLastBranch(int sessionId)
+        public async Task<ActionResult<int>> ToLastBranch(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
-                return 0;
+                return BadRequest(SESSION_UNKNOWN_ERR);
             }
 
             GoNode node = josekisGoNodes[sessionId];
@@ -98,26 +104,27 @@ namespace Gosuji.Controllers
 
             josekisGoNodes[sessionId] = node;
 
-            return returnCount;
+            return Ok(returnCount);
         }
 
         [HttpGet("{sessionId}")]
-        public async Task ToFirst(int sessionId)
+        public async Task<ActionResult> ToFirst(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
-                return;
+                return BadRequest(SESSION_UNKNOWN_ERR);
             }
 
             josekisGoNodes[sessionId] = baseGame.RootNode;
+            return Ok();
         }
 
         [HttpPost("{sessionId}")]
-        public async Task<bool> ToChild(int sessionId, JosekisNode childToGo)
+        public async Task<ActionResult<bool>> ToChild(int sessionId, JosekisNode childToGo)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
-                return false;
+                return BadRequest(SESSION_UNKNOWN_ERR);
             }
 
             sanitizeService.Sanitize(childToGo);
@@ -129,12 +136,12 @@ namespace Gosuji.Controllers
                     if (childToGo.X == childMove.Stone.X && childToGo.Y == childMove.Stone.Y)
                     {
                         josekisGoNodes[sessionId] = childMove;
-                        return true;
+                        return Ok(true);
                     }
                 }
             }
 
-            return false;
+            return Ok(false);
         }
     }
 }

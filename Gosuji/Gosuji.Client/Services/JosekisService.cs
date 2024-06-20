@@ -1,5 +1,5 @@
-﻿using Gosuji.Client.Models.Josekis;
-using System.Net.Http.Json;
+﻿using Gosuji.Client.Helpers;
+using Gosuji.Client.Models.Josekis;
 
 namespace Gosuji.Client.Services
 {
@@ -7,39 +7,46 @@ namespace Gosuji.Client.Services
     {
         private static string MAP_GROUP = "/api/Josekis";
 
-        public async Task AddSession(int sessionId)
+        public async Task<bool> AddSession(int sessionId)
         {
-            await http.GetAsync($"{MAP_GROUP}/AddSession/{sessionId}");
+            return await HttpResponseHandler.Get(http,
+                $"{MAP_GROUP}/AddSession/{sessionId}");
         }
 
-        public async Task RemoveSession(int sessionId)
+        public async Task<bool> RemoveSession(int sessionId)
         {
-            await http.GetAsync($"{MAP_GROUP}/RemoveSession/{sessionId}");
+            return await HttpResponseHandler.Get(http,
+                $"{MAP_GROUP}/RemoveSession/{sessionId}");
         }
 
         public async Task<JosekisNode?> Current(int sessionId)
         {
-            return await http.GetFromJsonAsync<JosekisNode>($"{MAP_GROUP}/Current/{sessionId}");
+            return await HttpResponseHandler.Get<JosekisNode>(http,
+                $"{MAP_GROUP}/Current/{sessionId}");
         }
 
-        public async Task ToParent(int sessionId)
+        public async Task<bool> ToParent(int sessionId)
         {
-            await http.GetAsync($"{MAP_GROUP}/AddSession/{sessionId}");
+            return await HttpResponseHandler.Get(http,
+                $"{MAP_GROUP}/ToParent/{sessionId}");
         }
 
         public async Task<int?> ToLastBranch(int sessionId)
         {
-            return int.Parse(await (await http.GetAsync($"{MAP_GROUP}/ToLastBranch/{sessionId}")).Content.ReadAsStringAsync());
+            return await HttpResponseHandler.Get<int>(http,
+                $"{MAP_GROUP}/ToLastBranch/{sessionId}");
         }
 
-        public async Task ToFirst(int sessionId)
+        public async Task<bool> ToFirst(int sessionId)
         {
-            await http.GetAsync($"{MAP_GROUP}/ToFirst/{sessionId}");
+            return await HttpResponseHandler.Get(http,
+                $"{MAP_GROUP}/ToFirst/{sessionId}");
         }
 
         public async Task<bool?> ToChild(int sessionId, JosekisNode childToGo)
         {
-            return bool.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/ToChild/{sessionId}", childToGo)).Content.ReadAsStringAsync());
+            return await HttpResponseHandler.Post<bool>(http,
+                $"{MAP_GROUP}/ToChild/{sessionId}", childToGo);
         }
     }
 }

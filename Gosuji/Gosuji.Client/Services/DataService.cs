@@ -1,7 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Helpers;
 using Gosuji.Client.ViewModels;
-using System.Net.Http.Json;
 
 namespace Gosuji.Client.Services
 {
@@ -11,7 +10,8 @@ namespace Gosuji.Client.Services
 
         public async Task<Changelog[]?> GetChangelogs()
         {
-            return await http.GetFromJsonAsync<Changelog[]>($"{MAP_GROUP}/GetChangelogs");
+            return await HttpResponseHandler.Get<Changelog[]>(http,
+                $"{MAP_GROUP}/GetChangelogs");
         }
 
         public async Task<List<VMGame>?> GetUserGames(string userId, int start, int end)
@@ -22,52 +22,62 @@ namespace Gosuji.Client.Services
 
         public async Task<Game?> GetGame(long gameId)
         {
-            return await http.GetFromJsonAsync<Game?>($"{MAP_GROUP}/GetGame/{gameId}");
+            return await HttpResponseHandler.Get<Game>(http,
+                $"{MAP_GROUP}/GetGame/{gameId}");
         }
 
         public async Task<long?> PostTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
         {
-            return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostTrainerSettingConfig", trainerSettingConfig)).Content.ReadAsStringAsync());
+            return await HttpResponseHandler.Post<long>(http,
+                $"{MAP_GROUP}/PostTrainerSettingConfig", trainerSettingConfig);
         }
 
         public async Task<long?> PostGameStat(GameStat gameStat)
         {
-            return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostGameStat", gameStat)).Content.ReadAsStringAsync());
+            return await HttpResponseHandler.Post<long>(http,
+                $"{MAP_GROUP}/PostGameStat", gameStat);
         }
 
-        public async Task PutGameStat(GameStat gameStat)
+        public async Task<bool> PutGameStat(GameStat gameStat)
         {
-            await http.PutAsJsonAsync($"{MAP_GROUP}/PutGameStat", gameStat);
+            return await HttpResponseHandler.Put(http,
+                $"{MAP_GROUP}/PutGameStat", gameStat);
         }
 
         public async Task<long?> PostGame(Game game)
         {
-            return long.Parse(await (await http.PostAsJsonAsync($"{MAP_GROUP}/PostGame", game)).Content.ReadAsStringAsync());
+            return await HttpResponseHandler.Post<long>(http,
+                $"{MAP_GROUP}/PostGame", game);
         }
 
-        public async Task PutGame(Game game)
+        public async Task<bool> PutGame(Game game)
         {
-            await http.PutAsJsonAsync($"{MAP_GROUP}/PutGame", game);
+            return await HttpResponseHandler.Put(http,
+                $"{MAP_GROUP}/PutGame", game);
         }
 
-        public async Task PostFeedback(Feedback feedback)
+        public async Task<bool> PostFeedback(Feedback feedback)
         {
-            await http.PostAsJsonAsync($"{MAP_GROUP}/PostFeedback", feedback);
+            return await HttpResponseHandler.Post(http,
+                $"{MAP_GROUP}/PostFeedback", feedback);
         }
 
         public async Task<SettingConfig?> GetSettingConfig(string userId)
         {
-            return await http.GetFromJsonAsync<SettingConfig>($"{MAP_GROUP}/GetSettingConfig/{userId}");
+            return await HttpResponseHandler.Get<SettingConfig>(http,
+                $"{MAP_GROUP}/GetSettingConfig/{userId}");
         }
 
-        public async Task PutSettingConfig(SettingConfig settingConfig)
+        public async Task<bool> PutSettingConfig(SettingConfig settingConfig)
         {
-            await http.PutAsJsonAsync($"{MAP_GROUP}/PutSettingConfig", settingConfig);
+            return await HttpResponseHandler.Put(http,
+                $"{MAP_GROUP}/PutSettingConfig", settingConfig);
         }
 
         public async Task<Dictionary<string, Language>?> GetLanguages()
         {
-            return await http.GetFromJsonAsync<Dictionary<string, Language>>($"{MAP_GROUP}/GetLanguages");
+            return await HttpResponseHandler.Get<Dictionary<string, Language>>(http,
+                $"{MAP_GROUP}/GetLanguages");
         }
     }
 }
