@@ -30,16 +30,20 @@ namespace Gosuji.Client.Data
         public string Name { get; set; }
         public int? Result { get; set; }
         [Required]
+        [Range(0, 500)]
         public int PrevNodeX { get; set; }
         [Required]
+        [Range(0, 500)]
         public int PrevNodeY { get; set; }
 
         [Required]
+        [RegularExpression("^(9|13|19)$")]
         public int Boardsize { get; set; }
         [Required]
         [Range(0, 9)]
         public int Handicap { get; set; }
         [Required]
+        [Range(-1, 1)]
         public int Color { get; set; }
         [Required]
         [MaxLength(100)]

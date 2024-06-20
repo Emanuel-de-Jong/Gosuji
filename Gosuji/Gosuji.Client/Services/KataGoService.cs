@@ -37,7 +37,7 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task SetBoardsize(string userId, string boardsize)
+        public async Task SetBoardsize(string userId, int boardsize)
         {
             await http.GetAsync($"{MAP_GROUP}/SetBoardsize/{userId}/{boardsize}");
         }

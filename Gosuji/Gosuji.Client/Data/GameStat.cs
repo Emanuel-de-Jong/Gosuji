@@ -12,28 +12,36 @@ namespace Gosuji.Client.Data
 
         [Key] public long Id { get; set; }
         [Required]
+        [Range(0, 500)]
         public int MoveNumber { get; set; }
 
         public int? Winrate { get; set; }
         public int? Score { get; set; }
 
         [Required]
+        [Range(0, 500)]
         public int Total { get; set; }
 
         [Required]
+        [Range(0, 500)]
         public int Right { get; set; }
         [Required]
+        [Range(0, 500)]
         public int RightStreak { get; set; }
         [Required]
+        [Range(0, 500)]
         public int RightTopStreak { get; set; }
         [NotMapped]
         public int RightPercent => (int)((double)Right / Total * 100);
 
         [Required]
+        [Range(0, 500)]
         public int Perfect { get; set; }
         [Required]
+        [Range(0, 500)]
         public int PerfectStreak { get; set; }
         [Required]
+        [Range(0, 500)]
         public int PerfectTopStreak { get; set; }
         [NotMapped]
         public int PerfectPercent => (int)((double)Perfect / Total * 100);

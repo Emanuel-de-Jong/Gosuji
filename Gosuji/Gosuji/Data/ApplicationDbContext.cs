@@ -74,17 +74,17 @@ namespace Gosuji.Data
             builder.Entity<RateLimitViolation>();
         }
 
-        public override int SaveChanges()
-        {
-            Validate();
-            return base.SaveChanges();
-        }
+        //public override int SaveChanges()
+        //{
+        //    Validate();
+        //    return base.SaveChanges();
+        //}
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            Validate();
-            return base.SaveChangesAsync(cancellationToken);
-        }
+        //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        //{
+        //    Validate();
+        //    return base.SaveChangesAsync(cancellationToken);
+        //}
 
         private void Validate()
         {

@@ -51,9 +51,9 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{userId}/{boardsize}")]
-        public async Task SetBoardsize(string userId, [RegularExpression(@"(9|13|19)")] string boardsize)
+        public async Task SetBoardsize(string userId, [RegularExpression("^(9|13|19)$")] int boardsize)
         {
-            (await pool.Get(userId)).SetBoardsize(int.Parse(boardsize));
+            (await pool.Get(userId)).SetBoardsize(boardsize);
         }
 
         [HttpGet("{userId}/{ruleset}")]
