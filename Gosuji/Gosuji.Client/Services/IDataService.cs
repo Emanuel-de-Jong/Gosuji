@@ -6,7 +6,6 @@ namespace Gosuji.Client.Services
     public interface IDataService
     {
         Task<Changelog[]> GetChangelogs();
-        Task<Dictionary<string, long>> GetUserLanguageIds();
         Task<VMGame[]> GetUserGames(string userId);
         Task<Game?> GetGame(long gameId);
         Task<long> PostTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig);

@@ -25,16 +25,16 @@ namespace Gosuji.Client.Data
         [Required]
         public int PreMoves { get; set; } = 0;
         [Required]
-        [Range(0, 100_000)]
+        [Range(2, 100_000)]
         public int PreVisits { get; set; } = 1000;
         [Required]
-        [Range(0, 100_000)]
+        [Range(2, 100_000)]
         public int SelfplayVisits { get; set; } = 2500;
         [Required]
-        [Range(0, 100_000)]
+        [Range(2, 100_000)]
         public int SuggestionVisits { get; set; } = 1500;
         [Required]
-        [Range(0, 100_000)]
+        [Range(2, 100_000)]
         public int OpponentVisits { get; set; } = 1500;
         [Required]
         public bool DisableAICorrection { get; set; } = false;

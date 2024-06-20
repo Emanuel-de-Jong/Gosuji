@@ -13,11 +13,6 @@ namespace Gosuji.Client.Services
             return await http.GetFromJsonAsync<Changelog[]>($"{MAP_GROUP}/GetChangelogs");
         }
 
-        public async Task<Dictionary<string, long>> GetUserLanguageIds()
-        {
-            return await http.GetFromJsonAsync<Dictionary<string, long>>($"{MAP_GROUP}/GetUserLanguageIds");
-        }
-
         public async Task<VMGame[]> GetUserGames(string userId)
         {
             return await http.GetFromJsonAsync<VMGame[]>($"{MAP_GROUP}/GetUserGames/{userId}");

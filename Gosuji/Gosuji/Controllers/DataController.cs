@@ -32,22 +32,6 @@ namespace Gosuji.Controllers
             return changelogs;
         }
 
-        [HttpGet]
-        public async Task<Dictionary<string, long>> GetUserLanguageIds()
-        {
-            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-
-            Dictionary<string, long> userLanguageIds = [];
-            foreach (User user in dbContext.Users.Include(u => u.SettingConfig))
-            {
-                userLanguageIds[user.Id] = user.SettingConfig.LanguageId;
-            }
-
-            await dbContext.DisposeAsync();
-
-            return userLanguageIds;
-        }
-
         [HttpGet("{userId}")]
         public async Task<VMGame[]> GetUserGames(string userId)
         {
