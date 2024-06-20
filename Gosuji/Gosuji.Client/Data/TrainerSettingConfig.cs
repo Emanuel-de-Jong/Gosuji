@@ -9,8 +9,7 @@ namespace Gosuji.Client.Data
         [Key] public long Id { get; set; }
 
         [MaxLength(150)]
-        [MinLength(10)]
-        public string Hash { get; set; }
+        public string? Hash { get; set; }
 
         [Required]
         [RegularExpression("^(9|13|19)$")]
@@ -202,7 +201,7 @@ namespace Gosuji.Client.Data
             builder.Append(config.ShowOpponentOptions);
 
             byte[] inputBytes = ASCIIEncoding.ASCII.GetBytes(builder.ToString());
-            byte[] hashBytes = MD5.Create().ComputeHash(inputBytes);
+            byte[] hashBytes = MD5.HashData(inputBytes);
             return string.Join("", hashBytes.Select(x => x.ToString("X2")));
         }
     }

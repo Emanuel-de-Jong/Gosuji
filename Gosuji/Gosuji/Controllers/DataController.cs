@@ -79,7 +79,7 @@ namespace Gosuji.Controllers
         {
             sanitizeService.Sanitize(config);
 
-            if (config.Hash.IsNullOrEmpty())
+            if (config.Hash == null || config.Hash == "")
             {
                 config.SetHash();
             }

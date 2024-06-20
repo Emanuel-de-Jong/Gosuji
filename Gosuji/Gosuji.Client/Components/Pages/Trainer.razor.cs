@@ -226,13 +226,6 @@ namespace Gosuji.Client.Components.Pages
                 ShowOpponentOptions = showOpponentOptions,
             };
 
-            newConfig.SetHash();
-
-            if (trainerSettingConfig?.Hash == newConfig.Hash)
-            {
-                return;
-            }
-
             newConfig.Id = await dataService.PostTrainerSettingConfig(newConfig);
             trainerSettingConfig = newConfig;
         }
