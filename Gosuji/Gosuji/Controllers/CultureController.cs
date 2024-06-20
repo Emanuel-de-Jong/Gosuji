@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 [Route("[controller]/[action]")]
 public class CultureController : Controller
 {
-    public IActionResult Set(string culture, string redirectUri)
+    public IActionResult Set([Required, MinLength(1), MaxLength(100)] string culture,
+        [Required, MinLength(1), MaxLength(100)] string redirectUri)
     {
         if (culture != null)
         {

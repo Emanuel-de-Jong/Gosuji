@@ -7,6 +7,7 @@ using Gosuji.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Controllers
 {
@@ -32,13 +33,22 @@ namespace Gosuji.Controllers
             return changelogs;
         }
 
-        [HttpGet("{userId}")]
-        public async Task<VMGame[]> GetUserGames(string userId)
+        [HttpGet("{userId}/{start}/{end}")]
+        public async Task<VMGame[]?> GetUserGames(string userId,
+            [Range(1, 100_000)] int start = 1,
+            [Range(1, 100_000)] int end = 500)
         {
+            if (end < start || end - start + 1 > 500)
+            {
+                return null;
+            }
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             VMGame[] games = await dbContext.Games
                 .Where(g => g.UserId == userId)
                 .Where(g => g.IsDeleted == false)
+                .Skip(start - 1)
+                .Take(end - start + 1)
                 .Include(g => g.GameStat)
                 .Include(g => g.OpeningStat)
                 .Include(g => g.MidgameStat)
@@ -62,6 +72,12 @@ namespace Gosuji.Controllers
                 })
                 .ToArrayAsync();
             await dbContext.DisposeAsync();
+
+            if (games.Length == 0)
+            {
+                return null;
+            }
+
             return games;
         }
 

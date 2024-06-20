@@ -61,7 +61,7 @@ namespace Gosuji.Client.Components.Pages
                 return;
             }
 
-            Games = await dataService.GetUserGames(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            Games = await dataService.GetUserGames(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value, 1, 500);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

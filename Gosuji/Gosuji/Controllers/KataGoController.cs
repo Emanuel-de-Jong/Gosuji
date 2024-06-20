@@ -84,9 +84,9 @@ namespace Gosuji.Controllers
 
         [HttpGet("{userId}/{color}")]
         public async Task<List<MoveSuggestion>> Analyze(string userId, [RegularExpression(@"(B|W)")] string color,
-            [Range(2, 100_000)] int maxVisits,
-            [Range(0, 100)] float minVisitsPerc,
-            [Range(0, 100)] float maxVisitDiffPerc)
+            [Required, Range(2, 100_000)] int maxVisits,
+            [Required, Range(0, 100)] float minVisitsPerc,
+            [Required, Range(0, 100)] float maxVisitDiffPerc)
         {
             return (await pool.Get(userId)).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
         }

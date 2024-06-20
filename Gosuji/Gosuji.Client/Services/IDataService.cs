@@ -1,12 +1,13 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.ViewModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Services
 {
     public interface IDataService
     {
         Task<Changelog[]> GetChangelogs();
-        Task<VMGame[]> GetUserGames(string userId);
+        Task<VMGame[]?> GetUserGames(string userId, int start, int end);
         Task<Game?> GetGame(long gameId);
         Task<long> PostTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig);
         Task<long> PostGameStat(GameStat gameStat);

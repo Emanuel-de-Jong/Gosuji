@@ -13,9 +13,9 @@ namespace Gosuji.Client.Services
             return await http.GetFromJsonAsync<Changelog[]>($"{MAP_GROUP}/GetChangelogs");
         }
 
-        public async Task<VMGame[]> GetUserGames(string userId)
+        public async Task<VMGame[]> GetUserGames(string userId, int start, int end)
         {
-            return await http.GetFromJsonAsync<VMGame[]>($"{MAP_GROUP}/GetUserGames/{userId}");
+            return await http.GetFromJsonAsync<VMGame[]>($"{MAP_GROUP}/GetUserGames/{userId}/{start}/{end}");
         }
 
         public async Task<Game?> GetGame(long gameId)

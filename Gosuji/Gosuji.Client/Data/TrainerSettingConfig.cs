@@ -13,92 +13,92 @@ namespace Gosuji.Client.Data
 
         [Required]
         [RegularExpression("^(9|13|19)$")]
-        public int Boardsize { get; set; } = 19;
+        public int Boardsize { get; set; }
         [Required]
         [Range(0, 9)]
-        public int Handicap { get; set; } = 0;
+        public int Handicap { get; set; }
         [Required]
-        public int ColorType { get; set; } = 0;
+        public int ColorType { get; set; }
         [Required]
-        public bool PreMovesSwitch { get; set; } = false;
+        public bool PreMovesSwitch { get; set; }
         [Required]
-        public int PreMoves { get; set; } = 0;
-        [Required]
-        [Range(2, 100_000)]
-        public int PreVisits { get; set; } = 1000;
+        public int PreMoves { get; set; }
         [Required]
         [Range(2, 100_000)]
-        public int SelfplayVisits { get; set; } = 2500;
+        public int PreVisits { get; set; }
         [Required]
         [Range(2, 100_000)]
-        public int SuggestionVisits { get; set; } = 1500;
+        public int SelfplayVisits { get; set; }
         [Required]
         [Range(2, 100_000)]
-        public int OpponentVisits { get; set; } = 1500;
+        public int SuggestionVisits { get; set; }
         [Required]
-        public bool DisableAICorrection { get; set; } = false;
+        [Range(2, 100_000)]
+        public int OpponentVisits { get; set; }
+        [Required]
+        public bool DisableAICorrection { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public string Ruleset { get; set; } = "Japanese";
+        public string Ruleset { get; set; }
         [Required]
         [MaxLength(100)]
-        public string KomiChangeStyle { get; set; } = "Automatic";
+        public string KomiChangeStyle { get; set; }
         [Required]
         [Range(-150, 150)]
-        public float Komi { get; set; } = 6.5f;
+        public float Komi { get; set; }
 
         [Required]
-        public int PreOptions { get; set; } = 2;
+        public int PreOptions { get; set; }
         [Required]
-        public float PreOptionPerc { get; set; } = 20;
+        public float PreOptionPerc { get; set; }
         [Required]
         [MaxLength(100)]
-        public string ForceOpponentCorners { get; set; } = "Both";
+        public string ForceOpponentCorners { get; set; }
         [Required]
-        public bool CornerSwitch44 { get; set; } = true;
+        public bool CornerSwitch44 { get; set; }
         [Required]
-        public bool CornerSwitch34 { get; set; } = true;
+        public bool CornerSwitch34 { get; set; }
         [Required]
-        public bool CornerSwitch33 { get; set; } = false;
+        public bool CornerSwitch33 { get; set; }
         [Required]
-        public bool CornerSwitch45 { get; set; } = false;
+        public bool CornerSwitch45 { get; set; }
         [Required]
-        public bool CornerSwitch35 { get; set; } = false;
+        public bool CornerSwitch35 { get; set; }
         [Required]
-        public int CornerChance44 { get; set; } = 8;
+        public int CornerChance44 { get; set; }
         [Required]
-        public int CornerChance34 { get; set; } = 12;
+        public int CornerChance34 { get; set; }
         [Required]
-        public int CornerChance33 { get; set; } = 2;
+        public int CornerChance33 { get; set; }
         [Required]
-        public int CornerChance45 { get; set; } = 2;
+        public int CornerChance45 { get; set; }
         [Required]
-        public int CornerChance35 { get; set; } = 2;
+        public int CornerChance35 { get; set; }
 
         [Required]
-        public int SuggestionOptions { get; set; } = 4;
+        public int SuggestionOptions { get; set; }
         [Required]
-        public bool ShowOptions { get; set; } = true;
+        public bool ShowOptions { get; set; }
         [Required]
-        public bool ShowWeakerOptions { get; set; } = false;
+        public bool ShowWeakerOptions { get; set; }
         [Required]
-        public bool MinVisitsPercSwitch { get; set; } = true;
+        public bool MinVisitsPercSwitch { get; set; }
         [Required]
-        public float MinVisitsPerc { get; set; } = 10;
+        public float MinVisitsPerc { get; set; }
         [Required]
-        public bool MaxVisitDiffPercSwitch { get; set; } = false;
+        public bool MaxVisitDiffPercSwitch { get; set; }
         [Required]
-        public float MaxVisitDiffPerc { get; set; } = 40;
+        public float MaxVisitDiffPerc { get; set; }
 
         [Required]
-        public bool OpponentOptionsSwitch { get; set; } = false;
+        public bool OpponentOptionsSwitch { get; set; }
         [Required]
-        public int OpponentOptions { get; set; } = 5;
+        public int OpponentOptions { get; set; }
         [Required]
-        public float OpponentOptionPerc { get; set; } = 10;
+        public float OpponentOptionPerc { get; set; }
         [Required]
-        public bool ShowOpponentOptions { get; set; } = false;
+        public bool ShowOpponentOptions { get; set; }
 
         public void Update(TrainerSettingConfig newModel)
         {
