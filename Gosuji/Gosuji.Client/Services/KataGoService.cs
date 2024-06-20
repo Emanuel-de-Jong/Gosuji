@@ -83,7 +83,7 @@ namespace Gosuji.Client.Services
                 $"{MAP_GROUP}/Analyze/{userId}/{color}" +
                 $"?maxVisits={maxVisits}" +
                 $"&minVisitsPerc={minVisitsPerc}" +
-                $"&minVisitsPerc={maxVisitDiffPerc}");
+                $"&maxVisitDiffPerc={maxVisitDiffPerc}");
         }
 
         [JSInvokable]
