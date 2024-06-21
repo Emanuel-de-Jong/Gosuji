@@ -24,8 +24,6 @@ db.save = async function () {
 };
 
 db.saveTrainerSettingConfig = async function () {
-    if (g.LOG) console.log("db.saveTrainerSettingConfig");
-
     return trainerG.trainerRef
         .invokeMethodAsync(
             "SaveTrainerSettingConfig",
@@ -80,8 +78,6 @@ db.saveTrainerSettingConfig = async function () {
 };
 
 db.saveGameStats = async function () {
-    if (g.LOG) console.log("db.saveGameStats");
-
     let gameRatio = stats.getRatio(0);
     let openingRatio = stats.getRatio(0, db.OPENING_RATIO_MOVENUMBER);
     let midgameRatio = stats.getRatio(db.OPENING_RATIO_MOVENUMBER + 1, db.MIDGAME_RATIO_MOVENUMBER);
@@ -98,8 +94,6 @@ db.saveGameStats = async function () {
 };
 
 db.saveGame = async function () {
-    if (g.LOG) console.log("db.saveGame");
-
     return trainerG.trainerRef
         .invokeMethodAsync(
             "SaveGame",

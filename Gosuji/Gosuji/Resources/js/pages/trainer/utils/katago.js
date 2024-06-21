@@ -23,8 +23,6 @@ katago.clear = async function () {
 
 
 katago.clearBoard = async function () {
-    if (g.LOG) console.log("katago.clearBoard");
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("ClearBoard", katago.userId)
         .then((response) => {
@@ -36,8 +34,6 @@ katago.clearBoard = async function () {
 };
 
 katago.restart = async function () {
-    if (g.LOG) console.log("katago.restart");
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("Restart", katago.userId)
         .then((response) => {
@@ -49,8 +45,6 @@ katago.restart = async function () {
 };
 
 katago.setBoardsize = async function () {
-    if (g.LOG) console.log("katago.setBoardsize " + trainerG.board.boardsize);
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("SetBoardsize", katago.userId, trainerG.board.boardsize)
         .then((response) => {
@@ -62,8 +56,6 @@ katago.setBoardsize = async function () {
 };
 
 katago.setRuleset = async function () {
-    if (g.LOG) console.log("katago.setRuleset " + sgf.ruleset);
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("SetRuleset", katago.userId, sgf.ruleset)
         .then((response) => {
@@ -75,8 +67,6 @@ katago.setRuleset = async function () {
 };
 
 katago.setKomi = async function () {
-    if (g.LOG) console.log("katago.setKomi " + sgf.komi);
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("SetKomi", katago.userId, sgf.komi)
         .then((response) => {
@@ -89,9 +79,7 @@ katago.setKomi = async function () {
 
 katago.setHandicap = async function () {
     if (!trainerG.board.handicap) return;
-
-    if (g.LOG) console.log("katago.setHandicap " + trainerG.board.handicap);
-
+    
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("SetHandicap", katago.userId, trainerG.board.handicap)
         .then((response) => {
@@ -103,8 +91,6 @@ katago.setHandicap = async function () {
 };
 
 katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
-    if (g.LOG) console.log("katago.analyzeMove " + g.colorNumToName(color) + " " + katago.coordNumToName(coord));
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("AnalyzeMove", katago.userId, g.colorNumToName(color), katago.coordNumToName(coord))
         .then((kataGoSuggestion) => {
@@ -124,17 +110,7 @@ katago.analyze = async function (
 ) {
     minVisitsPerc = settings.minVisitsPercSwitch ? minVisitsPerc : 0;
     maxVisitDiffPerc = settings.maxVisitDiffPercSwitch ? maxVisitDiffPerc : 100;
-
-    if (g.LOG)
-        console.log(
-            "katago.analyze " +
-            maxVisits + " " +
-            moveOptions + " " +
-            minVisitsPerc + " " +
-            maxVisitDiffPerc + " " +
-            color
-        );
-
+    
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("Analyze", katago.userId, g.colorNumToName(color), maxVisits, minVisitsPerc, maxVisitDiffPerc)
         .then((kataGoSuggestions) => {
@@ -150,8 +126,6 @@ katago.analyze = async function (
 };
 
 katago.play = async function (coord, color = trainerG.board.getColor()) {
-    if (g.LOG) console.log("katago.play " + g.colorNumToName(color) + " " + katago.coordNumToName(coord));
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("Play", katago.userId, g.colorNumToName(color), katago.coordNumToName(coord))
         .then((response) => {
@@ -178,8 +152,6 @@ katago.playRange = async function () {
         });
     }
 
-    if (g.LOG) console.log("katago.playRange " + serverMoves);
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("PlayRange", katago.userId, serverMoves)
         .then((response) => {
@@ -191,8 +163,6 @@ katago.playRange = async function () {
 };
 
 katago.sgf = async function () {
-    if (g.LOG) console.log("katago.sgf " + false);
-
     return trainerG.kataGoServiceRef
         .invokeMethodAsync("SGF", katago.userId, false)
         .then((response) => {

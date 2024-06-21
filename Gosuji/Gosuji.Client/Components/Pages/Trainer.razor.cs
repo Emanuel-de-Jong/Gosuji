@@ -176,11 +176,6 @@ namespace Gosuji.Client.Components.Pages
             float opponentOptionPerc,
             bool showOpponentOptions)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("Index.SaveTrainerSettingConfig");
-            }
-
             TrainerSettingConfig newConfig = new()
             {
                 Boardsize = boardsize,
@@ -239,11 +234,6 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task SaveGameStats(GameStat newGameStat, GameStat newOpeningStat, GameStat newMidgameStat, GameStat newEndgameStat)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("Index.SaveGameStats");
-            }
-
             Task[] tasks =
             {
                 Task.Run(async () => {
@@ -328,11 +318,6 @@ namespace Gosuji.Client.Components.Pages
             bool isFinished,
             bool isThirdPartySGF)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("Index.SaveGame");
-            }
-
             if (userId == null)
             {
                 return;

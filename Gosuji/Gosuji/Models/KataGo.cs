@@ -21,11 +21,6 @@ namespace Gosuji.Models
 
         public async Task Start()
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.Start");
-            }
-
             if (stopped)
             {
                 return;
@@ -70,11 +65,6 @@ namespace Gosuji.Models
 
         public void ClearBoard()
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.ClearBoard");
-            }
-
             Write("clear_board");
             ClearReader();
             Write("clear_cache");
@@ -83,11 +73,6 @@ namespace Gosuji.Models
 
         public async Task Restart()
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.Restart");
-            }
-
             if (process != null)
             {
                 Write("quit");
@@ -98,55 +83,30 @@ namespace Gosuji.Models
 
         public void SetBoardsize(int boardsize)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.SetBoardsize " + boardsize);
-            }
-
             Write("boardsize " + boardsize);
             ClearReader();
         }
 
         public void SetRuleset(string ruleset)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.SetRuleset " + ruleset);
-            }
-
             Write("kata-set-rules " + ruleset);
             ClearReader();
         }
 
         public void SetKomi(float komi)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.SetKomi " + komi);
-            }
-
             Write("komi " + komi);
             ClearReader();
         }
 
         public void SetHandicap(int handicap)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.SetHandicap " + handicap);
-            }
-
             Write("fixed_handicap " + handicap);
             ClearReader();
         }
 
         public MoveSuggestion AnalyzeMove(string color, string coord)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.AnalyzeMove " + color + " " + coord);
-            }
-
             int maxVisits = 100;
             if (lastMaxVisits != maxVisits)
             {
@@ -177,11 +137,6 @@ namespace Gosuji.Models
 
         public List<MoveSuggestion> Analyze(string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.Analyze " + color + " " + maxVisits + " " + minVisitsPerc + " " + maxVisitDiffPerc);
-            }
-
             if (lastMaxVisits != maxVisits)
             {
                 lastMaxVisits = maxVisits;
@@ -265,22 +220,12 @@ namespace Gosuji.Models
 
         public void Play(string color, string coord)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.Play " + color + " " + coord);
-            }
-
             Write("play " + color + " " + coord);
             ClearReader();
         }
 
         public void PlayRange(Moves moves)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.PlayRange " + moves);
-            }
-
             foreach (Move move in moves.moves)
             {
                 Play(move.color, move.coord);
@@ -289,11 +234,6 @@ namespace Gosuji.Models
 
         public string SGF(bool shouldWriteFile)
         {
-            if (G.Log)
-            {
-                Console.WriteLine("KataGo.SGF " + shouldWriteFile);
-            }
-
             Write("printsgf");
             string sgfStr = Read()[2..];
             ClearReader();
