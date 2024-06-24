@@ -7,9 +7,7 @@ import { trainerG } from "./trainerG";
 let katago = { id: "katago" };
 
 
-katago.init = async function (userId) {
-    katago.userId = userId;
-
+katago.init = async function () {
     await katago.clear();
 };
 
@@ -24,7 +22,7 @@ katago.clear = async function () {
 
 katago.clearBoard = async function () {
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("ClearBoard", katago.userId)
+        .invokeMethodAsync("ClearBoard")
         .then((response) => {
             return response;
         })
@@ -35,7 +33,7 @@ katago.clearBoard = async function () {
 
 katago.restart = async function () {
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("Restart", katago.userId)
+        .invokeMethodAsync("Restart")
         .then((response) => {
             return response;
         })
@@ -46,7 +44,7 @@ katago.restart = async function () {
 
 katago.setBoardsize = async function () {
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("SetBoardsize", katago.userId, trainerG.board.boardsize)
+        .invokeMethodAsync("SetBoardsize", trainerG.board.boardsize)
         .then((response) => {
             return response;
         })
@@ -57,7 +55,7 @@ katago.setBoardsize = async function () {
 
 katago.setRuleset = async function () {
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("SetRuleset", katago.userId, sgf.ruleset)
+        .invokeMethodAsync("SetRuleset", sgf.ruleset)
         .then((response) => {
             return response;
         })
@@ -68,7 +66,7 @@ katago.setRuleset = async function () {
 
 katago.setKomi = async function () {
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("SetKomi", katago.userId, sgf.komi)
+        .invokeMethodAsync("SetKomi", sgf.komi)
         .then((response) => {
             return response;
         })
@@ -81,7 +79,7 @@ katago.setHandicap = async function () {
     if (!trainerG.board.handicap) return;
     
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("SetHandicap", katago.userId, trainerG.board.handicap)
+        .invokeMethodAsync("SetHandicap", trainerG.board.handicap)
         .then((response) => {
             return response;
         })
@@ -92,7 +90,7 @@ katago.setHandicap = async function () {
 
 katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("AnalyzeMove", katago.userId, g.colorNumToName(color), katago.coordNumToName(coord))
+        .invokeMethodAsync("AnalyzeMove", g.colorNumToName(color), katago.coordNumToName(coord))
         .then((kataGoSuggestion) => {
             return MoveSuggestion.fromKataGo(kataGoSuggestion);
         })
@@ -112,7 +110,7 @@ katago.analyze = async function (
     maxVisitDiffPerc = settings.maxVisitDiffPercSwitch ? maxVisitDiffPerc : 100;
     
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("Analyze", katago.userId, g.colorNumToName(color), maxVisits, minVisitsPerc, maxVisitDiffPerc)
+        .invokeMethodAsync("Analyze", g.colorNumToName(color), maxVisits, minVisitsPerc, maxVisitDiffPerc)
         .then((kataGoSuggestions) => {
             let suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
             suggestions.filterByPass();
@@ -127,7 +125,7 @@ katago.analyze = async function (
 
 katago.play = async function (coord, color = trainerG.board.getColor()) {
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("Play", katago.userId, g.colorNumToName(color), katago.coordNumToName(coord))
+        .invokeMethodAsync("Play", g.colorNumToName(color), katago.coordNumToName(coord))
         .then((response) => {
             return response;
         })
@@ -153,7 +151,7 @@ katago.playRange = async function () {
     }
 
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("PlayRange", katago.userId, serverMoves)
+        .invokeMethodAsync("PlayRange", serverMoves)
         .then((response) => {
             return response;
         })
@@ -164,7 +162,7 @@ katago.playRange = async function () {
 
 katago.sgf = async function () {
     return trainerG.kataGoServiceRef
-        .invokeMethodAsync("SGF", katago.userId, false)
+        .invokeMethodAsync("SGF", false)
         .then((response) => {
             return response;
         })

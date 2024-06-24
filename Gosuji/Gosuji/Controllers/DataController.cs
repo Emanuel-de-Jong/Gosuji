@@ -17,7 +17,7 @@ namespace Gosuji.Controllers
     [Route("api/[controller]/[action]")]
     [Authorize]
     [EnableRateLimiting(G.ControllerRateLimitPolicyName)]
-    public class DataController : ControllerBase
+    public class DataController : CustomControllerBase
     {
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
         private SanitizeService sanitizeService;
@@ -38,12 +38,13 @@ namespace Gosuji.Controllers
             return Ok(changelogs);
         }
 
-        [HttpGet("{userId}/{start}/{end}")]
+        [HttpGet("{start}/{end}")]
         [EnableRateLimiting("rl5")]
-        public async Task<ActionResult<List<VMGame>>> GetUserGames(string userId,
-            [Range(1, 100_000)] int start = 1,
+        public async Task<ActionResult<List<VMGame>>> GetUserGames([Range(1, 100_000)] int start = 1,
             [Range(1, 100_000)] int end = 500)
         {
+            string userId = GetUserId();
+
             if (end < start || end - start + 1 > 500)
             {
                 return BadRequest("Invalid range. Max range 500.");
@@ -152,6 +153,8 @@ namespace Gosuji.Controllers
         [EnableRateLimiting("rl5")]
         public async Task<ActionResult<long>> PostGame(Game game)
         {
+            game.UserId = GetUserId();
+
             sanitizeService.Sanitize(game);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -165,6 +168,8 @@ namespace Gosuji.Controllers
         [EnableRateLimiting("rl5")]
         public async Task<ActionResult> PutGame(Game game)
         {
+            game.UserId = GetUserId();
+
             sanitizeService.Sanitize(game);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -178,6 +183,8 @@ namespace Gosuji.Controllers
         [EnableRateLimiting("rl5")]
         public async Task<ActionResult> PostFeedback(Feedback feedback)
         {
+            feedback.UserId = GetUserId();
+
             sanitizeService.Sanitize(feedback);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -187,9 +194,11 @@ namespace Gosuji.Controllers
             return Ok();
         }
 
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<SettingConfig>> GetSettingConfig(string userId)
+        [HttpGet]
+        public async Task<ActionResult<SettingConfig>> GetSettingConfig()
         {
+            string userId = GetUserId();
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             SettingConfig settingConfig = await dbContext.Users
                 .Where(u => u.Id == userId)

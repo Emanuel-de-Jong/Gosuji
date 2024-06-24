@@ -27,7 +27,6 @@ let trainerPage = { id: "trainerPage" };
 trainerPage.init = async function (
     trainerRef,
     kataGoServiceRef,
-    userId,
     userName,
     kataGoVersion,
 
@@ -76,7 +75,7 @@ trainerPage.init = async function (
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
-    await katago.init(userId);
+    await katago.init();
     db.init();
 
     // console.log(stats.ratioHistory);

@@ -33,7 +33,7 @@ namespace Gosuji.Client.Components.Layout
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
-                settingConfig = await dataService.GetSettingConfig(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                settingConfig = await dataService.GetSettingConfig();
                 languages = await dataService.GetLanguages();
                 currentLanguage = languages.Where(kv => kv.Value.Id == settingConfig.LanguageId).FirstOrDefault().Value;
 

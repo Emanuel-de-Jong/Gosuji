@@ -62,7 +62,7 @@ namespace Gosuji.Client.Components.Pages
             List<VMGame>? tempGames;
             do
             {
-                tempGames = await dataService.GetUserGames(claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value, rangeStart, rangeStart + rangeStep - 1);
+                tempGames = await dataService.GetUserGames(rangeStart, rangeStart + rangeStep - 1);
                 if (tempGames == null)
                 {
                     break;

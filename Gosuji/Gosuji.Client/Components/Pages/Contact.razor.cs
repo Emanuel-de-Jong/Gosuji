@@ -18,15 +18,14 @@ namespace Gosuji.Client.Components.Pages
         [SupplyParameterFromForm]
         private InputModel input { get; set; } = new();
 
-        private string? userId;
-        private bool isNotLoggedIn => userId == null;
+        private bool isNotLoggedIn = true;
 
         protected override async Task OnInitializedAsync()
         {
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
-                userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                isNotLoggedIn = false;
             }
         }
 
@@ -39,7 +38,6 @@ namespace Gosuji.Client.Components.Pages
 
             Feedback feedback = new()
             {
-                UserId = userId,
                 Subject = input.Subject,
                 Message = input.Message,
                 FeedbackType = input.FeedbackType

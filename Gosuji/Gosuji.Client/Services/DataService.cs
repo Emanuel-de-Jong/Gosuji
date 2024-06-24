@@ -14,10 +14,10 @@ namespace Gosuji.Client.Services
                 $"{MAP_GROUP}/GetChangelogs");
         }
 
-        public async Task<List<VMGame>?> GetUserGames(string userId, int start, int end)
+        public async Task<List<VMGame>?> GetUserGames(int start, int end)
         {
             return await HttpResponseHandler.Get<List<VMGame>>(http,
-                $"{MAP_GROUP}/GetUserGames/{userId}/{start}/{end}");
+                $"{MAP_GROUP}/GetUserGames/{start}/{end}");
         }
 
         public async Task<Game?> GetGame(long gameId)
@@ -62,10 +62,10 @@ namespace Gosuji.Client.Services
                 $"{MAP_GROUP}/PostFeedback", feedback);
         }
 
-        public async Task<SettingConfig?> GetSettingConfig(string userId)
+        public async Task<SettingConfig?> GetSettingConfig()
         {
             return await HttpResponseHandler.Get<SettingConfig>(http,
-                $"{MAP_GROUP}/GetSettingConfig/{userId}");
+                $"{MAP_GROUP}/GetSettingConfig");
         }
 
         public async Task<bool> PutSettingConfig(SettingConfig settingConfig)

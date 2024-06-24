@@ -13,7 +13,6 @@ namespace Gosuji.Client.Data
     public class Feedback : DbModel
     {
         [Key] public long Id { get; set; }
-        [Required]
         [StringLength(36)]
         public string UserId { get; set; }
         [Required]

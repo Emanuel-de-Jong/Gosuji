@@ -66,12 +66,12 @@ namespace Gosuji.Client.Components.Pages
 
             if (firstRender)
             {
-                if (userId == null)
+                if (userName == null)
                 {
                     return;
                 }
 
-                if ((await kataGoService.UserHasInstance(userId)).Value)
+                if ((await kataGoService.UserHasInstance()).Value)
                 {
                     await js.InvokeVoidAsync("alert", "You already use this page somewhere else!");
                     return;
@@ -100,7 +100,6 @@ namespace Gosuji.Client.Components.Pages
                 jsRef.InvokeVoidAsync("trainerPage.init",
                     trainerRef,
                     kataGoServiceRef,
-                    userId,
                     userName,
                     kataGoVersion,
 
@@ -120,7 +119,6 @@ namespace Gosuji.Client.Components.Pages
                 jsRef.InvokeVoidAsync("trainerPage.init",
                     trainerRef,
                     kataGoServiceRef,
-                    userId,
                     userName,
                     kataGoVersion);
             }
@@ -325,7 +323,6 @@ namespace Gosuji.Client.Components.Pages
 
             Game newGame = new()
             {
-                UserId = userId,
                 TrainerSettingConfigId = trainerSettingConfig.Id,
                 KataGoVersionId = kataGoVersion.Id,
                 GameStatId = gameStat?.Id,
@@ -378,9 +375,9 @@ namespace Gosuji.Client.Components.Pages
             trainerRef?.Dispose();
             kataGoServiceRef?.Dispose();
 
-            if (userId != null)
+            if (userName != null)
             {
-                kataGoService.Return(userId).Wait();
+                kataGoService.Return().Wait();
             }
         }
     }
