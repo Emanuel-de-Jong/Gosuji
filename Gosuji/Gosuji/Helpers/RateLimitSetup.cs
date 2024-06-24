@@ -1,5 +1,6 @@
 ﻿using Gosuji.Client;
 using Gosuji.Services;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Globalization;
 using System.Threading.RateLimiting;
 
@@ -15,8 +16,7 @@ namespace Gosuji.Helpers
             {
                 options.AddPolicy(G.RazorRateLimitPolicyName, context =>
                 {
-                    string ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-                    return RateLimitPartition.GetFixedWindowLimiter(ipAddress, partition => new()
+                    return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
                     {
                         PermitLimit = 100,
                         Window = TimeSpan.FromSeconds(10),
@@ -27,8 +27,7 @@ namespace Gosuji.Helpers
 
                 options.AddPolicy(G.ControllerRateLimitPolicyName, context =>
                 {
-                    string ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-                    return RateLimitPartition.GetFixedWindowLimiter(ipAddress, partition => new()
+                    return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
                     {
                         PermitLimit = 100,
                         Window = TimeSpan.FromSeconds(10),
@@ -37,21 +36,30 @@ namespace Gosuji.Helpers
                     });
                 });
 
-                options.OnRejected = async (context, cancellationToken) =>
-                {
-                    if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
-                    {
-                        context.HttpContext.Response.Headers.RetryAfter =
-                            ((int)retryAfter.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo);
-                    }
-
-                    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                    await context.HttpContext.Response.WriteAsync("Too Many Requests");
-
-                    RateLimitLogger logger = context.HttpContext.RequestServices.GetRequiredService<RateLimitLogger>();
-                    logger.LogViolation(context.HttpContext);
-                };
+                options.OnRejected = OnRejected;
             });
+        }
+
+        private static string GetPartitionKey(HttpContext context)
+        {
+            return context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        }
+
+        private static ValueTask OnRejected(OnRejectedContext context, CancellationToken cancellationToken)
+        {
+            if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+            {
+                context.HttpContext.Response.Headers.RetryAfter =
+                    ((int)retryAfter.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo);
+            }
+
+            context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            Task writeResponse = context.HttpContext.Response.WriteAsync("Too Many Requests");
+
+            RateLimitLogger logger = context.HttpContext.RequestServices.GetRequiredService<RateLimitLogger>();
+            logger.LogViolation(context.HttpContext);
+
+            return new ValueTask(writeResponse);
         }
     }
 }
