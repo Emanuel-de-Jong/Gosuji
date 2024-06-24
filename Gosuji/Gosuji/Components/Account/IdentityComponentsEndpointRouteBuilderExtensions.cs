@@ -1,3 +1,4 @@
+using Gosuji.Client.Data.Attributes;
 using Gosuji.Components.Account.Pages;
 using Gosuji.Components.Account.Pages.Manage;
 using Gosuji.Data;
@@ -6,9 +7,12 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Reflection;
+using Gosuji.Client.Data;
 
 namespace Gosuji.Components.Account
 {
@@ -74,7 +78,8 @@ namespace Gosuji.Components.Account
             manageGroup.MapPost("/DownloadPersonalData", async (
                 HttpContext context,
                 [FromServices] UserManager<User> userManager,
-                [FromServices] AuthenticationStateProvider authenticationStateProvider) =>
+                [FromServices] AuthenticationStateProvider authenticationStateProvider,
+                [FromServices] IDbContextFactory<ApplicationDbContext> dbContextFactory) =>
             {
                 User? user = await userManager.GetUserAsync(context.User);
                 if (user is null)
@@ -86,21 +91,54 @@ namespace Gosuji.Components.Account
                 downloadLogger.LogInformation("User with ID '{UserId}' asked for their personal data.", userId);
 
                 // Only include personal data for download
-                Dictionary<string, string> personalData = new();
-                IEnumerable<System.Reflection.PropertyInfo> personalDataProps = typeof(User).GetProperties().Where(
-                    prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
-                foreach (System.Reflection.PropertyInfo? p in personalDataProps)
+                PersonalData personalData = new();
+
+                IEnumerable<PropertyInfo> personalDataProps = typeof(User).GetProperties().Where(
+                    p => Attribute.IsDefined(p, typeof(PersonalDataAttribute)) ||
+                    Attribute.IsDefined(p, typeof(CustomPersonalDataAttribute)));
+                foreach (PropertyInfo p in personalDataProps)
                 {
-                    personalData.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
+                    personalData.User.Add(p.Name, p.GetValue(user)?.ToString() ?? "null");
                 }
 
                 IList<UserLoginInfo> logins = await userManager.GetLoginsAsync(user);
                 foreach (UserLoginInfo l in logins)
                 {
-                    personalData.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
+                    personalData.User.Add($"{l.LoginProvider} external login provider key", l.ProviderKey);
                 }
 
-                personalData.Add("Authenticator Key", (await userManager.GetAuthenticatorKeyAsync(user))!);
+                personalData.User.Add("Authenticator Key", (await userManager.GetAuthenticatorKeyAsync(user))!);
+
+                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+                UserActivity[] userActivities = await dbContext.UserActivities.Where(a => a.UserId == userId).ToArrayAsync();
+                personalDataProps = typeof(UserActivity).GetProperties().Where(
+                    p => Attribute.IsDefined(p, typeof(CustomPersonalDataAttribute)));
+                foreach (UserActivity activity in userActivities)
+                {
+                    Dictionary<string, string> instanceData = [];
+                    foreach (PropertyInfo p in personalDataProps)
+                    {
+                        instanceData.Add(p.Name, p.GetValue(activity)?.ToString() ?? "null");
+                    }
+                    personalData.Activities.Add(instanceData);
+                }
+
+                Feedback[] feedbacks = await dbContext.Feedbacks.Where(f => f.UserId == userId).ToArrayAsync();
+                personalDataProps = typeof(Feedback).GetProperties().Where(
+                    p => Attribute.IsDefined(p, typeof(CustomPersonalDataAttribute)));
+                foreach (Feedback feedback in feedbacks)
+                {
+                    Dictionary<string, string> instanceData = [];
+                    foreach (PropertyInfo p in personalDataProps)
+                    {
+                        instanceData.Add(p.Name, p.GetValue(feedback)?.ToString() ?? "null");
+                    }
+                    personalData.Feedbacks.Add(instanceData);
+                }
+
+                await dbContext.DisposeAsync();
+
                 byte[] fileBytes = JsonSerializer.SerializeToUtf8Bytes(personalData);
 
                 context.Response.Headers.TryAdd("Content-Disposition", "attachment; filename=PersonalData.json");

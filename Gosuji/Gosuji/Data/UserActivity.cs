@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Data.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Data
@@ -12,7 +13,9 @@ namespace Gosuji.Data
         public User? User { get; set; }
         [Required]
         [MaxLength(120)]
+        [CustomPersonalData]
         public string Ip { get; set; }
+        [CustomPersonalData]
         public DateTimeOffset? EndDate { get; set; }
     }
 }

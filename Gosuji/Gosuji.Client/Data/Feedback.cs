@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Data.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
 {
@@ -16,12 +17,15 @@ namespace Gosuji.Client.Data
         [StringLength(36)]
         public string UserId { get; set; }
         [Required]
+        [CustomPersonalData]
         public EFeedbackType FeedbackType { get; set; }
         [Required]
         [MaxLength(250)]
         [MinLength(3)]
+        [CustomPersonalData]
         public string Subject { get; set; }
         [MaxLength(1000)]
+        [CustomPersonalData]
         public string? Message { get; set; }
         public bool IsRead { get; set; } = false;
         public bool IsResolved { get; set; } = false;

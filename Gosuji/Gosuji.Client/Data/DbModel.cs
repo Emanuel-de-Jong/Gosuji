@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Data.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
 {
     public class DbModel : IDbModel
     {
         [Required]
+        [CustomPersonalData]
         public DateTimeOffset CreateDate { get; set; } = DateTimeOffset.Now;
+        [CustomPersonalData]
         public DateTimeOffset? ModifyDate { get; set; }
 
         public override string ToString()

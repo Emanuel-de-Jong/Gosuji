@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Data.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
 {
@@ -10,6 +11,7 @@ namespace Gosuji.Client.Data
         public string Name { get; set; }
         [Required]
         [MaxLength(15)]
+        [CustomPersonalData]
         public string Short { get; set; }
     }
 }

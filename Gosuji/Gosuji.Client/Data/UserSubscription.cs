@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Data.Attributes;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gosuji.Client.Data
@@ -17,12 +18,15 @@ namespace Gosuji.Client.Data
         [StringLength(36)]
         public string UserId { get; set; }
         [Required]
+        [CustomPersonalData]
         public ESubscriptionType SubscriptionType { get; set; }
         public long? DiscountId { get; set; }
         public Discount? Discount { get; set; }
         [Required]
+        [CustomPersonalData]
         public int Months { get; set; }
         [NotMapped]
+        [CustomPersonalData]
         public DateTimeOffset EndDate => CreateDate.AddMonths(Months);
 
         public override string ToString()
