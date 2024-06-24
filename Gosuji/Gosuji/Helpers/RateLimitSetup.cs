@@ -30,7 +30,7 @@ namespace Gosuji.Helpers
                     {
                         PermitLimit = 20,
                         Window = TimeSpan.FromSeconds(10),
-                        QueueLimit = 5
+                        QueueLimit = 0
                     });
                 });
 
@@ -38,7 +38,7 @@ namespace Gosuji.Helpers
                 {
                     return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
                     {
-                        PermitLimit = 2,
+                        PermitLimit = 5,
                         Window = TimeSpan.FromSeconds(10),
                         QueueLimit = 0
                     });

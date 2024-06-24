@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Localization;
+﻿using Gosuji.Client;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Controllers
 {
     [Route("[controller]/[action]")]
+    [EnableRateLimiting(G.ControllerRateLimitPolicyName)]
     public class CultureController : Controller
     {
         public IActionResult Set([Required, MinLength(1), MaxLength(100)] string culture,

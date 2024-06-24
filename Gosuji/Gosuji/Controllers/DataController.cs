@@ -1,4 +1,5 @@
 ﻿using Ganss.Xss;
+using Gosuji.Client;
 using Gosuji.Client.Data;
 using Gosuji.Client.Services;
 using Gosuji.Client.ViewModels;
@@ -13,6 +14,7 @@ namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [EnableRateLimiting(G.ControllerRateLimitPolicyName)]
     public class DataController : ControllerBase
     {
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
@@ -88,6 +90,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult<long>> PostTrainerSettingConfig(TrainerSettingConfig config)
         {
             sanitizeService.Sanitize(config);
@@ -143,6 +146,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult<long>> PostGame(Game game)
         {
             sanitizeService.Sanitize(game);
@@ -155,6 +159,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpPut]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult> PutGame(Game game)
         {
             sanitizeService.Sanitize(game);
@@ -167,6 +172,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpPost]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult> PostFeedback(Feedback feedback)
         {
             sanitizeService.Sanitize(feedback);

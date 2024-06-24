@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Models.Josekis;
+﻿using Gosuji.Client;
+using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Services;
 using Gosuji.Helpers;
 using Gosuji.Services;
@@ -7,11 +8,13 @@ using IGOEnchi.GoGameSgf;
 using IGOEnchi.SmartGameLib;
 using IGOEnchi.SmartGameLib.models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [EnableRateLimiting(G.ControllerRateLimitPolicyName)]
     public class JosekisController : ControllerBase
     {
         private static readonly string SESSION_UNKNOWN_ERR = "SessionId unknown.";
@@ -34,6 +37,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{sessionId}")]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult> AddSession(int sessionId)
         {
             josekisGoNodes[sessionId] = baseGame.RootNode;
@@ -41,6 +45,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{sessionId}")]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult> RemoveSession(int sessionId)
         {
             josekisGoNodes.Remove(sessionId);

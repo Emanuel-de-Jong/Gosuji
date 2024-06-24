@@ -1,14 +1,17 @@
-﻿using Gosuji.Client.Data;
+﻿using Gosuji.Client;
+using Gosuji.Client.Data;
 using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [EnableRateLimiting(G.ControllerRateLimitPolicyName)]
     public class KataGoController : ControllerBase
     {
         private SanitizeService sanitizeService;
@@ -47,6 +50,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{userId}")]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult> Restart(string userId)
         {
             await (await pool.Get(userId)).Restart();
@@ -83,6 +87,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{userId}/{color}/{coord}")]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult<MoveSuggestion>> AnalyzeMove(string userId, [RegularExpression(@"(B|W)")] string color,
             [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
         {
@@ -90,6 +95,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{userId}/{color}")]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult<List<MoveSuggestion>>> Analyze(string userId, [RegularExpression(@"(B|W)")] string color,
             [Required, Range(2, 100_000)] int maxVisits,
             [Required, Range(0, 100)] float minVisitsPerc,
