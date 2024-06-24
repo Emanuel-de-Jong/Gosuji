@@ -7,7 +7,6 @@ using Gosuji.Helpers;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Threading.RateLimiting;
@@ -50,22 +49,47 @@ namespace Gosuji
 
             builder.Services.AddSingleton<RateLimitLogger>();
 
-            builder.Services.AddRateLimiter((_) => {
-                _.AddFixedWindowLimiter(policyName: G.RateLimitPolicyName, options =>
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.AddPolicy(G.RazorRateLimitPolicyName, context =>
                 {
-                    options.PermitLimit = 100;
-                    options.Window = TimeSpan.FromSeconds(10);
-                    options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-                    options.QueueLimit = 0;
+                    string ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                    return RateLimitPartition.GetFixedWindowLimiter(ipAddress, partition => new()
+                    {
+                        PermitLimit = 100,
+                        Window = TimeSpan.FromSeconds(10),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 0
+                    });
                 });
-                _.OnRejected = async (context, cancellationToken) =>
+
+                options.AddPolicy(G.ControllerRateLimitPolicyName, context =>
                 {
-                    context.HttpContext.Response.StatusCode = 429;
+                    string ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                    return RateLimitPartition.GetFixedWindowLimiter(ipAddress, partition => new()
+                    {
+                        PermitLimit = 100,
+                        Window = TimeSpan.FromSeconds(10),
+                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 0
+                    });
+                });
+
+                options.OnRejected = async (context, cancellationToken) =>
+                {
+                    if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+                    {
+                        context.HttpContext.Response.Headers.RetryAfter =
+                            ((int)retryAfter.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo);
+                    }
+
+                    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
                     await context.HttpContext.Response.WriteAsync("Too Many Requests");
 
                     RateLimitLogger logger = context.HttpContext.RequestServices.GetRequiredService<RateLimitLogger>();
                     logger.LogViolation(context.HttpContext);
-                };});
+                };
+            });
 
 
             builder.Services.AddControllers();
@@ -122,7 +146,7 @@ namespace Gosuji
             app.UseAntiforgery();
 
             app.MapRazorComponents<App>()
-                .RequireRateLimiting(G.RateLimitPolicyName)
+                .RequireRateLimiting(G.RazorRateLimitPolicyName)
                 .AddInteractiveServerRenderMode()
                 .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client.Components._Imports).Assembly);
@@ -131,7 +155,7 @@ namespace Gosuji
             app.MapAdditionalIdentityEndpoints();
 
             app.MapControllers()
-                .RequireRateLimiting(G.RateLimitPolicyName);
+                .RequireRateLimiting(G.ControllerRateLimitPolicyName);
 
             app.Run();
         }

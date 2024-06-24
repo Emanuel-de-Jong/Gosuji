@@ -9,7 +9,8 @@
                 false;
 #endif
 
-        public const string RateLimitPolicyName = "FixedWindowPolicy";
+        public const string ControllerRateLimitPolicyName = "ControllerRateLimitPolicy";
+        public const string RazorRateLimitPolicyName = "RazorRateLimitPolicy";
 
         public static Dictionary<string, string> CSSLibUrls = new()
         {
