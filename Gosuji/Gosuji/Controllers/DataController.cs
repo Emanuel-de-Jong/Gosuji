@@ -5,6 +5,7 @@ using Gosuji.Client.ViewModels;
 using Gosuji.Data;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
@@ -24,6 +25,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet]
+        [EnableRateLimiting("FixedWindowPolicy")]
         public async Task<ActionResult<Changelog[]>> GetChangelogs()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();

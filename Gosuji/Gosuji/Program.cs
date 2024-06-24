@@ -1,11 +1,12 @@
 using Gosuji.Client.Services;
 using Gosuji.Components;
 using Gosuji.Components.Account;
-using Gosuji.Helpers;
 using Gosuji.Data;
+using Gosuji.Helpers;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.RateLimiting;
 
@@ -34,8 +35,6 @@ namespace Gosuji
                 })
                 .AddIdentityCookies();
 
-            builder.Services.AddControllers();
-
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
                 options.UseSqlite(connectionString));
@@ -47,24 +46,23 @@ namespace Gosuji
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddSingleton<IEmailSender<User>, IdentityNoOpEmailSender>();
-
-            builder.Services.AddSingleton(serviceProvider =>
+            builder.Services.AddRateLimiter(options =>
             {
-                return PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-                {
-                    string ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-                    return RateLimitPartition.GetFixedWindowLimiter(
-                        partitionKey: ip,
-                        factory: partition => new FixedWindowRateLimiterOptions
-                        {
-                            PermitLimit = 100,
-                            Window = TimeSpan.FromSeconds(10),
-                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                            QueueLimit = 10
-                        });
-                });
+                options.AddPolicy("FixedWindowPolicy", context =>
+                   RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                   partition => new FixedWindowRateLimiterOptions
+                   {
+                       PermitLimit = 100,
+                       Window = TimeSpan.FromSeconds(10),
+                       QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                       QueueLimit = 10
+                   }));
             });
+            builder.Services.AddSingleton<RateLimitLogger>();
+
+            builder.Services.AddControllers();
+
+            builder.Services.AddSingleton<IEmailSender<User>, IdentityNoOpEmailSender>();
 
             builder.Services.AddLocalization();
 
@@ -78,9 +76,9 @@ namespace Gosuji
             // Preconfigure an HttpClient for web API calls
             builder.Services.AddSingleton<HttpClient>(sp =>
             {
-                var httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-                var request = httpContextAccessor.HttpContext.Request;
-                var baseAddress = $"{request.Scheme}://{request.Host.Value}";
+                IHttpContextAccessor httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
+                HttpRequest request = httpContextAccessor.HttpContext.Request;
+                string baseAddress = $"{request.Scheme}://{request.Host.Value}";
                 return new HttpClient { BaseAddress = new Uri(baseAddress) };
             });
 
@@ -113,33 +111,16 @@ namespace Gosuji
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.Use(async (context, next) =>
+            app.UseRateLimiter(new RateLimiterOptions
             {
-                PartitionedRateLimiter<HttpContext> rateLimiter = context.RequestServices.GetRequiredService<PartitionedRateLimiter<HttpContext>>();
-
-                RateLimitLease lease = await rateLimiter.AcquireAsync(context);
-                if (lease.IsAcquired)
+                OnRejected = async (context, cancellationToken) =>
                 {
-                    await next.Invoke();
-                    return;
+                    context.HttpContext.Response.StatusCode = 429;
+                    await context.HttpContext.Response.WriteAsync("Too Many Requests");
+
+                    RateLimitLogger logger = context.HttpContext.RequestServices.GetRequiredService<RateLimitLogger>();
+                    await logger.LogViolation(context.HttpContext);
                 }
-
-                context.Response.StatusCode = 429;
-                await context.Response.WriteAsync("Too Many Requests");
-
-                IDbContextFactory<ApplicationDbContext> dbContextFactory = context.RequestServices.GetRequiredService<IDbContextFactory<ApplicationDbContext>>();
-                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-
-                RateLimitViolation violation = new()
-                {
-                    Ip = context.Connection.RemoteIpAddress?.ToString() ?? "",
-                    Endpoint = context.Request.Path,
-                    Method = Enum.Parse<HTTPMethod>(context.Request.Method)
-                };
-
-                await dbContext.RateLimitViolations.AddAsync(violation);
-                await dbContext.SaveChangesAsync();
-                await dbContext.DisposeAsync();
             });
 
             app.MapRazorComponents<App>()
