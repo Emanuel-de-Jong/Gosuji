@@ -95,6 +95,7 @@ namespace Gosuji.Controllers
         [EnableRateLimiting("rl5")]
         public async Task<ActionResult<long>> PostTrainerSettingConfig(TrainerSettingConfig config)
         {
+            config.Id = 0;
             sanitizeService.Sanitize(config);
 
             if (config.Hash is null or "")
@@ -126,6 +127,7 @@ namespace Gosuji.Controllers
         [HttpPost]
         public async Task<ActionResult<long>> PostGameStat(GameStat gameStat)
         {
+            gameStat.Id = 0;
             sanitizeService.Sanitize(gameStat);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -153,9 +155,10 @@ namespace Gosuji.Controllers
         }
 
         [HttpPost]
-        [EnableRateLimiting("rl5")]
+        [EnableRateLimiting("rl1")]
         public async Task<ActionResult<long>> PostGame(Game game)
         {
+            game.Id = 0;
             game.UserId = GetUserId();
 
             sanitizeService.Sanitize(game);
@@ -171,14 +174,22 @@ namespace Gosuji.Controllers
         [EnableRateLimiting("rl5")]
         public async Task<ActionResult> PutGame(Game game)
         {
-            game.UserId = GetUserId();
-
             sanitizeService.Sanitize(game);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            if (dbContext.Games.Any(g => g.Id == game.Id) == false)
+            Game? oldGame = await dbContext.Games.Where(g => g.Id == game.Id).FirstOrDefaultAsync();
+            if (oldGame == null)
             {
                 return BadRequest("Game not found.");
+            }
+            if (oldGame.UserId != GetUserId())
+            {
+                return Unauthorized();
+            }
+
+            if (game.UserId is null or "")
+            {
+                game.UserId = oldGame.UserId;
             }
 
             dbContext.Games.Update(game);
@@ -188,9 +199,10 @@ namespace Gosuji.Controllers
         }
 
         [HttpPost]
-        [EnableRateLimiting("rl5")]
+        [EnableRateLimiting("rl1")]
         public async Task<ActionResult> PostFeedback(Feedback feedback)
         {
+            feedback.Id = 0;
             feedback.UserId = GetUserId();
 
             sanitizeService.Sanitize(feedback);

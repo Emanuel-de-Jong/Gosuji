@@ -44,6 +44,16 @@ namespace Gosuji.Helpers
                     });
                 });
 
+                options.AddPolicy("rl1", context =>
+                {
+                    return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
+                    {
+                        PermitLimit = 1,
+                        Window = TimeSpan.FromSeconds(10),
+                        QueueLimit = 0
+                    });
+                });
+
                 options.OnRejected = OnRejected;
             });
         }
