@@ -1,13 +1,13 @@
 ﻿using Gosuji.Client;
-using Gosuji.Helpers;
 using Gosuji.Data;
+using Gosuji.Helpers;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 
 namespace Gosuji.Components.Shared.CMS
 {
-    class RateLimitViolator
+    internal class RateLimitViolator
     {
         public string Ip { get; set; }
         public int Violations { get; set; }

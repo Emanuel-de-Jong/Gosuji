@@ -55,7 +55,7 @@ namespace Gosuji.Helpers
 
         private static ValueTask OnRejected(OnRejectedContext context, CancellationToken cancellationToken)
         {
-            if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+            if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out TimeSpan retryAfter))
             {
                 context.HttpContext.Response.Headers.RetryAfter =
                     ((int)retryAfter.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo);

@@ -38,11 +38,6 @@ namespace Gosuji.Client.Helpers.GameDecoder
 
         public static RatioTree DecodeRatios(byte[] bytes)
         {
-            if (bytes.Length == 0)
-            {
-                return new();
-            }
-
             RatioTree rootNode = new();
 
             int i = 0;
@@ -77,11 +72,6 @@ namespace Gosuji.Client.Helpers.GameDecoder
 
         public static Dictionary<short, Dictionary<short, SuggestionList>> DecodeSuggestions(byte[] bytes)
         {
-            if (bytes.Length == 0)
-            {
-                return new();
-            }
-
             return Decode(bytes, (i) =>
             {
                 int suggestionLength = GetInt16(bytes, i);
@@ -136,11 +126,6 @@ namespace Gosuji.Client.Helpers.GameDecoder
 
         public static Dictionary<short, Dictionary<short, EMoveType>> DecodeMoveTypes(byte[] bytes)
         {
-            if (bytes.Length == 0)
-            {
-                return new();
-            }
-
             return Decode(bytes, (i) =>
             {
                 EMoveType moveType = (EMoveType)bytes[i++];
@@ -150,11 +135,6 @@ namespace Gosuji.Client.Helpers.GameDecoder
 
         public static Dictionary<short, Dictionary<short, Coord>> DecodeChosenNotPlayedCoords(byte[] bytes)
         {
-            if (bytes.Length == 0)
-            {
-                return new();
-            }
-
             return Decode(bytes, (i) =>
             {
                 int coordX = bytes[i++];

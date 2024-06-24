@@ -1,5 +1,5 @@
-﻿using Gosuji.Client.Helpers.GameDecoder;
-using Gosuji.Client.Data;
+﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers.GameDecoder;
 using Gosuji.Client.Models;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;

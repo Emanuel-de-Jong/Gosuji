@@ -33,7 +33,7 @@ namespace Gosuji.Services
             {
                 fieldsToSanitize.Add(type, new());
                 FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-                foreach (var field in fields)
+                foreach (FieldInfo field in fields)
                 {
                     if (field.FieldType == typeof(string))
                     {
@@ -43,7 +43,7 @@ namespace Gosuji.Services
 
                 propertiesToSanitize.Add(type, new());
                 PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                foreach (var property in properties)
+                foreach (PropertyInfo property in properties)
                 {
                     if (property.PropertyType == typeof(string))
                     {
@@ -62,7 +62,7 @@ namespace Gosuji.Services
         {
             Type type = typeof(T);
 
-            foreach (var field in fieldsToSanitize[type])
+            foreach (FieldInfo field in fieldsToSanitize[type])
             {
                 string value = (string)field.GetValue(obj);
                 if (value != null)
@@ -71,7 +71,7 @@ namespace Gosuji.Services
                 }
             }
 
-            foreach (var property in propertiesToSanitize[type])
+            foreach (PropertyInfo property in propertiesToSanitize[type])
             {
                 string value = (string)property.GetValue(obj);
                 if (value != null)

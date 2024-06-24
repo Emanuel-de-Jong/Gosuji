@@ -1,6 +1,6 @@
 ﻿using Gosuji.Client.Data;
-using Gosuji.Helpers;
 using Gosuji.Data;
+using Gosuji.Helpers;
 using Gosuji.Models;
 using Microsoft.EntityFrameworkCore;
 

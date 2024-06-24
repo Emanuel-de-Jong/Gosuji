@@ -1,7 +1,6 @@
 ﻿using Gosuji.Client;
 using Gosuji.Client.Data;
 using Gosuji.Client.Models.KataGo;
-using Gosuji.Client.Services;
 using Gosuji.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -88,11 +88,11 @@ namespace Gosuji.Data
 
         private void Validate()
         {
-            var entries = ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified)
+            IEnumerable<object> entries = ChangeTracker.Entries()
+                .Where(e => e.State is EntityState.Added or EntityState.Modified)
                 .Select(e => e.Entity);
 
-            foreach (var entity in entries)
+            foreach (object? entity in entries)
             {
                 ValidationContext validationContext = new(entity);
                 Validator.ValidateObject(entity, validationContext, validateAllProperties: true);

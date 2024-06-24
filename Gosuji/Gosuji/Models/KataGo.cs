@@ -1,5 +1,4 @@
-﻿using Gosuji.Client;
-using Gosuji.Client.Data;
+﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models.KataGo;
 using System.Diagnostics;
 
