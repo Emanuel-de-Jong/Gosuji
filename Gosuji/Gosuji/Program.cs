@@ -50,14 +50,22 @@ namespace Gosuji
 
             builder.Services.AddSingleton<RateLimitLogger>();
 
-            builder.Services.AddRateLimiter(_ => _
-                .AddFixedWindowLimiter(policyName: G.RateLimitPolicyName, options =>
+            builder.Services.AddRateLimiter((_) => {
+                _.AddFixedWindowLimiter(policyName: G.RateLimitPolicyName, options =>
                 {
                     options.PermitLimit = 100;
                     options.Window = TimeSpan.FromSeconds(10);
                     options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                     options.QueueLimit = 0;
-                }));
+                });
+                _.OnRejected = async (context, cancellationToken) =>
+                {
+                    context.HttpContext.Response.StatusCode = 429;
+                    await context.HttpContext.Response.WriteAsync("Too Many Requests");
+
+                    RateLimitLogger logger = context.HttpContext.RequestServices.GetRequiredService<RateLimitLogger>();
+                    logger.LogViolation(context.HttpContext);
+                };});
 
 
             builder.Services.AddControllers();
