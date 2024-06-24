@@ -114,6 +114,13 @@ namespace Gosuji
 
             app.MapControllers();
 
+            //using (IServiceScope scope = app.Services.CreateScope())
+            //{
+            //    TestDataGen testDataGen = new(scope.ServiceProvider);
+            //    testDataGen.ClearDb();
+            //    testDataGen.GenerateTestData();
+            //}
+
             app.Run();
         }
     }

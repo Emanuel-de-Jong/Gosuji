@@ -39,7 +39,7 @@ profilePage.themeChangedListener = function (e) {
 
 profilePage.createGameTable = function () {
     profilePage.gameTable = new DataTable("#gameTable", {
-        order: [[12, "desc"]]
+        order: [[13, "desc"]]
     });
 };
 
