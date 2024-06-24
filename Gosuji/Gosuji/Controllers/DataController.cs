@@ -25,7 +25,6 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet]
-        [EnableRateLimiting("FixedWindowPolicy")]
         public async Task<ActionResult<Changelog[]>> GetChangelogs()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();

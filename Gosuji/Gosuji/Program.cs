@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Threading.RateLimiting;
 
 namespace Gosuji
@@ -46,19 +47,42 @@ namespace Gosuji
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddRateLimiter(options =>
-            {
-                options.AddPolicy("FixedWindowPolicy", context =>
-                   RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
-                   partition => new FixedWindowRateLimiterOptions
-                   {
-                       PermitLimit = 100,
-                       Window = TimeSpan.FromSeconds(10),
-                       QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                       QueueLimit = 10
-                   }));
-            });
             builder.Services.AddSingleton<RateLimitLogger>();
+
+            builder.Services.AddRateLimiter(_ =>
+            {
+                _.OnRejected = (context, _) =>
+                {
+                    RateLimitLogger logger = context.HttpContext.RequestServices.GetRequiredService<RateLimitLogger>();
+                    logger.LogViolation(context.HttpContext);
+
+                    if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
+                    {
+                        context.HttpContext.Response.Headers.RetryAfter =
+                            ((int)retryAfter.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo);
+                    }
+
+                    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+                    context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.");
+
+                    return new ValueTask();
+                };
+                _.GlobalLimiter = PartitionedRateLimiter.CreateChained(
+                    PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                    {
+                        string ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+                        return RateLimitPartition.GetFixedWindowLimiter
+                        (ip, _ =>
+                            new FixedWindowRateLimiterOptions
+                            {
+                                PermitLimit = 100,
+                                Window = TimeSpan.FromSeconds(10),
+                                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                                QueueLimit = 10
+                            });
+                    }));
+            });
 
             builder.Services.AddControllers();
 
@@ -111,17 +135,7 @@ namespace Gosuji
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.UseRateLimiter(new RateLimiterOptions
-            {
-                OnRejected = async (context, cancellationToken) =>
-                {
-                    context.HttpContext.Response.StatusCode = 429;
-                    await context.HttpContext.Response.WriteAsync("Too Many Requests");
-
-                    RateLimitLogger logger = context.HttpContext.RequestServices.GetRequiredService<RateLimitLogger>();
-                    await logger.LogViolation(context.HttpContext);
-                }
-            });
+            app.UseRateLimiter();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
