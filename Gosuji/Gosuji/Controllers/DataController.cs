@@ -5,6 +5,7 @@ using Gosuji.Client.Services;
 using Gosuji.Client.ViewModels;
 using Gosuji.Data;
 using Gosuji.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ namespace Gosuji.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
+    [Authorize]
     [EnableRateLimiting(G.ControllerRateLimitPolicyName)]
     public class DataController : ControllerBase
     {
@@ -27,6 +29,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<Changelog[]>> GetChangelogs()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -209,6 +212,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<Dictionary<string, Language>>> GetLanguages()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();

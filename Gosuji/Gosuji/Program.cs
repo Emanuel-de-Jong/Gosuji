@@ -5,6 +5,7 @@ using Gosuji.Components.Account;
 using Gosuji.Data;
 using Gosuji.Helpers;
 using Gosuji.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,8 @@ namespace Gosuji
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
                 .AddDefaultTokenProviders();
+
+            builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthHandler>();
 
             RateLimitSetup.AddRateLimiters(builder);
 
