@@ -1,7 +1,5 @@
-﻿using Ganss.Xss;
-using Gosuji.Client;
+﻿using Gosuji.Client;
 using Gosuji.Client.Data;
-using Gosuji.Client.Services;
 using Gosuji.Client.ViewModels;
 using Gosuji.Data;
 using Gosuji.Services;
@@ -99,7 +97,7 @@ namespace Gosuji.Controllers
         {
             sanitizeService.Sanitize(config);
 
-            if (config.Hash == null || config.Hash == "")
+            if (config.Hash is null or "")
             {
                 config.SetHash();
             }
@@ -143,6 +141,11 @@ namespace Gosuji.Controllers
             sanitizeService.Sanitize(gameStat);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            if (dbContext.GameStats.Any(gs => gs.Id == gameStat.Id) == false)
+            {
+                return BadRequest("GameStat not found.");
+            }
+
             dbContext.GameStats.Update(gameStat);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -173,6 +176,11 @@ namespace Gosuji.Controllers
             sanitizeService.Sanitize(game);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            if (dbContext.Games.Any(g => g.Id == game.Id) == false)
+            {
+                return BadRequest("Game not found.");
+            }
+
             dbContext.Games.Update(game);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -214,6 +222,11 @@ namespace Gosuji.Controllers
             sanitizeService.Sanitize(settingConfig);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            if (dbContext.SettingConfigs.Any(cs => cs.Id == settingConfig.Id) == false)
+            {
+                return BadRequest("SettingConfig not found.");
+            }
+
             dbContext.SettingConfigs.Update(settingConfig);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
