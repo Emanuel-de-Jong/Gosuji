@@ -17,6 +17,6 @@ namespace Gosuji.Client.ViewModels
         public bool IsFinished { get; set; }
         public bool IsThirdPartySGF { get; set; }
         public DateTimeOffset CreateDate { get; set; }
-        public DateTimeOffset? ModifyDate { get; set; }
+        public DateTimeOffset ModifyDate { get; set; }
     }
 }

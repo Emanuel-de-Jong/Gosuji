@@ -75,6 +75,8 @@ namespace Gosuji.Client.Components.Pages
                 }
             } while (tempGames.Count != 0);
 
+            Games = Games.OrderByDescending(g => g.ModifyDate).ToList();
+
             //FinishedGames = Games.FindAll(g => g.IsFinished).ToList();
             FinishedGames = Games.ToList();
         }

@@ -18,8 +18,16 @@ namespace Gosuji.Data
         public DateTimeOffset? EmailConfirmedDate { get; set; }
         [Required]
         [CustomPersonalData]
-        public DateTimeOffset CreateDate { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset CreateDate { get; set; }
+        [Required]
         [CustomPersonalData]
-        public DateTimeOffset? ModifyDate { get; set; }
+        public DateTimeOffset ModifyDate { get; set; }
+
+        public User()
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            CreateDate = now;
+            ModifyDate = now;
+        }
     }
 }

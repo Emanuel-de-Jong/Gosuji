@@ -64,7 +64,7 @@ namespace Gosuji.Components.Shared.CMS
             feedback.IsRead = true;
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            dbContext.Feedbacks.Update(feedback);
+            dbContext.Update(feedback);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
         }
@@ -74,7 +74,7 @@ namespace Gosuji.Components.Shared.CMS
             feedback.IsResolved = (bool)e.Value;
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            dbContext.Feedbacks.Update(feedback);
+            dbContext.Update(feedback);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
         }

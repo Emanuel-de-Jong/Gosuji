@@ -16,10 +16,5 @@ namespace Gosuji.Data
         [Required]
         [CustomPersonalData]
         public int KataGoVisits { get; set; }
-
-        public UserMoveCount(string userId)
-        {
-            UserId = userId;
-        }
     }
 }

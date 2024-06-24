@@ -59,6 +59,6 @@
         userId = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         changelogs = await dataService.GetChangelogs();
-        changelogs.Reverse();
+        changelogs = changelogs.OrderByDescending(c => c.Date).ToArray();
     }
 }

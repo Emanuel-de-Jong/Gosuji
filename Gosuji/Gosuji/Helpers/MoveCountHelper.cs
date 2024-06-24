@@ -15,7 +15,7 @@ namespace Gosuji.Helpers
             DateTimeOffset lastMonday = DateTimeOffset.UtcNow.AddDays(-(DateTimeOffset.UtcNow.DayOfWeek - DayOfWeek.Monday + 7) % 7);
             if (moveCount == null || moveCount.CreateDate < lastMonday)
             {
-                moveCount = new UserMoveCount(userId);
+                moveCount = new() { UserId = userId };
                 await dbContext.UserMoveCounts.AddAsync(moveCount);
                 await dbContext.SaveChangesAsync();
             }

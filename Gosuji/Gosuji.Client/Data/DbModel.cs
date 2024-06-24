@@ -7,20 +7,16 @@ namespace Gosuji.Client.Data
     {
         [Required]
         [CustomPersonalData]
-        public DateTimeOffset CreateDate { get; set; } = DateTimeOffset.Now;
+        public DateTimeOffset CreateDate { get; set; }
+        [Required]
         [CustomPersonalData]
-        public DateTimeOffset? ModifyDate { get; set; }
+        public DateTimeOffset ModifyDate { get; set; }
 
-        public override string ToString()
+        public DbModel()
         {
-            return "CreateDate: " + CreateDate +
-                (ModifyDate == null ? "" : "\nModifyDate: " + ModifyDate);
-        }
-
-        public void Update(DbModel newModel)
-        {
-            CreateDate = newModel.CreateDate;
-            ModifyDate = newModel.ModifyDate;
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            CreateDate = now;
+            ModifyDate = now;
         }
     }
 }

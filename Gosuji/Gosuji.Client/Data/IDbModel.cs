@@ -3,6 +3,6 @@
     public interface IDbModel
     {
         DateTimeOffset CreateDate { get; set; }
-        DateTimeOffset? ModifyDate { get; set; }
+        DateTimeOffset ModifyDate { get; set; }
     }
 }

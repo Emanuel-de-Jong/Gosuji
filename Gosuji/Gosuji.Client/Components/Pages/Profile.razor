@@ -40,7 +40,8 @@
                                     <th>Perfect</th>
                                     <th>Perfect streak</th>
                                     <th>Custom SGF</th>
-                                    <th>Date</th>
+                                    <th>Started</th>
+                                    <th>Last played</th>
                                     <th>SGF</th>
                                 </tr>
                             </thead>
@@ -61,6 +62,7 @@
                                         <td>@game.GameStat?.PerfectTopStreak</td>
                                         <td>@game.IsThirdPartySGF</td>
                                         <td>@game.CreateDate.ToString("dd-MM-yy HH:mm")</td>
+                                        <td>@game.ModifyDate.ToString("dd-MM-yy HH:mm")</td>
                                         <td><button type="button" class="btn btn-primary" @onclick="async () => await DownloadSGF(game.Id)">Download</button></td>
                                     </tr>
                                 }

@@ -148,7 +148,7 @@ namespace Gosuji.Controllers
                 return BadRequest("GameStat not found.");
             }
 
-            dbContext.GameStats.Update(gameStat);
+            dbContext.Update(gameStat);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
             return Ok();
@@ -177,7 +177,10 @@ namespace Gosuji.Controllers
             sanitizeService.Sanitize(game);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Game? oldGame = await dbContext.Games.Where(g => g.Id == game.Id).FirstOrDefaultAsync();
+            Game? oldGame = await dbContext.Games
+                .Where(g => g.Id == game.Id)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
             if (oldGame == null)
             {
                 return BadRequest("Game not found.");
@@ -192,7 +195,7 @@ namespace Gosuji.Controllers
                 game.UserId = oldGame.UserId;
             }
 
-            dbContext.Games.Update(game);
+            dbContext.Update(game);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
             return Ok();
@@ -239,7 +242,7 @@ namespace Gosuji.Controllers
                 return BadRequest("SettingConfig not found.");
             }
 
-            dbContext.SettingConfigs.Update(settingConfig);
+            dbContext.Update(settingConfig);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
             return Ok();

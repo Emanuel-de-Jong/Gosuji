@@ -2,6 +2,7 @@ using Gosuji.Client.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Data
@@ -72,6 +73,14 @@ namespace Gosuji.Data
             builder.Entity<Language>();
             builder.Entity<Changelog>();
             builder.Entity<RateLimitViolation>();
+        }
+
+        public override EntityEntry<TEntity> Update<TEntity>(TEntity entity)
+        {
+            IDbModel dbModel = entity as IDbModel;
+            dbModel.ModifyDate = DateTimeOffset.UtcNow;
+            entity = dbModel as TEntity;
+            return base.Update(entity);
         }
 
         //public override int SaveChanges()

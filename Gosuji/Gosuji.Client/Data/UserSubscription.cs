@@ -28,17 +28,5 @@ namespace Gosuji.Client.Data
         [NotMapped]
         [CustomPersonalData]
         public DateTimeOffset EndDate => CreateDate.AddMonths(Months);
-
-        public override string ToString()
-        {
-            return "{" +
-                "\nId: " + Id +
-                "\nSubscriptionType: " + SubscriptionType +
-                "\nDiscountId: " + DiscountId +
-                (Discount == null ? "" : "\nDiscount: " + Discount) +
-                "\nMonths: " + Months +
-                "\n" + base.ToString() +
-                "\n}";
-        }
     }
 }

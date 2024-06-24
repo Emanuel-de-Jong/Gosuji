@@ -7,7 +7,15 @@ namespace Gosuji.Data
     public class UserRole : IdentityUserRole<string>, IDbModel
     {
         [Required]
-        public DateTimeOffset CreateDate { get; set; } = DateTimeOffset.Now;
-        public DateTimeOffset? ModifyDate { get; set; }
+        public DateTimeOffset CreateDate { get; set; }
+        [Required]
+        public DateTimeOffset ModifyDate { get; set; }
+
+        public UserRole()
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            CreateDate = now;
+            ModifyDate = now;
+        }
     }
 }

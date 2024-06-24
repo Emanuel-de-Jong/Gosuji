@@ -46,21 +46,6 @@ namespace Gosuji.Client.Data
         [NotMapped]
         public int PerfectPercent => (int)((double)Perfect / Total * 100);
 
-        public void Update(GameStat newModel)
-        {
-            MoveNumber = newModel.MoveNumber;
-            Winrate = newModel.Winrate;
-            Score = newModel.Score;
-            Total = newModel.Total;
-            Right = newModel.Right;
-            RightStreak = newModel.RightStreak;
-            RightTopStreak = newModel.RightTopStreak;
-            Perfect = newModel.Perfect;
-            PerfectStreak = newModel.PerfectStreak;
-            PerfectTopStreak = newModel.PerfectTopStreak;
-            base.Update(newModel);
-        }
-
         public bool Equal(GameStat other)
         {
             return MoveNumber == other.MoveNumber &&
@@ -70,24 +55,6 @@ namespace Gosuji.Client.Data
                 Perfect == other.Perfect &&
                 PerfectStreak == other.PerfectStreak &&
                 PerfectTopStreak == other.PerfectTopStreak;
-        }
-
-        public override string ToString()
-        {
-            return "{" +
-                "\nId: " + Id +
-                "\nMoveNumber: " + MoveNumber +
-                "\nWinrate: " + Winrate +
-                "\nScore: " + Score +
-                "\nTotal: " + Total +
-                "\nPerfect: " + Perfect +
-                "\nPerfectTopStreak: " + PerfectTopStreak +
-                "\nPerfectStreak: " + PerfectStreak +
-                "\nRight: " + Right +
-                "\nRightTopStreak: " + RightTopStreak +
-                "\nRightStreak: " + RightStreak +
-                "\n" + base.ToString() +
-                "\n}";
         }
     }
 }

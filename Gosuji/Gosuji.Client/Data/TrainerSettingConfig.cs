@@ -100,55 +100,6 @@ namespace Gosuji.Client.Data
         [Required]
         public bool ShowOpponentOptions { get; set; }
 
-        public void Update(TrainerSettingConfig newModel)
-        {
-            Hash = newModel.Hash;
-
-            Boardsize = newModel.Boardsize;
-            Handicap = newModel.Handicap;
-            ColorType = newModel.ColorType;
-            PreMovesSwitch = newModel.PreMovesSwitch;
-            PreMoves = newModel.PreMoves;
-            PreVisits = newModel.PreVisits;
-            SelfplayVisits = newModel.SelfplayVisits;
-            SuggestionVisits = newModel.SuggestionVisits;
-            OpponentVisits = newModel.OpponentVisits;
-            DisableAICorrection = newModel.DisableAICorrection;
-
-            Ruleset = newModel.Ruleset;
-            KomiChangeStyle = newModel.KomiChangeStyle;
-            Komi = newModel.Komi;
-
-            PreOptions = newModel.PreOptions;
-            PreOptionPerc = newModel.PreOptionPerc;
-            ForceOpponentCorners = newModel.ForceOpponentCorners;
-            CornerSwitch44 = newModel.CornerSwitch44;
-            CornerSwitch34 = newModel.CornerSwitch34;
-            CornerSwitch33 = newModel.CornerSwitch33;
-            CornerSwitch45 = newModel.CornerSwitch45;
-            CornerSwitch35 = newModel.CornerSwitch35;
-            CornerChance44 = newModel.CornerChance44;
-            CornerChance34 = newModel.CornerChance34;
-            CornerChance33 = newModel.CornerChance33;
-            CornerChance45 = newModel.CornerChance45;
-            CornerChance35 = newModel.CornerChance35;
-
-            SuggestionOptions = newModel.SuggestionOptions;
-            ShowOptions = newModel.ShowOptions;
-            ShowWeakerOptions = newModel.ShowWeakerOptions;
-            MinVisitsPercSwitch = newModel.MinVisitsPercSwitch;
-            MinVisitsPerc = newModel.MinVisitsPerc;
-            MaxVisitDiffPercSwitch = newModel.MaxVisitDiffPercSwitch;
-            MaxVisitDiffPerc = newModel.MaxVisitDiffPerc;
-
-            OpponentOptionsSwitch = newModel.OpponentOptionsSwitch;
-            OpponentOptions = newModel.OpponentOptions;
-            OpponentOptionPerc = newModel.OpponentOptionPerc;
-            ShowOpponentOptions = newModel.ShowOpponentOptions;
-
-            base.Update(newModel);
-        }
-
         public void SetHash()
         {
             Hash = GenerateHash(this);

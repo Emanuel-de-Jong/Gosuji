@@ -51,7 +51,7 @@ namespace Gosuji.Services
                 if (version == null)
                 {
                     version = KataGoVersion.GetCurrent();
-                    await dbContext.AddAsync(version);
+                    await dbContext.KataGoVersions.AddAsync(version);
                     await dbContext.SaveChangesAsync();
                 }
 
@@ -160,7 +160,7 @@ namespace Gosuji.Services
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-            dbContext.UserMoveCounts.Update(moveCount);
+            dbContext.Update(moveCount);
             await dbContext.SaveChangesAsync();
 
             await dbContext.DisposeAsync();
