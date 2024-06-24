@@ -34,7 +34,7 @@ namespace Gosuji.Client.Helpers
 
         public static async Task<T?> Put<T>(HttpClient http, string uri, object obj)
         {
-            return await TryCatch<T>(http.PostAsJsonAsync(uri, obj), uri);
+            return await TryCatch<T>(http.PutAsJsonAsync(uri, obj), uri);
         }
 
         private static async Task<T?> TryCatch<T>(Task<HttpResponseMessage> responseTask, string uri)
