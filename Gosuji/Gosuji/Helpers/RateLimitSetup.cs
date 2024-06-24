@@ -20,7 +20,6 @@ namespace Gosuji.Helpers
                     {
                         PermitLimit = 100,
                         Window = TimeSpan.FromSeconds(10),
-                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                         QueueLimit = 0
                     });
                 });
@@ -29,9 +28,18 @@ namespace Gosuji.Helpers
                 {
                     return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
                     {
-                        PermitLimit = 100,
+                        PermitLimit = 20,
                         Window = TimeSpan.FromSeconds(10),
-                        QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                        QueueLimit = 5
+                    });
+                });
+
+                options.AddPolicy("rl5", context =>
+                {
+                    return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
+                    {
+                        PermitLimit = 2,
+                        Window = TimeSpan.FromSeconds(10),
                         QueueLimit = 0
                     });
                 });

@@ -34,6 +34,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{userId}/{start}/{end}")]
+        [EnableRateLimiting("rl5")]
         public async Task<ActionResult<List<VMGame>>> GetUserGames(string userId,
             [Range(1, 100_000)] int start = 1,
             [Range(1, 100_000)] int end = 500)
