@@ -59,12 +59,8 @@ namespace Gosuji.Client.Helpers
                 return default;
             }
 
-            if (typeof(T) == typeof(NoValue))
-            {
-                return (T)(object)new NoValue();
-            }
-
-            return typeof(T) == typeof(string) ? (T)(object)await response.Content.ReadAsStringAsync()
+            return typeof(T) == typeof(NoValue) ? (T)(object)new NoValue()
+                : typeof(T) == typeof(string) ? (T)(object)await response.Content.ReadAsStringAsync()
                 : typeof(T) == typeof(long) ? (T)(object)long.Parse(await response.Content.ReadAsStringAsync())
                 : typeof(T) == typeof(int) ? (T)(object)int.Parse(await response.Content.ReadAsStringAsync())
                 : typeof(T) == typeof(bool) ? (T)(object)bool.Parse(await response.Content.ReadAsStringAsync())
