@@ -7,8 +7,6 @@ namespace Gosuji.Client.Components.Shared
         [Parameter]
         public string? URI { get; set; }
         [Parameter]
-        public bool ForceLoad { get; set; } = true;
-        [Parameter]
         public bool Return { get; set; } = false;
 
         [Inject]
@@ -22,7 +20,7 @@ namespace Gosuji.Client.Components.Shared
                 uri += $"?returnUrl={Uri.EscapeDataString(navigationManager.Uri)}";
             }
 
-            navigationManager.NavigateTo(uri, ForceLoad);
+            navigationManager.NavigateTo(uri);
         }
     }
 }
