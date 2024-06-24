@@ -9,6 +9,8 @@
                 false;
 #endif
 
+        public const string RateLimitPolicyName = "FixedWindowPolicy";
+
         public static Dictionary<string, string> CSSLibUrls = new()
         {
             { "DataTables", "https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.css" },

@@ -1,3 +1,4 @@
+using Gosuji.Client;
 using Gosuji.Client.Services;
 using Gosuji.Components;
 using Gosuji.Components.Account;
@@ -49,40 +50,15 @@ namespace Gosuji
 
             builder.Services.AddSingleton<RateLimitLogger>();
 
-            builder.Services.AddRateLimiter(_ =>
-            {
-                _.OnRejected = (context, _) =>
+            builder.Services.AddRateLimiter(_ => _
+                .AddFixedWindowLimiter(policyName: G.RateLimitPolicyName, options =>
                 {
-                    RateLimitLogger logger = context.HttpContext.RequestServices.GetRequiredService<RateLimitLogger>();
-                    logger.LogViolation(context.HttpContext);
+                    options.PermitLimit = 100;
+                    options.Window = TimeSpan.FromSeconds(10);
+                    options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                    options.QueueLimit = 0;
+                }));
 
-                    if (context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retryAfter))
-                    {
-                        context.HttpContext.Response.Headers.RetryAfter =
-                            ((int)retryAfter.TotalSeconds).ToString(NumberFormatInfo.InvariantInfo);
-                    }
-
-                    context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                    context.HttpContext.Response.WriteAsync("Too many requests. Please try again later.");
-
-                    return new ValueTask();
-                };
-                _.GlobalLimiter = PartitionedRateLimiter.CreateChained(
-                    PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
-                    {
-                        string ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-
-                        return RateLimitPartition.GetFixedWindowLimiter
-                        (ip, _ =>
-                            new FixedWindowRateLimiterOptions
-                            {
-                                PermitLimit = 100,
-                                Window = TimeSpan.FromSeconds(10),
-                                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                                QueueLimit = 10
-                            });
-                    }));
-            });
 
             builder.Services.AddControllers();
 
@@ -115,6 +91,8 @@ namespace Gosuji
 
             WebApplication app = builder.Build();
 
+            app.UseRateLimiter();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -135,9 +113,8 @@ namespace Gosuji
             app.UseStaticFiles();
             app.UseAntiforgery();
 
-            app.UseRateLimiter();
-
             app.MapRazorComponents<App>()
+                .RequireRateLimiting(G.RateLimitPolicyName)
                 .AddInteractiveServerRenderMode()
                 .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client.Components._Imports).Assembly);
@@ -145,7 +122,8 @@ namespace Gosuji
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
 
-            app.MapControllers();
+            app.MapControllers()
+                .RequireRateLimiting(G.RateLimitPolicyName);
 
             app.Run();
         }
