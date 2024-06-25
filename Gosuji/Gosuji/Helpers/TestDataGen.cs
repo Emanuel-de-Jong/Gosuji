@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Gosuji.Client.Data;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Gosuji.Helpers
 {
     public class TestDataGen
     {
+        private const int PRESETS = 10;
+
         private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
         private UserManager<User> userManager { get; set; }
         private RoleManager<IdentityRole> roleManager { get; set; }
@@ -39,6 +42,8 @@ namespace Gosuji.Helpers
             GenerateSettingConfigs();
             GenerateUsers();
             GenerateUserRoles();
+            GenerateTrainerSettingConfigs();
+            GeneratePresets();
             GenerateChangelogs();
             GenerateFeedbacks();
         }
@@ -235,6 +240,50 @@ namespace Gosuji.Helpers
                     RoleId = roleIds["Owner"],
                 },
             ]);
+            dbContext.SaveChanges();
+            dbContext.Dispose();
+        }
+
+        public TrainerSettingConfig GetRandomTrainerSettingConfig()
+        {
+            Random random = new();
+            TrainerSettingConfig config = GetTrainerSettingConfigBase();
+            config.Handicap = random.Next(10);
+            config.ColorType = random.Next(3) - 1;
+            config.PreMovesSwitch = random.Next(2) == 0;
+            config.PreMoves = random.Next(11);
+            config.DisableAICorrection = random.Next(2) == 0;
+            return config.SetHash();
+        }
+
+        public void GenerateTrainerSettingConfigs()
+        {
+            ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
+            for (int i = 0; i < PRESETS; i++)
+            {
+                dbContext.TrainerSettingConfigs.Add(GetRandomTrainerSettingConfig());
+            }
+            dbContext.SaveChanges();
+            dbContext.Dispose();
+        }
+
+        public void GeneratePresets()
+        {
+            ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
+            User[] users = dbContext.Users.ToArray();
+            long[] trainerSettingConfigIds = dbContext.TrainerSettingConfigs
+                .OrderByDescending(c => c.Id)
+                .Select(c => c.Id)
+                .ToArray();
+            for (int i = 0; i < PRESETS; i++)
+            {
+                User user = users[i % users.Length];
+                dbContext.Presets.Add(new() {
+                    Name = $"{user.UserName} {Guid.NewGuid().ToString().Substring(0, 5)}",
+                    UserId = user.Id,
+                    TrainerSettingConfigId = trainerSettingConfigIds[i],
+                });
+            }
             dbContext.SaveChanges();
             dbContext.Dispose();
         }
