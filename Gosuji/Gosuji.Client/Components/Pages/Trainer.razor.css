@@ -27,8 +27,8 @@
 }
 
 
-#trainerPage #game .board {
-    width: 725px;
+#trainerPage #game {
+    max-width: 725px;
 }
 
 #trainerPage #game .besogo-gameInfo {

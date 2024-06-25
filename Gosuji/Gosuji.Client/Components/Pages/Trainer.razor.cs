@@ -30,6 +30,8 @@ namespace Gosuji.Client.Components.Pages
         private DotNetObjectReference<Trainer>? trainerRef;
         private DotNetObjectReference<KataGoService>? kataGoServiceRef;
 
+        private List<Preset> presets;
+
         private Game? game;
         private TrainerSettingConfig? trainerSettingConfig;
         private GameStat? gameStat;
@@ -49,6 +51,8 @@ namespace Gosuji.Client.Components.Pages
 
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
+
+            presets = await dataService.GetPresets();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -97,7 +101,7 @@ namespace Gosuji.Client.Components.Pages
                 Dictionary<short, Dictionary<short, EMoveType>> decodedMoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
                 Dictionary<short, Dictionary<short, Coord>> decodedChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords);
 
-                jsRef.InvokeVoidAsync("trainerPage.init",
+                await jsRef.InvokeVoidAsync("trainerPage.init",
                     trainerRef,
                     kataGoServiceRef,
                     userName,
@@ -116,12 +120,14 @@ namespace Gosuji.Client.Components.Pages
             }
             else
             {
-                jsRef.InvokeVoidAsync("trainerPage.init",
+                await jsRef.InvokeVoidAsync("trainerPage.init",
                     trainerRef,
                     kataGoServiceRef,
                     userName,
                     kataGoVersion);
             }
+
+            //await jsRef.InvokeVoidAsync("trainerPage.start");
         }
 
         private async Task Save()

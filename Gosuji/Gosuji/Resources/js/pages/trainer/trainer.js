@@ -86,8 +86,6 @@ trainerPage.init = async function (
 
     sgf.sgfLoadingEvent.add(trainerPage.sgfLoadingListener);
     sgf.sgfLoadedEvent.add(trainerPage.sgfLoadedListener);
-
-    await trainerPage.start();
 };
 
 trainerPage.clear = async function () {
@@ -117,7 +115,7 @@ trainerPage.start = async function () {
         trainerG.isLoadingServerData = false;
         gameplay.givePlayerControl(false);
     } else {
-        await preMovePlacer.start();
+        preMovePlacer.start();
     }
 };
 
