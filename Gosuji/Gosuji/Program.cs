@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Gosuji
 {
@@ -64,20 +65,30 @@ namespace Gosuji
             builder.Services.AddHttpContextAccessor();
 
             // Preconfigure an HttpClient for web API calls
-            builder.Services.AddSingleton<HttpClient>(sp =>
+            builder.Services.AddScoped<HttpClient>(sp =>
             {
                 IHttpContextAccessor httpContextAccessor = sp.GetRequiredService<IHttpContextAccessor>();
-                HttpRequest request = httpContextAccessor.HttpContext.Request;
-                string baseAddress = $"{request.Scheme}://{request.Host.Value}";
-                return new HttpClient { BaseAddress = new Uri(baseAddress) };
+                HttpRequest Request = httpContextAccessor.HttpContext.Request;
+                Uri baseAddress = new($"{Request.Scheme}://{Request.Host.Value}");
+
+                HttpClientHandler handler = new();
+                if (Request.Cookies != null)
+                {
+                    foreach (KeyValuePair<string, string> cookie in Request.Cookies)
+                    {
+                        handler.CookieContainer.Add(baseAddress, new Cookie(cookie.Key, cookie.Value));
+                    }
+                }
+
+                return new(handler) { BaseAddress = baseAddress };
             });
 
             // Custom services
             builder.Services.AddSingleton<SanitizeService>();
             builder.Services.AddSingleton<KataGoPoolService>();
-            builder.Services.AddSingleton<DataService, DataService>();
-            builder.Services.AddSingleton<KataGoService, KataGoService>();
-            builder.Services.AddSingleton<JosekisService, JosekisService>();
+            builder.Services.AddScoped<DataService, DataService>();
+            builder.Services.AddScoped<KataGoService, KataGoService>();
+            builder.Services.AddScoped<JosekisService, JosekisService>();
 
             WebApplication app = builder.Build();
 

@@ -20,9 +20,9 @@ namespace Gosuji.Client
             builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             // Custom services
-            builder.Services.AddSingleton<DataService>();
-            builder.Services.AddSingleton<KataGoService>();
-            builder.Services.AddSingleton<JosekisService>();
+            builder.Services.AddScoped<DataService>();
+            builder.Services.AddScoped<KataGoService>();
+            builder.Services.AddScoped<JosekisService>();
 
             builder.Services.AddLocalization();
 
