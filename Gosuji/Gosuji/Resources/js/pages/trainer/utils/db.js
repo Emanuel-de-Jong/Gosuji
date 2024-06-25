@@ -11,7 +11,10 @@ db.OPENING_RATIO_MOVENUMBER = 40;
 db.MIDGAME_RATIO_MOVENUMBER = 120;
 
 
-db.init = function () { };
+db.init = function () {
+    db.saveButton = document.getElementById("saveBtn");
+    db.saveButton.addEventListener("click", db.save);
+};
 
 db.clear = function () { };
 

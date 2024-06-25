@@ -96,10 +96,6 @@
         border-bottom-right-radius: 0;
     }
 
-    #trainerPage #settings #settingsButtonDiv {
-        margin-bottom: 20px;
-    }
-
 
 #trainerPage .accordion-button {
     padding: 8px 20px 8px 10px !important;

@@ -61,7 +61,9 @@ trainerPage.init = async function (
     trainerG.init(trainerRef, kataGoServiceRef, kataGoVersion, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
-    trainerPage.restartButton = document.getElementById("restart");
+    trainerPage.startButton = document.getElementById("startBtn");
+    trainerPage.restartButton = document.getElementById("restartBtn");
+    trainerPage.startButton.addEventListener("click", trainerPage.startButtonClickListener);
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
     settings.init(serverColor);
@@ -105,8 +107,6 @@ trainerPage.clear = async function () {
     await selfplay.clear();
     await katago.clear();
     db.clear();
-
-    await trainerPage.start();
 };
 
 
@@ -119,8 +119,15 @@ trainerPage.start = async function () {
     }
 };
 
+trainerPage.startButtonClickListener = async function () {
+    trainerPage.startButton.hidden = true;
+    trainerPage.restartButton.hidden = false;
+    await trainerPage.start();
+};
+
 trainerPage.restartButtonClickListener = async function () {
     await trainerPage.clear();
+    await trainerPage.start();
 };
 
 trainerPage.sgfLoadingListener = async function () {

@@ -13,7 +13,7 @@ preMovePlacer.MAX_VISIT_DIFF_PERC = 50;
 
 
 preMovePlacer.init = function () {
-    preMovePlacer.stopButton = document.getElementById("stopPreMoves");
+    preMovePlacer.stopButton = document.getElementById("stopPreMovesBtn");
     preMovePlacer.stopButton.addEventListener("click", preMovePlacer.stopButtonClickListener);
 
     preMovePlacer.clear();

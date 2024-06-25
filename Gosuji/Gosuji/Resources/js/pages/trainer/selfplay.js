@@ -7,7 +7,7 @@ let selfplay = { id: "selfplay" };
 
 
 selfplay.init = async function () {
-    selfplay.button = document.getElementById("selfplay");
+    selfplay.button = document.getElementById("selfplayBtn");
     selfplay.button.addEventListener("click", selfplay.buttonClickListener);
 
     selfplay.isPlaying = false;

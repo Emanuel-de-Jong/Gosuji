@@ -81,11 +81,11 @@ namespace Gosuji.Client.Components.Pages
                     return;
                 }
 
-                await Start();
+                await InitJS();
             }
         }
 
-        public async Task Start()
+        public async Task InitJS()
         {
             kataGoVersion = await kataGoService.GetVersion();
 
@@ -126,15 +126,7 @@ namespace Gosuji.Client.Components.Pages
                     userName,
                     kataGoVersion);
             }
-
-            //await jsRef.InvokeVoidAsync("trainerPage.start");
         }
-
-        private async Task Save()
-        {
-            await jsRef.InvokeVoidAsync("db.save");
-        }
-
 
         [JSInvokable]
         public async Task SaveTrainerSettingConfig(TrainerSettingConfig newConfig)

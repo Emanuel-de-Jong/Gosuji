@@ -19,21 +19,6 @@
             <div id="flex-container">
                 <div class="flex-item">
                     <form id="settings" class="collapse show" novalidate>
-                        <div class="row" id="settingsButtonDiv">
-                            <div class="col-6">
-                                <div>
-                                    <button type="button" class="btn btn-primary" id="restart">Restart</button>
-                                </div>
-                            </div>
-
-                            <div class="col-6">
-                                <div class="text-end">
-                                    <button type="button" class="btn btn-primary" id="stopPreMoves">Stop pre moves</button>
-                                    <button type="button" class="btn btn-primary" id="selfplay" hidden>Start selfplay</button>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="accordion accordion-flush" id="settingsAccordion">
                             <div class="accordion-item">
                                 <h3 class="accordion-header" id="basicsSettingsHeader">
@@ -390,10 +375,13 @@
                 <div class="flex-item">
                     <div id="stats">
                         <div>
-                            <button type="button" class="btn btn-primary" @onclick="Start" hidden>Start</button>
-                            <button type="button" class="btn btn-primary" @onclick="Save">Save</button>
+                            <button type="button" class="btn btn-primary" id="startBtn">Start</button>
+                            <button type="button" class="btn btn-primary" id="restartBtn" hidden>Restart</button>
+                            <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+                            <button type="button" class="btn btn-primary" id="stopPreMovesBtn">Stop pre moves</button>
+                            <button type="button" class="btn btn-primary" id="selfplayBtn" hidden>Start selfplay</button>
                             <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#settings">Settings</button>
-                            <button type="button" class="btn btn-primary" id="test" hidden>Test</button>
+                            <button type="button" class="btn btn-primary" id="testBtn" hidden>Test</button>
                         </div>
                         <div class="accordion accordion-flush">
                             <div class="accordion-item">
