@@ -21,7 +21,7 @@ profilePage.init = function (rightColor, perfectColor) {
 profilePage.themeChangedListener = function (e) {
     let percentPerGameLineChartScales = profilePage.percentPerGameLineChart.config.options.scales;
     let gameStageBarChartScales = profilePage.gameStageBarChart.config.options.scales;
-    if (e.theme == theme.THEME_TYPES.DARK) {
+    if (e.theme == theme.TYPES.DARK) {
         percentPerGameLineChartScales.x.grid.color = profilePage.DARK_THEME_GRID_COLOR;
         percentPerGameLineChartScales.y.grid.color = profilePage.DARK_THEME_GRID_COLOR;
         gameStageBarChartScales.x.grid.color = profilePage.DARK_THEME_GRID_COLOR;
@@ -89,7 +89,7 @@ profilePage.createPercentPerGameLineChart = function (rightPercents, perfectPerc
                 x: {
                     grid: {
                         color:
-                        theme.theme == theme.THEME_TYPES.DARK
+                        theme.theme == theme.TYPES.DARK
                                 ? profilePage.DARK_THEME_GRID_COLOR
                                 : profilePage.LIGHT_THEME_GRID_COLOR,
                     },
@@ -99,7 +99,7 @@ profilePage.createPercentPerGameLineChart = function (rightPercents, perfectPerc
                     max: 100,
                     grid: {
                         color:
-                        theme.theme == theme.THEME_TYPES.DARK
+                        theme.theme == theme.TYPES.DARK
                                 ? profilePage.DARK_THEME_GRID_COLOR
                                 : profilePage.LIGHT_THEME_GRID_COLOR,
                     },
@@ -144,7 +144,7 @@ profilePage.createGameStageBarChart = function (right, perfect) {
                 x: {
                     grid: {
                         color:
-                            theme.theme == theme.theme_TYPES.DARK
+                            theme.theme == theme.TYPES.DARK
                                 ? profilePage.DARK_THEME_GRID_COLOR
                                 : profilePage.LIGHT_THEME_GRID_COLOR,
                     },
@@ -154,7 +154,7 @@ profilePage.createGameStageBarChart = function (right, perfect) {
                     max: 100,
                     grid: {
                         color:
-                            theme.theme == theme.theme_TYPES.DARK
+                            theme.theme == theme.TYPES.DARK
                                 ? profilePage.DARK_THEME_GRID_COLOR
                                 : profilePage.LIGHT_THEME_GRID_COLOR,
                     },

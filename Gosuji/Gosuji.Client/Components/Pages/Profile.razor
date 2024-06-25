@@ -15,11 +15,7 @@
             <a class="btn btn-primary" href="Account/Manage">Settings</a>
             <a class="btn btn-primary" href="logout">Logout</a>
 
-            @if (Games == null)
-            {
-                <p>Loading...</p>
-            }
-            else
+            @if (FinishedGames != null)
             {
                 <div class="row">
                     <div class="col" id="gameTableDiv">
