@@ -24,19 +24,18 @@ katago.start = async function () {
     }
     katago.isStarted = true;
 
-    trainerG.showLoadAnimation();
     await katago.restart();
     await katago.setBoardsize();
     await katago.setRuleset();
     await katago.setKomi();
     await katago.setHandicap();
-    trainerG.hideLoadAnimation();
 };
 
 katago.clearBoard = async function () {
     await katago.start();
 
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("ClearBoard")
         .then((response) => {
             return response;
@@ -44,12 +43,15 @@ katago.clearBoard = async function () {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.restart = async function () {
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("Restart")
         .then((response) => {
             return response;
@@ -57,12 +59,15 @@ katago.restart = async function () {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.setBoardsize = async function () {
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("SetBoardsize", trainerG.board.boardsize)
         .then((response) => {
             return response;
@@ -70,12 +75,15 @@ katago.setBoardsize = async function () {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.setRuleset = async function () {
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("SetRuleset", sgf.ruleset)
         .then((response) => {
             return response;
@@ -83,12 +91,15 @@ katago.setRuleset = async function () {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.setKomi = async function () {
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("SetKomi", sgf.komi)
         .then((response) => {
             return response;
@@ -96,6 +107,8 @@ katago.setKomi = async function () {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.setHandicap = async function () {
@@ -103,7 +116,8 @@ katago.setHandicap = async function () {
 
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("SetHandicap", trainerG.board.handicap)
         .then((response) => {
             return response;
@@ -111,12 +125,15 @@ katago.setHandicap = async function () {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("AnalyzeMove", g.colorNumToName(color), katago.coordNumToName(coord))
         .then((kataGoSuggestion) => {
             return MoveSuggestion.fromKataGo(kataGoSuggestion);
@@ -124,6 +141,8 @@ katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor(
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.analyze = async function (
@@ -138,7 +157,8 @@ katago.analyze = async function (
     
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("Analyze", g.colorNumToName(color), maxVisits, minVisitsPerc, maxVisitDiffPerc)
         .then((kataGoSuggestions) => {
             let suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
@@ -150,12 +170,15 @@ katago.analyze = async function (
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.play = async function (coord, color = trainerG.board.getColor()) {
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("Play", g.colorNumToName(color), katago.coordNumToName(coord))
         .then((response) => {
             return response;
@@ -163,6 +186,8 @@ katago.play = async function (coord, color = trainerG.board.getColor()) {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.playRange = async function () {
@@ -183,7 +208,8 @@ katago.playRange = async function () {
 
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("PlayRange", serverMoves)
         .then((response) => {
             return response;
@@ -191,12 +217,15 @@ katago.playRange = async function () {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.sgf = async function () {
     await katago.start();
     
-    return katago.serviceRef
+    trainerG.showLoadAnimation();
+    let response = await katago.serviceRef
         .invokeMethodAsync("SGF", false)
         .then((response) => {
             return response;
@@ -204,6 +233,8 @@ katago.sgf = async function () {
         .catch((error) => {
             return error;
         });
+    trainerG.hideLoadAnimation();
+    return response;
 };
 
 katago.sendRequest = async function (request) {

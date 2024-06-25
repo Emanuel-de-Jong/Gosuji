@@ -56,14 +56,8 @@ export class TrainerBoard extends Board {
 
         document
             .querySelector("#game .besogo-board")
-            .insertAdjacentHTML("beforeend",
-                `<button type="button" class="btn btn-secondary next" disabled>></button>
-                <div class="loadAnimationContainer" hidden>
-                    <div class="loadAnimation"></div>
-                </div>`
-            );
+            .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary next" disabled>></button>');
         this.nextButton = document.querySelector(".next");
-        this.loadAnimation = document.querySelector(".loadAnimationContainer");
 
         this.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
         this.editor.addListener(gameplay.treeJumpedCheckListener);

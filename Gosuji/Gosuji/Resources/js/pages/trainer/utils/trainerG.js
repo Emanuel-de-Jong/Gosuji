@@ -39,8 +39,8 @@ trainerG.init = function (trainerRef, kataGoVersion, serverSuggestions, serverMo
     trainerG.trainerRef = trainerRef;
     trainerG.kataGoVersion = kataGoVersion;
 
+    trainerG.loadAnimation = document.querySelector("#game .loadAnimation");
     trainerG.phaseChangedEvent = new CEvent();
-
     trainerG.board = new TrainerBoard();
 
     trainerG.clear(serverSuggestions, serverMoveTypes);
@@ -117,11 +117,11 @@ trainerG.setColor = function (color = trainerG.board.getNextColor()) {
 };
 
 trainerG.showLoadAnimation = function() {
-    trainerG.board.loadAnimation.hidden = false;
+    trainerG.loadAnimation.hidden = false;
 };
 
 trainerG.hideLoadAnimation = function() {
-    trainerG.board.loadAnimation.hidden = true;
+    trainerG.loadAnimation.hidden = true;
 };
 
 trainerG.analyze = async function (maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color) {
