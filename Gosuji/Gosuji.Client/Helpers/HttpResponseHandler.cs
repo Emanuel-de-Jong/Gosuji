@@ -37,6 +37,16 @@ namespace Gosuji.Client.Helpers
             return await TryCatch<T>(http.PutAsJsonAsync(uri, obj), uri);
         }
 
+        public static async Task<bool> Delete(HttpClient http, string uri)
+        {
+            return (await Delete<NoValue>(http, uri)) != null;
+        }
+
+        public static async Task<T?> Delete<T>(HttpClient http, string uri)
+        {
+            return await TryCatch<T>(http.DeleteAsync(uri), uri);
+        }
+
         private static async Task<T?> TryCatch<T>(Task<HttpResponseMessage> responseTask, string uri)
         {
             try

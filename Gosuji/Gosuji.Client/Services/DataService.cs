@@ -26,6 +26,12 @@ namespace Gosuji.Client.Services
                 $"{MAP_GROUP}/GetGame/{gameId}");
         }
 
+        public async Task<TrainerSettingConfig?> GetTrainerSettingConfig(long configId)
+        {
+            return await HttpResponseHandler.Get<TrainerSettingConfig>(http,
+                $"{MAP_GROUP}/GetTrainerSettingConfig/{configId}");
+        }
+
         public async Task<long?> PostTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
         {
             return await HttpResponseHandler.Post<long>(http,
@@ -78,6 +84,30 @@ namespace Gosuji.Client.Services
         {
             return await HttpResponseHandler.Get<Dictionary<string, Language>>(http,
                 $"{MAP_GROUP}/GetLanguages");
+        }
+
+        public async Task<List<Preset>?> GetPresets()
+        {
+            return await HttpResponseHandler.Get<List<Preset>>(http,
+                $"{MAP_GROUP}/GetPresets");
+        }
+
+        public async Task<long?> PostPreset(Preset preset)
+        {
+            return await HttpResponseHandler.Post<long>(http,
+                $"{MAP_GROUP}/PostPreset", preset);
+        }
+
+        public async Task<bool> PutPreset(Preset preset)
+        {
+            return await HttpResponseHandler.Put(http,
+                $"{MAP_GROUP}/PutPreset", preset);
+        }
+
+        public async Task<bool> DeletePreset(long presetId)
+        {
+            return await HttpResponseHandler.Delete(http,
+                $"{MAP_GROUP}/DeletePreset/{presetId}");
         }
     }
 }

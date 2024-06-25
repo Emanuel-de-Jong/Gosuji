@@ -88,7 +88,30 @@ namespace Gosuji.Controllers
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             Game? game = await dbContext.Games.Where(g => g.Id == gameId).FirstOrDefaultAsync();
             await dbContext.DisposeAsync();
+
+            if (game?.UserId != GetUserId())
+            {
+                return Unauthorized();
+            }
+
             return Ok(game);
+        }
+
+        [HttpGet("{configId}")]
+        public async Task<ActionResult<TrainerSettingConfig>> GetTrainerSettingConfig(long configId)
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            TrainerSettingConfig? config = await dbContext.TrainerSettingConfigs
+                .Where(c => c.Id == configId)
+                .FirstOrDefaultAsync();
+            await dbContext.DisposeAsync();
+
+            if (config == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(config);
         }
 
         [HttpPost]
@@ -96,7 +119,6 @@ namespace Gosuji.Controllers
         public async Task<ActionResult<long>> PostTrainerSettingConfig(TrainerSettingConfig config)
         {
             config.Id = 0;
-            sanitizeService.Sanitize(config);
 
             if (config.Hash is null or "")
             {
@@ -115,6 +137,7 @@ namespace Gosuji.Controllers
             }
             else
             {
+                sanitizeService.Sanitize(config);
                 await dbContext.TrainerSettingConfigs.AddAsync(config);
                 await dbContext.SaveChangesAsync();
             }
@@ -128,9 +151,9 @@ namespace Gosuji.Controllers
         public async Task<ActionResult<long>> PostGameStat(GameStat gameStat)
         {
             gameStat.Id = 0;
-            sanitizeService.Sanitize(gameStat);
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            sanitizeService.Sanitize(gameStat);
             await dbContext.GameStats.AddAsync(gameStat);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -140,14 +163,13 @@ namespace Gosuji.Controllers
         [HttpPut]
         public async Task<ActionResult> PutGameStat(GameStat gameStat)
         {
-            sanitizeService.Sanitize(gameStat);
-
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             if (dbContext.GameStats.Any(gs => gs.Id == gameStat.Id) == false)
             {
-                return BadRequest("GameStat not found.");
+                return NotFound();
             }
 
+            sanitizeService.Sanitize(gameStat);
             dbContext.Update(gameStat);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -161,9 +183,8 @@ namespace Gosuji.Controllers
             game.Id = 0;
             game.UserId = GetUserId();
 
-            sanitizeService.Sanitize(game);
-
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            sanitizeService.Sanitize(game);
             await dbContext.Games.AddAsync(game);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -174,8 +195,6 @@ namespace Gosuji.Controllers
         [EnableRateLimiting("rl5")]
         public async Task<ActionResult> PutGame(Game game)
         {
-            sanitizeService.Sanitize(game);
-
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             Game? oldGame = await dbContext.Games
                 .Where(g => g.Id == game.Id)
@@ -183,7 +202,7 @@ namespace Gosuji.Controllers
                 .FirstOrDefaultAsync();
             if (oldGame == null)
             {
-                return BadRequest("Game not found.");
+                return NotFound();
             }
             if (oldGame.UserId != GetUserId())
             {
@@ -195,6 +214,7 @@ namespace Gosuji.Controllers
                 game.UserId = oldGame.UserId;
             }
 
+            sanitizeService.Sanitize(game);
             dbContext.Update(game);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -208,9 +228,8 @@ namespace Gosuji.Controllers
             feedback.Id = 0;
             feedback.UserId = GetUserId();
 
-            sanitizeService.Sanitize(feedback);
-
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            sanitizeService.Sanitize(feedback);
             await dbContext.Feedbacks.AddAsync(feedback);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -220,11 +239,9 @@ namespace Gosuji.Controllers
         [HttpGet]
         public async Task<ActionResult<SettingConfig>> GetSettingConfig()
         {
-            string userId = GetUserId();
-
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            SettingConfig settingConfig = await dbContext.Users
-                .Where(u => u.Id == userId)
+            SettingConfig? settingConfig = await dbContext.Users
+                .Where(u => u.Id == GetUserId())
                 .Select(u => u.SettingConfig)
                 .FirstOrDefaultAsync();
             await dbContext.DisposeAsync();
@@ -234,14 +251,21 @@ namespace Gosuji.Controllers
         [HttpPut]
         public async Task<ActionResult> PutSettingConfig(SettingConfig settingConfig)
         {
-            sanitizeService.Sanitize(settingConfig);
-
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             if (dbContext.SettingConfigs.Any(cs => cs.Id == settingConfig.Id) == false)
             {
-                return BadRequest("SettingConfig not found.");
+                return NotFound();
             }
 
+            User user = await dbContext.Users
+                .Where(u => u.Id == GetUserId())
+                .FirstOrDefaultAsync();
+            if (user.SettingConfigId != settingConfig.Id)
+            {
+                return Unauthorized();
+            }
+
+            sanitizeService.Sanitize(settingConfig);
             dbContext.Update(settingConfig);
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -256,6 +280,87 @@ namespace Gosuji.Controllers
             Dictionary<string, Language> languages = await dbContext.Languages.ToDictionaryAsync(l => l.Short);
             await dbContext.DisposeAsync();
             return Ok(languages);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Preset>>> GetPresets()
+        {
+            string userId = GetUserId();
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            List<Preset> presets = await dbContext.Presets
+                .Where(p => p.UserId == null || p.UserId == userId)
+                .OrderBy(p => p.Id)
+                .ToListAsync();
+            await dbContext.DisposeAsync();
+            return Ok(presets);
+        }
+
+        [HttpPost]
+        [EnableRateLimiting("rl5")]
+        public async Task<ActionResult<long>> PostPreset(Preset preset)
+        {
+            preset.Id = 0;
+            preset.UserId = GetUserId();
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            sanitizeService.Sanitize(preset);
+            await dbContext.Presets.AddAsync(preset);
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+            return Ok(preset.Id);
+        }
+
+        [HttpPut]
+        [EnableRateLimiting("rl5")]
+        public async Task<ActionResult> PutPreset(Preset preset)
+        {
+            if (preset.UserId == null)
+            {
+                return Unauthorized();
+            }
+            preset.UserId = GetUserId();
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            Preset? oldPreset = await dbContext.Presets
+                .Where(p => p.Id == preset.Id)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+            if (oldPreset == null)
+            {
+                return NotFound();
+            }
+            if (oldPreset.UserId != GetUserId())
+            {
+                return Unauthorized();
+            }
+
+            sanitizeService.Sanitize(preset);
+            dbContext.Update(preset);
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+            return Ok();
+        }
+
+        [HttpDelete("{presetId}")]
+        public async Task<ActionResult> DeletePreset(long presetId)
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            Preset? preset = await dbContext.Presets
+                .Where(p => p.Id == presetId)
+                .FirstOrDefaultAsync();
+            if (preset == null)
+            {
+                return NotFound();
+            }
+            if (preset.UserId == null || preset.UserId != GetUserId())
+            {
+                return Unauthorized();
+            }
+
+            dbContext.Presets.Remove(preset);
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+            return Ok();
         }
     }
 }

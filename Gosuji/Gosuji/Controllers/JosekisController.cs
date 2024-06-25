@@ -131,8 +131,6 @@ namespace Gosuji.Controllers
                 return BadRequest(SESSION_UNKNOWN_ERR);
             }
 
-            sanitizeService.Sanitize(childToGo);
-
             foreach (GoNode? childNode in josekisGoNodes[sessionId].ChildNodes)
             {
                 if (childNode is GoMoveNode childMove)

@@ -1,8 +1,7 @@
-﻿using Gosuji.Client.Data;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Gosuji.Data
+namespace Gosuji.Client.Data
 {
     public class Preset : DbModel
     {
@@ -10,7 +9,6 @@ namespace Gosuji.Data
 
         [StringLength(36)]
         public string? UserId { get; set; }
-        public User? User { get; set; }
         [Required]
         public long TrainerSettingConfigId { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
@@ -19,7 +17,6 @@ namespace Gosuji.Data
         [MaxLength(250)]
         [MinLength(1)]
         public string Name { get; set; }
-        public bool IsDeleted { get; set; }
 
         [NotMapped]
         public bool IsGeneral => string.IsNullOrEmpty(UserId);
