@@ -38,7 +38,6 @@ namespace Gosuji.Helpers
             GenerateEssentials();
             GenerateSettingConfigs();
             GenerateUsers();
-            GenerateRoles();
             GenerateUserRoles();
             GenerateChangelogs();
             GenerateFeedbacks();
@@ -46,7 +45,15 @@ namespace Gosuji.Helpers
 
         public void GenerateEssentials()
         {
+            GenerateRoles();
             GenerateLanguages();
+            GenerateGeneralTrainerSettingConfigs();
+            GenerateGeneralPresets();
+        }
+
+        public void GenerateRoles()
+        {
+            roleManager.CreateAsync(new("Owner")).Wait();
         }
 
         public void GenerateLanguages()
@@ -68,6 +75,91 @@ namespace Gosuji.Helpers
                 new() {
                     Name = "日本語",
                     Short = "ja",
+                },
+            ]);
+            dbContext.SaveChanges();
+            dbContext.Dispose();
+        }
+
+        private TrainerSettingConfig GetTrainerSettingConfigBase()
+        {
+            return new TrainerSettingConfig
+            {
+                Boardsize = 19,
+                Handicap = 0,
+                ColorType = 0,
+                PreMovesSwitch = false,
+                PreMoves = 5,
+                DisableAICorrection = false,
+
+                Ruleset = "Japanese",
+                KomiChangeStyle = "Automatic",
+                Komi = 6.5f,
+
+                PreOptions = 2,
+                PreOptionPerc = 20,
+                ForceOpponentCorners = "Both",
+                CornerSwitch44 = true,
+                CornerSwitch34 = true,
+                CornerSwitch33 = false,
+                CornerSwitch45 = false,
+                CornerSwitch35 = false,
+                CornerChance44 = 8,
+                CornerChance34 = 12,
+                CornerChance33 = 2,
+                CornerChance45 = 2,
+                CornerChance35 = 2,
+
+                SuggestionOptions = 6,
+                ShowOptions = true,
+                ShowWeakerOptions = false,
+                MinVisitsPercSwitch = true,
+                MinVisitsPerc = 10,
+                MaxVisitDiffPercSwitch = false,
+                MaxVisitDiffPerc = 40,
+
+                OpponentOptionsSwitch = false,
+                OpponentOptions = 5,
+                OpponentOptionPerc = 10,
+                ShowOpponentOptions = false,
+            };
+        }
+
+        public void GenerateGeneralTrainerSettingConfigs()
+        {
+            ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
+            TrainerSettingConfig config;
+            config = GetTrainerSettingConfigBase();
+            dbContext.TrainerSettingConfigs.Add(config.SetHash());
+
+            config = GetTrainerSettingConfigBase();
+            config.PreMovesSwitch = true;
+            dbContext.TrainerSettingConfigs.Add(config.SetHash());
+
+            config = GetTrainerSettingConfigBase();
+            config.DisableAICorrection = true;
+            config.ShowOptions = false;
+            dbContext.TrainerSettingConfigs.Add(config.SetHash());
+            dbContext.SaveChanges();
+            dbContext.Dispose();
+        }
+
+        public void GenerateGeneralPresets()
+        {
+            ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
+            int id = 1;
+            dbContext.Presets.AddRange([
+                new() {
+                    Name = "Default",
+                    TrainerSettingConfigId = id++,
+                },
+                new() {
+                    Name = "Quick start",
+                    TrainerSettingConfigId = id++,
+                },
+                new() {
+                    Name = "Just play",
+                    TrainerSettingConfigId = id++,
                 },
             ]);
             dbContext.SaveChanges();
@@ -130,11 +222,6 @@ namespace Gosuji.Helpers
                 EmailConfirmed = false,
                 SettingConfigId = settingConfigIds[settingConfigIndex++],
             }, password).Wait();
-        }
-
-        public void GenerateRoles()
-        {
-            roleManager.CreateAsync(new("Owner")).Wait();
         }
 
         public void GenerateUserRoles()

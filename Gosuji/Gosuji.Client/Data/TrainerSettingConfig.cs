@@ -23,18 +23,14 @@ namespace Gosuji.Client.Data
         public bool PreMovesSwitch { get; set; }
         [Required]
         public int PreMoves { get; set; }
-        [Required]
         [Range(2, 100_000)]
-        public int PreVisits { get; set; }
-        [Required]
+        public int? PreVisits { get; set; }
         [Range(2, 100_000)]
-        public int SelfplayVisits { get; set; }
-        [Required]
+        public int? SelfplayVisits { get; set; }
         [Range(2, 100_000)]
-        public int SuggestionVisits { get; set; }
-        [Required]
+        public int? SuggestionVisits { get; set; }
         [Range(2, 100_000)]
-        public int OpponentVisits { get; set; }
+        public int? OpponentVisits { get; set; }
         [Required]
         public bool DisableAICorrection { get; set; }
 
@@ -100,9 +96,10 @@ namespace Gosuji.Client.Data
         [Required]
         public bool ShowOpponentOptions { get; set; }
 
-        public void SetHash()
+        public TrainerSettingConfig SetHash()
         {
             Hash = GenerateHash(this);
+            return this;
         }
 
         public static string GenerateHash(TrainerSettingConfig config)
