@@ -33,6 +33,10 @@ namespace Gosuji.Services
             cashInTimer.Elapsed += (sender, e) => CashInTimerElapsed();
             cashInTimer.Enabled = true;
 
+            // TEMP START
+            return;
+            // TEMP END
+
             ManageFreeInstances();
         }
 
