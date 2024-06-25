@@ -7,7 +7,7 @@ namespace Gosuji.Client.Data
         [Key] public long Id { get; set; }
 
         [StringLength(36)]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         [Required]
         public long TrainerSettingConfigId { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }

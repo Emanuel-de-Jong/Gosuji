@@ -88,7 +88,6 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{color}/{coord}")]
-        [EnableRateLimiting("rl5")]
         public async Task<ActionResult<MoveSuggestion>> AnalyzeMove([RegularExpression(@"(B|W)")] string color,
             [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
         {
@@ -96,7 +95,6 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{color}")]
-        [EnableRateLimiting("rl5")]
         public async Task<ActionResult<List<MoveSuggestion>>> Analyze([RegularExpression(@"(B|W)")] string color,
             [Required, Range(2, 100_000)] int maxVisits,
             [Required, Range(0, 100)] float minVisitsPerc,

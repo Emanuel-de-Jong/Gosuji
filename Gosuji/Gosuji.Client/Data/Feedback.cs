@@ -15,7 +15,7 @@ namespace Gosuji.Client.Data
     {
         [Key] public long Id { get; set; }
         [StringLength(36)]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         [Required]
         [CustomPersonalData]
         public EFeedbackType FeedbackType { get; set; }

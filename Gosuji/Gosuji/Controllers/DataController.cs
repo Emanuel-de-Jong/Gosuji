@@ -41,8 +41,6 @@ namespace Gosuji.Controllers
         public async Task<ActionResult<List<VMGame>>> GetUserGames([Range(1, 100_000)] int start = 1,
             [Range(1, 100_000)] int end = 500)
         {
-            string userId = GetUserId();
-
             if (end < start || end - start + 1 > 500)
             {
                 return BadRequest("Invalid range. Max range 500.");
@@ -50,7 +48,7 @@ namespace Gosuji.Controllers
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             List<VMGame> games = await dbContext.Games
-                .Where(g => g.UserId == userId)
+                .Where(g => g.UserId == GetUserId())
                 .Where(g => g.IsDeleted == false)
                 .OrderByDescending(g => g.Id)
                 .Skip(start - 1)
@@ -285,10 +283,9 @@ namespace Gosuji.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Preset>>> GetPresets()
         {
-            string userId = GetUserId();
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             List<Preset> presets = await dbContext.Presets
-                .Where(p => p.UserId == null || p.UserId == userId)
+                .Where(p => p.UserId == null || p.UserId == GetUserId())
                 .OrderBy(p => p.Id)
                 .ToListAsync();
             await dbContext.DisposeAsync();
