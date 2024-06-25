@@ -27,6 +27,17 @@ db.saveTrainerSettingConfig = async function () {
     return trainerG.trainerRef
         .invokeMethodAsync(
             "SaveTrainerSettingConfig",
+                // boardsize: settings.boardsize,
+                // handicap: settings.handicap,
+                // colorType: settings.colorType,
+                // preMovesSwitch: settings.preMovesSwitch,
+                // preMoves: settings.preMoves,
+                // preVisits: settings.preVisits,
+                // selfplayVisits: settings.selfplayVisits,
+                // suggestionVisits: settings.suggestionVisits,
+                // opponentVisits: settings.opponentVisits,
+                // disableAICorrection: settings.disableAICorrection,
+
             settings.boardsize,
             settings.handicap,
             settings.colorType,
@@ -96,22 +107,23 @@ db.saveGameStats = async function () {
 db.saveGame = async function () {
     return trainerG.trainerRef
         .invokeMethodAsync(
-            "SaveGame",
-            trainerG.result ? trainerG.result.scoreLead : null,
-            trainerG.board.getNodeX(),
-            trainerG.board.getNodeY(),
-            trainerG.board.boardsize,
-            trainerG.board.handicap,
-            trainerG.color,
-            sgf.ruleset,
-            sgf.komi,
-            besogo.composeSgf(trainerG.board.editor),
-            new Uint8Array(stats.encodeRatioHistory()),
-            new Uint8Array(trainerG.suggestionsHistory.encode()),
-            new Uint8Array(trainerG.moveTypeHistory.encode()),
-            new Uint8Array(gameplay.chosenNotPlayedCoordHistory.encode()),
-            trainerG.wasPassed,
-            sgf.isThirdParty
+            "SaveGame", {
+                Result: trainerG.result ? trainerG.result.scoreLead : null,
+                PrevNodeX: trainerG.board.getNodeX(),
+                PrevNodeY: trainerG.board.getNodeY(),
+                Boardsize: trainerG.board.boardsize,
+                Handicap: trainerG.board.handicap,
+                Color: trainerG.color,
+                Ruleset: sgf.ruleset,
+                Komi: sgf.komi,
+                SGF: besogo.composeSgf(trainerG.board.editor),
+                Ratios: new Uint8Array(stats.encodeRatioHistory()),
+                Suggestions: new Uint8Array(trainerG.suggestionsHistory.encode()),
+                MoveTypes: new Uint8Array(trainerG.moveTypeHistory.encode()),
+                ChosenNotPlayedCoords: new Uint8Array(gameplay.chosenNotPlayedCoordHistory.encode()),
+                IsFinished: trainerG.wasPassed,
+                IsThirdPartySGF: sgf.isThirdParty
+            }
         )
         .then((response) => {
             return response;

@@ -299,53 +299,20 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task SaveGame(
-            int? result,
-            int prevNodeX,
-            int prevNodeY,
-            int boardsize,
-            int handicap,
-            int color,
-            string ruleset,
-            float komi,
-            string sgf,
-            byte[] encodedRatios,
-            byte[] encodedSuggestions,
-            byte[] encodedMoveTypes,
-            byte[] encodedChosenNotPlayedCoords,
-            bool isFinished,
-            bool isThirdPartySGF)
+        public async Task SaveGame(Game newGame)
         {
             if (userId == null)
             {
                 return;
             }
 
-            Game newGame = new()
-            {
-                TrainerSettingConfigId = trainerSettingConfig.Id,
-                KataGoVersionId = kataGoVersion.Id,
-                GameStatId = gameStat?.Id,
-                OpeningStatId = openingStat?.Id,
-                MidgameStatId = midgameStat?.Id,
-                EndgameStatId = endgameStat?.Id,
-                Name = "GameX",
-                Result = result,
-                PrevNodeX = prevNodeX,
-                PrevNodeY = prevNodeY,
-                Boardsize = boardsize,
-                Handicap = handicap,
-                Color = color,
-                Ruleset = ruleset,
-                Komi = komi,
-                SGF = sgf,
-                Ratios = encodedRatios,
-                Suggestions = encodedSuggestions,
-                MoveTypes = encodedMoveTypes,
-                ChosenNotPlayedCoords = encodedChosenNotPlayedCoords,
-                IsFinished = isFinished,
-                IsThirdPartySGF = isThirdPartySGF,
-            };
+            newGame.TrainerSettingConfigId = trainerSettingConfig.Id;
+            newGame.KataGoVersionId = kataGoVersion.Id;
+            newGame.GameStatId = gameStat?.Id;
+            newGame.OpeningStatId = openingStat?.Id;
+            newGame.MidgameStatId = midgameStat?.Id;
+            newGame.EndgameStatId = endgameStat?.Id;
+            newGame.Name = "GameX";
 
             if (newGame.SGF == game?.SGF)
             {
