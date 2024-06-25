@@ -31,14 +31,6 @@
     max-width: 725px;
 }
 
-#trainerPage #game .besogo-gameInfo {
-    display: none !important;
-}
-
-#trainerPage #game .besogo-tree {
-    flex-basis: 3%;
-}
-
 
 #trainerPage #stats {
     width: 400px;

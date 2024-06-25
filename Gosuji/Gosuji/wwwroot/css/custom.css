@@ -1,3 +1,41 @@
+.loadAnimation {
+    color: #1c4c5b
+}
+
+.loadAnimation,
+.loadAnimation:after {
+    box-sizing: border-box;
+}
+
+.loadAnimation {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}
+
+.loadAnimation:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6.4px solid currentColor;
+    border-color: currentColor transparent currentColor transparent;
+    animation: loadAnimation 1.2s linear infinite;
+}
+
+@keyframes loadAnimation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
 #mainNavMenu .active {
     font-weight: 600;
 }
@@ -16,6 +54,31 @@
     position: absolute;
     top: 5px;
     right: 5px;
+}
+
+#trainerPage #game .besogo-board {
+    position: relative;
+}
+
+#trainerPage #game .loadAnimationContainer {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+}
+
+#trainerPage #game .besogo-gameInfo {
+    display: none !important;
+}
+
+#trainerPage #game .besogo-tree {
+    flex-basis: 3%;
 }
 
 #trainerPage #settings .form-invalid-message {

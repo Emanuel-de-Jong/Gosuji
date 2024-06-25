@@ -116,6 +116,14 @@ trainerG.setColor = function (color = trainerG.board.getNextColor()) {
     }
 };
 
+trainerG.showLoadAnimation = function() {
+    trainerG.board.loadAnimation.hidden = false;
+};
+
+trainerG.hideLoadAnimation = function() {
+    trainerG.board.loadAnimation.hidden = true;
+};
+
 trainerG.analyze = async function (maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color) {
     trainerG.suggestions = await katago.analyze(maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color);
     await trainerG.pass(trainerG.suggestions.passSuggestion);

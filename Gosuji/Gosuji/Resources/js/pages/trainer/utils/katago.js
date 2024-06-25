@@ -24,11 +24,13 @@ katago.start = async function () {
     }
     katago.isStarted = true;
 
+    trainerG.showLoadAnimation();
     await katago.restart();
     await katago.setBoardsize();
     await katago.setRuleset();
     await katago.setKomi();
     await katago.setHandicap();
+    trainerG.hideLoadAnimation();
 };
 
 katago.clearBoard = async function () {
