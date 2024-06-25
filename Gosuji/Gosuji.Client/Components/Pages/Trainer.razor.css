@@ -27,6 +27,15 @@
 }
 
 
+#presetSettings {
+    padding-bottom: 16px;
+}
+
+    #presetSettings .row {
+        margin-bottom: 15px;
+    }
+
+
 #trainerPage #game {
     max-width: 725px;
 }

@@ -2,6 +2,7 @@
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 @using Gosuji.Client.Components.Shared
+@using Gosuji.Client.Data
 
 <PageTitle>Trainer</PageTitle>
 
@@ -19,6 +20,33 @@
             <div id="flex-container">
                 <div class="flex-item">
                     <form id="settings" class="collapse show" novalidate>
+                        @if (presets != null)
+                        {
+                            <div id="presetSettings">
+                                <div class="row">
+                                    <div class="col-9">
+                                        <input type="text" class="form-control" placeholder="New preset name">
+                                    </div>
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-primary">Add</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-9">
+                                        <select class="form-select" id="presetSelect">
+                                            @foreach (Preset preset in presets)
+                                            {
+                                                <option value="@preset.Id">@preset.Name</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
                         <div class="accordion accordion-flush" id="settingsAccordion">
                             <div class="accordion-item">
                                 <h3 class="accordion-header" id="basicsSettingsHeader">
@@ -377,9 +405,9 @@
                         <div>
                             <button type="button" class="btn btn-primary" id="startBtn">Start</button>
                             <button type="button" class="btn btn-primary" id="restartBtn" hidden>Restart</button>
-                            <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
                             <button type="button" class="btn btn-primary" id="stopPreMovesBtn">Stop pre moves</button>
                             <button type="button" class="btn btn-primary" id="selfplayBtn" hidden>Start selfplay</button>
+                            <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
                             <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#settings">Settings</button>
                             <button type="button" class="btn btn-primary" id="testBtn" hidden>Test</button>
                         </div>

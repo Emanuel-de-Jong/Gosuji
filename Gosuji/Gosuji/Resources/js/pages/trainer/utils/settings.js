@@ -55,7 +55,7 @@ settings.init = function (serverColor) {
     }
 
     utils.addEventListeners(
-        utils.querySelectorAlls(["#settings input", "#settings select"]),
+        utils.querySelectorAlls(["#settingsAccordion input", "#settingsAccordion select"]),
         "input",
         settings.inputAndSelectInputListener
     );
@@ -67,7 +67,7 @@ settings.init = function (serverColor) {
     settings.boardsizeElement.addEventListener("input", settings.setKomi);
     settings.showOptionsElement.addEventListener("input", settings.showOptionsElementInputListener);
 
-    utils.querySelectorAlls(["input", "select"]).forEach((input) => {
+    utils.querySelectorAlls(["#settingsAccordion input", "#settingsAccordion select"]).forEach((input) => {
         if (input.type != "checkbox") {
             input.required = true;
         }

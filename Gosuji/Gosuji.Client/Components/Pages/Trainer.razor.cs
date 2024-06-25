@@ -30,7 +30,7 @@ namespace Gosuji.Client.Components.Pages
         private DotNetObjectReference<Trainer>? trainerRef;
         private DotNetObjectReference<KataGoService>? kataGoServiceRef;
 
-        private List<Preset> presets;
+        private List<Preset>? presets;
 
         private Game? game;
         private TrainerSettingConfig? trainerSettingConfig;
@@ -126,6 +126,12 @@ namespace Gosuji.Client.Components.Pages
                     userName,
                     kataGoVersion);
             }
+        }
+
+        private async Task DeletePreset(Preset preset)
+        {
+            presets.Remove(preset);
+            await dataService.DeletePreset(preset.Id);
         }
 
         [JSInvokable]
