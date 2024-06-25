@@ -35,9 +35,8 @@ trainerG.PHASE_TYPE = {
 trainerG.isLoadingServerData = false;
 
 
-trainerG.init = function (trainerRef, kataGoServiceRef, kataGoVersion, serverSuggestions, serverMoveTypes) {
+trainerG.init = function (trainerRef, kataGoVersion, serverSuggestions, serverMoveTypes) {
     trainerG.trainerRef = trainerRef;
-    trainerG.kataGoServiceRef = kataGoServiceRef;
     trainerG.kataGoVersion = kataGoVersion;
 
     trainerG.phaseChangedEvent = new CEvent();

@@ -58,7 +58,7 @@ trainerPage.init = async function (
     // console.log(serverMoveTypes);
     // console.log(serverChosenNotPlayedCoords);
 
-    trainerG.init(trainerRef, kataGoServiceRef, kataGoVersion, serverSuggestions, serverMoveTypes);
+    trainerG.init(trainerRef, kataGoVersion, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
     trainerPage.startButton = document.getElementById("startBtn");
@@ -77,7 +77,7 @@ trainerPage.init = async function (
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
-    await katago.init();
+    await katago.init(kataGoServiceRef);
     db.init();
 
     // console.log(stats.ratioHistory);
@@ -111,6 +111,8 @@ trainerPage.clear = async function () {
 
 
 trainerPage.start = async function () {
+    await katago.start();
+    
     if (trainerG.isLoadingServerData || debug.testData) {
         trainerG.isLoadingServerData = false;
         gameplay.givePlayerControl(false);
