@@ -42,6 +42,7 @@ namespace Gosuji.Helpers
             GenerateSettingConfigs();
             GenerateUsers();
             GenerateUserRoles();
+            GenerateUserStates();
             GenerateTrainerSettingConfigs();
             GeneratePresets();
             GenerateChangelogs();
@@ -240,6 +241,20 @@ namespace Gosuji.Helpers
                     RoleId = roleIds["Owner"],
                 },
             ]);
+            dbContext.SaveChanges();
+            dbContext.Dispose();
+        }
+
+        public void GenerateUserStates()
+        {
+            ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
+            string[] userIds = dbContext.Users.Select(u => u.Id).ToArray();
+            foreach (string id in userIds) {
+                dbContext.UserStates.Add(new() {
+                    Id = id,
+                    LastPresetId = 1,
+                });
+            }
             dbContext.SaveChanges();
             dbContext.Dispose();
         }

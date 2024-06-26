@@ -359,5 +359,36 @@ namespace Gosuji.Controllers
             await dbContext.DisposeAsync();
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<ActionResult<UserState>> GetUserState()
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            UserState? userState = dbContext.UserStates
+                .Where(us => us.Id == GetUserId())
+                .FirstOrDefault();
+            if (userState == null)
+            {
+                return NotFound();
+            }
+            await dbContext.DisposeAsync();
+            return Ok(userState);
+        }
+
+
+        [HttpPut]
+        public async Task<ActionResult> PutUserState(UserState userState)
+        {
+            if (userState.Id != GetUserId())
+            {
+                return Unauthorized();
+            }
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            dbContext.Update(userState);
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+            return Ok();
+        }
     }
 }

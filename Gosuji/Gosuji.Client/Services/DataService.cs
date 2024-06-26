@@ -109,5 +109,17 @@ namespace Gosuji.Client.Services
             return await HttpResponseHandler.Delete(http,
                 $"{MAP_GROUP}/DeletePreset/{presetId}");
         }
+
+        public async Task<UserState?> GetUserState()
+        {
+            return await HttpResponseHandler.Get<UserState>(http,
+                $"{MAP_GROUP}/GetUserState");
+        }
+
+        public async Task<bool> PutUserState(UserState userState)
+        {
+            return await HttpResponseHandler.Put(http,
+                $"{MAP_GROUP}/PutUserState", userState);
+        }
     }
 }
