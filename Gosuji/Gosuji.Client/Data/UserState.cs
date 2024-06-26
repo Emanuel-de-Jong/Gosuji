@@ -8,6 +8,6 @@ namespace Gosuji.Client.Data
 
         [Required]
         public long LastPresetId { get; set; }
-        public Preset LastPreset { get; set; }
+        public Preset? LastPreset { get; set; }
     }
 }

@@ -24,25 +24,26 @@
                         {
                             <div id="presetSettings">
                                 <div class="row">
-                                    <div class="col-9">
-                                        <input type="text" class="form-control" placeholder="New preset name">
-                                    </div>
-                                    <div class="col-3">
-                                        <button type="button" class="btn btn-primary">Add</button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-9">
-                                        <select class="form-select" id="presetSelect">
-                                            @foreach (Preset preset in presets)
+                                    <div class="col-7">
+                                        <select class="form-select" id="presetSelect" @onchange="SelectPreset">
+                                            @foreach (Preset preset in presets.Values)
                                             {
-                                                <option value="@preset.Id"
+                                                <option class="@(preset.IsGeneral ? "generalPresetOption" : "")" value="@preset.Id"
                                                     selected="@(preset.Id == selectedPreset.Id ? "true" : null)">@preset.Name</option>
                                             }
                                         </select>
                                     </div>
-                                    <div class="col-3">
-                                        <button type="button" class="btn btn-primary">Save</button>
+                                    <div class="col-5">
+                                        <button type="button" class="btn btn-primary" disabled="@(selectedPreset.IsGeneral ? "true" : null)">Save</button>
+                                        <button type="button" class="btn btn-primary" disabled="@(selectedPreset.IsGeneral ? "true" : null)" @onclick="DeletePreset">Delete</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-7">
+                                        <input type="text" class="form-control" placeholder="New preset name">
+                                    </div>
+                                    <div class="col-5">
+                                        <button type="button" class="btn btn-primary">Add</button>
                                     </div>
                                 </div>
                             </div>

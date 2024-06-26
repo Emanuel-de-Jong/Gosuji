@@ -35,11 +35,16 @@
         margin-bottom: 15px;
     }
 
+    #presetSettings .generalPresetOption {
+        font-weight: 600;
+        color: darkblue;
+    }
 
-#game {
-    position: relative;
-    max-width: 725px;
-}
+
+    #game {
+        position: relative;
+        max-width: 725px;
+    }
 
     #game .loadAnimation {
         position: absolute;

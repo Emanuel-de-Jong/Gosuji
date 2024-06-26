@@ -86,9 +86,9 @@ namespace Gosuji.Client.Services
                 $"{MAP_GROUP}/GetLanguages");
         }
 
-        public async Task<List<Preset>?> GetPresets()
+        public async Task<Dictionary<long, Preset>?> GetPresets()
         {
-            return await HttpResponseHandler.Get<List<Preset>>(http,
+            return await HttpResponseHandler.Get<Dictionary<long, Preset>>(http,
                 $"{MAP_GROUP}/GetPresets");
         }
 

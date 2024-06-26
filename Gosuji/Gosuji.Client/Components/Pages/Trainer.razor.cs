@@ -30,7 +30,7 @@ namespace Gosuji.Client.Components.Pages
         private DotNetObjectReference<KataGoService>? kataGoServiceRef;
 
         private UserState? userState;
-        private List<Preset>? presets;
+        private Dictionary<long, Preset>? presets;
         private Preset? selectedPreset;
 
         private Game? game;
@@ -56,7 +56,7 @@ namespace Gosuji.Client.Components.Pages
 
             userState = await dataService.GetUserState();
             presets = await dataService.GetPresets();
-            selectedPreset = presets.Where(p => p.Id == userState.LastPresetId).FirstOrDefault();
+            selectedPreset = presets[userState.LastPresetId];
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -137,10 +137,30 @@ namespace Gosuji.Client.Components.Pages
             }
         }
 
-        private async Task DeletePreset(Preset preset)
+        private async Task SelectPreset(ChangeEventArgs e)
         {
-            presets.Remove(preset);
-            await dataService.DeletePreset(preset.Id);
+            await SelectPreset(long.Parse(e.Value.ToString()));
+        }
+
+        private async Task SelectPreset(long presetId)
+        {
+            selectedPreset = presets[presetId];
+            userState.LastPresetId = presetId;
+            await dataService.PutUserState(userState);
+        }
+
+        private async Task DeletePreset()
+        {
+            if (selectedPreset.IsGeneral)
+            {
+                return;
+            }
+
+            long oldSelectedPresetId = selectedPreset.Id;
+            await SelectPreset(presets.Values.Where(p => p.Order == 1).FirstOrDefault().Id);
+
+            presets.Remove(oldSelectedPresetId);
+            await dataService.DeletePreset(oldSelectedPresetId);
         }
 
         [JSInvokable]
