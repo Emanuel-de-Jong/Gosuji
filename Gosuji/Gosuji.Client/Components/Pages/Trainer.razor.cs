@@ -24,7 +24,6 @@ namespace Gosuji.Client.Components.Pages
         private DataService dataService { get; set; }
 
         private IJSObjectReference jsRef;
-        private string? userId;
         private string? userName;
 
         private DotNetObjectReference<Trainer>? trainerRef;
@@ -45,7 +44,6 @@ namespace Gosuji.Client.Components.Pages
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
-                userId = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
             }
 
@@ -219,7 +217,7 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task SaveGame(Game newGame)
         {
-            if (userId == null)
+            if (userName == null)
             {
                 return;
             }

@@ -24,6 +24,7 @@ namespace Gosuji.Data
         public DbSet<Language> Languages { get; set; }
         public DbSet<Changelog> Changelogs { get; set; }
         public DbSet<RateLimitViolation> RateLimitViolations { get; set; }
+        public DbSet<UserState> UserStates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -73,6 +74,11 @@ namespace Gosuji.Data
             builder.Entity<Language>();
             builder.Entity<Changelog>();
             builder.Entity<RateLimitViolation>();
+
+            builder.Entity<UserState>()
+                .HasOne(e => e.LastPreset)
+                .WithMany()
+                .HasForeignKey(e => e.LastPresetId);
         }
 
         public override EntityEntry<TEntity> Update<TEntity>(TEntity entity)

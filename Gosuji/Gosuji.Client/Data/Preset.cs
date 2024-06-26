@@ -17,8 +17,9 @@ namespace Gosuji.Client.Data
         [MaxLength(250)]
         [MinLength(1)]
         public string Name { get; set; }
+        public int? Order { get; set; }
 
         [NotMapped]
-        public bool IsGeneral => string.IsNullOrEmpty(UserId);
+        public bool IsGeneral => Order != null;
     }
 }
