@@ -157,14 +157,17 @@ namespace Gosuji.Helpers
             dbContext.Presets.AddRange([
                 new() {
                     Name = "Default",
+                    Order = id,
                     TrainerSettingConfigId = id++,
                 },
                 new() {
                     Name = "Quick start",
+                    Order = id,
                     TrainerSettingConfigId = id++,
                 },
                 new() {
                     Name = "Just play",
+                    Order = id,
                     TrainerSettingConfigId = id++,
                 },
             ]);

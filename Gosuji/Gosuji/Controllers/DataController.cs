@@ -287,6 +287,8 @@ namespace Gosuji.Controllers
             List<Preset> presets = await dbContext.Presets
                 .Where(p => p.UserId == null || p.UserId == GetUserId())
                 .OrderBy(p => p.Id)
+                .OrderBy(p => p.Order == null ? 1 : 0)
+                .ThenBy(p => p.Order)
                 .ToListAsync();
             await dbContext.DisposeAsync();
             return Ok(presets);

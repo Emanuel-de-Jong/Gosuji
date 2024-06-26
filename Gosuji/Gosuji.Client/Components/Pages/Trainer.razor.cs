@@ -29,7 +29,9 @@ namespace Gosuji.Client.Components.Pages
         private DotNetObjectReference<Trainer>? trainerRef;
         private DotNetObjectReference<KataGoService>? kataGoServiceRef;
 
+        private UserState? userState;
         private List<Preset>? presets;
+        private Preset? selectedPreset;
 
         private Game? game;
         private TrainerSettingConfig? trainerSettingConfig;
@@ -42,19 +44,28 @@ namespace Gosuji.Client.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
+            if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
             {
-                userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
+                return;
             }
+
+            userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
 
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 
+            userState = await dataService.GetUserState();
             presets = await dataService.GetPresets();
+            selectedPreset = presets.Where(p => p.Id == userState.LastPresetId).FirstOrDefault();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            if (userName == null)
+            {
+                return;
+            }
+
             try
             {
                 await js.InvokeVoidAsync("utils.lazyLoadJSLibrary", G.JSLibUrls["ChartJS"]);

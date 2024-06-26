@@ -20,7 +20,7 @@
             <div id="flex-container">
                 <div class="flex-item">
                     <form id="settings" class="collapse show" novalidate>
-                        @if (presets != null)
+                        @if (selectedPreset != null)
                         {
                             <div id="presetSettings">
                                 <div class="row">
@@ -36,7 +36,8 @@
                                         <select class="form-select" id="presetSelect">
                                             @foreach (Preset preset in presets)
                                             {
-                                                <option value="@preset.Id">@preset.Name</option>
+                                                <option value="@preset.Id"
+                                                    selected="@(preset.Id == selectedPreset.Id ? "true" : null)">@preset.Name</option>
                                             }
                                         </select>
                                     </div>
