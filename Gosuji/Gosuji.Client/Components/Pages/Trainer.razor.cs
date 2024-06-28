@@ -42,7 +42,6 @@ namespace Gosuji.Client.Components.Pages
         private TrainerSettingConfig? trainerSettingConfig;
 
         private Game? game;
-        private TrainerSettingConfig? jsTrainerSettingConfig;
         private GameStat? gameStat;
         private GameStat? openingStat;
         private GameStat? midgameStat;
@@ -221,16 +220,15 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task SaveTrainerSettingConfig(TrainerSettingConfig newConfig)
+        public async Task SaveTrainerSettingConfig()
         {
-            long? newId = await dataService.PostTrainerSettingConfig(newConfig);
+            long? newId = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
             if (newId == null)
             {
                 return;
             }
 
-            newConfig.Id = newId.Value;
-            jsTrainerSettingConfig = newConfig;
+            trainerSettingConfig.Id = newId.Value;
         }
 
         [JSInvokable]
@@ -310,7 +308,7 @@ namespace Gosuji.Client.Components.Pages
                 return;
             }
 
-            newGame.TrainerSettingConfigId = jsTrainerSettingConfig.Id;
+            newGame.TrainerSettingConfigId = trainerSettingConfig.Id;
             newGame.KataGoVersionId = kataGoVersion.Id;
             newGame.GameStatId = gameStat?.Id;
             newGame.OpeningStatId = openingStat?.Id;

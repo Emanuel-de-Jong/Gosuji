@@ -28,50 +28,7 @@ db.save = async function () {
 
 db.saveTrainerSettingConfig = async function () {
     return trainerG.trainerRef
-        .invokeMethodAsync(
-            "SaveTrainerSettingConfig", {
-                Boardsize: settings.boardsize,
-                Handicap: settings.handicap,
-                ColorType: settings.colorType,
-                PreMovesSwitch: settings.preMovesSwitch,
-                PreMoves: settings.preMoves,
-                PreVisits: settings.preVisits,
-                SelfplayVisits: settings.selfplayVisits,
-                SuggestionVisits: settings.suggestionVisits,
-                OpponentVisits: settings.opponentVisits,
-                DisableAICorrection: settings.disableAICorrection,
-
-                Ruleset: settings.ruleset,
-                KomiChangeStyle: settings.komiChangeStyle,
-                Komi: settings.komi,
-
-                PreOptions: settings.preOptions,
-                PreOptionPerc: settings.preOptionPerc,
-                ForceOpponentCorners: settings.forceOpponentCorners,
-                CornerSwitch44: settings.cornerSwitch44,
-                CornerSwitch34: settings.cornerSwitch34,
-                CornerSwitch33: settings.cornerSwitch33,
-                CornerSwitch45: settings.cornerSwitch45,
-                CornerSwitch35: settings.cornerSwitch35,
-                CornerChance44: settings.cornerChance44,
-                CornerChance34: settings.cornerChance34,
-                CornerChance33: settings.cornerChance33,
-                CornerChance45: settings.cornerChance45,
-                CornerChance35: settings.cornerChance35,
-
-                SuggestionOptions: settings.suggestionOptions,
-                ShowOptions: settings.showOptions,
-                ShowWeakerOptions: settings.showWeakerOptions,
-                MinVisitsPercSwitch: settings.minVisitsPercSwitch,
-                MinVisitsPerc: settings.minVisitsPerc,
-                MaxVisitDiffPercSwitch: settings.maxVisitDiffPercSwitch,
-                MaxVisitDiffPerc: settings.maxVisitDiffPerc,
-
-                OpponentOptionsSwitch: settings.opponentOptionsSwitch,
-                OpponentOptions: settings.opponentOptions,
-                OpponentOptionPerc: settings.opponentOptionPerc,
-                ShowOpponentOptions: settings.showOpponentOptions
-        })
+        .invokeMethodAsync("SaveTrainerSettingConfig")
         .then((response) => {
             return response;
         })
