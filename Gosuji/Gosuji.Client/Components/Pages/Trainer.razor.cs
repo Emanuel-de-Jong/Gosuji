@@ -150,10 +150,9 @@ namespace Gosuji.Client.Components.Pages
         private async Task SelectPreset(long presetId)
         {
             Preset lastPreset = presets[presetId];
-            if (lastPreset.TrainerSettingConfig == null)
-            {
-                lastPreset.TrainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
-            }
+            lastPreset.TrainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
+
+            userState.LastPreset.TrainerSettingConfig = null;
 
             userState.LastPresetId = presetId;
             userState.LastPreset = lastPreset;

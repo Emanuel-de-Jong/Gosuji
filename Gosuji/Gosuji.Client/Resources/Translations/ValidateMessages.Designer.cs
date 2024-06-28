@@ -63,9 +63,9 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string MaxLength {
+        public static string MaxLengthError {
             get {
-                return ResourceManager.GetString("MaxLength", resourceCulture);
+                return ResourceManager.GetString("MaxLengthError", resourceCulture);
             }
         }
         

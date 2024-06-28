@@ -44,11 +44,11 @@
 
                                     <div class="row">
                                         <div class="col-7">
-                                            <InputText class="form-control" placeholder="New preset name" @bind-Value=addPresetModel.Name />
+                                            <InputText class="form-control" placeholder="New preset name" @bind-Value=addPresetModel.Name maxlength="22" />
                                             <ValidationMessage For="() => addPresetModel.Name" class="text-danger" />
                                         </div>
                                         <div class="col-5">
-                                            <button type="submit" class="btn btn-primary feedback_submit">Add</button>
+                                            <button type="submit" class="btn btn-primary">Add</button>
                                         </div>
                                     </div>
                                 </EditForm>
