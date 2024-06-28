@@ -60,10 +60,10 @@ namespace Gosuji.Client.Components.Pages
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 
             presets = await dataService.GetPresets();
-            userState = await dataService.GetUserState();
-            Preset lastPreset = presets[userState.LastPresetId];
-            lastPreset.TrainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
-            userState.LastPreset = lastPreset;
+            UserState tempUserState = await dataService.GetUserState();
+            tempUserState.LastPreset = presets[tempUserState.LastPresetId];
+            tempUserState.LastPreset.TrainerSettingConfig = await dataService.GetTrainerSettingConfig(tempUserState.LastPreset.TrainerSettingConfigId);
+            userState = tempUserState;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
