@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers;
 using Gosuji.Client.Helpers.GameDecoder;
 using Gosuji.Client.Models;
 using Gosuji.Client.Services;
@@ -29,9 +30,8 @@ namespace Gosuji.Client.Components.Pages
         private DotNetObjectReference<Trainer>? trainerRef;
         private DotNetObjectReference<KataGoService>? kataGoServiceRef;
 
-        private UserState? userState;
         private Dictionary<long, Preset>? presets;
-        private Preset? selectedPreset;
+        private UserState? userState;
 
         private Game? game;
         private TrainerSettingConfig? trainerSettingConfig;
@@ -54,9 +54,9 @@ namespace Gosuji.Client.Components.Pages
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 
-            userState = await dataService.GetUserState();
             presets = await dataService.GetPresets();
-            selectedPreset = presets[userState.LastPresetId];
+            userState = await dataService.GetUserState();
+            userState.LastPreset = presets[userState.LastPresetId];
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -144,19 +144,19 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task SelectPreset(long presetId)
         {
-            selectedPreset = presets[presetId];
             userState.LastPresetId = presetId;
-            await dataService.PutUserState(userState);
+            userState.LastPreset = presets[presetId];
+            await dataService.PutUserState(ReflectionHelper.DeepClone(userState));
         }
 
         private async Task DeletePreset()
         {
-            if (selectedPreset.IsGeneral)
+            if (userState.LastPreset.IsGeneral)
             {
                 return;
             }
 
-            long oldSelectedPresetId = selectedPreset.Id;
+            long oldSelectedPresetId = userState.LastPresetId;
             await SelectPreset(presets.Values.Where(p => p.Order == 1).FirstOrDefault().Id);
 
             presets.Remove(oldSelectedPresetId);
