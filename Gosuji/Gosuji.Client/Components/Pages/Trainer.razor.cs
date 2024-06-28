@@ -38,9 +38,10 @@ namespace Gosuji.Client.Components.Pages
 
         private Dictionary<long, Preset>? presets;
         private UserState? userState;
+        private TrainerSettingConfig? trainerSettingConfig;
 
         private Game? game;
-        private TrainerSettingConfig? trainerSettingConfig;
+        private TrainerSettingConfig? jsTrainerSettingConfig;
         private GameStat? gameStat;
         private GameStat? openingStat;
         private GameStat? midgameStat;
@@ -63,7 +64,9 @@ namespace Gosuji.Client.Components.Pages
             presets = await dataService.GetPresets();
             UserState tempUserState = await dataService.GetUserState();
             tempUserState.LastPreset = presets[tempUserState.LastPresetId];
-            tempUserState.LastPreset.TrainerSettingConfig = await dataService.GetTrainerSettingConfig(tempUserState.LastPreset.TrainerSettingConfigId);
+
+            trainerSettingConfig = await dataService.GetTrainerSettingConfig(tempUserState.LastPreset.TrainerSettingConfigId);
+
             userState = tempUserState;
         }
 
@@ -150,9 +153,7 @@ namespace Gosuji.Client.Components.Pages
         private async Task SelectPreset(long presetId)
         {
             Preset lastPreset = presets[presetId];
-            lastPreset.TrainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
-
-            userState.LastPreset.TrainerSettingConfig = null;
+            trainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
 
             userState.LastPresetId = presetId;
             userState.LastPreset = lastPreset;
@@ -161,7 +162,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task SavePreset()
         {
-            long? trainerSettingConfigId = await dataService.PostTrainerSettingConfig(userState.LastPreset.TrainerSettingConfig);
+            long? trainerSettingConfigId = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
             if (trainerSettingConfigId == null)
             {
                 return;
@@ -170,7 +171,7 @@ namespace Gosuji.Client.Components.Pages
             if (userState.LastPreset.TrainerSettingConfigId != trainerSettingConfigId)
             {
                 userState.LastPreset.TrainerSettingConfigId = trainerSettingConfigId.Value;
-                await dataService.PutPreset(ReflectionHelper.DeepClone(userState.LastPreset));
+                await dataService.PutPreset(userState.LastPreset);
             }
         }
 
@@ -193,10 +194,16 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddPreset()
         {
+            long? trainerSettingConfigId = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            if (trainerSettingConfigId == null)
+            {
+                return;
+            }
+
             Preset newPreset = new()
             {
                 Name = addPresetModel.Name,
-                TrainerSettingConfig = userState.LastPreset.TrainerSettingConfig,
+                TrainerSettingConfigId = trainerSettingConfigId.Value
             };
 
             long? newPresetId = await dataService.PostPreset(newPreset);
@@ -208,7 +215,9 @@ namespace Gosuji.Client.Components.Pages
             newPreset.Id = newPresetId.Value;
             presets.Add(newPreset.Id, newPreset);
 
-            await SelectPreset(newPreset.Id);
+            userState.LastPresetId = newPreset.Id;
+            userState.LastPreset = newPreset;
+            await dataService.PutUserState(ReflectionHelper.DeepClone(userState));
 
             addPresetModel = new();
         }
@@ -223,7 +232,7 @@ namespace Gosuji.Client.Components.Pages
             }
 
             newConfig.Id = newId.Value;
-            trainerSettingConfig = newConfig;
+            jsTrainerSettingConfig = newConfig;
         }
 
         [JSInvokable]
@@ -303,7 +312,7 @@ namespace Gosuji.Client.Components.Pages
                 return;
             }
 
-            newGame.TrainerSettingConfigId = trainerSettingConfig.Id;
+            newGame.TrainerSettingConfigId = jsTrainerSettingConfig.Id;
             newGame.KataGoVersionId = kataGoVersion.Id;
             newGame.GameStatId = gameStat?.Id;
             newGame.OpeningStatId = openingStat?.Id;
