@@ -38,6 +38,7 @@ namespace Gosuji.Client.Components.Pages
 
         private Dictionary<long, Preset>? presets;
         private UserState? userState;
+        private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
 
         private Game? game;
@@ -62,12 +63,9 @@ namespace Gosuji.Client.Components.Pages
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 
             presets = await dataService.GetPresets();
-            UserState tempUserState = await dataService.GetUserState();
-            tempUserState.LastPreset = presets[tempUserState.LastPresetId];
-
-            trainerSettingConfig = await dataService.GetTrainerSettingConfig(tempUserState.LastPreset.TrainerSettingConfigId);
-
-            userState = tempUserState;
+            userState = await dataService.GetUserState();
+            currentPreset = presets[userState.LastPresetId];
+            trainerSettingConfig = await dataService.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -156,8 +154,8 @@ namespace Gosuji.Client.Components.Pages
             trainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
 
             userState.LastPresetId = presetId;
-            userState.LastPreset = lastPreset;
-            await dataService.PutUserState(ReflectionHelper.DeepClone(userState));
+            currentPreset = lastPreset;
+            await dataService.PutUserState(userState);
         }
 
         private async Task SavePreset()
@@ -168,16 +166,16 @@ namespace Gosuji.Client.Components.Pages
                 return;
             }
 
-            if (userState.LastPreset.TrainerSettingConfigId != trainerSettingConfigId)
+            if (currentPreset.TrainerSettingConfigId != trainerSettingConfigId)
             {
-                userState.LastPreset.TrainerSettingConfigId = trainerSettingConfigId.Value;
-                await dataService.PutPreset(userState.LastPreset);
+                currentPreset.TrainerSettingConfigId = trainerSettingConfigId.Value;
+                await dataService.PutPreset(currentPreset);
             }
         }
 
         private async Task DeletePreset()
         {
-            long oldSelectedPresetId = userState.LastPresetId;
+            long oldSelectedPresetId = currentPreset.Id;
             await SelectPreset(presets.Values.Where(p => p.Order == 1).FirstOrDefault().Id);
 
             presets.Remove(oldSelectedPresetId);
@@ -216,8 +214,8 @@ namespace Gosuji.Client.Components.Pages
             presets.Add(newPreset.Id, newPreset);
 
             userState.LastPresetId = newPreset.Id;
-            userState.LastPreset = newPreset;
-            await dataService.PutUserState(ReflectionHelper.DeepClone(userState));
+            currentPreset = newPreset;
+            await dataService.PutUserState(userState);
 
             addPresetModel = new();
         }

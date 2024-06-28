@@ -19,7 +19,7 @@
 
             <div id="flex-container">
                 <div class="flex-item">
-                    @if (userState != null)
+                    @if (trainerSettingConfig != null)
                     {
                         <div id="settings" class="collapse show">
                             <div id="presetSettings">
@@ -28,17 +28,17 @@
 
                                     <div class="row">
                                         <div class="col-7">
-                                            <select class="form-select" id="presetSelect" value="@userState.LastPreset.Id" @onchange=SelectPreset>
+                                            <select class="form-select" id="presetSelect" value="@currentPreset.Id" @onchange=SelectPreset>
                                                 @foreach (Preset preset in presets.Values)
                                                 {
                                                     <option class="@(preset.IsGeneral ? "generalPresetOption" : "")" value="@preset.Id"
-                                                            selected="@(preset.Id == userState.LastPreset.Id ? "true" : null)">@preset.Name</option>
+                                                            selected="@(preset.Id == currentPreset.Id ? "true" : null)">@preset.Name</option>
                                                 }
                                             </select>
                                         </div>
                                         <div class="col-5">
-                                            <button type="button" class="btn btn-primary" disabled="@(userState.LastPreset.IsGeneral ? "true" : null)" @onclick=SavePreset>Save</button>
-                                            <button type="button" class="btn btn-primary" disabled="@(userState.LastPreset.IsGeneral ? "true" : null)" @onclick=DeletePreset>Delete</button>
+                                            <button type="button" class="btn btn-primary" disabled="@(currentPreset.IsGeneral ? "true" : null)" @onclick=SavePreset>Save</button>
+                                            <button type="button" class="btn btn-primary" disabled="@(currentPreset.IsGeneral ? "true" : null)" @onclick=DeletePreset>Delete</button>
                                         </div>
                                     </div>
 
