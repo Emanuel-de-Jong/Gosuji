@@ -2,10 +2,12 @@
 using Gosuji.Client.Helpers;
 using Gosuji.Client.Helpers.GameDecoder;
 using Gosuji.Client.Models;
+using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
@@ -23,6 +25,9 @@ namespace Gosuji.Client.Components.Pages
         private IJSRuntime js { get; set; }
         [Inject]
         private DataService dataService { get; set; }
+
+        [SupplyParameterFromForm]
+        private PresetModel addPresetModel { get; set; } = new();
 
         private IJSObjectReference jsRef;
         private string? userName;
@@ -56,7 +61,9 @@ namespace Gosuji.Client.Components.Pages
 
             presets = await dataService.GetPresets();
             userState = await dataService.GetUserState();
-            userState.LastPreset = presets[userState.LastPresetId];
+            Preset lastPreset = presets[userState.LastPresetId];
+            lastPreset.TrainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
+            userState.LastPreset = lastPreset;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -144,8 +151,14 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task SelectPreset(long presetId)
         {
+            Preset lastPreset = presets[presetId];
+            if (lastPreset.TrainerSettingConfig == null)
+            {
+                lastPreset.TrainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
+            }
+
             userState.LastPresetId = presetId;
-            userState.LastPreset = presets[presetId];
+            userState.LastPreset = lastPreset;
             await dataService.PutUserState(ReflectionHelper.DeepClone(userState));
         }
 
@@ -161,6 +174,36 @@ namespace Gosuji.Client.Components.Pages
 
             presets.Remove(oldSelectedPresetId);
             await dataService.DeletePreset(oldSelectedPresetId);
+        }
+
+        private sealed class PresetModel
+        {
+            [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [MaxLength(22, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [MinLength(1, ErrorMessageResourceName = "MinLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            public string Name { get; set; }
+        }
+
+        private async Task AddPreset()
+        {
+            Preset newPreset = new()
+            {
+                Name = addPresetModel.Name,
+                TrainerSettingConfig = ReflectionHelper.DeepClone(userState.LastPreset.TrainerSettingConfig),
+            };
+
+            long? newPresetId = await dataService.PostPreset(newPreset);
+            if (newPresetId == null)
+            {
+                return;
+            }
+
+            newPreset.Id = newPresetId.Value;
+            presets.Add(newPreset.Id, newPreset);
+
+            await SelectPreset(newPreset.Id);
+
+            addPresetModel = new();
         }
 
         [JSInvokable]

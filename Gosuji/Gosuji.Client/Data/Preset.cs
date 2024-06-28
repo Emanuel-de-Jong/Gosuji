@@ -14,7 +14,7 @@ namespace Gosuji.Client.Data
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
 
         [Required]
-        [MaxLength(250)]
+        [MaxLength(22)]
         [MinLength(1)]
         public string Name { get; set; }
         public int? Order { get; set; }
