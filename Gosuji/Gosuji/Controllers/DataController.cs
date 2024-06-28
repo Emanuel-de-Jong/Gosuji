@@ -117,11 +117,7 @@ namespace Gosuji.Controllers
         public async Task<ActionResult<long>> PostTrainerSettingConfig(TrainerSettingConfig config)
         {
             config.Id = 0;
-
-            if (config.Hash is null or "")
-            {
-                config.SetHash();
-            }
+            config.SetHash();
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 

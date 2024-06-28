@@ -37,7 +37,7 @@
                                             </select>
                                         </div>
                                         <div class="col-5">
-                                            <button type="button" class="btn btn-primary" disabled="@(userState.LastPreset.IsGeneral ? "true" : null)">Save</button>
+                                            <button type="button" class="btn btn-primary" disabled="@(userState.LastPreset.IsGeneral ? "true" : null)" @onclick=SavePreset>Save</button>
                                             <button type="button" class="btn btn-primary" disabled="@(userState.LastPreset.IsGeneral ? "true" : null)" @onclick=DeletePreset>Delete</button>
                                         </div>
                                     </div>

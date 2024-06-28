@@ -159,13 +159,23 @@ namespace Gosuji.Client.Components.Pages
             await dataService.PutUserState(ReflectionHelper.DeepClone(userState));
         }
 
-        private async Task DeletePreset()
+        private async Task SavePreset()
         {
-            if (userState.LastPreset.IsGeneral)
+            long? trainerSettingConfigId = await dataService.PostTrainerSettingConfig(userState.LastPreset.TrainerSettingConfig);
+            if (trainerSettingConfigId == null)
             {
                 return;
             }
 
+            if (userState.LastPreset.TrainerSettingConfigId != trainerSettingConfigId)
+            {
+                userState.LastPreset.TrainerSettingConfigId = trainerSettingConfigId.Value;
+                await dataService.PutPreset(ReflectionHelper.DeepClone(userState.LastPreset));
+            }
+        }
+
+        private async Task DeletePreset()
+        {
             long oldSelectedPresetId = userState.LastPresetId;
             await SelectPreset(presets.Values.Where(p => p.Order == 1).FirstOrDefault().Id);
 
@@ -186,7 +196,7 @@ namespace Gosuji.Client.Components.Pages
             Preset newPreset = new()
             {
                 Name = addPresetModel.Name,
-                TrainerSettingConfig = ReflectionHelper.DeepClone(userState.LastPreset.TrainerSettingConfig),
+                TrainerSettingConfig = userState.LastPreset.TrainerSettingConfig,
             };
 
             long? newPresetId = await dataService.PostPreset(newPreset);
