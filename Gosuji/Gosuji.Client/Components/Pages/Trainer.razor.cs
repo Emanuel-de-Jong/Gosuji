@@ -29,6 +29,7 @@ namespace Gosuji.Client.Components.Pages
         [SupplyParameterFromForm]
         private PresetModel addPresetModel { get; set; } = new();
 
+        private bool isJSInitialized = false;
         private IJSObjectReference jsRef;
         private string? userName;
 
@@ -82,14 +83,11 @@ namespace Gosuji.Client.Components.Pages
                 Console.WriteLine($"Error loading library: {ex.Message}");
             }
 
-            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js?v=03-06-24");
-
-            if (firstRender)
+            if (userState != null && !isJSInitialized)
             {
-                if (userName == null)
-                {
-                    return;
-                }
+                isJSInitialized = true;
+
+                jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js?v=03-06-24");
 
                 if ((await kataGoService.UserHasInstance()).Value)
                 {
