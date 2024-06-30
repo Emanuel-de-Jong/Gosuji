@@ -88,7 +88,7 @@ namespace Gosuji.Client.Components.Pages
             {
                 isJSInitialized = true;
 
-                jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js?v=03-06-24");
+                jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js");
 
                 if ((await kataGoService.UserHasInstance()).Value)
                 {
@@ -121,6 +121,7 @@ namespace Gosuji.Client.Components.Pages
                     kataGoServiceRef,
                     userName,
                     kataGoVersion,
+                    settingConfig.CalcStoneVolume(),
 
                     game.Boardsize,
                     game.Handicap,
@@ -139,7 +140,8 @@ namespace Gosuji.Client.Components.Pages
                     trainerRef,
                     kataGoServiceRef,
                     userName,
-                    kataGoVersion);
+                    kataGoVersion,
+                    settingConfig.CalcStoneVolume());
             }
         }
 

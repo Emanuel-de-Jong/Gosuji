@@ -50,7 +50,7 @@ if (typeof Board === "undefined") {
             let fileDir = "resources/audio/pages/trainer/";
             for (let i = 0; i < 5; i++) {
                 let audio = new Audio(fileDir + "placeStone" + i + ".mp3");
-                // audio.volume = stoneVolume;
+                audio.volume = stoneVolume;
                 this.placeStoneAudios.push(audio);
             }
 

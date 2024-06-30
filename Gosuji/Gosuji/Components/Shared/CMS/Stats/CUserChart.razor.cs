@@ -120,7 +120,7 @@ namespace Gosuji.Components.Shared.CMS.Stats
                 Console.WriteLine($"Error loading library: {ex.Message}");
             }
 
-            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/cms/bundle.js?v=03-06-24");
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/cms/bundle.js");
 
             if (firstRender)
             {

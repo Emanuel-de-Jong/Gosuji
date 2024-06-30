@@ -95,7 +95,7 @@ namespace Gosuji.Client.Components.Pages
                 Console.WriteLine($"Error loading library: {ex.Message}");
             }
 
-            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/profile/bundle.js?v=03-06-24");
+            jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/profile/bundle.js");
 
             if (firstRender)
             {
