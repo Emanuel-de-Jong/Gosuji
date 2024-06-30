@@ -3,39 +3,43 @@
 
 <PageTitle>AI Josekipedia</PageTitle>
 
-<div id="josekisPage">
-    <div id="flex-container">
-        <div class="flex-item"></div>
+@if (settingConfig != null)
+{
+    <div id="josekisPage">
+        <div id="flex-container">
+            <div class="flex-item"></div>
 
-        <div class="flex-item">
-            <div id="game">
-                <div class="board"></div>
+            <div class="flex-item">
+                <div id="game">
+                    <div class="board"></div>
+                </div>
             </div>
-        </div>
 
-        <div class="flex-item">
-            <div id="comment">
-                @if (Comment != null)
-                {
-                    @foreach (string line in Comment)
+            <div class="flex-item">
+                <div id="comment">
+                    @if (Comment != null)
                     {
-                        @foreach (string word in line.Split(" "))
+                        @foreach (string line in Comment)
                         {
-                            @if (word == "Pass")
+                            @foreach (string word in line.Split(" "))
                             {
-                                <span class="pass">
+                                @if (word == "Pass")
+                                {
+                                    <span class="pass">
+                                        @(word + " ")
+                                    </span>
+                                }
+                                else
+                                {
                                     @(word + " ")
-                                </span>
-                            } else
-                            {
-                                @(word + " ")
+                                }
                             }
-                        }
 
-                        <br />
+                            <br />
+                        }
                     }
-                }
+                </div>
             </div>
         </div>
     </div>
-</div>
+}

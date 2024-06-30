@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Models.Josekis;
+﻿using Gosuji.Client.Data;
+using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -16,10 +17,15 @@ namespace Gosuji.Client.Components.Pages
         private IJSRuntime js { get; set; }
         [Inject]
         private JosekisService josekisService { get; set; }
+        [Inject]
+        private DataService dataService { get; set; }
 
-        private IJSObjectReference jsRef;
-        private int sessionId;
         private DotNetObjectReference<Josekis>? josekisRef;
+        private int sessionId;
+        private IJSObjectReference jsRef;
+
+        private SettingConfig? settingConfig;
+        private bool isJSInitialized = false;
 
         public string[]? Comment { get; set; }
 
@@ -27,6 +33,8 @@ namespace Gosuji.Client.Components.Pages
         {
             josekisRef = DotNetObjectReference.Create(this);
             sessionId = random.Next(100_000_000, 999_999_999);
+
+            settingConfig = await dataService.GetSettingConfig();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -36,9 +44,13 @@ namespace Gosuji.Client.Components.Pages
             if (firstRender)
             {
                 await josekisService.AddSession(sessionId);
+            }
 
-                await jsRef.InvokeVoidAsync("josekisPage.init", josekisRef);
+            if (settingConfig != null && !isJSInitialized)
+            {
+                isJSInitialized = true;
 
+                await jsRef.InvokeVoidAsync("josekisPage.init", josekisRef, settingConfig.CalcStoneVolume());
                 await AddMarkups();
             }
         }
@@ -53,6 +65,7 @@ namespace Gosuji.Client.Components.Pages
 
             await jsRef.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
             await jsRef.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
+            await jsRef.InvokeVoidAsync($"{BOARD}.playPlaceStoneAudio");
 
             await AddMarkups(node);
 
