@@ -120,6 +120,22 @@ namespace Gosuji.Client.Components.Layout
             }
         }
 
+        private async Task ChangeStoneVolume(ChangeEventArgs e)
+        {
+            int volume = Convert.ToInt32(e.Value);
+
+            if (settingConfig != null)
+            {
+                if (settingConfig.StoneVolume == volume)
+                {
+                    return;
+                }
+
+                settingConfig.StoneVolume = volume;
+                await dataService.PutSettingConfig(settingConfig);
+            }
+        }
+
         private async Task ChangeIsDarkMode(ChangeEventArgs e)
         {
             bool isDarkMode = (bool)e.Value;

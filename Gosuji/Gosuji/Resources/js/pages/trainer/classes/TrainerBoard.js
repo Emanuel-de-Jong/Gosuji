@@ -25,10 +25,10 @@ export class TrainerBoard extends Board {
         }
     }
 
-    init(serverBoardsize, serverHandicap, serverSGF) {
+    init(serverBoardsize, serverHandicap, stoneVolume, serverSGF) {
         this.handicapElement = document.getElementById("currentHandicap");
 
-        super.init(serverBoardsize, serverHandicap, serverSGF);
+        super.init(serverBoardsize, serverHandicap, stoneVolume, serverSGF);
 
         // Disable mouse 3/4 triggering prev/next in browser
         document.addEventListener("mouseup", (e) => {

@@ -19,5 +19,15 @@ namespace Gosuji.Client.Data
         public bool IsSelfplayStoneSound { get; set; } = true;
         [CustomPersonalData]
         public bool IsGetChangelogEmail { get; set; }
+
+        public float CalcMasterVolume()
+        {
+            return MasterVolume / 100f;
+        }
+
+        public float CalcStoneVolume()
+        {
+            return (StoneVolume / 100f) * CalcMasterVolume();
+        }
     }
 }

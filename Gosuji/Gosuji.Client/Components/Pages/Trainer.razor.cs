@@ -32,6 +32,7 @@ namespace Gosuji.Client.Components.Pages
         private bool isJSInitialized = false;
         private IJSObjectReference jsRef;
         private string? userName;
+        private SettingConfig? settingConfig;
 
         private DotNetObjectReference<Trainer>? trainerRef;
         private DotNetObjectReference<KataGoService>? kataGoServiceRef;
@@ -57,6 +58,7 @@ namespace Gosuji.Client.Components.Pages
             }
 
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
+            settingConfig = await dataService.GetSettingConfig();
 
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
@@ -120,6 +122,7 @@ namespace Gosuji.Client.Components.Pages
                     kataGoServiceRef,
                     userName,
                     kataGoVersion,
+                    settingConfig.CalcStoneVolume(),
 
                     game.Boardsize,
                     game.Handicap,
@@ -138,7 +141,8 @@ namespace Gosuji.Client.Components.Pages
                     trainerRef,
                     kataGoServiceRef,
                     userName,
-                    kataGoVersion);
+                    kataGoVersion,
+                    settingConfig.CalcStoneVolume());
             }
         }
 

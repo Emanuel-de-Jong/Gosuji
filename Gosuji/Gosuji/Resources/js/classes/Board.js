@@ -44,15 +44,16 @@ if (typeof Board === "undefined") {
             nowheel: true,
         };
 
-        init(boardsize, handicap, sgf) {
+        init(boardsize, handicap, stoneVolume, sgf) {
+            this.placeStoneAudios = [];
+
             let fileDir = "resources/audio/pages/trainer/";
-            this.placeStoneAudios = [
-                new Audio(fileDir + "placeStone0.mp3"),
-                new Audio(fileDir + "placeStone1.mp3"),
-                new Audio(fileDir + "placeStone2.mp3"),
-                new Audio(fileDir + "placeStone3.mp3"),
-                new Audio(fileDir + "placeStone4.mp3"),
-            ];
+            for (let i = 0; i < 5; i++) {
+                let audio = new Audio(fileDir + "placeStone" + i + ".mp3");
+                audio.volume = stoneVolume;
+                this.placeStoneAudios.push(audio);
+            }
+
             this.lastPlaceStoneAudioIndex = 0;
 
             this.clear(boardsize, handicap, sgf);
