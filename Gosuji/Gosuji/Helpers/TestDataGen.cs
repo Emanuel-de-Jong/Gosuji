@@ -100,7 +100,7 @@ namespace Gosuji.Helpers
 
                 Ruleset = "Japanese",
                 KomiChangeStyle = "Automatic",
-                Komi = 6.5f,
+                Komi = 6.5,
 
                 PreOptions = 2,
                 PreOptionPerc = 20,

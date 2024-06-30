@@ -85,7 +85,7 @@ namespace Gosuji.Client.Components.Pages
                 Console.WriteLine($"Error loading library: {ex.Message}");
             }
 
-            if (userState != null && !isJSInitialized)
+            if (trainerSettingConfig != null && !isJSInitialized)
             {
                 isJSInitialized = true;
 
