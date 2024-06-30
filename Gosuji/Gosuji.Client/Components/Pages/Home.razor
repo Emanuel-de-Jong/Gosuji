@@ -48,15 +48,12 @@
 </div>
 
 @code {
-    private string? userId;
     private Changelog[]? changelogs;
 
     protected override async Task OnInitializedAsync()
     {
         // navigationManager.NavigateTo("Account/Manage");
         // return;
-
-        userId = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         changelogs = await dataService.GetChangelogs();
         changelogs = changelogs.OrderByDescending(c => c.Date).ToArray();
