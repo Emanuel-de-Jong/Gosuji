@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Gosuji.Components.Account
+namespace Gosuji.Account
 {
     internal sealed class IdentityRedirectManager(NavigationManager navigationManager)
     {

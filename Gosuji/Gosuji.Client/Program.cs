@@ -1,4 +1,4 @@
-using Gosuji.Client.Components.Account;
+using Gosuji.Client.Account;
 using Gosuji.Client.Helpers;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components.Authorization;

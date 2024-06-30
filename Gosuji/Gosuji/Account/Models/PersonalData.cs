@@ -1,4 +1,4 @@
-﻿namespace Gosuji.Components.Account
+﻿namespace Gosuji.Account.Models
 {
     public class PersonalData
     {

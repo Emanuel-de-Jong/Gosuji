@@ -1,7 +1,7 @@
 using Gosuji.Data;
 using Microsoft.AspNetCore.Identity;
 
-namespace Gosuji.Components.Account
+namespace Gosuji.Account
 {
     internal sealed class IdentityUserAccessor(UserManager<User> userManager, IdentityRedirectManager redirectManager)
     {

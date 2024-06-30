@@ -1,4 +1,4 @@
-using Gosuji.Client.Components.Account;
+using Gosuji.Client.Account.Models;
 using Gosuji.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Security.Claims;
 
-namespace Gosuji.Components.Account
+namespace Gosuji.Account
 {
     // This is a server-side AuthenticationStateProvider that revalidates the security stamp for the connected user
     // every 30 minutes an interactive circuit is connected. It also uses PersistentComponentState to flow the

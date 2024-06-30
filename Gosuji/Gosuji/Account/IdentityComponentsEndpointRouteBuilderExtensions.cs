@@ -1,6 +1,5 @@
 using Gosuji.Client.Data.Attributes;
 using Gosuji.Components.Account.Pages;
-using Gosuji.Components.Account.Pages.Manage;
 using Gosuji.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -13,8 +12,10 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Reflection;
 using Gosuji.Client.Data;
+using Gosuji.Account.Models;
+using Gosuji.Components.Account.Pages.Manage;
 
-namespace Gosuji.Components.Account
+namespace Gosuji.Account
 {
     internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {
@@ -91,7 +92,7 @@ namespace Gosuji.Components.Account
                 downloadLogger.LogInformation("User with ID '{UserId}' asked for their personal data.", userId);
 
                 // Only include personal data for download
-                PersonalData personalData = new();
+                Models.PersonalData personalData = new();
 
                 IEnumerable<PropertyInfo> personalDataProps = typeof(User).GetProperties().Where(
                     p => Attribute.IsDefined(p, typeof(PersonalDataAttribute)) ||
