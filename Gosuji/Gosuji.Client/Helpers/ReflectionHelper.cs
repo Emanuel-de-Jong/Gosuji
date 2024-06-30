@@ -1,6 +1,6 @@
-﻿using System.Text;
+﻿using System.Collections.Concurrent;
 using System.Reflection;
-using System.Collections.Concurrent;
+using System.Text;
 
 namespace Gosuji.Client.Helpers
 {

@@ -1,8 +1,7 @@
-﻿using Gosuji.Data;
+﻿using Gosuji.Client.Data;
+using Gosuji.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Gosuji.Client.Data;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Gosuji.Helpers
 {
@@ -211,7 +210,8 @@ namespace Gosuji.Helpers
 
             int settingConfigIndex = 0;
             string password = "@Password1";
-            userManager.CreateAsync(new() {
+            userManager.CreateAsync(new()
+            {
                 UserName = "Admino",
                 Email = "admino@gmail.com",
                 EmailConfirmed = true,
@@ -252,8 +252,10 @@ namespace Gosuji.Helpers
         {
             ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
             string[] userIds = dbContext.Users.Select(u => u.Id).ToArray();
-            foreach (string id in userIds) {
-                dbContext.UserStates.Add(new() {
+            foreach (string id in userIds)
+            {
+                dbContext.UserStates.Add(new()
+                {
                     Id = id,
                     LastPresetId = 1,
                 });
@@ -296,8 +298,9 @@ namespace Gosuji.Helpers
             for (int i = 0; i < PRESETS; i++)
             {
                 User user = users[i % users.Length];
-                dbContext.Presets.Add(new() {
-                    Name = $"{user.UserName} {Guid.NewGuid().ToString().Substring(0, 5)}",
+                dbContext.Presets.Add(new()
+                {
+                    Name = $"{user.UserName} {Guid.NewGuid().ToString()[..5]}",
                     UserId = user.Id,
                     TrainerSettingConfigId = trainerSettingConfigIds[i],
                 });

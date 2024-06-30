@@ -1,5 +1,7 @@
+using Gosuji.Client.Data;
 using Gosuji.Client.Data.Attributes;
 using Gosuji.Components.Account.Pages;
+using Gosuji.Components.Account.Pages.Manage;
 using Gosuji.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -8,12 +10,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Reflection;
-using Gosuji.Client.Data;
-using Gosuji.Account.Models;
-using Gosuji.Components.Account.Pages.Manage;
 
 namespace Gosuji.Account
 {

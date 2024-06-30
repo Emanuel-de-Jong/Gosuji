@@ -1,7 +1,7 @@
+using Gosuji.Account;
 using Gosuji.Client;
 using Gosuji.Client.Services;
 using Gosuji.Components;
-using Gosuji.Components.Account;
 using Gosuji.Data;
 using Gosuji.Helpers;
 using Gosuji.Services;
@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
-using Gosuji.Account;
 
 namespace Gosuji
 {

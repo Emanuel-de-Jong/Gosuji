@@ -27,7 +27,7 @@ namespace Gosuji.Client.Data
 
         public double CalcStoneVolume()
         {
-            return (StoneVolume / 100d) * CalcMasterVolume();
+            return StoneVolume / 100d * CalcMasterVolume();
         }
     }
 }

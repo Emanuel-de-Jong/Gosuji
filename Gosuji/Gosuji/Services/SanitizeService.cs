@@ -1,8 +1,5 @@
 ﻿using Ganss.Xss;
-using Gosuji.Client.Data;
 using Gosuji.Client.Helpers;
-using Gosuji.Client.Models.Josekis;
-using Gosuji.Client.Models.KataGo;
 using System.Reflection;
 
 namespace Gosuji.Services
