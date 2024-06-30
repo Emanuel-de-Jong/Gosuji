@@ -29,7 +29,6 @@ trainerPage.init = async function (
     kataGoServiceRef,
     userName,
     kataGoVersion,
-    stoneVolume,
 
     serverBoardsize,
     serverHandicap,
@@ -68,7 +67,7 @@ trainerPage.init = async function (
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
     settings.init(serverColor);
-    trainerG.board.init(serverBoardsize, serverHandicap, stoneVolume, serverSGF);
+    trainerG.board.init(serverBoardsize, serverHandicap, 1.0, serverSGF);
     await sgf.init(userName, serverKomi, serverRuleset);
     sgfComment.init();
     scoreChart.init();

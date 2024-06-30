@@ -1,5 +1,4 @@
 ﻿using Gosuji.Client.Data;
-using Gosuji.Client.Helpers;
 using Gosuji.Client.Helpers.GameDecoder;
 using Gosuji.Client.Models;
 using Gosuji.Client.Resources.Translations;
@@ -112,7 +111,7 @@ namespace Gosuji.Client.Components.Pages
 
             if (game != null)
             {
-                RatioTree decodedRatios = GameDecoder.DecodeRatios(game.Ratios);
+                Dictionary<short, Dictionary<short, ERatio>> decodedRatios = GameDecoder.DecodeRatios(game.Ratios).ToDict();
                 Dictionary<short, Dictionary<short, SuggestionList>> decodedSuggestions = GameDecoder.DecodeSuggestions(game.Suggestions);
                 Dictionary<short, Dictionary<short, EMoveType>> decodedMoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
                 Dictionary<short, Dictionary<short, Coord>> decodedChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords);
@@ -122,7 +121,6 @@ namespace Gosuji.Client.Components.Pages
                     kataGoServiceRef,
                     userName,
                     kataGoVersion,
-                    settingConfig.CalcStoneVolume(),
 
                     game.Boardsize,
                     game.Handicap,
@@ -130,7 +128,7 @@ namespace Gosuji.Client.Components.Pages
                     game.Komi,
                     game.Ruleset,
                     game.SGF,
-                    decodedRatios.ToDict(),
+                    decodedRatios,
                     decodedSuggestions,
                     decodedMoveTypes,
                     decodedChosenNotPlayedCoords);
@@ -141,8 +139,7 @@ namespace Gosuji.Client.Components.Pages
                     trainerRef,
                     kataGoServiceRef,
                     userName,
-                    kataGoVersion,
-                    settingConfig.CalcStoneVolume());
+                    kataGoVersion);
             }
         }
 
