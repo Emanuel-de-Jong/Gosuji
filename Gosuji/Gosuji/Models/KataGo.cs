@@ -92,7 +92,7 @@ namespace Gosuji.Models
             ClearReader();
         }
 
-        public void SetKomi(float komi)
+        public void SetKomi(double komi)
         {
             Write("komi " + komi);
             ClearReader();
@@ -134,7 +134,7 @@ namespace Gosuji.Models
             return suggestion;
         }
 
-        public List<MoveSuggestion> Analyze(string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
+        public List<MoveSuggestion> Analyze(string color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
             if (lastMaxVisits != maxVisits)
             {

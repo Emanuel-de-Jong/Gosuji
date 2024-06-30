@@ -42,12 +42,12 @@ namespace Gosuji.Client.Data
         public string KomiChangeStyle { get; set; }
         [Required]
         [Range(-150, 150)]
-        public float Komi { get; set; }
+        public double Komi { get; set; }
 
         [Required]
         public int PreOptions { get; set; }
         [Required]
-        public float PreOptionPerc { get; set; }
+        public double PreOptionPerc { get; set; }
         [Required]
         [MaxLength(100)]
         public string ForceOpponentCorners { get; set; }
@@ -81,18 +81,18 @@ namespace Gosuji.Client.Data
         [Required]
         public bool MinVisitsPercSwitch { get; set; }
         [Required]
-        public float MinVisitsPerc { get; set; }
+        public double MinVisitsPerc { get; set; }
         [Required]
         public bool MaxVisitDiffPercSwitch { get; set; }
         [Required]
-        public float MaxVisitDiffPerc { get; set; }
+        public double MaxVisitDiffPerc { get; set; }
 
         [Required]
         public bool OpponentOptionsSwitch { get; set; }
         [Required]
         public int OpponentOptions { get; set; }
         [Required]
-        public float OpponentOptionPerc { get; set; }
+        public double OpponentOptionPerc { get; set; }
         [Required]
         public bool ShowOpponentOptions { get; set; }
 

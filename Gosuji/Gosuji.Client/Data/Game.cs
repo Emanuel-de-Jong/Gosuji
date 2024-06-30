@@ -49,7 +49,7 @@ namespace Gosuji.Client.Data
         public string Ruleset { get; set; }
         [Required]
         [Range(-150, 150)]
-        public float Komi { get; set; }
+        public double Komi { get; set; }
 
         [MaxLength(100_000)]
         public string SGF { get; set; }

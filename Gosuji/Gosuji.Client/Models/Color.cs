@@ -5,7 +5,7 @@
         public byte R { get; set; }
         public byte G { get; set; }
         public byte B { get; set; }
-        public float? A { get; set; }
+        public double? A { get; set; }
 
         public Color(byte r, byte g, byte b)
         {
@@ -13,7 +13,7 @@
             G = g;
             B = b;
         }
-        public Color(byte r, byte g, byte b, float a) : this(r, g, b)
+        public Color(byte r, byte g, byte b, double a) : this(r, g, b)
         {
             A = a;
         }

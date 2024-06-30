@@ -56,7 +56,7 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<bool> SetKomi(float komi)
+        public async Task<bool> SetKomi(double komi)
         {
             return await HttpResponseHandler.Get(http,
                 $"{MAP_GROUP}/SetKomi/{komi}");
@@ -77,7 +77,7 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<List<MoveSuggestion>?> Analyze(string color, int maxVisits, float minVisitsPerc, float maxVisitDiffPerc)
+        public async Task<List<MoveSuggestion>?> Analyze(string color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
             return await HttpResponseHandler.Get<List<MoveSuggestion>>(http,
                 $"{MAP_GROUP}/Analyze/{color}" +

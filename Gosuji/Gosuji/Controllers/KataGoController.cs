@@ -74,7 +74,7 @@ namespace Gosuji.Controllers
         }
 
         [HttpGet("{komi}")]
-        public async Task<ActionResult> SetKomi([Range(-150, 150)] float komi)
+        public async Task<ActionResult> SetKomi([Range(-150, 150)] double komi)
         {
             (await pool.Get(GetUserId())).SetKomi(komi);
             return Ok();
@@ -97,8 +97,8 @@ namespace Gosuji.Controllers
         [HttpGet("{color}")]
         public async Task<ActionResult<List<MoveSuggestion>>> Analyze([RegularExpression(@"(B|W)")] string color,
             [Required, Range(2, 100_000)] int maxVisits,
-            [Required, Range(0, 100)] float minVisitsPerc,
-            [Required, Range(0, 100)] float maxVisitDiffPerc)
+            [Required, Range(0, 100)] double minVisitsPerc,
+            [Required, Range(0, 100)] double maxVisitDiffPerc)
         {
             return Ok((await pool.Get(GetUserId())).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
         }

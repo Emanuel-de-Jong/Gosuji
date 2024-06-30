@@ -8,7 +8,7 @@ namespace Gosuji.Client.Data
         [MaxLength(100)]
         public string? Code { get; set; }
         [Required]
-        public float Percent { get; set; }
+        public double Percent { get; set; }
         public DateTimeOffset? ExpireDate { get; set; }
     }
 }

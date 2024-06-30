@@ -20,12 +20,12 @@ namespace Gosuji.Client.Data
         [CustomPersonalData]
         public bool IsGetChangelogEmail { get; set; }
 
-        public float CalcMasterVolume()
+        public double CalcMasterVolume()
         {
             return MasterVolume / 100f;
         }
 
-        public float CalcStoneVolume()
+        public double CalcStoneVolume()
         {
             return (StoneVolume / 100f) * CalcMasterVolume();
         }
