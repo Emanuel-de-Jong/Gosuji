@@ -53,7 +53,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        navigationManager.NavigateTo("trainer");
+        navigationManager.NavigateTo("Account/Manage");
         return;
 
         userId = (await authenticationStateProvider.GetAuthenticationStateAsync()).User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

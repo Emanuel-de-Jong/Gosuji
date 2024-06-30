@@ -183,19 +183,19 @@ namespace Gosuji.Helpers
                 new() {
                     LanguageId = languageIds["en"],
                     IsDarkMode = true,
-                    Volume = 100,
+                    MasterVolume = 100,
                     IsGetChangelogEmail = true,
                 },
                 new() {
                     LanguageId = languageIds["en"],
                     IsDarkMode = true,
-                    Volume = 80,
+                    MasterVolume = 80,
                     IsGetChangelogEmail = false,
                 },
                 new() {
                     LanguageId = languageIds["zh"],
                     IsDarkMode = false,
-                    Volume = 100,
+                    MasterVolume = 100,
                     IsGetChangelogEmail = true,
                 },
             ]);

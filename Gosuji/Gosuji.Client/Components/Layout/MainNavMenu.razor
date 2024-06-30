@@ -63,8 +63,8 @@
                     </a>
                     <ul class="dropdown-menu text-small px-2">
                         <li>
-                            <label for="volumeRange" class="form-label">Volume</label>
-                            <input type="range" class="form-range" id="volumeRange" max="100" value="@(settingConfig != null ? settingConfig.Volume : 100)" @onchange="ChangeVolume">
+                            <label for="masterVolumeRange" class="form-label">Master Volume</label>
+                            <input type="range" class="form-range" id="masterVolumeRange" max="100" value="@(settingConfig != null ? settingConfig.MasterVolume : 100)" @onchange="ChangeMasterVolume">
                         </li>
                         <li>
                             <div class="form-check form-switch">

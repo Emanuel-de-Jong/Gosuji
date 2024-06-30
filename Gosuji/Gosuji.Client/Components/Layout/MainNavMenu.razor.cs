@@ -104,18 +104,18 @@ namespace Gosuji.Client.Components.Layout
                 forceLoad: true);
         }
 
-        private async Task ChangeVolume(ChangeEventArgs e)
+        private async Task ChangeMasterVolume(ChangeEventArgs e)
         {
             int volume = Convert.ToInt32(e.Value);
 
             if (settingConfig != null)
             {
-                if (settingConfig.Volume == volume)
+                if (settingConfig.MasterVolume == volume)
                 {
                     return;
                 }
 
-                settingConfig.Volume = volume;
+                settingConfig.MasterVolume = volume;
                 await dataService.PutSettingConfig(settingConfig);
             }
         }

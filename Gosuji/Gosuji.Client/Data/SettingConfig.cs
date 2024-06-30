@@ -12,8 +12,11 @@ namespace Gosuji.Client.Data
         [CustomPersonalData]
         public bool IsDarkMode { get; set; } = true;
         [Range(0, 100)]
-        [CustomPersonalData]
-        public int Volume { get; set; } = 100;
+        public int MasterVolume { get; set; } = 100;
+        [Range(0, 100)]
+        public int StoneVolume { get; set; } = 100;
+        public bool IsPreMoveStoneSound { get; set; } = true;
+        public bool IsSelfplayStoneSound { get; set; } = true;
         [CustomPersonalData]
         public bool IsGetChangelogEmail { get; set; }
     }
