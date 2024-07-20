@@ -49,7 +49,7 @@ namespace Gosuji.Client.Components.Pages
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
             {
-                navigationManager.NavigateTo("Account/Login");
+                navigationManager.NavigateTo($"login?{G.ReturnUriName}={Uri.EscapeDataString(navigationManager.Uri)}");
                 return;
             }
 

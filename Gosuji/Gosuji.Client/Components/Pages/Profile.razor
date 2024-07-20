@@ -1,98 +1,91 @@
 ﻿@page "/profile"
-@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
 @using Gosuji.Client.ViewModels
 @using Gosuji.Client.Components.Shared
 
 <PageTitle>Profile</PageTitle>
 
-<AuthorizeView>
-    <Authorized>
+@if (name != null)
+{
+    <div id="profilePage">
+        <h1 class="pageTitle">@name</h1>
 
-        <div id="profilePage">
-            <h1 class="pageTitle">@name</h1>
+        <a class="btn btn-primary" href="Account/Manage">Settings</a>
+        <a class="btn btn-primary" href="logout">Logout</a>
 
-            <a class="btn btn-primary" href="Account/Manage">Settings</a>
-            <a class="btn btn-primary" href="logout">Logout</a>
+        @if (FinishedGames != null)
+        {
+            <div class="row">
+                <div class="col" id="gameTableDiv">
+                    <h2>Games</h2>
 
-            @if (FinishedGames != null)
-            {
-                <div class="row">
-                    <div class="col" id="gameTableDiv">
-                        <h2>Games</h2>
-
-                        <table id="gameTable" class="table table-striped">
-                            <thead>
+                    <table id="gameTable" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Finished</th>
+                                <th>Boardsize</th>
+                                <th>Handicap</th>
+                                <th>Color</th>
+                                <th>Moves</th>
+                                <th>Player moves</th>
+                                <th>Right</th>
+                                <th>Right streak</th>
+                                <th>Perfect</th>
+                                <th>Perfect streak</th>
+                                <th>Custom SGF</th>
+                                <th>Started</th>
+                                <th>Last played</th>
+                                <th>SGF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (VMGame game in Games)
+                            {
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Finished</th>
-                                    <th>Boardsize</th>
-                                    <th>Handicap</th>
-                                    <th>Color</th>
-                                    <th>Moves</th>
-                                    <th>Player moves</th>
-                                    <th>Right</th>
-                                    <th>Right streak</th>
-                                    <th>Perfect</th>
-                                    <th>Perfect streak</th>
-                                    <th>Custom SGF</th>
-                                    <th>Started</th>
-                                    <th>Last played</th>
-                                    <th>SGF</th>
+                                    <td><a href="/trainer/@game.Id">@game.Name</a></td>
+                                    <td>@game.IsFinished</td>
+                                    <td>@game.Boardsize</td>
+                                    <td>@game.Handicap</td>
+                                    <td>@G.ColorNumToFullName(game.Color)</td>
+                                    <td>@game.GameStat?.MoveNumber</td>
+                                    <td>@game.GameStat?.Total</td>
+                                    <td>@(game.GameStat?.RightPercent)%</td>
+                                    <td>@game.GameStat?.RightTopStreak</td>
+                                    <td>@(game.GameStat?.PerfectPercent)%</td>
+                                    <td>@game.GameStat?.PerfectTopStreak</td>
+                                    <td>@game.IsThirdPartySGF</td>
+                                    <td>@game.CreateDate.ToString("dd-MM-yy HH:mm")</td>
+                                    <td>@game.ModifyDate.ToString("dd-MM-yy HH:mm")</td>
+                                    <td><button type="button" class="btn btn-primary" @onclick="async () => await DownloadSGF(game.Id)">Download</button></td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (VMGame game in Games)
-                                {
-                                    <tr>
-                                        <td><a href="/trainer/@game.Id">@game.Name</a></td>
-                                        <td>@game.IsFinished</td>
-                                        <td>@game.Boardsize</td>
-                                        <td>@game.Handicap</td>
-                                        <td>@G.ColorNumToFullName(game.Color)</td>
-                                        <td>@game.GameStat?.MoveNumber</td>
-                                        <td>@game.GameStat?.Total</td>
-                                        <td>@(game.GameStat?.RightPercent)%</td>
-                                        <td>@game.GameStat?.RightTopStreak</td>
-                                        <td>@(game.GameStat?.PerfectPercent)%</td>
-                                        <td>@game.GameStat?.PerfectTopStreak</td>
-                                        <td>@game.IsThirdPartySGF</td>
-                                        <td>@game.CreateDate.ToString("dd-MM-yy HH:mm")</td>
-                                        <td>@game.ModifyDate.ToString("dd-MM-yy HH:mm")</td>
-                                        <td><button type="button" class="btn btn-primary" @onclick="async () => await DownloadSGF(game.Id)">Download</button></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col" id="percentPerGameLineChartDiv">
+                    <h2>Percent per game</h2>
+
+                    <canvas id="percentPerGameLineChart"></canvas>
                 </div>
 
-                <div class="row">
-                    <div class="col" id="percentPerGameLineChartDiv">
-                        <h2>Percent per game</h2>
+                <div class="col" id="gameStageBarChartDiv">
+                    <h2>Percent per stage</h2>
 
-                        <canvas id="percentPerGameLineChart"></canvas>
-                    </div>
-
-                    <div class="col" id="gameStageBarChartDiv">
-                        <h2>Percent per stage</h2>
-
-                        <canvas id="gameStageBarChart"></canvas>
-                    </div>
+                    <canvas id="gameStageBarChart"></canvas>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col" id="daysChartDiv">
-                        <h2>Days played</h2>
+            <div class="row">
+                <div class="col" id="daysChartDiv">
+                    <h2>Days played</h2>
 
-                        <div id="daysChart"></div>
-                    </div>
+                    <div id="daysChart"></div>
                 </div>
-            }
-        </div>
-
-    </Authorized>
-    <NotAuthorized>
-        <CRedirect URI="Account/Login" />
-    </NotAuthorized>
-</AuthorizeView>
+            </div>
+        }
+    </div>
+}

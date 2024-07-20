@@ -1,0 +1,19 @@
+﻿@page "/"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@using Gosuji.Client.Components.Shared
+@using Gosuji.CMS.Components.Shared
+@using Gosuji.Client.Components.Shared.Errors
+
+<PageTitle>CMS Home</PageTitle>
+
+<div id="cmsPage">
+    <div class="cmsFlexContainer">
+        <div class="cmsFlexItem cmsFlexItemXL">
+            <CFeedback />
+        </div>
+        <div class="cmsFlexItem">
+            <CAbuseDetect />
+        </div>
+    </div>
+</div>

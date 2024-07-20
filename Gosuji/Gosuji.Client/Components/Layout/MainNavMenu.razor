@@ -1,6 +1,4 @@
-﻿@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
-
-<header id="mainNavMenu" class="mb-5 border-bottom bg-light-subtle">
+﻿<header id="mainNavMenu" class="mb-5 border-bottom bg-light-subtle">
     <div class="container">
         <div class="d-flex justify-content-between flex-wrap py-2">
             <div class="flexItem">
@@ -26,13 +24,16 @@
                         <div class="px-2">
                             <NavLink href="profile" class="link-body-emphasis nav-link">Profile</NavLink>
                         </div>
+                        <div class="px-2">
+                            <NavLink href="logout" class="link-body-emphasis nav-link">Logout</NavLink>
+                        </div>
                     </Authorized>
                     <NotAuthorized>
                         <div class="px-2">
-                            <NavLink href="Account/Register" class="link-body-emphasis nav-link">Register</NavLink>
+                            <NavLink href="register" class="link-body-emphasis nav-link">Register</NavLink>
                         </div>
                         <div class="px-2">
-                            <NavLink href="Account/Login" class="link-body-emphasis nav-link">Login</NavLink>
+                            <NavLink href="login" class="link-body-emphasis nav-link">Login</NavLink>
                         </div>
                     </NotAuthorized>
                 </AuthorizeView>

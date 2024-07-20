@@ -5,9 +5,16 @@ using Microsoft.JSInterop;
 
 namespace Gosuji.Client.Services
 {
-    public class KataGoService(HttpClient http)
+    public class KataGoService
     {
         private static string MAP_GROUP = "/api/KataGo";
+
+        private HttpClient http;
+
+        public KataGoService(IHttpClientFactory httpClientFactory)
+        {
+            http = httpClientFactory.CreateClient("Auth");
+        }
 
         public async Task<KataGoVersion?> GetVersion()
         {

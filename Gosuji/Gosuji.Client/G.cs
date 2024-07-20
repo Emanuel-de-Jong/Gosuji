@@ -12,6 +12,11 @@
         public const string ControllerRateLimitPolicyName = "ControllerRateLimitPolicy";
         public const string RazorRateLimitPolicyName = "RazorRateLimitPolicy";
 
+        public const string LangLocalStorageName = "lang";
+        public static string[] SupportedLangs = { "en", "zh", "ko", "ja" };
+
+        public const string ReturnUriName = "ReturnUri";
+
         public static Dictionary<string, string> CSSLibUrls = new()
         {
             { "DataTables", "https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.css" },

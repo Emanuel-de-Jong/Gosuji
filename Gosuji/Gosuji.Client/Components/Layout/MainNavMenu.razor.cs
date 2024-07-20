@@ -41,16 +41,8 @@ namespace Gosuji.Client.Components.Layout
                 {
                     CultureInfo culture = new(currentLanguage.Short);
 
-                    await js.InvokeVoidAsync("blazorCulture.set", culture!.Name);
-
-                    string uri = new Uri(navigationManager.Uri)
-                        .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
-                    string cultureEscaped = Uri.EscapeDataString(culture.Name);
-                    string uriEscaped = Uri.EscapeDataString(uri);
-
-                    navigationManager.NavigateTo(
-                        $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
-                        forceLoad: true);
+                    await js.InvokeVoidAsync("utils.setLocal", G.LangLocalStorageName, culture.TwoLetterISOLanguageName);
+                    navigationManager.NavigateTo(navigationManager.Uri, true);
                 }
             }
             else
@@ -92,16 +84,8 @@ namespace Gosuji.Client.Components.Layout
 
             CultureInfo culture = new(language);
 
-            await js.InvokeVoidAsync("blazorCulture.set", culture!.Name);
-
-            string uri = new Uri(navigationManager.Uri)
-                .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
-            string cultureEscaped = Uri.EscapeDataString(culture.Name);
-            string uriEscaped = Uri.EscapeDataString(uri);
-
-            navigationManager.NavigateTo(
-                $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
-                forceLoad: true);
+            await js.InvokeVoidAsync("utils.setLocal", G.LangLocalStorageName, culture.TwoLetterISOLanguageName);
+            navigationManager.NavigateTo(navigationManager.Uri, true);
         }
 
         private async Task ChangeMasterVolume(ChangeEventArgs e)

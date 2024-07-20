@@ -4,9 +4,16 @@ using Gosuji.Client.ViewModels;
 
 namespace Gosuji.Client.Services
 {
-    public class DataService(HttpClient http)
+    public class DataService
     {
         private static string MAP_GROUP = "/api/Data";
+
+        private HttpClient http;
+
+        public DataService(IHttpClientFactory httpClientFactory)
+        {
+            http = httpClientFactory.CreateClient("Auth");
+        }
 
         public async Task<Changelog[]?> GetChangelogs()
         {

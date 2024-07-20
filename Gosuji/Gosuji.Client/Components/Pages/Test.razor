@@ -1,0 +1,48 @@
+﻿@page "/test"
+
+@using Gosuji.Client.Services
+
+@inject TestService testService
+
+<h3>Test</h3>
+
+<p>FromQuery: @FromQuery</p>
+
+@if (testResult.HasValue)
+{
+    <p>1: @testResult</p>
+}
+@if (test2Result.HasValue)
+{
+    <p>2: @test2Result</p>
+}
+@if (test3Result.HasValue)
+{
+    <p>3: @test3Result</p>
+}
+
+<NavLink href="/" @onclick=LinkClicked>Link</NavLink>
+
+@code {
+    [Inject]
+    private NavigationManager navigationManager { get; set; }
+
+    [SupplyParameterFromQuery]
+    public string? FromQuery { get; set; }
+
+    bool? testResult;
+    bool? test2Result;
+    bool? test3Result;
+
+    protected override async Task OnInitializedAsync()
+    {
+        testResult = await testService.Test();
+        test2Result = await testService.Test2();
+        test3Result = await testService.Test3();
+    }
+
+    private void LinkClicked()
+    {
+        navigationManager.NavigateTo("login");
+    }
+}

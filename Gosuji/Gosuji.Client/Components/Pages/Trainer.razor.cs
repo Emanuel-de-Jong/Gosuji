@@ -19,6 +19,8 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
+        private NavigationManager navigationManager { get; set; }
+        [Inject]
         private KataGoService kataGoService { get; set; }
         [Inject]
         private IJSRuntime js { get; set; }
@@ -53,7 +55,7 @@ namespace Gosuji.Client.Components.Pages
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
             {
-                return;
+                navigationManager.NavigateTo("register");
             }
 
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;

@@ -1,0 +1,49 @@
+﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@using Gosuji.API.Data;
+
+<h3>Abuse Detect</h3>
+
+<p>KataGo visits</p>
+<table id="abuseTable" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Sub</th>
+            <th>KataGo visits (week)</th>
+            <th>KataGo visits</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (User user in users)
+        {
+            <tr>
+                <td title="@user.Id">@user.UserName</td>
+                <td>@(user.CurrentSubscription != null ? user.CurrentSubscription.SubscriptionType : "Free")</td>
+                <td>@weekKataGoVisits[user.Id]</td>
+                <td>@(totalKataGoVisits.ContainsKey(user.Id) ? totalKataGoVisits[user.Id] : "0")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>Rate limit violations</p>
+<table id="rateLimitTable" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Ip</th>
+            <th>Violations</th>
+            <th>Most Common Endpoint</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RateLimitViolator violator in rateLimitViolators)
+        {
+            <tr>
+                <td>@violator.Ip</td>
+                <td>@violator.Violations</td>
+                <td>@violator.MostCommonEndpoint</td>
+            </tr>
+        }
+    </tbody>
+</table>

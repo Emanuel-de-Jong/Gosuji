@@ -1,0 +1,12 @@
+﻿
+@if (!string.IsNullOrEmpty(Message))
+{
+    <div class="alert alert-@(IsError ? "danger" : "success")" role="alert">@Message</div>
+}
+
+@code {
+    [Parameter]
+    public bool IsError { get; set; }
+    [Parameter]
+    public string? Message { get; set; }
+}

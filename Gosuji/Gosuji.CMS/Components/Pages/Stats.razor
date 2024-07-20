@@ -1,0 +1,19 @@
+﻿@page "/stats"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@using Gosuji.Client.Components.Shared
+@using Gosuji.CMS.Components.Shared
+@using Gosuji.Client.Components.Shared.Errors
+
+<PageTitle>CMS Stats</PageTitle>
+
+<div id="cmsStatsPage">
+    <div class="cmsFlexContainer">
+        <div class="cmsFlexItem">
+            <CUserChart GraphDays="graphDays" GraphMonths="graphMonths" DayLabels="dayLabels" MonthLabels="monthLabels" />
+        </div>
+        <div class="cmsFlexItem">
+            <CSubChart GraphDays="graphDays" GraphMonths="graphMonths" DayLabels="dayLabels" MonthLabels="monthLabels" />
+        </div>
+    </div>
+</div>

@@ -3,9 +3,16 @@ using Gosuji.Client.Models.Josekis;
 
 namespace Gosuji.Client.Services
 {
-    public class JosekisService(HttpClient http)
+    public class JosekisService
     {
         private static string MAP_GROUP = "/api/Josekis";
+
+        private HttpClient http;
+
+        public JosekisService(IHttpClientFactory httpClientFactory)
+        {
+            http = httpClientFactory.CreateClient("Auth");
+        }
 
         public async Task<bool> AddSession(int sessionId)
         {
