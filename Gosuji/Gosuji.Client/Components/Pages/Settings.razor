@@ -1,5 +1,7 @@
 ﻿@page "/settings"
 
+@using Gosuji.Client.Components.Shared;
+
 <div id="settingsPage">
     <div class="container">
         <div class="d-flex align-items-start">
@@ -18,9 +20,43 @@
                     <p>Cancel</p>
                 </div>
                 <div class="tab-pane" id="v-pills-privacy">
-                    <p>Username</p>
-                    <p>Email</p>
-                    <p>Password</p>
+                    <StatusMessage IsError="isPrivacyMessageError" Message="@privacyMessage" />
+
+                    <EditForm Model="privacyInput" FormName="privacy" OnValidSubmit="UpdatePrivacy" method="post">
+                        <DataAnnotationsValidator />
+
+                        <div class="form-floating mb-3">
+                            <InputText @bind-Value="privacyInput.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="User" />
+                            <label for="username">Username</label>
+                            <ValidationMessage For="() => privacyInput.UserName" class="text-danger" />
+                        </div>
+                        <div class="form-floating mb-3">
+                            <InputText @bind-Value="privacyInput.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label for="email">Email</label>
+                            <ValidationMessage For="() => privacyInput.Email" class="text-danger" />
+                        </div>
+                        <div class="form-floating mb-3">
+                            <InputText type="password" @bind-Value="privacyInput.NewPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label for="password">New password</label>
+                            <ValidationMessage For="() => privacyInput.NewPassword" class="text-danger" />
+                        </div>
+                        <div class="form-floating mb-6">
+                            <InputText type="password" @bind-Value="privacyInput.ConfirmNewPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label for="confirm-password">Confirm new password</label>
+                            <ValidationMessage For="() => privacyInput.ConfirmNewPassword" class="text-danger" />
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <InputText type="password" @bind-Value="privacyInput.CurrentPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
+                            <label for="confirm-password">Current Password</label>
+                            <ValidationMessage For="() => privacyInput.CurrentPassword" class="text-danger" />
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-lg btn-primary">Save</button>
+                        </div>
+                    </EditForm>
+
                     <p>Changelog emails</p>
                     <p>Personal data</p>
                 </div>
@@ -28,3 +64,7 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.querySelector("button[data-bs-target='#v-pills-privacy']").click();
+</script>
