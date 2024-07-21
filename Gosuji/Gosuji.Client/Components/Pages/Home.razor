@@ -51,8 +51,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // navigationManager.NavigateTo("Account/Manage");
-        // return;
+        navigationManager.NavigateTo("settings");
+        return;
 
         changelogs = await dataService.GetChangelogs();
         changelogs = changelogs.OrderByDescending(c => c.Date).ToArray();

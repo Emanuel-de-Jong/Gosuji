@@ -1,5 +1,30 @@
 ﻿@page "/settings"
 
 <div id="settingsPage">
-    <h3>Settings</h3>
+    <div class="container">
+        <div class="d-flex align-items-start">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="v-pills-general-tab" data-bs-toggle="pill" data-bs-target="#v-pills-general" type="button" role="tab" aria-controls="v-pills-general" aria-selected="true">General</button>
+                <button class="nav-link" id="v-pills-subscription-tab" data-bs-toggle="pill" data-bs-target="#v-pills-subscription" type="button" role="tab" aria-controls="v-pills-subscription" aria-selected="false">Subscription</button>
+                <button class="nav-link" id="v-pills-privacy-tab" data-bs-toggle="pill" data-bs-target="#v-pills-privacy" type="button" role="tab" aria-controls="v-pills-privacy" aria-selected="false">Security</button>
+            </div>
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-general" role="tabpanel" aria-labelledby="v-pills-general-tab" tabindex="0">
+                    <p>Dark mode</p>
+                    <p>Volume</p>
+                </div>
+                <div class="tab-pane fade" id="v-pills-subscription" role="tabpanel" aria-labelledby="v-pills-subscription-tab" tabindex="0">
+                    <p>Current</p>
+                    <p>Cancel</p>
+                </div>
+                <div class="tab-pane fade" id="v-pills-privacy" role="tabpanel" aria-labelledby="v-pills-privacy-tab" tabindex="0">
+                    <p>Username</p>
+                    <p>Email</p>
+                    <p>Password</p>
+                    <p>Changelog emails</p>
+                    <p>Personal data</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
