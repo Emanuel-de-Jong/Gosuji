@@ -37,6 +37,22 @@
                     <ValidationMessage For="() => input.ConfirmPassword" class="text-danger" />
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label">
+                        <InputCheckbox @bind-Value="input.AcceptToS" class="form-check-input" />
+                        I accept the <a href="tos">Terms of Service</a>.
+                    </label>
+                    <ValidationMessage For="() => input.AcceptToS" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        <InputCheckbox @bind-Value="input.IsGetChangelogEmail" class="form-check-input" />
+                        Send me emails about changes to the website.
+                    </label>
+                    <ValidationMessage For="() => input.IsGetChangelogEmail" class="text-danger" />
+                </div>
+
                 <div>
                     <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
                 </div>

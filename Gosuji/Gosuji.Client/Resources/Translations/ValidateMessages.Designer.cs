@@ -63,6 +63,15 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        public static string CheckboxCheckedError {
+            get {
+                return ResourceManager.GetString("CheckboxCheckedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         public static string CompareError {
             get {
                 return ResourceManager.GetString("CompareError", resourceCulture);

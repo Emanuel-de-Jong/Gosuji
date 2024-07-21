@@ -17,5 +17,7 @@ namespace Gosuji.Client.Services.User
         [MinLength(6)]
         [MaxLength(50)]
         public string Password { get; set; }
+
+        public bool IsGetChangelogEmail { get; set; }
     }
 }

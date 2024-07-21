@@ -22,7 +22,8 @@ namespace Gosuji.Client.Components.Pages
             {
                 UserName = input.UserName,
                 Email = input.Email,
-                Password = input.Password
+                Password = input.Password,
+                IsGetChangelogEmail = input.IsGetChangelogEmail
             });
 
             if (result)
@@ -61,6 +62,11 @@ namespace Gosuji.Client.Components.Pages
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [Compare("Password", ErrorMessageResourceName = "CompareError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string ConfirmPassword { get; set; }
+
+            [Range(typeof(bool), "true", "true", ErrorMessageResourceName = "CheckboxCheckedError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            public bool AcceptToS { get; set; } = false;
+
+            public bool IsGetChangelogEmail { get; set; } = false;
         }
     }
 }

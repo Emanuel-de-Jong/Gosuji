@@ -55,6 +55,7 @@ namespace Gosuji.API.Controllers.UserController
 
             SettingConfig settingConfig = new();
             settingConfig.LanguageId = languageId.Value;
+            settingConfig.IsGetChangelogEmail = model.IsGetChangelogEmail;
             await dbContext.SettingConfigs.AddAsync(settingConfig);
             await dbContext.SaveChangesAsync();
 
