@@ -6,39 +6,41 @@
 
 <h1>@tl["Login_Title"]</h1>
 
-<div class="row">
-    <div class="col-md-4">
-        <StatusMessage IsError="true" Message="@errorMessage" />
+<div id="loginPage">
+    <div class="row">
+        <div class="col-md-4">
+            <StatusMessage IsError="true" Message="@errorMessage" />
 
-        <EditForm Model="input" method="post" OnValidSubmit="LoginUser" FormName="login">
-            <DataAnnotationsValidator />
+            <EditForm Model="input" method="post" OnValidSubmit="LoginUser" FormName="login">
+                <DataAnnotationsValidator />
 
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="input.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="Username" />
-                <label for="username" class="form-label">Username</label>
-                <ValidationMessage For="() => input.UserName" class="text-danger" />
-            </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password" />
-                <label for="password" class="form-label">Password</label>
-                <ValidationMessage For="() => input.Password" class="text-danger" />
-            </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="input.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="Username" />
+                    <label for="username" class="form-label">Username</label>
+                    <ValidationMessage For="() => input.UserName" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password" />
+                    <label for="password" class="form-label">Password</label>
+                    <ValidationMessage For="() => input.Password" class="text-danger" />
+                </div>
 
-            <div>
-                <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-            </div>
+                <div>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                </div>
 
-            <div>
-                <p>
-                    <a href="Account/ForgotPassword">Forgot your password?</a>
-                </p>
-                <p>
-                    <a href="register">Register as a new user</a>
-                </p>
-                <p>
-                    <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
-                </p>
-            </div>
-        </EditForm>
+                <div>
+                    <p>
+                        <a href="Account/ForgotPassword">Forgot your password?</a>
+                    </p>
+                    <p>
+                        <a href="register">Register as a new user</a>
+                    </p>
+                    <p>
+                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+                    </p>
+                </div>
+            </EditForm>
+        </div>
     </div>
 </div>

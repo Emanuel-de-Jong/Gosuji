@@ -4,24 +4,26 @@
 
 @inject TestService testService
 
-<h3>Test</h3>
+<div id="testPage">
+    <h3>Test</h3>
 
-<p>FromQuery: @FromQuery</p>
+    <p>FromQuery: @FromQuery</p>
 
-@if (testResult.HasValue)
-{
-    <p>1: @testResult</p>
-}
-@if (test2Result.HasValue)
-{
-    <p>2: @test2Result</p>
-}
-@if (test3Result.HasValue)
-{
-    <p>3: @test3Result</p>
-}
+    @if (testResult.HasValue)
+    {
+        <p>1: @testResult</p>
+    }
+    @if (test2Result.HasValue)
+    {
+        <p>2: @test2Result</p>
+    }
+    @if (test3Result.HasValue)
+    {
+        <p>3: @test3Result</p>
+    }
 
-<NavLink href="/" @onclick=LinkClicked>Link</NavLink>
+    <NavLink href="/" @onclick=LinkClicked>Link</NavLink>
+</div>
 
 @code {
     [Inject]
