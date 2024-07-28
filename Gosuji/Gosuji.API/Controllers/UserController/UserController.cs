@@ -40,13 +40,16 @@ namespace Gosuji.API.Controllers.UserController
         }
 
         [HttpPost]
-        public async Task<ActionResult> Register([FromBody] VMRegister model)
+        public async Task<ActionResult<string>> Register([FromBody] VMRegister model)
         {
             User user = new()
             {
                 UserName = model.UserName,
                 Email = model.Email,
             };
+
+            string backupCode = Guid.NewGuid().ToString().Replace("-", "");
+            user.BackupCode = backupCode;
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
@@ -81,7 +84,7 @@ namespace Gosuji.API.Controllers.UserController
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
-            return Ok();
+            return Ok(backupCode);
         }
 
         [HttpPost]

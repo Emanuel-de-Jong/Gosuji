@@ -1,6 +1,7 @@
 ﻿using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Components.Pages
@@ -12,15 +13,18 @@ namespace Gosuji.Client.Components.Pages
 
         [Inject]
         private UserService userService { get; set; }
+        [Inject]
+        private IJSRuntime js { get; set; }
 
         private string? message;
         private bool isMessageError;
+        string? backupCode;
 
         public async Task RegisterUser()
         {
-            bool result = await userService.Register(input);
+            backupCode = await userService.Register(input);
 
-            if (result)
+            if (backupCode != null)
             {
                 isMessageError = false;
                 message = "Registration successful. A confirmation email has been sent. Please use the link in the email to confirm your account.";
@@ -31,6 +35,11 @@ namespace Gosuji.Client.Components.Pages
                 isMessageError = true;
                 message = "An error occurred while registering.";
             }
+        }
+
+        public async Task BackupCodeToClipboard()
+        {
+            js.InvokeVoidAsync("navigator.clipboard.writeText", backupCode);
         }
     }
 }

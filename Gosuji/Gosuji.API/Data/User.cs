@@ -19,6 +19,9 @@ namespace Gosuji.API.Data
         public DateTimeOffset? EmailConfirmedDate { get; set; }
 
         [Required]
+        public string BackupCode { get; set; }
+
+        [Required]
         [CustomPersonalData]
         public DateTimeOffset CreateDate { get; set; }
         [Required]

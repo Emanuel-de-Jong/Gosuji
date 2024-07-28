@@ -22,9 +22,9 @@ namespace Gosuji.Client.Services.User
             return true;
         }
 
-        public async Task<bool> Register(VMRegister model)
+        public async Task<string?> Register(VMRegister model)
         {
-            return await HttpResponseHandler.Post(HTTP,
+            return await HttpResponseHandler.Post<string>(HTTP,
                 $"{MAP_GROUP}/Register", model);
         }
 

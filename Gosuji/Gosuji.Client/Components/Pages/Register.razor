@@ -13,6 +13,17 @@
         <div class="col-md-4">
             <StatusMessage IsError="isMessageError" Message="@message" />
 
+            @if (backupCode != null)
+            {
+                <div class="backupCodeWarning">
+                    <p>
+                        This is your backup code: <b>@backupCode</b>
+                        <button type="button" class="btn btn-secondary" @onclick=BackupCodeToClipboard><i class="fa-solid fa-copy"></i></button>
+                    </p>
+                    <p>Save this code somewhere safe! You will need it to recover your account if you lose access to your email.</p>
+                </div>
+            }
+
             <EditForm Model="input" method="post" OnValidSubmit="RegisterUser" FormName="register">
                 <DataAnnotationsValidator />
 
