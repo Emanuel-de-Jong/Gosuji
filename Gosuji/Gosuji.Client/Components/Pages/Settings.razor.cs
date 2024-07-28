@@ -1,30 +1,61 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Resources.Translations;
+using Gosuji.Client.Services;
 using Gosuji.Client.Services.User;
+using Gosuji.Client.ViewModels;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using System.Xml.Linq;
 
 namespace Gosuji.Client.Components.Pages
 {
     public partial class Settings : ComponentBase
     {
         [SupplyParameterFromForm]
-        private PrivacyInputModel privacyInput { get; set; } = new();
+        private PrivacyInputModel? privacyInput { get; set; }
 
         [Inject]
+        private AuthenticationStateProvider authenticationStateProvider { get; set; }
+        [Inject]
+        private NavigationManager navigationManager { get; set; }
+        [Inject]
         private UserService userService { get; set; }
+
+        private string? currentUserName;
+        private string? currentEmail;
 
         private string? privacyMessage;
         private bool isPrivacyMessageError;
 
+        protected override async Task OnInitializedAsync()
+        {
+            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
+            {
+                navigationManager.NavigateTo($"login?{G.ReturnUriName}={Uri.EscapeDataString(navigationManager.Uri)}");
+                return;
+            }
+
+            currentUserName = claimsPrincipal.Identity.Name;
+            currentEmail = claimsPrincipal.FindFirst(ClaimTypes.Email).Value;
+
+            privacyInput = new PrivacyInputModel
+            {
+                UserName = currentUserName,
+                Email = currentEmail
+            };
+        }
+
         public async Task UpdatePrivacy()
         {
             VMUpdatePrivacy vmUpdatePrivacy = new();
-            if (privacyInput.UserName != "Current")
+            if (privacyInput.UserName != currentUserName)
             {
                 vmUpdatePrivacy.UserName = privacyInput.UserName;
             }
-            if (privacyInput.Email != "Current")
+            if (privacyInput.Email != currentEmail)
             {
                 vmUpdatePrivacy.Email = privacyInput.Email;
             }

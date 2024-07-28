@@ -33,7 +33,8 @@ namespace Gosuji.API.Services
             List<Claim> claims = [
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(ClaimTypes.Name, user.UserName)];
+                new(ClaimTypes.Name, user.UserName),
+                new(ClaimTypes.Email, user.Email)];
 
             IList<string> roles = await userManager.GetRolesAsync(user);
             foreach (string role in roles)
