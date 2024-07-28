@@ -15,10 +15,10 @@
 
             @if (backupCode != null)
             {
-                <div class="backupCodeWarning">
+                <div class="alert alert-warning" role="alert">
                     <p>
                         This is your backup code: <b>@backupCode</b>
-                        <button type="button" class="btn btn-secondary" @onclick=BackupCodeToClipboard><i class="fa-solid fa-copy"></i></button>
+                        <button type="button" class="btn btn-sm btn-warning" @onclick=BackupCodeToClipboard><i class="fa-regular fa-copy"></i></button>
                     </p>
                     <p>Save this code somewhere safe! You will need it to recover your account if you lose access to your email.</p>
                 </div>
