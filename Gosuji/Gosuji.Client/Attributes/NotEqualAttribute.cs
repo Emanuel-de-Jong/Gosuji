@@ -5,16 +5,16 @@ namespace Gosuji.Client.Attributes
 {
     public class NotEqualAttribute : ValidationAttribute
     {
-        private readonly string comparisonProperty;
+        public string ComparisonProperty { get; }
 
         public NotEqualAttribute(string comparisonProperty)
         {
-            this.comparisonProperty = comparisonProperty;
+            ComparisonProperty = comparisonProperty;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            PropertyInfo property = validationContext.ObjectType.GetProperty(comparisonProperty);
+            PropertyInfo property = validationContext.ObjectType.GetProperty(ComparisonProperty);
 
             if (property == null)
             {
@@ -25,7 +25,12 @@ namespace Gosuji.Client.Attributes
 
             if (value != null && value.Equals(comparisonValue))
             {
-                string errorMessage = FormatErrorMessage(validationContext.DisplayName);
+                string errorMessage = string.Format("{0} should not be equal to {1}", validationContext.DisplayName, ComparisonProperty);
+                if (!string.IsNullOrEmpty(ErrorMessageString))
+                {
+                    errorMessage = FormatErrorMessage(validationContext.DisplayName);
+                }
+
                 return new ValidationResult(ErrorMessage ?? errorMessage);
             }
 
@@ -34,7 +39,7 @@ namespace Gosuji.Client.Attributes
 
         public override string FormatErrorMessage(string name)
         {
-            return string.Format(ErrorMessageString, name, comparisonProperty);
+            return string.Format(ErrorMessageString, name, ComparisonProperty);
         }
     }
 }
