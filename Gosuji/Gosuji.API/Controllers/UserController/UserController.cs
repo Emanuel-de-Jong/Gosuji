@@ -273,14 +273,15 @@ namespace Gosuji.API.Controllers.UserController
             {
                 model.Email = null;
             }
-            if (model.Password != null && await userManager.CheckPasswordAsync(user, model.Password))
-            {
-                model.Password = null;
-            }
 
-            if (model.UserName == null && model.Email == null && model.Password == null)
+            if (model.UserName == null && model.Email == null && model.NewPassword == null)
             {
                 return BadRequest("No data to update");
+            }
+
+            if (!await userManager.CheckPasswordAsync(user, model.CurrentPassword))
+            {
+                return BadRequest("Invalid password");
             }
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -289,7 +290,7 @@ namespace Gosuji.API.Controllers.UserController
                 Id = user.Id,
                 UserName = model.UserName,
                 Email = model.Email,
-                Password = model.Password,
+                Password = model.NewPassword,
             });
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();

@@ -135,6 +135,9 @@
   <data name="MinLengthError" xml:space="preserve">
     <value>This field must have at least {1} characters.</value>
   </data>
+  <data name="NewPasswordEqualError" xml:space="preserve">
+    <value>The new password can't be the same as the current password.</value>
+  </data>
   <data name="PasswordCharError" xml:space="preserve">
     <value>The password should have at least one number and one special character.</value>
   </data>

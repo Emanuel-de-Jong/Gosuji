@@ -117,6 +117,15 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        public static string NewPasswordEqualError {
+            get {
+                return ResourceManager.GetString("NewPasswordEqualError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         public static string PasswordCharError {
             get {
                 return ResourceManager.GetString("PasswordCharError", resourceCulture);

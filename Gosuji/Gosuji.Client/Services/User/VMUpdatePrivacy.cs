@@ -1,4 +1,4 @@
-﻿using Gosuji.Client.Resources.Translations;
+﻿using Gosuji.Client.Attributes;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Services.User
@@ -16,7 +16,12 @@ namespace Gosuji.Client.Services.User
 
         [MinLength(6)]
         [MaxLength(50)]
+        [NotEqual(nameof(CurrentPassword))]
         [RegularExpression(@"^(?=.*\d)(?=.*[@#$%^&+=!]).*$")] // At least one digit and special character
-        public string? Password { get; set; }
+        public string? NewPassword { get; set; }
+
+        [Required]
+        [MaxLength(50)]
+        public string CurrentPassword { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Data;
+﻿using Gosuji.Client.Attributes;
+using Gosuji.Client.Data;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Gosuji.Client.Services.User;
@@ -50,7 +51,11 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task UpdatePrivacy()
         {
-            VMUpdatePrivacy vmUpdatePrivacy = new();
+            VMUpdatePrivacy vmUpdatePrivacy = new()
+            {
+                CurrentPassword = privacyInput.CurrentPassword
+            };
+
             if (privacyInput.UserName != currentUserName)
             {
                 vmUpdatePrivacy.UserName = privacyInput.UserName;
@@ -61,7 +66,14 @@ namespace Gosuji.Client.Components.Pages
             }
             if (!string.IsNullOrEmpty(privacyInput.NewPassword))
             {
-                vmUpdatePrivacy.Password = privacyInput.NewPassword;
+                vmUpdatePrivacy.NewPassword = privacyInput.NewPassword;
+            }
+
+            if (vmUpdatePrivacy.UserName == null && vmUpdatePrivacy.Email == null && vmUpdatePrivacy.NewPassword == null)
+            {
+                isPrivacyMessageError = true;
+                privacyMessage = "There was nothing to change.";
+                return;
             }
 
             bool result = await userService.UpdatePrivacy(vmUpdatePrivacy);
@@ -75,7 +87,7 @@ namespace Gosuji.Client.Components.Pages
             else
             {
                 isPrivacyMessageError = true;
-                privacyMessage = "There was nothing to change.";
+                privacyMessage = "The provided password is incorrect.";
             }
         }
 
@@ -95,12 +107,13 @@ namespace Gosuji.Client.Components.Pages
 
             [MinLength(6, ErrorMessageResourceName = "MinLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [NotEqual(nameof(CurrentPassword), ErrorMessageResourceName = "NewPasswordEqualError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [RegularExpression(@"^(?=.*\d)(?=.*[@#$%^&+=!]).*$",
                 ErrorMessageResourceName = "PasswordCharError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string NewPassword { get; set; }
 
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
-            [Compare("NewPassword", ErrorMessageResourceName = "CompareError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [Compare(nameof(NewPassword), ErrorMessageResourceName = "CompareError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string ConfirmNewPassword { get; set; }
 
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
