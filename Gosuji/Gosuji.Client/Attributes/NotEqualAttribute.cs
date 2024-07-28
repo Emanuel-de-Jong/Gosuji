@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Resources;
 
 namespace Gosuji.Client.Attributes
 {
@@ -39,7 +40,19 @@ namespace Gosuji.Client.Attributes
 
         public override string FormatErrorMessage(string name)
         {
-            return string.Format(ErrorMessageString ?? "{0} should not be equal to {1}.", name, ComparisonProperty);
+            string errorMessageString = ErrorMessageString ?? "{0} should not be equal to {1}";
+
+            if (ErrorMessageResourceType != null && !string.IsNullOrEmpty(ErrorMessageResourceName))
+            {
+                ResourceManager resourceManager = new(ErrorMessageResourceType);
+                string? resourceErrorMessageString = resourceManager.GetString(ErrorMessageResourceName);
+                if (!string.IsNullOrEmpty(resourceErrorMessageString))
+                {
+                    errorMessageString = resourceErrorMessageString;
+                }
+            }
+
+            return string.Format(errorMessageString, name, ComparisonProperty);
         }
     }
 }

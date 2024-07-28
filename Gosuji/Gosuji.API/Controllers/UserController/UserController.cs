@@ -284,14 +284,34 @@ namespace Gosuji.API.Controllers.UserController
                 return BadRequest("Invalid password");
             }
 
-            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            dbContext.PendingUserChanges.Add(new PendingUserChange
+            string? passwordHash = null;
+            if (model.NewPassword != null)
             {
-                Id = user.Id,
-                UserName = model.UserName,
-                Email = model.Email,
-                Password = model.NewPassword,
-            });
+                passwordHash = userManager.PasswordHasher.HashPassword(user, model.NewPassword);
+            }
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            PendingUserChange? pendingUserChange = await dbContext.PendingUserChanges.Where(p => p.Id == user.Id).FirstOrDefaultAsync();
+            if (pendingUserChange != null)
+            {
+                pendingUserChange.UserName = model.UserName != null ? model.UserName : pendingUserChange.UserName;
+                pendingUserChange.Email = model.Email != null ? model.Email : pendingUserChange.Email;
+                pendingUserChange.Password = passwordHash != null ? passwordHash : pendingUserChange.Password;
+
+                dbContext.PendingUserChanges.Update(pendingUserChange);
+            } else
+            {
+                pendingUserChange = new()
+                {
+                    Id = user.Id,
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    Password = passwordHash,
+                };
+
+                dbContext.PendingUserChanges.Add(pendingUserChange);
+            }
+
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
