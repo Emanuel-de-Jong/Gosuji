@@ -26,6 +26,7 @@ namespace Gosuji.API.Data
         public DbSet<RateLimitViolation> RateLimitViolations { get; set; }
         public DbSet<UserState> UserStates { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<PendingUserChange> PendingUserChanges { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -82,6 +83,11 @@ namespace Gosuji.API.Data
                 .HasForeignKey(e => e.LastPresetId);
 
             builder.Entity<RefreshToken>();
+
+            builder.Entity<PendingUserChange>()
+                .HasOne(e => e.User)
+                .WithOne()
+                .HasForeignKey<PendingUserChange>(e => e.Id);
         }
 
         public override EntityEntry<TEntity> Update<TEntity>(TEntity entity)

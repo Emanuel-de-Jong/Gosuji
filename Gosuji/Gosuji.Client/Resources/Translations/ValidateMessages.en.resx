@@ -126,6 +126,9 @@
   <data name="EmailError" xml:space="preserve">
     <value>Please enter a valid email.</value>
   </data>
+  <data name="JustSpacesError" xml:space="preserve">
+    <value>This field needs more characters than just spaces.</value>
+  </data>
   <data name="MaxLengthError" xml:space="preserve">
     <value>This field can't have more than {1} characters.</value>
   </data>

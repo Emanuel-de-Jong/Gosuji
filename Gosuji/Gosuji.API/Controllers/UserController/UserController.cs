@@ -258,5 +258,43 @@ namespace Gosuji.API.Controllers.UserController
             Response.Headers.TryAdd("Content-Disposition", "attachment; filename=PersonalData.json");
             return Ok(File(fileBytes, "application/json", "PersonalData.json"));
         }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> UpdatePrivacy([FromBody] VMUpdatePrivacy model)
+        {
+            User user = await GetUser(userManager);
+
+            if (model.UserName == user.UserName)
+            {
+                model.UserName = null;
+            }
+            if (model.Email == user.Email)
+            {
+                model.Email = null;
+            }
+            if (model.Password != null && await userManager.CheckPasswordAsync(user, model.Password))
+            {
+                model.Password = null;
+            }
+
+            if (model.UserName == null && model.Email == null && model.Password == null)
+            {
+                return BadRequest("No data to update");
+            }
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            dbContext.PendingUserChanges.Add(new PendingUserChange
+            {
+                Id = user.Id,
+                UserName = model.UserName,
+                Email = model.Email,
+                Password = model.Password,
+            });
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+
+            return Ok();
+        }
     }
 }

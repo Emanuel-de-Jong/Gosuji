@@ -90,6 +90,15 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        public static string JustSpacesError {
+            get {
+                return ResourceManager.GetString("JustSpacesError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         public static string MaxLengthError {
             get {
                 return ResourceManager.GetString("MaxLengthError", resourceCulture);

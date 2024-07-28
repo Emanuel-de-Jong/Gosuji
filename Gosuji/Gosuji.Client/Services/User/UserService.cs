@@ -63,5 +63,11 @@ namespace Gosuji.Client.Services.User
             await AuthenticationStateProvider.NotifyLogin(token);
             return true;
         }
+
+        public async Task<bool> UpdatePrivacy(VMUpdatePrivacy model)
+        {
+            return await HttpResponseHandler.Post(HTTP,
+                $"{MAP_GROUP}/UpdatePrivacy", model);
+        }
     }
 }

@@ -126,6 +126,9 @@
   <data name="EmailError" xml:space="preserve">
     <value />
   </data>
+  <data name="JustSpacesError" xml:space="preserve">
+    <value />
+  </data>
   <data name="MaxLengthError" xml:space="preserve">
     <value />
   </data>
