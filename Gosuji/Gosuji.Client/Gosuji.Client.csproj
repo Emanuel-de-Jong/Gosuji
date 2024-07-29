@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -27,6 +27,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ValidateMessages.resx</DependentUpon>
     </Compile>
+	<Compile Update="Resources\Translations\APIResponse.Designer.cs">
+	  <DesignTime>True</DesignTime>
+	  <AutoGen>True</AutoGen>
+	  <DependentUpon>APIResponse.resx</DependentUpon>
+	</Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -56,6 +61,13 @@
     <EmbeddedResource Update="Resources\Translations\ValidateMessages.en.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
+	<EmbeddedResource Update="Resources\Translations\APIResponse.resx">
+	  <Generator>PublicResXFileCodeGenerator</Generator>
+	  <LastGenOutput>APIResponse.Designer.cs</LastGenOutput>
+	</EmbeddedResource>
+	<EmbeddedResource Update="Resources\Translations\APIResponse.en.resx">
+	  <Generator>PublicResXFileCodeGenerator</Generator>
+	</EmbeddedResource>
   </ItemGroup>
 
 </Project>
