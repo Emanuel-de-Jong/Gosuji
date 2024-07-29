@@ -120,4 +120,16 @@
   <data name="LoginWrongCredentials" xml:space="preserve">
     <value />
   </data>
+  <data name="SC_Error" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SC_Limit" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SC_Unauthorized" xml:space="preserve">
+    <value />
+  </data>
+  <data name="SC_Unauthorized_Link" xml:space="preserve">
+    <value />
+  </data>
 </root>

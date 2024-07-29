@@ -32,7 +32,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
             {
-                return Unauthorized();
+                return Ok("LoginWrongCredentials");
             }
 
             string token = await jwtService.CreateCookies(user, userManager, HttpContext);
@@ -46,7 +46,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (await dbContext.Users.AnyAsync(u => u.NormalizedEmail == model.Email.ToUpper()))
             {
-                return BadRequest("Email already exists");
+                return Ok("Email already exists");
             }
 
             User user = new()

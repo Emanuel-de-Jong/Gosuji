@@ -68,5 +68,41 @@ namespace Gosuji.Client.Resources.Translations {
                 return ResourceManager.GetString("LoginWrongCredentials", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string SC_Error {
+            get {
+                return ResourceManager.GetString("SC_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string SC_Limit {
+            get {
+                return ResourceManager.GetString("SC_Limit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string SC_Unauthorized {
+            get {
+                return ResourceManager.GetString("SC_Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string SC_Unauthorized_Link {
+            get {
+                return ResourceManager.GetString("SC_Unauthorized_Link", resourceCulture);
+            }
+        }
     }
 }

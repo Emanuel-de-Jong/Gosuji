@@ -1,4 +1,4 @@
-﻿using Gosuji.Client.Helpers;
+﻿using Gosuji.Client.Helpers.HttpResponseHandler;
 
 namespace Gosuji.Client.Services
 {

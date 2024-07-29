@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Resources.Translations;
+﻿using Gosuji.Client.Helpers.HttpResponseHandler;
+using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -19,6 +20,8 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IStringLocalizer<General> tl { get; set; }
         [Inject]
+        private IStringLocalizer<APIResponse> tlApi { get; set; }
+        [Inject]
         private UserService userService { get; set; }
         [Inject]
         private NavigationManager navigationManager { get; set; }
@@ -36,14 +39,14 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task LoginUser()
         {
-            bool result = await userService.Login(input);
-            if (result)
+            APIResponse<string> apiResponse = await userService.Login(input);
+            if (apiResponse.IsSuccess)
             {
                 navigationManager.NavigateTo(string.IsNullOrEmpty(ReturnUri) ? "/" : ReturnUri);
             }
             else
             {
-                errorMessage = "Username and password do not match.";
+                errorMessage = tlApi[apiResponse.Message];
             }
         }
     }

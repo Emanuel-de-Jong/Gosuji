@@ -1,5 +1,5 @@
 ﻿using Gosuji.Client.Data;
-using Gosuji.Client.Helpers;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.JSInterop;
 

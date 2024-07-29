@@ -1,4 +1,4 @@
-﻿using Gosuji.Client.Helpers;
+﻿using Gosuji.Client.Helpers.HttpResponseHandler;
 
 namespace Gosuji.Client.Services.User
 {
@@ -9,62 +9,67 @@ namespace Gosuji.Client.Services.User
         public HttpClient? HTTP { get; set; }
         public JwtAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
-        public async Task<bool> Login(VMLogin model)
+        public async Task<APIResponse<string>> Login(VMLogin model)
         {
-            string? token = await HttpResponseHandler.Post<string>(HTTP,
+            APIResponse<string> response = await HttpResponseHandler.Post<string>(HTTP,
                 $"{MAP_GROUP}/Login", model);
-            if (token == null)
+
+            if (response.IsOk)
             {
-                return false;
+                await AuthenticationStateProvider.NotifyLogin(response.Data);
+                response.Data = null;
             }
 
-            await AuthenticationStateProvider.NotifyLogin(token);
-            return true;
+            return response;
         }
 
-        public async Task<string?> Register(VMRegister model)
+        public async Task<APIResponse<string>> Register(VMRegister model)
         {
             return await HttpResponseHandler.Post<string>(HTTP,
                 $"{MAP_GROUP}/Register", model);
         }
 
-        public async Task<bool> Logout()
+        public async Task<APIResponse<bool?>> Logout()
         {
-            bool result = await HttpResponseHandler.Post(HTTP,
+            APIResponse<bool?> response = await HttpResponseHandler.Post(HTTP,
                 $"{MAP_GROUP}/Logout", new object());
 
             await AuthenticationStateProvider.NotifyLogout();
 
-            return result;
+            return response;
         }
 
-        public async Task<bool> CheckAuthorized()
+        public async Task<APIResponse<bool?>> CheckAuthorized()
         {
             return await HttpResponseHandler.Get(HTTP,
                 $"{MAP_GROUP}/CheckAuthorized");
         }
 
-        public async Task<string?> GetToken()
+        public async Task<APIResponse<string>> GetToken()
         {
             return await HttpResponseHandler.Get<string>(HTTP,
                 $"{MAP_GROUP}/GetToken");
         }
 
-        public async Task<bool> GetNewTokens()
+        public async Task<APIResponse<string>> GetNewTokens()
         {
-            string? token = await HttpResponseHandler.Get<string>(HTTP,
+            APIResponse<string> response = await HttpResponseHandler.Get<string>(HTTP,
                 $"{MAP_GROUP}/GetNewTokens");
-            if (token == null)
+
+            if (response.IsOk)
+            {
+                await AuthenticationStateProvider.NotifyLogin(response.Data);
+                response.Data = null;
+            }
+            else
             {
                 await AuthenticationStateProvider.NotifyLogout();
-                return false;
             }
 
-            await AuthenticationStateProvider.NotifyLogin(token);
-            return true;
+            return response;
         }
 
-        public async Task<bool> UpdatePrivacy(VMUpdatePrivacy model)
+        public async Task<APIResponse<bool?>> UpdatePrivacy(VMUpdatePrivacy model)
         {
             return await HttpResponseHandler.Post(HTTP,
                 $"{MAP_GROUP}/UpdatePrivacy", model);

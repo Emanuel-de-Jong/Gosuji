@@ -1,4 +1,4 @@
-﻿using Gosuji.Client.Helpers;
+﻿using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Josekis;
 
 namespace Gosuji.Client.Services
