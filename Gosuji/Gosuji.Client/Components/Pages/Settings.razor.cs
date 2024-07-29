@@ -81,7 +81,7 @@ namespace Gosuji.Client.Components.Pages
             if (result)
             {
                 isPrivacyMessageError = false;
-                privacyMessage = "Privacy changes pending. A confirmation email has been sent. Please use the link in the email to confirm your changes.";
+                privacyMessage = "Privacy changes pending. A confirmation email has been sent to your current email address. Please use the link in the email to confirm your changes.";
                 privacyInput = new();
             }
             else

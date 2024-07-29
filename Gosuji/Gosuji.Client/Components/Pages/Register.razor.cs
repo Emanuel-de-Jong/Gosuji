@@ -33,7 +33,7 @@ namespace Gosuji.Client.Components.Pages
             else
             {
                 isMessageError = true;
-                message = "An error occurred while registering.";
+                message = "There is already an account with this email.";
             }
         }
 

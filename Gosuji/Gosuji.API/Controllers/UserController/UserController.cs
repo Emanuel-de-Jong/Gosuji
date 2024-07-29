@@ -42,6 +42,13 @@ namespace Gosuji.API.Controllers.UserController
         [HttpPost]
         public async Task<ActionResult<string>> Register([FromBody] VMRegister model)
         {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+            if (await dbContext.Users.AnyAsync(u => u.NormalizedEmail == model.Email.ToUpper()))
+            {
+                return BadRequest("Email already exists");
+            }
+
             User user = new()
             {
                 UserName = model.UserName,
@@ -50,8 +57,6 @@ namespace Gosuji.API.Controllers.UserController
 
             string backupCode = Guid.NewGuid().ToString().Replace("-", "");
             user.BackupCode = backupCode;
-
-            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
             long? languageId = (await dbContext.Languages.Where(l => l.Short == CultureInfo.CurrentCulture.TwoLetterISOLanguageName).FirstOrDefaultAsync())?.Id;
             languageId ??= 1;
