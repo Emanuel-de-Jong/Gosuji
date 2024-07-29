@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Helpers.HttpResponseHandler;
+﻿using Gosuji.Client.Components.Shared;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components;
@@ -20,11 +21,11 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IStringLocalizer<General> tl { get; set; }
         [Inject]
-        private IStringLocalizer<APIResponse> tlApi { get; set; }
-        [Inject]
         private UserService userService { get; set; }
         [Inject]
         private NavigationManager navigationManager { get; set; }
+
+        private CStatusMessage statusMessage;
 
         private string? errorMessage;
 
@@ -43,11 +44,10 @@ namespace Gosuji.Client.Components.Pages
             if (apiResponse.IsSuccess)
             {
                 navigationManager.NavigateTo(string.IsNullOrEmpty(ReturnUri) ? "/" : ReturnUri);
+                return;
             }
-            else
-            {
-                errorMessage = tlApi[apiResponse.Message];
-            }
+
+            statusMessage.HandleAPIResponse(apiResponse);
         }
     }
 }

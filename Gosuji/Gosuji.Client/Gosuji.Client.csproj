@@ -27,10 +27,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>ValidateMessages.resx</DependentUpon>
     </Compile>
-	<Compile Update="Resources\Translations\APIResponse.Designer.cs">
+	<Compile Update="Resources\Translations\APIResponses.Designer.cs">
 	  <DesignTime>True</DesignTime>
 	  <AutoGen>True</AutoGen>
-	  <DependentUpon>APIResponse.resx</DependentUpon>
+	  <DependentUpon>APIResponses.resx</DependentUpon>
 	</Compile>
   </ItemGroup>
 
@@ -61,11 +61,11 @@
     <EmbeddedResource Update="Resources\Translations\ValidateMessages.en.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
-	<EmbeddedResource Update="Resources\Translations\APIResponse.resx">
+	<EmbeddedResource Update="Resources\Translations\APIResponses.resx">
 	  <Generator>PublicResXFileCodeGenerator</Generator>
-	  <LastGenOutput>APIResponse.Designer.cs</LastGenOutput>
+	  <LastGenOutput>APIResponses.Designer.cs</LastGenOutput>
 	</EmbeddedResource>
-	<EmbeddedResource Update="Resources\Translations\APIResponse.en.resx">
+	<EmbeddedResource Update="Resources\Translations\APIResponses.en.resx">
 	  <Generator>PublicResXFileCodeGenerator</Generator>
 	</EmbeddedResource>
   </ItemGroup>

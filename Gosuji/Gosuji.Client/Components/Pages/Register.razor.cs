@@ -39,7 +39,7 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task BackupCodeToClipboard()
         {
-            js.InvokeVoidAsync("navigator.clipboard.writeText", backupCode);
+            await js.InvokeVoidAsync("navigator.clipboard.writeText", backupCode);
         }
     }
 }

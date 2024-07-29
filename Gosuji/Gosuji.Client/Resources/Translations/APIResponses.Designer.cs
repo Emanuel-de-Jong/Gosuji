@@ -22,14 +22,14 @@ namespace Gosuji.Client.Resources.Translations {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class APIResponse {
+    public class APIResponses {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal APIResponse() {
+        internal APIResponses() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Gosuji.Client.Resources.Translations {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Gosuji.Client.Resources.Translations.APIResponse", typeof(APIResponse).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Gosuji.Client.Resources.Translations.APIResponses", typeof(APIResponses).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,42 +66,6 @@ namespace Gosuji.Client.Resources.Translations {
         public static string LoginWrongCredentials {
             get {
                 return ResourceManager.GetString("LoginWrongCredentials", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string SC_Error {
-            get {
-                return ResourceManager.GetString("SC_Error", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string SC_Limit {
-            get {
-                return ResourceManager.GetString("SC_Limit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string SC_Unauthorized {
-            get {
-                return ResourceManager.GetString("SC_Unauthorized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        public static string SC_Unauthorized_Link {
-            get {
-                return ResourceManager.GetString("SC_Unauthorized_Link", resourceCulture);
             }
         }
     }

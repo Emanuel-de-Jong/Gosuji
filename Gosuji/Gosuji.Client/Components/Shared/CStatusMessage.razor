@@ -1,0 +1,91 @@
+﻿@using Gosuji.Client.Helpers.HttpResponseHandler
+@using Gosuji.Client.Resources.Translations
+
+@inject IStringLocalizer<APIResponses> tlApi
+@inject IJSRuntime js
+
+@if (showMessage)
+{
+    <div class="alert alert-@(isSuccess ? "success" : "danger")" role="alert">
+        @if (isUnauthorized)
+        {
+            <span>Access denied. Please <a href="login" class="alert-link">Log in</a>.</span>
+        }
+        else if (isError)
+        {
+            <span>Something went wrong. Please contact us with this message: </span>
+            <b>@message</b>
+            <button type="button" class="btn btn-sm btn-warning" @onclick=ErrorToClipboard><i class="fa-regular fa-copy"></i></button>
+            <p>Send us an email at <a href="mailto:someone@example.com" class="alert-link">someone@example.com</a>.</p>
+        }
+        else
+        {
+            @message
+        }
+    </div>
+}
+
+@code {
+    private bool showMessage;
+
+    private bool isSuccess;
+    private string? message;
+
+    private bool isUnauthorized;
+    private bool isError;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Reset();
+    }
+
+    private void Reset()
+    {
+        showMessage = false;
+
+        isSuccess = true;
+        message = null;
+
+        isUnauthorized = false;
+        isError = false;
+    }
+
+    public void SetMessage(string message)
+    {
+        Reset();
+
+        this.message = message;
+        showMessage = true;
+    }
+
+    public void HandleAPIResponse<T>(APIResponse<T> response)
+    {
+        Reset();
+
+        if (response.IsOk)
+        {
+            message = tlApi[response.Message];
+        }
+        else if (response.IsLimit)
+        {
+            message = "Something went wrong. Please try again later.";
+        }
+        else if (response.IsUnauthorized)
+        {
+            isUnauthorized = true;
+        }
+        else
+        {
+            isError = true;
+            message = response.StatusCode + " " + response.Message;
+        }
+
+        isSuccess = false;
+        showMessage = true;
+    }
+
+    private async Task ErrorToClipboard()
+    {
+        await js.InvokeVoidAsync("navigator.clipboard.writeText", message);
+    }
+}

@@ -9,7 +9,7 @@
 <div id="loginPage">
     <div class="row">
         <div class="col-md-4">
-            <StatusMessage IsError="true" Message="@errorMessage" />
+            <CStatusMessage @ref=statusMessage />
 
             <EditForm Model="input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />

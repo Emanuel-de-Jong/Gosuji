@@ -120,16 +120,4 @@
   <data name="LoginWrongCredentials" xml:space="preserve">
     <value>The username and password do not match.</value>
   </data>
-  <data name="SC_Error" xml:space="preserve">
-    <value>Something went wrong. Please contact us with the following message:</value>
-  </data>
-  <data name="SC_Limit" xml:space="preserve">
-    <value>Something went wrong. Please try again later.</value>
-  </data>
-  <data name="SC_Unauthorized" xml:space="preserve">
-    <value>Permission denied. Please</value>
-  </data>
-  <data name="SC_Unauthorized_Link" xml:space="preserve">
-    <value>Log in</value>
-  </data>
 </root>
