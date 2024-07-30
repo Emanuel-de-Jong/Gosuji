@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Login : ComponentBase
+    public partial class Login : CustomPage
     {
         [SupplyParameterFromQuery(Name = G.ReturnUriName)]
         public string? ReturnUri { get; set; }

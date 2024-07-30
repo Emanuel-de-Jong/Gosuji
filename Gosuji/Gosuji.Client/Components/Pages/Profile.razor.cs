@@ -15,7 +15,7 @@ namespace Gosuji.Client.Components.Pages
         PLAYED = 2,
     }
 
-    public partial class Profile : ComponentBase
+    public partial class Profile : CustomPage
     {
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }

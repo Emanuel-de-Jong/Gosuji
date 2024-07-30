@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Logout : ComponentBase
+    public partial class Logout : CustomPage
     {
         [Inject]
         private UserService userService { get; set; }

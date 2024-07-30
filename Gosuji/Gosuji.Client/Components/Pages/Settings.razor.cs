@@ -15,7 +15,7 @@ using System.Xml.Linq;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Settings : ComponentBase
+    public partial class Settings : CustomPage
     {
         [SupplyParameterFromForm]
         private PrivacyInputModel? privacyInput { get; set; }

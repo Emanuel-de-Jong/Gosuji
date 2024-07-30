@@ -34,8 +34,12 @@
         }
         set
         {
+            bool oldValue = show;
             show = value;
-            StateHasChanged();
+            if (oldValue != show)
+            {
+                StateHasChanged();
+            }
         }
     }
 

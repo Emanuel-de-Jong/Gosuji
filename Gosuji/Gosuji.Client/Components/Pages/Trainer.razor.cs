@@ -11,7 +11,7 @@ using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Trainer : ComponentBase, IDisposable
+    public partial class Trainer : CustomPage, IDisposable
     {
         [Parameter]
         public long? GameId { get; set; }

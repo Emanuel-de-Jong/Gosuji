@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Register : ComponentBase
+    public partial class Register : CustomPage
     {
         [SupplyParameterFromForm]
         private VMRegister input { get; set; } = new();

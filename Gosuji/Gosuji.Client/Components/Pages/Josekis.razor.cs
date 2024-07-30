@@ -6,7 +6,7 @@ using Microsoft.JSInterop;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Josekis : ComponentBase, IDisposable
+    public partial class Josekis : CustomPage, IDisposable
     {
         private static Random random = new();
 
