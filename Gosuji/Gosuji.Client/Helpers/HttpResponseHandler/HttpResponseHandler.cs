@@ -6,9 +6,9 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
 
     public class HttpResponseHandler
     {
-        public static async Task<APIResponse<bool?>> Get(HttpClient http, string uri)
+        public static async Task<APIResponse> Get(HttpClient http, string uri)
         {
-            return await Get<bool?>(http, uri);
+            return await TryCatch(http.GetAsync(uri), uri);
         }
 
         public static async Task<APIResponse<T>> Get<T>(HttpClient http, string uri)
@@ -16,9 +16,9 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             return await TryCatch<T>(http.GetAsync(uri), uri);
         }
 
-        public static async Task<APIResponse<bool?>> Post(HttpClient http, string uri, object obj)
+        public static async Task<APIResponse> Post(HttpClient http, string uri, object obj)
         {
-            return await Post<bool?>(http, uri, obj);
+            return await TryCatch(http.PostAsJsonAsync(uri, obj), uri);
         }
 
         public static async Task<APIResponse<T>> Post<T>(HttpClient http, string uri, object obj)
@@ -26,9 +26,9 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             return await TryCatch<T>(http.PostAsJsonAsync(uri, obj), uri);
         }
 
-        public static async Task<APIResponse<bool?>> Put(HttpClient http, string uri, object obj)
+        public static async Task<APIResponse> Put(HttpClient http, string uri, object obj)
         {
-            return await Put<bool?>(http, uri, obj);
+            return await TryCatch(http.PutAsJsonAsync(uri, obj), uri);
         }
 
         public static async Task<APIResponse<T>> Put<T>(HttpClient http, string uri, object obj)
@@ -36,14 +36,25 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             return await TryCatch<T>(http.PutAsJsonAsync(uri, obj), uri);
         }
 
-        public static async Task<APIResponse<bool?>> Delete(HttpClient http, string uri)
+        public static async Task<APIResponse> Delete(HttpClient http, string uri)
         {
-            return await Delete<bool?>(http, uri);
+            return await TryCatch(http.DeleteAsync(uri), uri);
         }
 
         public static async Task<APIResponse<T>> Delete<T>(HttpClient http, string uri)
         {
             return await TryCatch<T>(http.DeleteAsync(uri), uri);
+        }
+
+        private static async Task<APIResponse> TryCatch(Task<HttpResponseMessage> responseTask, string uri)
+        {
+            APIResponse<object> templateResponse = await TryCatch<object>(responseTask, uri);
+            APIResponse response = new()
+            {
+                StatusCode = templateResponse.StatusCode,
+                Message = templateResponse.Message
+            };
+            return response;
         }
 
         private static async Task<APIResponse<T>> TryCatch<T>(Task<HttpResponseMessage> responseTask, string uri)

@@ -14,7 +14,7 @@ namespace Gosuji.Client.Services.User
             APIResponse<string> response = await HttpResponseHandler.Post<string>(HTTP,
                 $"{MAP_GROUP}/Login", model);
 
-            if (response.IsOk)
+            if (response.IsSuccess)
             {
                 await AuthenticationStateProvider.NotifyLogin(response.Data);
                 response.Data = null;
@@ -29,9 +29,9 @@ namespace Gosuji.Client.Services.User
                 $"{MAP_GROUP}/Register", model);
         }
 
-        public async Task<APIResponse<bool?>> Logout()
+        public async Task<APIResponse> Logout()
         {
-            APIResponse<bool?> response = await HttpResponseHandler.Post(HTTP,
+            APIResponse response = await HttpResponseHandler.Post(HTTP,
                 $"{MAP_GROUP}/Logout", new object());
 
             await AuthenticationStateProvider.NotifyLogout();
@@ -39,7 +39,7 @@ namespace Gosuji.Client.Services.User
             return response;
         }
 
-        public async Task<APIResponse<bool?>> CheckAuthorized()
+        public async Task<APIResponse> CheckAuthorized()
         {
             return await HttpResponseHandler.Get(HTTP,
                 $"{MAP_GROUP}/CheckAuthorized");
@@ -56,7 +56,7 @@ namespace Gosuji.Client.Services.User
             APIResponse<string> response = await HttpResponseHandler.Get<string>(HTTP,
                 $"{MAP_GROUP}/GetNewTokens");
 
-            if (response.IsOk)
+            if (response.IsSuccess)
             {
                 await AuthenticationStateProvider.NotifyLogin(response.Data);
                 response.Data = null;
@@ -69,7 +69,7 @@ namespace Gosuji.Client.Services.User
             return response;
         }
 
-        public async Task<APIResponse<bool?>> UpdatePrivacy(VMUpdatePrivacy model)
+        public async Task<APIResponse> UpdatePrivacy(VMUpdatePrivacy model)
         {
             return await HttpResponseHandler.Post(HTTP,
                 $"{MAP_GROUP}/UpdatePrivacy", model);

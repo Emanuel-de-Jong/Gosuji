@@ -77,7 +77,7 @@
         else
         {
             isError = true;
-            message = response.StatusCode + " " + response.Message;
+            message = $"{response.StatusCode} {response.Message}";
         }
 
         isSuccess = false;
