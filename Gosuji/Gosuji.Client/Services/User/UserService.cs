@@ -9,6 +9,18 @@ namespace Gosuji.Client.Services.User
         public HttpClient? HTTP { get; set; }
         public JwtAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
+        public async Task<bool> CheckAuthorized()
+        {
+            return (await HttpResponseHandler.Get(HTTP,
+                $"{MAP_GROUP}/CheckAuthorized")).IsSuccess;
+        }
+
+        public async Task<APIResponse<string>> Register(VMRegister model)
+        {
+            return await HttpResponseHandler.Post<string>(HTTP,
+                $"{MAP_GROUP}/Register", model);
+        }
+
         public async Task<APIResponse> Login(VMLogin model)
         {
             APIResponse<string> response = await HttpResponseHandler.Post<string>(HTTP,
@@ -23,12 +35,6 @@ namespace Gosuji.Client.Services.User
             return response;
         }
 
-        public async Task<APIResponse<string>> Register(VMRegister model)
-        {
-            return await HttpResponseHandler.Post<string>(HTTP,
-                $"{MAP_GROUP}/Register", model);
-        }
-
         public async Task<APIResponse> Logout()
         {
             APIResponse response = await HttpResponseHandler.Post(HTTP,
@@ -39,10 +45,10 @@ namespace Gosuji.Client.Services.User
             return response;
         }
 
-        public async Task<bool> CheckAuthorized()
+        public async Task<APIResponse> UpdatePrivacy(VMUpdatePrivacy model)
         {
-            return (await HttpResponseHandler.Get(HTTP,
-                $"{MAP_GROUP}/CheckAuthorized")).IsSuccess;
+            return await HttpResponseHandler.Post(HTTP,
+                $"{MAP_GROUP}/UpdatePrivacy", model);
         }
 
         public async Task<string?> GetToken()
@@ -66,12 +72,6 @@ namespace Gosuji.Client.Services.User
             }
 
             return response.IsSuccess;
-        }
-
-        public async Task<APIResponse> UpdatePrivacy(VMUpdatePrivacy model)
-        {
-            return await HttpResponseHandler.Post(HTTP,
-                $"{MAP_GROUP}/UpdatePrivacy", model);
         }
     }
 }

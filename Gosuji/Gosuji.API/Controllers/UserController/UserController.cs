@@ -21,23 +21,11 @@ namespace Gosuji.API.Controllers.UserController
     public class UserController(IDbContextFactory<ApplicationDbContext> dbContextFactory, UserManager<User> userManager,
         JwtService jwtService) : CustomControllerBase
     {
-        [HttpPost]
-        public async Task<ActionResult<string>> Login([FromBody] VMLogin model)
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> CheckAuthorized()
         {
-            User? user = await userManager.FindByNameAsync(model.UserName);
-            if (user == null && Regex.IsMatch(model.UserName, @"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)*\.[a-zA-Z]{2,}$"))
-            {
-                model.UserName = (await userManager.FindByEmailAsync(model.UserName))?.UserName;
-                user = await userManager.FindByNameAsync(model.UserName);
-            }
-
-            if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
-            {
-                return Accepted("User_Login_WrongCredentials");
-            }
-
-            string token = await jwtService.CreateCookies(user, userManager, HttpContext);
-            return Ok(token);
+            return Ok();
         }
 
         [HttpPost]
@@ -101,6 +89,25 @@ namespace Gosuji.API.Controllers.UserController
         }
 
         [HttpPost]
+        public async Task<ActionResult<string>> Login([FromBody] VMLogin model)
+        {
+            User? user = await userManager.FindByNameAsync(model.UserName);
+            if (user == null && Regex.IsMatch(model.UserName, @"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)*\.[a-zA-Z]{2,}$"))
+            {
+                model.UserName = (await userManager.FindByEmailAsync(model.UserName))?.UserName;
+                user = await userManager.FindByNameAsync(model.UserName);
+            }
+
+            if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
+            {
+                return Accepted("User_Login_WrongCredentials");
+            }
+
+            string token = await jwtService.CreateCookies(user, userManager, HttpContext);
+            return Ok(token);
+        }
+
+        [HttpPost]
         [Authorize]
         public async Task<ActionResult> Logout([FromBody] object empty)
         {
@@ -139,74 +146,68 @@ namespace Gosuji.API.Controllers.UserController
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public async Task<ActionResult> CheckAuthorized()
+        public async Task<ActionResult> UpdatePrivacy([FromBody] VMUpdatePrivacy model)
         {
-            return Ok();
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<string>> GetToken()
-        {
-            return !Request.Cookies.ContainsKey(SG.TokenCookieName)
-                ? (ActionResult<string>)BadRequest("No token in cookie")
-                : (ActionResult<string>)Ok(Request.Cookies[SG.TokenCookieName]);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<string>> GetNewTokens()
-        {
-            User? user = await GetUser(userManager);
+            User user = await GetUser(userManager);
             if (user == null)
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("Unauthorized");
+                return Unauthorized();
             }
 
-            string? token = Request.Cookies[SG.TokenCookieName];
-            if (string.IsNullOrEmpty(token))
+            if (model.UserName == user.UserName)
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("No Token");
+                model.UserName = null;
+            }
+            if (model.Email == user.Email)
+            {
+                model.Email = null;
             }
 
-            string? refreshToken = Request.Cookies[SG.RefreshTokenCookieName];
-            if (string.IsNullOrEmpty(refreshToken))
+            if (model.UserName == null && model.Email == null && model.NewPassword == null)
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("No RefreshToken");
+                return Accepted("User_UpdatePrivacy_NoChanges");
             }
 
-            ClaimsPrincipal? principal = jwtService.GetPrincipalFromExpiredToken(token);
-            if (principal == null)
+            if (!await userManager.CheckPasswordAsync(user, model.CurrentPassword))
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("Invalid token");
+                return Accepted("User_UpdatePrivacy_WrongPassword");
+            }
+
+            string? passwordHash = null;
+            if (model.NewPassword != null)
+            {
+                passwordHash = userManager.PasswordHasher.HashPassword(user, model.NewPassword);
             }
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            RefreshToken? refreshTokenObj = await dbContext.RefreshTokens.Where(t => t.Token == refreshToken).FirstOrDefaultAsync();
-            if (refreshTokenObj == null || refreshTokenObj.ExpireDate < DateTime.UtcNow)
+            PendingUserChange? pendingUserChange = await dbContext.PendingUserChanges.Where(p => p.Id == user.Id).FirstOrDefaultAsync();
+            if (pendingUserChange != null)
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("Invalid refresh token");
-            }
+                pendingUserChange.UserName = model.UserName != null ? model.UserName : pendingUserChange.UserName;
+                pendingUserChange.Email = model.Email != null ? model.Email : pendingUserChange.Email;
+                pendingUserChange.Password = passwordHash != null ? passwordHash : pendingUserChange.Password;
 
-            if (refreshTokenObj.UserId != user.Id)
+                dbContext.PendingUserChanges.Update(pendingUserChange);
+            }
+            else
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("Unauthorized");
+                pendingUserChange = new()
+                {
+                    Id = user.Id,
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    Password = passwordHash,
+                };
+
+                dbContext.PendingUserChanges.Add(pendingUserChange);
             }
-
-            string newToken = await jwtService.CreateCookies(user, userManager, HttpContext);
-
-            dbContext.RefreshTokens.Remove(refreshTokenObj);
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
-            return Ok(newToken);
+            return Ok();
         }
 
         [HttpPost]
@@ -273,67 +274,67 @@ namespace Gosuji.API.Controllers.UserController
             return Ok(File(fileBytes, "application/json", "PersonalData.json"));
         }
 
-        [HttpPost]
-        [Authorize]
-        public async Task<ActionResult> UpdatePrivacy([FromBody] VMUpdatePrivacy model)
+        [HttpGet]
+        public async Task<ActionResult<string>> GetToken()
         {
-            User user = await GetUser(userManager);
+            return !Request.Cookies.ContainsKey(SG.TokenCookieName)
+                ? (ActionResult<string>)BadRequest("No token in cookie")
+                : (ActionResult<string>)Ok(Request.Cookies[SG.TokenCookieName]);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<string>> GetNewTokens()
+        {
+            User? user = await GetUser(userManager);
             if (user == null)
             {
-                return Unauthorized();
+                jwtService.RemoveCookies(HttpContext);
+                return BadRequest("Unauthorized");
             }
 
-            if (model.UserName == user.UserName)
+            string? token = Request.Cookies[SG.TokenCookieName];
+            if (string.IsNullOrEmpty(token))
             {
-                model.UserName = null;
-            }
-            if (model.Email == user.Email)
-            {
-                model.Email = null;
+                jwtService.RemoveCookies(HttpContext);
+                return BadRequest("No Token");
             }
 
-            if (model.UserName == null && model.Email == null && model.NewPassword == null)
+            string? refreshToken = Request.Cookies[SG.RefreshTokenCookieName];
+            if (string.IsNullOrEmpty(refreshToken))
             {
-                return Accepted("User_UpdatePrivacy_NoChanges");
+                jwtService.RemoveCookies(HttpContext);
+                return BadRequest("No RefreshToken");
             }
 
-            if (!await userManager.CheckPasswordAsync(user, model.CurrentPassword))
+            ClaimsPrincipal? principal = jwtService.GetPrincipalFromExpiredToken(token);
+            if (principal == null)
             {
-                return Accepted("User_UpdatePrivacy_WrongPassword");
-            }
-
-            string? passwordHash = null;
-            if (model.NewPassword != null)
-            {
-                passwordHash = userManager.PasswordHasher.HashPassword(user, model.NewPassword);
+                jwtService.RemoveCookies(HttpContext);
+                return BadRequest("Invalid token");
             }
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            PendingUserChange? pendingUserChange = await dbContext.PendingUserChanges.Where(p => p.Id == user.Id).FirstOrDefaultAsync();
-            if (pendingUserChange != null)
+            RefreshToken? refreshTokenObj = await dbContext.RefreshTokens.Where(t => t.Token == refreshToken).FirstOrDefaultAsync();
+            if (refreshTokenObj == null || refreshTokenObj.ExpireDate < DateTime.UtcNow)
             {
-                pendingUserChange.UserName = model.UserName != null ? model.UserName : pendingUserChange.UserName;
-                pendingUserChange.Email = model.Email != null ? model.Email : pendingUserChange.Email;
-                pendingUserChange.Password = passwordHash != null ? passwordHash : pendingUserChange.Password;
-
-                dbContext.PendingUserChanges.Update(pendingUserChange);
-            } else
-            {
-                pendingUserChange = new()
-                {
-                    Id = user.Id,
-                    UserName = model.UserName,
-                    Email = model.Email,
-                    Password = passwordHash,
-                };
-
-                dbContext.PendingUserChanges.Add(pendingUserChange);
+                jwtService.RemoveCookies(HttpContext);
+                return BadRequest("Invalid refresh token");
             }
+
+            if (refreshTokenObj.UserId != user.Id)
+            {
+                jwtService.RemoveCookies(HttpContext);
+                return BadRequest("Unauthorized");
+            }
+
+            string newToken = await jwtService.CreateCookies(user, userManager, HttpContext);
+
+            dbContext.RefreshTokens.Remove(refreshTokenObj);
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
-            return Ok();
+            return Ok(newToken);
         }
     }
 }
