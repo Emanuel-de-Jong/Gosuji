@@ -51,7 +51,7 @@ namespace Gosuji.Client.Components.Pages
             List<VMGame>? tempGames;
             do
             {
-                tempGames = await dataService.GetUserGames(rangeStart, rangeStart + rangeStep - 1);
+                tempGames = (await dataService.GetUserGames(rangeStart, rangeStart + rangeStep - 1)).Data;
                 if (tempGames == null)
                 {
                     break;
@@ -104,7 +104,7 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task DownloadSGF(long gameId)
         {
-            Game? fullGame = await dataService.GetGame(gameId);
+            Game? fullGame = (await dataService.GetGame(gameId)).Data;
             if (fullGame == null)
             {
                 return;

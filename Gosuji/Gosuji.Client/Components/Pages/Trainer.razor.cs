@@ -59,15 +59,15 @@ namespace Gosuji.Client.Components.Pages
             }
 
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
-            settingConfig = await dataService.GetSettingConfig();
+            settingConfig = (await dataService.GetSettingConfig()).Data;
 
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 
-            presets = await dataService.GetPresets();
-            userState = await dataService.GetUserState();
+            presets = (await dataService.GetPresets()).Data;
+            userState = (await dataService.GetUserState()).Data;
             currentPreset = presets[userState.LastPresetId];
-            trainerSettingConfig = await dataService.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
+            trainerSettingConfig = (await dataService.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId)).Data;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -108,7 +108,7 @@ namespace Gosuji.Client.Components.Pages
 
             if (GameId != null)
             {
-                game = await dataService.GetGame(GameId.Value);
+                game = (await dataService.GetGame(GameId.Value)).Data;
             }
 
             if (game != null)
@@ -155,7 +155,7 @@ namespace Gosuji.Client.Components.Pages
         private async Task SelectPreset(long presetId)
         {
             Preset lastPreset = presets[presetId];
-            trainerSettingConfig = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
+            trainerSettingConfig = (await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId)).Data;
 
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;
@@ -164,7 +164,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task SavePreset()
         {
-            long? trainerSettingConfigId = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            long? trainerSettingConfigId = (await dataService.PostTrainerSettingConfig(trainerSettingConfig)).Data;
             if (trainerSettingConfigId == null)
             {
                 return;
@@ -196,7 +196,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddPreset()
         {
-            long? trainerSettingConfigId = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            long? trainerSettingConfigId = (await dataService.PostTrainerSettingConfig(trainerSettingConfig)).Data;
             if (trainerSettingConfigId == null)
             {
                 return;
@@ -208,7 +208,7 @@ namespace Gosuji.Client.Components.Pages
                 TrainerSettingConfigId = trainerSettingConfigId.Value
             };
 
-            long? newPresetId = await dataService.PostPreset(newPreset);
+            long? newPresetId = (await dataService.PostPreset(newPreset)).Data;
             if (newPresetId == null)
             {
                 return;
@@ -227,7 +227,7 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task SaveTrainerSettingConfig()
         {
-            long? newId = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            long? newId = (await dataService.PostTrainerSettingConfig(trainerSettingConfig)).Data;
             if (newId == null)
             {
                 return;
@@ -288,7 +288,7 @@ namespace Gosuji.Client.Components.Pages
 
             if (gameStat == null)
             {
-                long? newGameStatId = await dataService.PostGameStat(newGameStat);
+                long? newGameStatId = (await dataService.PostGameStat(newGameStat)).Data;
                 if (newGameStatId == null)
                 {
                     return null;
@@ -328,7 +328,7 @@ namespace Gosuji.Client.Components.Pages
 
             if (game == null)
             {
-                long? newGameId = await dataService.PostGame(newGame);
+                long? newGameId = (await dataService.PostGame(newGame)).Data;
                 if (newGameId == null)
                 {
                     return;

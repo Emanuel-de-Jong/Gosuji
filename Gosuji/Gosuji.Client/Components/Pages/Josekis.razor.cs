@@ -34,7 +34,7 @@ namespace Gosuji.Client.Components.Pages
             josekisRef = DotNetObjectReference.Create(this);
             sessionId = random.Next(100_000_000, 999_999_999);
 
-            settingConfig = await dataService.GetSettingConfig();
+            settingConfig = (await dataService.GetSettingConfig()).Data;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

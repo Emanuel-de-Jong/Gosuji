@@ -15,20 +15,20 @@ namespace Gosuji.Client.Services
 
         public async Task<bool> Test()
         {
-            return await HttpResponseHandler.Get(HTTP,
-                $"{MAP_GROUP}/Test");
+            return (await HttpResponseHandler.Get(HTTP,
+                $"{MAP_GROUP}/Test")).IsSuccess;
         }
 
         public async Task<bool> Test2()
         {
-            return await HttpResponseHandler.Get(HTTP,
-                $"{MAP_GROUP}/Test2");
+            return (await HttpResponseHandler.Get(HTTP,
+                $"{MAP_GROUP}/Test2")).IsSuccess;
         }
 
         public async Task<bool> Test3()
         {
-            return await HttpResponseHandler.Get(HTTP,
-                $"{MAP_GROUP}/Test3");
+            return (await HttpResponseHandler.Get(HTTP,
+                $"{MAP_GROUP}/Test3")).IsSuccess;
         }
     }
 }

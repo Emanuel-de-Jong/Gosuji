@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Contact : ComponentBase
+    public partial class Contact : CustomPage
     {
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
@@ -22,6 +22,8 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            await base.OnInitializedAsync();
+
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {

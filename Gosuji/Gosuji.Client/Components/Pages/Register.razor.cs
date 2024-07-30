@@ -1,4 +1,6 @@
-﻿using Gosuji.Client.Resources.Translations;
+﻿using Gosuji.Client.Components.Shared;
+using Gosuji.Client.Helpers.HttpResponseHandler;
+using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -16,24 +18,26 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IJSRuntime js { get; set; }
 
+        private CStatusMessage statusMessage;
+
         private string? message;
         private bool isMessageError;
         string? backupCode;
 
         public async Task RegisterUser()
         {
-            backupCode = await userService.Register(input);
+            APIResponse<string> response = await userService.Register(input);
 
-            if (backupCode != null)
+            if (response.IsSuccess)
             {
-                isMessageError = false;
-                message = "Registration successful. A confirmation email has been sent. Please use the link in the email to confirm your account.";
                 input = new();
+                statusMessage.SetMessage("Registration successful. A confirmation email has been sent. Please use the link in the email to confirm your account.");
+                backupCode = response.Data;
+                return;
             }
             else
             {
-                isMessageError = true;
-                message = "There is already an account with this email.";
+                statusMessage.HandleAPIResponse(response);
             }
         }
 

@@ -5,6 +5,8 @@
 @using Gosuji.Client.Services
 @using Gosuji.Client.Resources.Translations
 
+@inherits CustomPage
+
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject DataService dataService
 @inject NavigationManager navigationManager
@@ -51,8 +53,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        navigationManager.NavigateTo("settings");
-        return;
+        await base.OnInitializedAsync();
+
+        // navigationManager.NavigateTo("settings");
+        // return;
 
         changelogs = await dataService.GetChangelogs();
         changelogs = changelogs.OrderByDescending(c => c.Date).ToArray();
