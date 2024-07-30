@@ -89,7 +89,7 @@ namespace Gosuji.API.Controllers
 
             if (game?.UserId != GetUserId())
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             return Ok(game);
@@ -200,7 +200,7 @@ namespace Gosuji.API.Controllers
             }
             if (oldGame.UserId != GetUserId())
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             if (game.UserId is null or "")
@@ -256,7 +256,7 @@ namespace Gosuji.API.Controllers
                 .FirstOrDefaultAsync();
             if (user.SettingConfigId != settingConfig.Id)
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             sanitizeService.Sanitize(settingConfig);
@@ -311,7 +311,7 @@ namespace Gosuji.API.Controllers
         {
             if (preset.UserId == null)
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
             preset.UserId = GetUserId();
 
@@ -326,7 +326,7 @@ namespace Gosuji.API.Controllers
             }
             if (oldPreset.UserId != GetUserId())
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             sanitizeService.Sanitize(preset);
@@ -349,7 +349,7 @@ namespace Gosuji.API.Controllers
             }
             if (preset.UserId == null || preset.UserId != GetUserId())
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             dbContext.Presets.Remove(preset);
@@ -379,7 +379,7 @@ namespace Gosuji.API.Controllers
         {
             if (userState.Id != GetUserId())
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();

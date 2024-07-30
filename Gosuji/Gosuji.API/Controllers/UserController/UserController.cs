@@ -13,6 +13,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Text;
+using Gosuji.Client.Resources.Translations;
 
 namespace Gosuji.API.Controllers.UserController
 {
@@ -35,7 +36,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (await dbContext.Users.AnyAsync(u => u.NormalizedEmail == model.Email.ToUpper()))
             {
-                return Accepted("User_Register_EmailExists");
+                return Accepted(APIResponses.User_Register_EmailExists);
             }
 
             User user = new()
@@ -100,7 +101,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
             {
-                return Accepted("User_Login_WrongCredentials");
+                return Accepted(APIResponses.User_Login_WrongCredentials);
             }
 
             string token = await jwtService.CreateCookies(user, userManager, HttpContext);
@@ -113,7 +114,7 @@ namespace Gosuji.API.Controllers.UserController
         {
             if (empty == null)
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             string? refreshToken = Request.Cookies[SG.RefreshTokenCookieName];
@@ -135,7 +136,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (GetUserId() != refreshTokenObj.UserId)
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             dbContext.RefreshTokens.Remove(refreshTokenObj);
@@ -153,7 +154,7 @@ namespace Gosuji.API.Controllers.UserController
             User user = await GetUser(userManager);
             if (user == null)
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             if (model.UserName == user.UserName)
@@ -167,12 +168,12 @@ namespace Gosuji.API.Controllers.UserController
 
             if (model.UserName == null && model.Email == null && model.NewPassword == null)
             {
-                return Accepted("User_UpdatePrivacy_NoChanges");
+                return Accepted(APIResponses.User_UpdatePrivacy_NoChanges);
             }
 
             if (!await userManager.CheckPasswordAsync(user, model.CurrentPassword))
             {
-                return Accepted("User_UpdatePrivacy_WrongPassword");
+                return Accepted(APIResponses.User_UpdatePrivacy_WrongPassword);
             }
 
             string? passwordHash = null;
@@ -217,7 +218,7 @@ namespace Gosuji.API.Controllers.UserController
             User? user = await GetUser(userManager);
             if (user == null)
             {
-                return Unauthorized();
+                return BadRequest("Unauthorized");
             }
 
             PersonalData personalData = new();
