@@ -1,10 +1,14 @@
-﻿@inherits CustomLayoutComponentBase
+﻿@using Gosuji.Client.Components.Shared
+
+@inherits CustomLayoutComponentBase
 
 <div class="page">
     <main>
         <MainNavMenu />
 
         <article class="content px-4">
+            <CStatusMessage @ref=G.StatusMessage />
+
             @Body
         </article>
 

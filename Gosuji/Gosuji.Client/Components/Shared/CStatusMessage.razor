@@ -26,7 +26,20 @@
 }
 
 @code {
-    public bool Show { get; set; }
+    public bool Show
+    {
+        get
+        {
+            return show;
+        }
+        set
+        {
+            show = value;
+            StateHasChanged();
+        }
+    }
+
+    private bool show;
 
     private bool isSuccess;
     private string? message;

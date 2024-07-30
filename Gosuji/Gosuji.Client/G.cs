@@ -1,4 +1,6 @@
-﻿namespace Gosuji.Client
+﻿using Gosuji.Client.Components.Shared;
+
+namespace Gosuji.Client
 {
     public static class G
     {
@@ -8,6 +10,8 @@
 #else
                 false;
 #endif
+
+        public static CStatusMessage StatusMessage;
 
         public const string ControllerRateLimitPolicyName = "ControllerRateLimitPolicy";
         public const string RazorRateLimitPolicyName = "RazorRateLimitPolicy";

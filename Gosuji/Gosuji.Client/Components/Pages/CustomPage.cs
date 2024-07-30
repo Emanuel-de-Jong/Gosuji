@@ -6,7 +6,7 @@ namespace Gosuji.Client.Components.Pages
     {
         protected override async Task OnInitializedAsync()
         {
-            Console.WriteLine("CustomPage.OnInitializedAsync");
+            G.StatusMessage.Show = false;
         }
     }
 }

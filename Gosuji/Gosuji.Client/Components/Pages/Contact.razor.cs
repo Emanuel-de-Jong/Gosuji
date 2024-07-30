@@ -23,6 +23,7 @@ namespace Gosuji.Client.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+            G.StatusMessage.SetMessage("Contact");
 
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
