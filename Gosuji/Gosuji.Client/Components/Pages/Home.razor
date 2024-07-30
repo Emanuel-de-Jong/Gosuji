@@ -31,11 +31,11 @@
         </p>
 
         <!-- Changelog -->
-        <div class="changelog-container">
-            <h2 class="header changelog-header">Changelog</h2>
+        @if (changelogs != null)
+        {
+            <div class="changelog-container">
+                <h2 class="header changelog-header">Changelog</h2>
 
-            @if (changelogs != null)
-            {
                 @foreach (Changelog changelogEntry in changelogs)
                 {
                     <h4 class="individual-header">@changelogEntry.Version @changelogEntry.Name</h4>
@@ -43,8 +43,8 @@
                         @changelogEntry.Description
                     </p>
                 }
-            }
-        </div>
+            </div>
+        }
     </div>
 </div>
 
@@ -59,6 +59,9 @@
         // return;
 
         changelogs = await dataService.GetChangelogs();
-        changelogs = changelogs.OrderByDescending(c => c.Date).ToArray();
+        if (changelogs != null)
+        {
+            changelogs = changelogs.OrderByDescending(c => c.Date).ToArray();
+        }
     }
 }

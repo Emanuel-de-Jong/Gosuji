@@ -11,7 +11,7 @@ namespace Gosuji.Client
                 false;
 #endif
 
-        public static CStatusMessage StatusMessage;
+        public static CStatusMessage? StatusMessage = null;
 
         public const string ControllerRateLimitPolicyName = "ControllerRateLimitPolicy";
         public const string RazorRateLimitPolicyName = "RazorRateLimitPolicy";

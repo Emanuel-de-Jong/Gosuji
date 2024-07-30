@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
@@ -45,7 +46,8 @@ namespace Gosuji.Client.Components.Pages
                 FeedbackType = input.FeedbackType
             };
 
-            await dataService.PostFeedback(feedback);
+            APIResponse response = await dataService.PostFeedback(feedback);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             input = new();
         }

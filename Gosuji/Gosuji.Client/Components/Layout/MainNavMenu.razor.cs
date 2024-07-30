@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
@@ -33,8 +34,14 @@ namespace Gosuji.Client.Components.Layout
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
-                settingConfig = (await dataService.GetSettingConfig()).Data;
-                languages = (await dataService.GetLanguages()).Data;
+                APIResponse<SettingConfig> settingConfigResponse = await dataService.GetSettingConfig();
+                if (G.StatusMessage.HandleAPIResponse(settingConfigResponse)) return;
+                settingConfig = settingConfigResponse.Data;
+
+                APIResponse<Dictionary<string, Language>> languagesResponse = await dataService.GetLanguages();
+                if (G.StatusMessage.HandleAPIResponse(languagesResponse)) return;
+                languages = languagesResponse.Data;
+
                 currentLanguage = languages.Where(kv => kv.Value.Id == settingConfig.LanguageId).FirstOrDefault().Value;
 
                 if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != currentLanguage.Short)
@@ -79,7 +86,9 @@ namespace Gosuji.Client.Components.Layout
             if (settingConfig != null)
             {
                 settingConfig.LanguageId = languages[language].Id;
-                await dataService.PutSettingConfig(settingConfig);
+
+                APIResponse response = await dataService.PutSettingConfig(settingConfig);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
 
             CultureInfo culture = new(language);
@@ -100,7 +109,9 @@ namespace Gosuji.Client.Components.Layout
                 }
 
                 settingConfig.MasterVolume = volume;
-                await dataService.PutSettingConfig(settingConfig);
+
+                APIResponse response = await dataService.PutSettingConfig(settingConfig);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
         }
 
@@ -116,7 +127,9 @@ namespace Gosuji.Client.Components.Layout
                 }
 
                 settingConfig.StoneVolume = volume;
-                await dataService.PutSettingConfig(settingConfig);
+
+                APIResponse response = await dataService.PutSettingConfig(settingConfig);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
         }
 
@@ -133,7 +146,9 @@ namespace Gosuji.Client.Components.Layout
                 }
 
                 settingConfig.IsDarkMode = isDarkMode;
-                await dataService.PutSettingConfig(settingConfig);
+
+                APIResponse response = await dataService.PutSettingConfig(settingConfig);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
         }
 

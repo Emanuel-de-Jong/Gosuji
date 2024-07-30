@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
@@ -34,7 +35,9 @@ namespace Gosuji.Client.Components.Pages
             josekisRef = DotNetObjectReference.Create(this);
             sessionId = random.Next(100_000_000, 999_999_999);
 
-            settingConfig = (await dataService.GetSettingConfig()).Data;
+            APIResponse<SettingConfig> response = await dataService.GetSettingConfig();
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            settingConfig = response.Data;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

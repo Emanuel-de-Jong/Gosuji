@@ -4,7 +4,9 @@
 
 <div class="page">
     <main>
-        <MainNavMenu />
+        @if (G.StatusMessage != null) {
+            <MainNavMenu />
+        }
 
         <article class="content px-4">
             <CStatusMessage @ref=G.StatusMessage />

@@ -174,22 +174,22 @@ namespace Gosuji.Client.Components.Pages
 
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;
-            APIResponse userStateResponse = await dataService.PutUserState(userState);
-            G.StatusMessage.HandleAPIResponse(userStateResponse);
+            APIResponse response = await dataService.PutUserState(userState);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
         }
 
         private async Task SavePreset()
         {
-            long? trainerSettingConfigId = (await dataService.PostTrainerSettingConfig(trainerSettingConfig)).Data;
-            if (trainerSettingConfigId == null)
-            {
-                return;
-            }
+            APIResponse<long> trainerSettingConfigResponse = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
+            long? trainerSettingConfigId = trainerSettingConfigResponse.Data;
 
             if (currentPreset.TrainerSettingConfigId != trainerSettingConfigId)
             {
                 currentPreset.TrainerSettingConfigId = trainerSettingConfigId.Value;
-                await dataService.PutPreset(currentPreset);
+
+                APIResponse response = await dataService.PutPreset(currentPreset);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
         }
 
@@ -199,7 +199,9 @@ namespace Gosuji.Client.Components.Pages
             await SelectPreset(presets.Values.Where(p => p.Order == 1).FirstOrDefault().Id);
 
             presets.Remove(oldSelectedPresetId);
-            await dataService.DeletePreset(oldSelectedPresetId);
+
+            APIResponse response = await dataService.DeletePreset(oldSelectedPresetId);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
         }
 
         private sealed class PresetModel
@@ -212,30 +214,28 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddPreset()
         {
-            long? trainerSettingConfigId = (await dataService.PostTrainerSettingConfig(trainerSettingConfig)).Data;
-            if (trainerSettingConfigId == null)
-            {
-                return;
-            }
+            APIResponse<long> trainerSettingConfigResponse = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
+            long trainerSettingConfigId = trainerSettingConfigResponse.Data;
 
             Preset newPreset = new()
             {
                 Name = addPresetModel.Name,
-                TrainerSettingConfigId = trainerSettingConfigId.Value
+                TrainerSettingConfigId = trainerSettingConfigId
             };
 
-            long? newPresetId = (await dataService.PostPreset(newPreset)).Data;
-            if (newPresetId == null)
-            {
-                return;
-            }
+            APIResponse<long> presetResponse = await dataService.PostPreset(newPreset);
+            if (G.StatusMessage.HandleAPIResponse(presetResponse)) return;
+            long newPresetId = presetResponse.Data;
 
-            newPreset.Id = newPresetId.Value;
+            newPreset.Id = newPresetId;
             presets.Add(newPreset.Id, newPreset);
 
             userState.LastPresetId = newPreset.Id;
             currentPreset = newPreset;
-            await dataService.PutUserState(userState);
+
+            APIResponse response = await dataService.PutUserState(userState);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             addPresetModel = new();
         }
@@ -243,13 +243,11 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task SaveTrainerSettingConfig()
         {
-            long? newId = (await dataService.PostTrainerSettingConfig(trainerSettingConfig)).Data;
-            if (newId == null)
-            {
-                return;
-            }
+            APIResponse<long> response = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            long newId = response.Data;
 
-            trainerSettingConfig.Id = newId.Value;
+            trainerSettingConfig.Id = newId;
         }
 
         [JSInvokable]
@@ -304,18 +302,18 @@ namespace Gosuji.Client.Components.Pages
 
             if (gameStat == null)
             {
-                long? newGameStatId = (await dataService.PostGameStat(newGameStat)).Data;
-                if (newGameStatId == null)
-                {
-                    return null;
-                }
+                APIResponse<long> response = await dataService.PostGameStat(newGameStat);
+                if (G.StatusMessage.HandleAPIResponse(response)) return null;
+                long newGameStatId = response.Data;
 
-                newGameStat.Id = newGameStatId.Value;
+                newGameStat.Id = newGameStatId;
             }
             else
             {
                 newGameStat.Id = gameStat.Id;
-                await dataService.PutGameStat(newGameStat);
+
+                APIResponse response = await dataService.PutGameStat(newGameStat);
+                if (G.StatusMessage.HandleAPIResponse(response)) return null;
             }
 
             return newGameStat;
@@ -344,18 +342,18 @@ namespace Gosuji.Client.Components.Pages
 
             if (game == null)
             {
-                long? newGameId = (await dataService.PostGame(newGame)).Data;
-                if (newGameId == null)
-                {
-                    return;
-                }
+                APIResponse<long> response = await dataService.PostGame(newGame);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
+                long newGameId = response.Data;
 
-                newGame.Id = newGameId.Value;
+                newGame.Id = newGameId;
             }
             else
             {
                 newGame.Id = game.Id;
-                await dataService.PutGame(newGame);
+
+                APIResponse response = await dataService.PutGame(newGame);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
             game = newGame;
         }
