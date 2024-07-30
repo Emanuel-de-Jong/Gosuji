@@ -4,7 +4,7 @@
 @inject IStringLocalizer<APIResponses> tlAPI
 @inject IJSRuntime js
 
-@if (showMessage)
+@if (Show)
 {
     <div class="alert alert-@(isSuccess ? "success" : "danger")" role="alert">
         @if (isUnauthorized)
@@ -26,7 +26,7 @@
 }
 
 @code {
-    private bool showMessage;
+    public bool Show { get; set; }
 
     private bool isSuccess;
     private string? message;
@@ -41,7 +41,7 @@
 
     private void Reset()
     {
-        showMessage = false;
+        Show = false;
 
         isSuccess = true;
         message = null;
@@ -55,7 +55,7 @@
         Reset();
 
         this.message = message;
-        showMessage = true;
+        Show = true;
     }
 
     public void HandleAPIResponse(APIResponse response, bool isSuccess = false)
@@ -82,7 +82,7 @@
             message = $"{(int)response.StatusCode} {response.Message}";
         }
 
-        showMessage = true;
+        Show = true;
     }
 
     private async Task ErrorToClipboard()
