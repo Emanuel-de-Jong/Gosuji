@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Text;
 
 namespace Gosuji.API.Controllers.UserController
 {
@@ -32,7 +33,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
             {
-                return Accepted("LoginWrongCredentials");
+                return Accepted("User_Login_WrongCredentials");
             }
 
             string token = await jwtService.CreateCookies(user, userManager, HttpContext);
@@ -46,7 +47,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (await dbContext.Users.AnyAsync(u => u.NormalizedEmail == model.Email.ToUpper()))
             {
-                return Ok("Email already exists");
+                return Accepted("User_Register_EmailExists");
             }
 
             User user = new()
@@ -74,7 +75,14 @@ namespace Gosuji.API.Controllers.UserController
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors);
+                StringBuilder stringBuilder = new("IdentityResult ");
+                foreach (string message in result.Errors.Select(e => e.Code))
+                {
+                    stringBuilder.Append(message);
+                    stringBuilder.Append(", ");
+                }
+                stringBuilder.Remove(stringBuilder.Length - 2, 2);
+                return BadRequest(stringBuilder.ToString());
             }
 
             string userId = await userManager.GetUserIdAsync(user);
@@ -102,6 +110,9 @@ namespace Gosuji.API.Controllers.UserController
             }
 
             string? refreshToken = Request.Cookies[SG.RefreshTokenCookieName];
+            jwtService.RemoveCookies(HttpContext);
+
+
             if (string.IsNullOrEmpty(refreshToken))
             {
                 return BadRequest("No RefreshToken");
@@ -124,8 +135,6 @@ namespace Gosuji.API.Controllers.UserController
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
-
-            jwtService.RemoveCookies(HttpContext);
 
             return Ok();
         }
@@ -269,6 +278,10 @@ namespace Gosuji.API.Controllers.UserController
         public async Task<ActionResult> UpdatePrivacy([FromBody] VMUpdatePrivacy model)
         {
             User user = await GetUser(userManager);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
 
             if (model.UserName == user.UserName)
             {
@@ -281,12 +294,12 @@ namespace Gosuji.API.Controllers.UserController
 
             if (model.UserName == null && model.Email == null && model.NewPassword == null)
             {
-                return BadRequest("No data to update");
+                return Accepted("User_UpdatePrivacy_NoChanges");
             }
 
             if (!await userManager.CheckPasswordAsync(user, model.CurrentPassword))
             {
-                return BadRequest("Invalid password");
+                return Accepted("User_UpdatePrivacy_WrongPassword");
             }
 
             string? passwordHash = null;

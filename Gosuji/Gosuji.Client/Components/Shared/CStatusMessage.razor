@@ -1,7 +1,7 @@
 ﻿@using Gosuji.Client.Helpers.HttpResponseHandler
 @using Gosuji.Client.Resources.Translations
 
-@inject IStringLocalizer<APIResponses> tlApi
+@inject IStringLocalizer<APIResponses> tlAPI
 @inject IJSRuntime js
 
 @if (showMessage)
@@ -58,13 +58,15 @@
         showMessage = true;
     }
 
-    public void HandleAPIResponse<T>(APIResponse<T> response)
+    public void HandleAPIResponse(APIResponse response, bool isSuccess = false)
     {
         Reset();
 
+        this.isSuccess = isSuccess;
+
         if (response.IsMessage)
         {
-            message = tlApi[response.Message];
+            message = tlAPI[response.Message];
         }
         else if (response.IsLimit)
         {
@@ -80,7 +82,6 @@
             message = $"{(int)response.StatusCode} {response.Message}";
         }
 
-        isSuccess = false;
         showMessage = true;
     }
 

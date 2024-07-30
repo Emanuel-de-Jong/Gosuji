@@ -28,7 +28,7 @@ namespace Gosuji.API.Controllers
 
         protected async Task<User?> GetUser(UserManager<User> userManager)
         {
-            return await userManager.GetUserAsync(User);
+            return await userManager.FindByIdAsync(GetUserId());
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Gosuji.Client.Services.User
         public HttpClient? HTTP { get; set; }
         public JwtAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
-        public async Task<APIResponse<string>> Login(VMLogin model)
+        public async Task<APIResponse> Login(VMLogin model)
         {
             APIResponse<string> response = await HttpResponseHandler.Post<string>(HTTP,
                 $"{MAP_GROUP}/Login", model);
@@ -39,19 +39,19 @@ namespace Gosuji.Client.Services.User
             return response;
         }
 
-        public async Task<APIResponse> CheckAuthorized()
+        public async Task<bool> CheckAuthorized()
         {
-            return await HttpResponseHandler.Get(HTTP,
-                $"{MAP_GROUP}/CheckAuthorized");
+            return (await HttpResponseHandler.Get(HTTP,
+                $"{MAP_GROUP}/CheckAuthorized")).IsSuccess;
         }
 
-        public async Task<APIResponse<string>> GetToken()
+        public async Task<string?> GetToken()
         {
-            return await HttpResponseHandler.Get<string>(HTTP,
-                $"{MAP_GROUP}/GetToken");
+            return (await HttpResponseHandler.Get<string>(HTTP,
+                $"{MAP_GROUP}/GetToken")).Data;
         }
 
-        public async Task<APIResponse<string>> GetNewTokens()
+        public async Task<bool> GetNewTokens()
         {
             APIResponse<string> response = await HttpResponseHandler.Get<string>(HTTP,
                 $"{MAP_GROUP}/GetNewTokens");
@@ -59,14 +59,13 @@ namespace Gosuji.Client.Services.User
             if (response.IsSuccess)
             {
                 await AuthenticationStateProvider.NotifyLogin(response.Data);
-                response.Data = null;
             }
             else
             {
                 await AuthenticationStateProvider.NotifyLogout();
             }
 
-            return response;
+            return response.IsSuccess;
         }
 
         public async Task<APIResponse> UpdatePrivacy(VMUpdatePrivacy model)

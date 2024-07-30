@@ -22,7 +22,7 @@
                         <p>Cancel</p>
                     </div>
                     <div class="tab-pane" id="v-pills-privacy">
-                        <CStatusMessage IsError="isPrivacyMessageError" Message="@privacyMessage" />
+                        <CStatusMessage @ref=statusMessage />
 
                         <EditForm Model="privacyInput" FormName="privacy" OnValidSubmit="UpdatePrivacy" method="post">
                             <DataAnnotationsValidator />

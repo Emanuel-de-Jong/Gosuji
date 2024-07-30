@@ -1,11 +1,14 @@
 ﻿using Gosuji.Client.Attributes;
+using Gosuji.Client.Components.Shared;
 using Gosuji.Client.Data;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Gosuji.Client.Services.User;
 using Gosuji.Client.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Localization;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Xml.Linq;
@@ -23,12 +26,13 @@ namespace Gosuji.Client.Components.Pages
         private NavigationManager navigationManager { get; set; }
         [Inject]
         private UserService userService { get; set; }
+        [Inject]
+        private IStringLocalizer<APIResponses> tlAPI { get; set; }
+
+        private CStatusMessage statusMessage;
 
         private string? currentUserName;
         private string? currentEmail;
-
-        private string? privacyMessage;
-        private bool isPrivacyMessageError;
 
         protected override async Task OnInitializedAsync()
         {
@@ -71,23 +75,26 @@ namespace Gosuji.Client.Components.Pages
 
             if (vmUpdatePrivacy.UserName == null && vmUpdatePrivacy.Email == null && vmUpdatePrivacy.NewPassword == null)
             {
-                isPrivacyMessageError = true;
-                privacyMessage = "There was nothing to change.";
+                statusMessage.SetMessage(tlAPI[APIResponses.User_UpdatePrivacy_NoChanges]);
                 return;
             }
 
-            bool result = await userService.UpdatePrivacy(vmUpdatePrivacy);
+            APIResponse response = await userService.UpdatePrivacy(vmUpdatePrivacy);
 
-            if (result)
+            if (response.IsSuccess)
             {
-                isPrivacyMessageError = false;
-                privacyMessage = "Privacy changes pending. A confirmation email has been sent to your current email address. Please use the link in the email to confirm your changes.";
-                privacyInput = new();
+                statusMessage.SetMessage("Privacy changes pending. A confirmation email has been sent to your current email address. Please use the link in the email to confirm your changes.");
+                privacyInput.NewPassword = string.Empty;
+                privacyInput.ConfirmNewPassword = string.Empty;
+                privacyInput.CurrentPassword = string.Empty;
+            }
+            else if (response.Message == APIResponses.User_UpdatePrivacy_NoChanges)
+            {
+                statusMessage.HandleAPIResponse(response, true);
             }
             else
             {
-                isPrivacyMessageError = true;
-                privacyMessage = "The provided password is incorrect.";
+                statusMessage.HandleAPIResponse(response);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Services.User;
+﻿using Gosuji.Client.Helpers.HttpResponseHandler;
+using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using Microsoft.JSInterop;
@@ -36,8 +37,7 @@ namespace Gosuji.Client.Services
             HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
             if (response.StatusCode == HttpStatusCode.Unauthorized && authenticationStateProvider.Token != null)
             {
-                bool result = await userService.GetNewTokens();
-                if (result)
+                if (await userService.GetNewTokens())
                 {
                     request.Headers.Authorization = new AuthenticationHeaderValue("bearer", authenticationStateProvider.Token);
                     response = await base.SendAsync(request, cancellationToken);

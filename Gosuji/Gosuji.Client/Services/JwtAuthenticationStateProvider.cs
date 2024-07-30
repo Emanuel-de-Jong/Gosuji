@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Helpers;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
@@ -40,7 +41,7 @@ namespace Gosuji.Client.Services
             }
 
             state = CreateAuthenticationState();
-            bool isAuthorized = await userService.CheckAuthorized();
+            await userService.CheckAuthorized();
 
             return state;
         }

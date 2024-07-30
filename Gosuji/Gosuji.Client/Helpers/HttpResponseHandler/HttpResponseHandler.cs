@@ -48,13 +48,7 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
 
         private static async Task<APIResponse> TryCatch(Task<HttpResponseMessage> responseTask, string uri)
         {
-            APIResponse<object> templateResponse = await TryCatch<object>(responseTask, uri);
-            APIResponse response = new()
-            {
-                StatusCode = templateResponse.StatusCode,
-                Message = templateResponse.Message
-            };
-            return response;
+            return await TryCatch<object>(responseTask, uri);
         }
 
         private static async Task<APIResponse<T>> TryCatch<T>(Task<HttpResponseMessage> responseTask, string uri)

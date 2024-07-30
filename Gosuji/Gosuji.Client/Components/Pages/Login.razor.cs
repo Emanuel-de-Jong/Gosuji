@@ -40,7 +40,7 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task LoginUser()
         {
-            APIResponse<string> apiResponse = await userService.Login(input);
+            APIResponse apiResponse = await userService.Login(input);
             if (apiResponse.IsSuccess)
             {
                 navigationManager.NavigateTo(string.IsNullOrEmpty(ReturnUri) ? "/" : ReturnUri);
