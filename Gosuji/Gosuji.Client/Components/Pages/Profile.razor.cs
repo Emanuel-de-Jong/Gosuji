@@ -33,17 +33,6 @@ namespace Gosuji.Client.Components.Pages
         private IJSObjectReference jsRef;
         private bool isChartsLoaded = false;
 
-        public async Task DownloadSGF(long gameId)
-        {
-            Game? fullGame = await dataService.GetGame(gameId);
-            if (fullGame == null)
-            {
-                return;
-            }
-
-            await jsRef.InvokeVoidAsync("profilePage.downloadSGF", fullGame.Name, fullGame.SGF);
-        }
-
         protected override async Task OnInitializedAsync()
         {
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
@@ -111,6 +100,17 @@ namespace Gosuji.Client.Components.Pages
                 CreateGameStageBarChart();
                 CreateDaysChart();
             }
+        }
+
+        public async Task DownloadSGF(long gameId)
+        {
+            Game? fullGame = await dataService.GetGame(gameId);
+            if (fullGame == null)
+            {
+                return;
+            }
+
+            await jsRef.InvokeVoidAsync("profilePage.downloadSGF", fullGame.Name, fullGame.SGF);
         }
 
         private async Task CreateGameTable()

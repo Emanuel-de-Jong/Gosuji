@@ -114,7 +114,7 @@ namespace Gosuji.API.Controllers.UserController
         {
             if (empty == null)
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             string? refreshToken = Request.Cookies[SG.RefreshTokenCookieName];
@@ -136,7 +136,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (GetUserId() != refreshTokenObj.UserId)
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             dbContext.RefreshTokens.Remove(refreshTokenObj);
@@ -154,7 +154,7 @@ namespace Gosuji.API.Controllers.UserController
             User user = await GetUser(userManager);
             if (user == null)
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             if (model.UserName == user.UserName)
@@ -218,7 +218,7 @@ namespace Gosuji.API.Controllers.UserController
             User? user = await GetUser(userManager);
             if (user == null)
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             PersonalData personalData = new();
@@ -290,7 +290,7 @@ namespace Gosuji.API.Controllers.UserController
             if (user == null)
             {
                 jwtService.RemoveCookies(HttpContext);
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             string? token = Request.Cookies[SG.TokenCookieName];
@@ -325,7 +325,7 @@ namespace Gosuji.API.Controllers.UserController
             if (refreshTokenObj.UserId != user.Id)
             {
                 jwtService.RemoveCookies(HttpContext);
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             string newToken = await jwtService.CreateCookies(user, userManager, HttpContext);

@@ -89,7 +89,7 @@ namespace Gosuji.API.Controllers
 
             if (game?.UserId != GetUserId())
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             return Ok(game);
@@ -200,7 +200,7 @@ namespace Gosuji.API.Controllers
             }
             if (oldGame.UserId != GetUserId())
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             if (game.UserId is null or "")
@@ -256,7 +256,7 @@ namespace Gosuji.API.Controllers
                 .FirstOrDefaultAsync();
             if (user.SettingConfigId != settingConfig.Id)
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             sanitizeService.Sanitize(settingConfig);
@@ -311,7 +311,7 @@ namespace Gosuji.API.Controllers
         {
             if (preset.UserId == null)
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
             preset.UserId = GetUserId();
 
@@ -326,7 +326,7 @@ namespace Gosuji.API.Controllers
             }
             if (oldPreset.UserId != GetUserId())
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             sanitizeService.Sanitize(preset);
@@ -349,7 +349,7 @@ namespace Gosuji.API.Controllers
             }
             if (preset.UserId == null || preset.UserId != GetUserId())
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             dbContext.Presets.Remove(preset);
@@ -379,7 +379,7 @@ namespace Gosuji.API.Controllers
         {
             if (userState.Id != GetUserId())
             {
-                return BadRequest("Unauthorized");
+                return Forbid();
             }
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
