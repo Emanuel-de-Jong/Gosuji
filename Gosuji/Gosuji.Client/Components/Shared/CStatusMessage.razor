@@ -62,7 +62,7 @@
     {
         Reset();
 
-        if (response.IsOk)
+        if (response.IsMessage)
         {
             message = tlApi[response.Message];
         }
@@ -77,7 +77,7 @@
         else
         {
             isError = true;
-            message = $"{response.StatusCode} {response.Message}";
+            message = $"{(int)response.StatusCode} {response.Message}";
         }
 
         isSuccess = false;

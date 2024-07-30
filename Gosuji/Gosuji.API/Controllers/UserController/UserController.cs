@@ -32,7 +32,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
             {
-                return Ok("LoginWrongCredentials");
+                return Accepted("LoginWrongCredentials");
             }
 
             string token = await jwtService.CreateCookies(user, userManager, HttpContext);

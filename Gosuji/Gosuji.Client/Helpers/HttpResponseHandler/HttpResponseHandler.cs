@@ -65,13 +65,23 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             {
                 HttpResponseMessage httpResponse = await responseTask;
                 response.StatusCode = httpResponse.StatusCode;
-                response.Message = httpResponse.ReasonPhrase;
 
-                if (!httpResponse.IsSuccessStatusCode)
+                string content = await httpResponse.Content.ReadAsStringAsync();
+
+                if (httpResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    Console.WriteLine($"{uri}: {(int)httpResponse.StatusCode} {httpResponse.ReasonPhrase}");
+                    response.Message = content;
+                    if (string.IsNullOrEmpty(response.Message))
+                    {
+                        response.Message = httpResponse.ReasonPhrase;
+                    }
+
+                    if (httpResponse.StatusCode != HttpStatusCode.Accepted)
+                    {
+                        Console.WriteLine($"{uri}: {(int)httpResponse.StatusCode} {response.Message}");
+                    }
                 }
-                else if (!string.IsNullOrEmpty(await httpResponse.Content.ReadAsStringAsync()))
+                else if (!string.IsNullOrEmpty(content))
                 {
                     response.Data = await Convert<T>(httpResponse, uri);
                 }
