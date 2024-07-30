@@ -27,17 +27,11 @@ namespace Gosuji.Client.Components.Pages
         public async Task RegisterUser()
         {
             APIResponse<string> response = await userService.Register(input);
-
-            if (response.IsSuccess)
+            if (!statusMessage.HandleAPIResponse(response))
             {
                 input = new();
                 statusMessage.SetMessage("Registration successful. A confirmation email has been sent. Please use the link in the email to confirm your account.");
                 backupCode = response.Data;
-                return;
-            }
-            else
-            {
-                statusMessage.HandleAPIResponse(response);
             }
         }
 

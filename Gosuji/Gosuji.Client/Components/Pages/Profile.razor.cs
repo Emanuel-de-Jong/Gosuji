@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Services;
 using Gosuji.Client.ViewModels;
 using Microsoft.AspNetCore.Components;
@@ -51,11 +52,14 @@ namespace Gosuji.Client.Components.Pages
             List<VMGame>? tempGames;
             do
             {
-                tempGames = (await dataService.GetUserGames(rangeStart, rangeStart + rangeStep - 1)).Data;
-                if (tempGames == null)
+                APIResponse<List<VMGame>> response = await dataService.GetUserGames(rangeStart, rangeStart + rangeStep - 1);
+                if (!response.IsSuccess)
                 {
+                    G.StatusMessage.HandleAPIResponse(response);
                     break;
                 }
+
+                tempGames = response.Data;
 
                 if (tempGames.Count != 0)
                 {
@@ -104,11 +108,9 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task DownloadSGF(long gameId)
         {
-            Game? fullGame = (await dataService.GetGame(gameId)).Data;
-            if (fullGame == null)
-            {
-                return;
-            }
+            APIResponse<Game> response = await dataService.GetGame(gameId);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            Game? fullGame = response.Data;
 
             await jsRef.InvokeVoidAsync("profilePage.downloadSGF", fullGame.Name, fullGame.SGF);
         }

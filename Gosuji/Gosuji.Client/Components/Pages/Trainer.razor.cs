@@ -1,5 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.GameDecoder;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
@@ -59,15 +60,27 @@ namespace Gosuji.Client.Components.Pages
             }
 
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
-            settingConfig = (await dataService.GetSettingConfig()).Data;
+
+            APIResponse<SettingConfig> settingConfigResponse = await dataService.GetSettingConfig();
+            if (G.StatusMessage.HandleAPIResponse(settingConfigResponse)) return;
+            settingConfig = settingConfigResponse.Data;
 
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 
-            presets = (await dataService.GetPresets()).Data;
-            userState = (await dataService.GetUserState()).Data;
+            APIResponse<Dictionary<long, Preset>> presetsResponse = await dataService.GetPresets();
+            if (G.StatusMessage.HandleAPIResponse(presetsResponse)) return;
+            presets = presetsResponse.Data;
+
+            APIResponse<UserState> userStateResponse = await dataService.GetUserState();
+            if (G.StatusMessage.HandleAPIResponse(userStateResponse)) return;
+            userState = userStateResponse.Data;
+
             currentPreset = presets[userState.LastPresetId];
-            trainerSettingConfig = (await dataService.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId)).Data;
+
+            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataService.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
+            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
+            trainerSettingConfig = trainerSettingConfigResponse.Data;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -155,11 +168,14 @@ namespace Gosuji.Client.Components.Pages
         private async Task SelectPreset(long presetId)
         {
             Preset lastPreset = presets[presetId];
-            trainerSettingConfig = (await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId)).Data;
+            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
+            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
+            trainerSettingConfig = trainerSettingConfigResponse.Data;
 
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;
-            await dataService.PutUserState(userState);
+            APIResponse userStateResponse = await dataService.PutUserState(userState);
+            G.StatusMessage.HandleAPIResponse(userStateResponse);
         }
 
         private async Task SavePreset()

@@ -75,8 +75,13 @@
         Show = true;
     }
 
-    public void HandleAPIResponse(APIResponse response, bool isSuccess = false)
+    public bool HandleAPIResponse(APIResponse response, bool isSuccess = false)
     {
+        if (response.IsSuccess)
+        {
+            return false;
+        }
+
         Reset();
 
         this.isSuccess = isSuccess;
@@ -100,6 +105,7 @@
         }
 
         Show = true;
+        return true;
     }
 
     private async Task ErrorToClipboard()

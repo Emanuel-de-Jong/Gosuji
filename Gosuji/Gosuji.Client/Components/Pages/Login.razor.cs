@@ -41,13 +41,10 @@ namespace Gosuji.Client.Components.Pages
         public async Task LoginUser()
         {
             APIResponse apiResponse = await userService.Login(input);
-            if (apiResponse.IsSuccess)
+            if (!statusMessage.HandleAPIResponse(apiResponse))
             {
                 navigationManager.NavigateTo(string.IsNullOrEmpty(ReturnUri) ? "/" : ReturnUri);
-                return;
             }
-
-            statusMessage.HandleAPIResponse(apiResponse);
         }
     }
 }
