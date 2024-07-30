@@ -14,46 +14,46 @@ namespace Gosuji.Client.Services
             http = httpClientFactory.CreateClient("Auth");
         }
 
-        public async Task<bool> AddSession(int sessionId)
+        public async Task<APIResponse> AddSession(int sessionId)
         {
-            return (await HttpResponseHandler.Get(http,
-                $"{MAP_GROUP}/AddSession/{sessionId}")).IsSuccess;
+            return await HttpResponseHandler.Get(http,
+                $"{MAP_GROUP}/AddSession/{sessionId}");
         }
 
-        public async Task<bool> RemoveSession(int sessionId)
+        public async Task<APIResponse> RemoveSession(int sessionId)
         {
-            return (await HttpResponseHandler.Get(http,
-                $"{MAP_GROUP}/RemoveSession/{sessionId}")).IsSuccess;
+            return await HttpResponseHandler.Get(http,
+                $"{MAP_GROUP}/RemoveSession/{sessionId}");
         }
 
-        public async Task<JosekisNode?> Current(int sessionId)
+        public async Task<APIResponse<JosekisNode>> Current(int sessionId)
         {
-            return (await HttpResponseHandler.Get<JosekisNode>(http,
-                $"{MAP_GROUP}/Current/{sessionId}")).Data;
+            return await HttpResponseHandler.Get<JosekisNode>(http,
+                $"{MAP_GROUP}/Current/{sessionId}");
         }
 
-        public async Task<bool> ToParent(int sessionId)
+        public async Task<APIResponse> ToParent(int sessionId)
         {
-            return (await HttpResponseHandler.Get(http,
-                $"{MAP_GROUP}/ToParent/{sessionId}")).IsSuccess;
+            return await HttpResponseHandler.Get(http,
+                $"{MAP_GROUP}/ToParent/{sessionId}");
         }
 
-        public async Task<int?> ToLastBranch(int sessionId)
+        public async Task<APIResponse<int>> ToLastBranch(int sessionId)
         {
-            return (await HttpResponseHandler.Get<int>(http,
-                $"{MAP_GROUP}/ToLastBranch/{sessionId}")).Data;
+            return await HttpResponseHandler.Get<int>(http,
+                $"{MAP_GROUP}/ToLastBranch/{sessionId}");
         }
 
-        public async Task<bool> ToFirst(int sessionId)
+        public async Task<APIResponse> ToFirst(int sessionId)
         {
-            return (await HttpResponseHandler.Get(http,
-                $"{MAP_GROUP}/ToFirst/{sessionId}")).IsSuccess;
+            return await HttpResponseHandler.Get(http,
+                $"{MAP_GROUP}/ToFirst/{sessionId}");
         }
 
-        public async Task<bool?> ToChild(int sessionId, JosekisNode childToGo)
+        public async Task<APIResponse<bool>> ToChild(int sessionId, JosekisNode childToGo)
         {
-            return (await HttpResponseHandler.Post<bool>(http,
-                $"{MAP_GROUP}/ToChild/{sessionId}", childToGo)).Data;
+            return await HttpResponseHandler.Post<bool>(http,
+                $"{MAP_GROUP}/ToChild/{sessionId}", childToGo);
         }
     }
 }

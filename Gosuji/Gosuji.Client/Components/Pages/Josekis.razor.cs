@@ -46,7 +46,8 @@ namespace Gosuji.Client.Components.Pages
 
             if (firstRender)
             {
-                await josekisService.AddSession(sessionId);
+                APIResponse response = await josekisService.AddSession(sessionId);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
 
             if (settingConfig != null && !isJSInitialized)
@@ -60,11 +61,9 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task Play()
         {
-            JosekisNode node = await josekisService.Current(sessionId);
-            if (node == null)
-            {
-                return;
-            }
+            APIResponse<JosekisNode> response = await josekisService.Current(sessionId);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            JosekisNode node = response.Data;
 
             await jsRef.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
             await jsRef.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
@@ -77,7 +76,10 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddMarkups()
         {
-            await AddMarkups(await josekisService.Current(sessionId));
+            APIResponse<JosekisNode> response = await josekisService.Current(sessionId);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+
+            await AddMarkups(response.Data);
         }
 
         private async Task AddMarkups(JosekisNode node)
@@ -152,14 +154,18 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task Pass()
         {
-            await josekisService.ToChild(sessionId, new JosekisNode(20, 20));
+            APIResponse response = await josekisService.ToChild(sessionId, new JosekisNode(20, 20));
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            
             await Play();
         }
 
         [JSInvokable]
         public async Task Prev()
         {
-            await josekisService.ToParent(sessionId);
+            APIResponse response = await josekisService.ToParent(sessionId);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            
             await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
@@ -167,7 +173,10 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task LastBranch()
         {
-            int returnCount = (await josekisService.ToLastBranch(sessionId)).Value;
+            APIResponse<int> response = await josekisService.ToLastBranch(sessionId);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            int returnCount = response.Data;
+
             await jsRef.InvokeVoidAsync($"{EDITOR}.prevNode", returnCount);
 
             await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
@@ -177,7 +186,9 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task First()
         {
-            await josekisService.ToFirst(sessionId);
+            APIResponse response = await josekisService.ToFirst(sessionId);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+
             await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
             await AddMarkups();
         }
@@ -185,7 +196,10 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task Next(int x, int y)
         {
-            if (!(await josekisService.ToChild(sessionId, new JosekisNode(x, y))).Value)
+            APIResponse<bool> response = await josekisService.ToChild(sessionId, new JosekisNode(x, y));
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+
+            if (!response.Data)
             {
                 return;
             }
