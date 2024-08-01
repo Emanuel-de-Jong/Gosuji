@@ -105,7 +105,11 @@ namespace Gosuji.Client.Components.Pages
 
                 jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js");
 
-                if ((await kataGoService.UserHasInstance()).Value)
+                APIResponse<bool> response = await kataGoService.UserHasInstance();
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
+                bool userHasInstance = response.Data;
+
+                if (userHasInstance)
                 {
                     await js.InvokeVoidAsync("alert", "You already use this page somewhere else!");
                     return;
@@ -117,7 +121,9 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task InitJS()
         {
-            kataGoVersion = await kataGoService.GetVersion();
+            APIResponse<KataGoVersion> response = await kataGoService.GetVersion();
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            kataGoVersion = response.Data;
 
             if (GameId != null)
             {
