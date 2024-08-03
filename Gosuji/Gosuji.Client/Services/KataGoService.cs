@@ -2,6 +2,7 @@
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.JSInterop;
+using System.Collections.Generic;
 
 namespace Gosuji.Client.Services
 {
@@ -35,76 +36,88 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<APIResponse> ClearBoard()
+        public async Task<bool> ClearBoard()
         {
-            return await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Get(http,
                 $"{MAP_GROUP}/ClearBoard");
+            return !G.StatusMessage.HandleAPIResponse(response);
         }
 
         [JSInvokable]
-        public async Task<APIResponse> Restart()
+        public async Task<bool> Restart()
         {
-            return await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Get(http,
                 $"{MAP_GROUP}/Restart");
+            return !G.StatusMessage.HandleAPIResponse(response);
         }
 
         [JSInvokable]
-        public async Task<APIResponse> SetBoardsize(int boardsize)
+        public async Task<bool> SetBoardsize(int boardsize)
         {
-            return await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Get(http,
                 $"{MAP_GROUP}/SetBoardsize/{boardsize}");
+            return !G.StatusMessage.HandleAPIResponse(response);
         }
 
         [JSInvokable]
-        public async Task<APIResponse> SetRuleset(string ruleset)
+        public async Task<bool> SetRuleset(string ruleset)
         {
-            return await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Get(http,
                 $"{MAP_GROUP}/SetRuleset/{ruleset}");
+            return !G.StatusMessage.HandleAPIResponse(response);
         }
 
         [JSInvokable]
-        public async Task<APIResponse> SetKomi(double komi)
+        public async Task<bool> SetKomi(double komi)
         {
-            return await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Get(http,
                 $"{MAP_GROUP}/SetKomi/{komi}");
+            return !G.StatusMessage.HandleAPIResponse(response);
         }
 
         [JSInvokable]
-        public async Task<APIResponse> SetHandicap(int handicap)
+        public async Task<bool> SetHandicap(int handicap)
         {
-            return await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Get(http,
                 $"{MAP_GROUP}/SetHandicap/{handicap}");
+            return !G.StatusMessage.HandleAPIResponse(response);
         }
 
         [JSInvokable]
-        public async Task<APIResponse<MoveSuggestion>> AnalyzeMove(string color, string coord)
+        public async Task<MoveSuggestion?> AnalyzeMove(string color, string coord)
         {
-            return await HttpResponseHandler.Get<MoveSuggestion>(http,
+            APIResponse<MoveSuggestion> response = await HttpResponseHandler.Get<MoveSuggestion>(http,
                 $"{MAP_GROUP}/AnalyzeMove/{color}/{coord}");
+            if (G.StatusMessage.HandleAPIResponse(response)) return null;
+            return response.Data;
         }
 
         [JSInvokable]
-        public async Task<APIResponse<List<MoveSuggestion>>> Analyze(string color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public async Task<List<MoveSuggestion>?> Analyze(string color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
-            return await HttpResponseHandler.Get<List<MoveSuggestion>>(http,
+            APIResponse<List<MoveSuggestion>> response = await HttpResponseHandler.Get<List<MoveSuggestion>>(http,
                 $"{MAP_GROUP}/Analyze/{color}" +
                 $"?maxVisits={maxVisits}" +
                 $"&minVisitsPerc={minVisitsPerc}" +
                 $"&maxVisitDiffPerc={maxVisitDiffPerc}");
+            if (G.StatusMessage.HandleAPIResponse(response)) return null;
+            return response.Data;
         }
 
         [JSInvokable]
-        public async Task<APIResponse> Play(string color, string coord)
+        public async Task<bool> Play(string color, string coord)
         {
-            return await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Get(http,
                 $"{MAP_GROUP}/Play/{color}/{coord}");
+            return !G.StatusMessage.HandleAPIResponse(response);
         }
 
         [JSInvokable]
-        public async Task<APIResponse> PlayRange(Moves moves)
+        public async Task<bool> PlayRange(Moves moves)
         {
-            return await HttpResponseHandler.Post(http,
+            APIResponse response = await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/PlayRange", moves);
+            return !G.StatusMessage.HandleAPIResponse(response);
         }
     }
 }
