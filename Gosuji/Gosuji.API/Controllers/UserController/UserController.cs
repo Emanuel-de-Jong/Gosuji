@@ -286,46 +286,46 @@ namespace Gosuji.API.Controllers.UserController
         [HttpGet]
         public async Task<ActionResult<string>> GetNewTokens()
         {
-            User? user = await GetUser(userManager);
-            if (user == null)
-            {
-                jwtService.RemoveCookies(HttpContext);
-                return Forbid();
-            }
-
             string? token = Request.Cookies[SG.TokenCookieName];
             if (string.IsNullOrEmpty(token))
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("No Token");
+                return GetNewTokensError(BadRequest("No token"));
             }
 
             string? refreshToken = Request.Cookies[SG.RefreshTokenCookieName];
             if (string.IsNullOrEmpty(refreshToken))
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("No RefreshToken");
+                return GetNewTokensError(BadRequest("No refreshToken"));
             }
 
             ClaimsPrincipal? principal = jwtService.GetPrincipalFromExpiredToken(token);
             if (principal == null)
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("Invalid token");
+                return GetNewTokensError(BadRequest("Invalid token"));
+            }
+
+            string? userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return GetNewTokensError(BadRequest("No user id in token"));
             }
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             RefreshToken? refreshTokenObj = await dbContext.RefreshTokens.Where(t => t.Token == refreshToken).FirstOrDefaultAsync();
             if (refreshTokenObj == null || refreshTokenObj.ExpireDate < DateTime.UtcNow)
             {
-                jwtService.RemoveCookies(HttpContext);
-                return BadRequest("Invalid refresh token");
+                return GetNewTokensError(BadRequest("Invalid refresh token"));
             }
 
-            if (refreshTokenObj.UserId != user.Id)
+            if (refreshTokenObj.UserId != userId)
             {
-                jwtService.RemoveCookies(HttpContext);
-                return Forbid();
+                return GetNewTokensError(Forbid());
+            }
+
+            User? user = await dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+            {
+                return GetNewTokensError(Forbid());
             }
 
             string newToken = await jwtService.CreateCookies(user, userManager, HttpContext);
@@ -336,6 +336,12 @@ namespace Gosuji.API.Controllers.UserController
             await dbContext.DisposeAsync();
 
             return Ok(newToken);
+        }
+
+        private ActionResult<string> GetNewTokensError(ActionResult<string> result)
+        {
+            jwtService.RemoveCookies(HttpContext);
+            return result;
         }
     }
 }

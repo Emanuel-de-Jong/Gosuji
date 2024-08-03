@@ -44,7 +44,8 @@ namespace Gosuji.API
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = jwtSettings["Issuer"],
                 ValidAudience = jwtSettings["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(jwtKey)
+                IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
+                ClockSkew = TimeSpan.Zero
             };
             builder.Services.AddSingleton(tokenValidationParameters);
 

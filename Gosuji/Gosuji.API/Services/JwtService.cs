@@ -46,7 +46,7 @@ namespace Gosuji.API.Services
                 issuer: configuration["Jwt:Issuer"],
                 audience: configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(5),
                 signingCredentials: creds);
 
             string token = new JwtSecurityTokenHandler().WriteToken(tokenObj);
