@@ -1,8 +1,9 @@
-﻿using Gosuji.Client.Data;
-using Gosuji.Client.Data.Attributes;
-using Gosuji.Client.Services.User;
-using Gosuji.API.Data;
+﻿using Gosuji.API.Data;
 using Gosuji.API.Services;
+using Gosuji.Client.Data;
+using Gosuji.Client.Data.Attributes;
+using Gosuji.Client.Resources.Translations;
+using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,9 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Text;
-using Gosuji.Client.Resources.Translations;
 
 namespace Gosuji.API.Controllers.UserController
 {
@@ -186,9 +186,9 @@ namespace Gosuji.API.Controllers.UserController
             PendingUserChange? pendingUserChange = await dbContext.PendingUserChanges.Where(p => p.Id == user.Id).FirstOrDefaultAsync();
             if (pendingUserChange != null)
             {
-                pendingUserChange.UserName = model.UserName != null ? model.UserName : pendingUserChange.UserName;
-                pendingUserChange.Email = model.Email != null ? model.Email : pendingUserChange.Email;
-                pendingUserChange.Password = passwordHash != null ? passwordHash : pendingUserChange.Password;
+                pendingUserChange.UserName = model.UserName ?? pendingUserChange.UserName;
+                pendingUserChange.Email = model.Email ?? pendingUserChange.Email;
+                pendingUserChange.Password = passwordHash ?? pendingUserChange.Password;
 
                 dbContext.PendingUserChanges.Update(pendingUserChange);
             }

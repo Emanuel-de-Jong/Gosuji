@@ -53,7 +53,7 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
 
         private static async Task<APIResponse<T>> TryCatch<T>(Task<HttpResponseMessage> responseTask, string uri)
         {
-            var response = new APIResponse<T>();
+            APIResponse<T> response = new();
 
             try
             {

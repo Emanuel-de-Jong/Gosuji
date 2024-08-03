@@ -1,8 +1,8 @@
-﻿using Gosuji.Client;
+﻿using Gosuji.API.Data;
+using Gosuji.API.Services;
+using Gosuji.Client;
 using Gosuji.Client.Data;
 using Gosuji.Client.ViewModels;
-using Gosuji.API.Data;
-using Gosuji.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

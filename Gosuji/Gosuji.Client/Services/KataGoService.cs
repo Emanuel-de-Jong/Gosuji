@@ -2,7 +2,6 @@
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.JSInterop;
-using System.Collections.Generic;
 
 namespace Gosuji.Client.Services
 {
@@ -88,8 +87,7 @@ namespace Gosuji.Client.Services
         {
             APIResponse<MoveSuggestion> response = await HttpResponseHandler.Get<MoveSuggestion>(http,
                 $"{MAP_GROUP}/AnalyzeMove/{color}/{coord}");
-            if (G.StatusMessage.HandleAPIResponse(response)) return null;
-            return response.Data;
+            return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
 
         [JSInvokable]
@@ -100,8 +98,7 @@ namespace Gosuji.Client.Services
                 $"?maxVisits={maxVisits}" +
                 $"&minVisitsPerc={minVisitsPerc}" +
                 $"&maxVisitDiffPerc={maxVisitDiffPerc}");
-            if (G.StatusMessage.HandleAPIResponse(response)) return null;
-            return response.Data;
+            return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
 
         [JSInvokable]
