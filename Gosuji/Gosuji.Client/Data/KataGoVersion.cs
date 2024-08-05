@@ -6,9 +6,9 @@ namespace Gosuji.Client.Data
     public class KataGoVersion : DbModel
     {
         [NotMapped]
-        public const string VERSION = "1.14.1";
+        public const string VERSION = "1.15.2";
         [NotMapped]
-        public const string MODEL = "kata1-b28c512nbt-s6797380608-d4265362003";
+        public const string MODEL = "kata1-b28c512nbt-s7332806912-d4357057652";
 
         [Key] public long Id { get; set; }
         [Required]
