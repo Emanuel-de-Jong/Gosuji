@@ -101,14 +101,12 @@ namespace Gosuji.API.Services
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
         {
             JwtSecurityTokenHandler tokenHandler = new();
-            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-            JwtSecurityToken? jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase))
-            {
-                return null;
-            }
+            TokenValidationParameters validationParameters = tokenValidationParameters.Clone();
+            validationParameters.ValidateLifetime = false;
 
-            return principal;
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
+            JwtSecurityToken? jwtSecurityToken = securityToken as JwtSecurityToken;
+            return jwtSecurityToken != null ? principal : null;
         }
     }
 }
