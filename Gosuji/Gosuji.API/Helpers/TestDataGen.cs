@@ -1,5 +1,6 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.Client.Data;
+using Gosuji.Client.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -66,20 +67,20 @@ namespace Gosuji.API.Helpers
             ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
             dbContext.Languages.AddRange([
                 new() {
+                    Id = "en",
                     Name = "English",
-                    Short = "en",
                 },
                 new() {
+                    Id = "zh",
                     Name = "汉语",
-                    Short = "zh",
                 },
                 new() {
+                    Id = "ko",
                     Name = "한국어",
-                    Short = "ko",
                 },
                 new() {
+                    Id = "ja",
                     Name = "日本語",
-                    Short = "ja",
                 },
             ]);
             dbContext.SaveChanges();
@@ -177,23 +178,22 @@ namespace Gosuji.API.Helpers
         public void GenerateSettingConfigs()
         {
             ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
-            Dictionary<string, long> languageIds = dbContext.Languages.ToDictionary(l => l.Short, l => l.Id);
             dbContext.SettingConfigs.AddRange([
                 new() {
-                    LanguageId = languageIds["en"],
-                    IsDarkMode = true,
+                    LanguageId = "en",
+                    Theme = EThemeType.DARK,
                     MasterVolume = 100,
                     IsGetChangelogEmail = true,
                 },
                 new() {
-                    LanguageId = languageIds["en"],
-                    IsDarkMode = true,
+                    LanguageId = "en",
+                    Theme = EThemeType.DARK,
                     MasterVolume = 80,
                     IsGetChangelogEmail = false,
                 },
                 new() {
-                    LanguageId = languageIds["zh"],
-                    IsDarkMode = false,
+                    LanguageId = "zh",
+                    Theme = EThemeType.LIGHT,
                     MasterVolume = 100,
                     IsGetChangelogEmail = true,
                 },

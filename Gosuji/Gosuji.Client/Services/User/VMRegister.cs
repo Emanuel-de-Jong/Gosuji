@@ -5,31 +5,27 @@ namespace Gosuji.Client.Services.User
 {
     public class VMRegister
     {
-        [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        [MinLength(2, ErrorMessageResourceName = "MinLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        [MaxLength(30, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
+        [Required]
+        [MinLength(2)]
+        [MaxLength(30)]
         public string UserName { get; set; }
 
-        [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        [RegularExpression(@"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)*\.[a-zA-Z]{2,}$",
-            ErrorMessageResourceName = "EmailError", ErrorMessageResourceType = typeof(ValidateMessages))]
+        [Required]
+        [MaxLength(50)]
+        [RegularExpression(@"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)*\.[a-zA-Z]{2,}$")]
         public string Email { get; set; }
 
-        [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        [MinLength(6, ErrorMessageResourceName = "MinLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        [RegularExpression(@"^(?=.*\d)(?=.*[@#$%^&+=!]).*$",
-            ErrorMessageResourceName = "PasswordCharError", ErrorMessageResourceType = typeof(ValidateMessages))]
+        [Required]
+        [MinLength(6)]
+        [MaxLength(50)]
+        [RegularExpression(@"^(?=.*\d)(?=.*[@#$%^&+=!]).*$")]
         public string Password { get; set; }
 
-        [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        [Compare("Password", ErrorMessageResourceName = "CompareError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        public string ConfirmPassword { get; set; }
-
-        [Range(typeof(bool), "true", "true", ErrorMessageResourceName = "CheckboxCheckedError", ErrorMessageResourceType = typeof(ValidateMessages))]
-        public bool AcceptToS { get; set; } = false;
-
         public bool IsGetChangelogEmail { get; set; } = false;
+
+        [Required]
+        [MinLength(4)]
+        [MaxLength(7)]
+        public string Language { get; set; }
     }
 }

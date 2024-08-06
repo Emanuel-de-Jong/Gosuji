@@ -17,51 +17,32 @@ namespace Gosuji.Client.Components.Layout
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
-        private NavigationManager navigationManager { get; set; }
-        [Inject]
         private DataService dataService { get; set; }
         [Inject]
-        private IJSRuntime js { get; set; }
+        private SettingConfigService settingConfigService { get; set; }
 
-        private string currentLanguageSrc;
-        private SettingConfig? settingConfig;
+        private string? currentLanguageSrc;
         private Dictionary<string, Language>? languages;
         private Language? currentLanguage;
-        private bool isDarkMode = true;
 
         protected override async Task OnInitializedAsync()
         {
+            await settingConfigService.InitSettingConfig();
+
+            APIResponse<Dictionary<string, Language>> languagesResponse = await dataService.GetLanguages();
+            if (G.StatusMessage.HandleAPIResponse(languagesResponse)) return;
+            languages = languagesResponse.Data;
+
+
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
-                APIResponse<SettingConfig> settingConfigResponse = await dataService.GetSettingConfig();
-                if (G.StatusMessage.HandleAPIResponse(settingConfigResponse)) return;
-                settingConfig = settingConfigResponse.Data;
+                if (!await settingConfigService.SettingConfigFromDb()) return;
 
-                APIResponse<Dictionary<string, Language>> languagesResponse = await dataService.GetLanguages();
-                if (G.StatusMessage.HandleAPIResponse(languagesResponse)) return;
-                languages = languagesResponse.Data;
-
-                currentLanguage = languages.Where(kv => kv.Value.Id == settingConfig.LanguageId).FirstOrDefault().Value;
-
-                if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName != currentLanguage.Short)
-                {
-                    CultureInfo culture = new(currentLanguage.Short);
-
-                    await js.InvokeVoidAsync("utils.setLocal", G.LangLocalStorageName, culture.TwoLetterISOLanguageName);
-                    navigationManager.NavigateTo(navigationManager.Uri, true);
-                }
-            }
-            else
-            {
-                string? theme = await js.InvokeAsync<string?>("utils.getCookie", "theme");
-                if (theme != null && int.TryParse(theme, out int themeNum))
-                {
-                    EThemeType themeType = (EThemeType)themeNum;
-                    isDarkMode = themeType == EThemeType.DARK;
-                }
+                await settingConfigService.ChangeLanguage(settingConfigService.SettingConfig.LanguageId);
             }
 
+            currentLanguage = languages[settingConfigService.SettingConfig.LanguageId];
             currentLanguageSrc = BASE_LANGUAGE_SRC + CultureInfo.CurrentCulture.TwoLetterISOLanguageName + ".svg";
         }
 
@@ -69,93 +50,8 @@ namespace Gosuji.Client.Components.Layout
         {
             if (firstRender)
             {
-                if (settingConfig != null)
-                {
-                    await SetTheme(settingConfig.IsDarkMode);
-                }
+                await settingConfigService.ChangeTheme(settingConfigService.SettingConfig.Theme);
             }
-        }
-
-        private async Task ChangeLanguage(string language)
-        {
-            if (CultureInfo.CurrentCulture.TwoLetterISOLanguageName == language)
-            {
-                return;
-            }
-
-            if (settingConfig != null)
-            {
-                settingConfig.LanguageId = languages[language].Id;
-
-                APIResponse response = await dataService.PutSettingConfig(settingConfig);
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-            }
-
-            CultureInfo culture = new(language);
-
-            await js.InvokeVoidAsync("utils.setLocal", G.LangLocalStorageName, culture.TwoLetterISOLanguageName);
-            navigationManager.NavigateTo(navigationManager.Uri, true);
-        }
-
-        private async Task ChangeMasterVolume(ChangeEventArgs e)
-        {
-            int volume = Convert.ToInt32(e.Value);
-
-            if (settingConfig != null)
-            {
-                if (settingConfig.MasterVolume == volume)
-                {
-                    return;
-                }
-
-                settingConfig.MasterVolume = volume;
-
-                APIResponse response = await dataService.PutSettingConfig(settingConfig);
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-            }
-        }
-
-        private async Task ChangeStoneVolume(ChangeEventArgs e)
-        {
-            int volume = Convert.ToInt32(e.Value);
-
-            if (settingConfig != null)
-            {
-                if (settingConfig.StoneVolume == volume)
-                {
-                    return;
-                }
-
-                settingConfig.StoneVolume = volume;
-
-                APIResponse response = await dataService.PutSettingConfig(settingConfig);
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-            }
-        }
-
-        private async Task ChangeIsDarkMode(ChangeEventArgs e)
-        {
-            bool isDarkMode = (bool)e.Value;
-            await SetTheme(isDarkMode);
-
-            if (settingConfig != null)
-            {
-                if (settingConfig.IsDarkMode == isDarkMode)
-                {
-                    return;
-                }
-
-                settingConfig.IsDarkMode = isDarkMode;
-
-                APIResponse response = await dataService.PutSettingConfig(settingConfig);
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-            }
-        }
-
-        private async Task SetTheme(bool isDarkTheme)
-        {
-            EThemeType theme = isDarkTheme ? EThemeType.DARK : EThemeType.LIGHT;
-            await js.InvokeVoidAsync("theme.set", theme);
         }
     }
 }

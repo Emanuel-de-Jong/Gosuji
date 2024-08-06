@@ -27,6 +27,8 @@ namespace Gosuji.Client.Components.Pages
         private IJSRuntime js { get; set; }
         [Inject]
         private DataService dataService { get; set; }
+        [Inject]
+        private SettingConfigService settingConfigService { get; set; }
 
         [SupplyParameterFromForm]
         private PresetModel addPresetModel { get; set; } = new();
@@ -34,7 +36,6 @@ namespace Gosuji.Client.Components.Pages
         private bool isJSInitialized = false;
         private IJSObjectReference jsRef;
         private string? userName;
-        private SettingConfig? settingConfig;
 
         private DotNetObjectReference<Trainer>? trainerRef;
         private DotNetObjectReference<KataGoService>? kataGoServiceRef;
@@ -61,9 +62,8 @@ namespace Gosuji.Client.Components.Pages
 
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
 
-            APIResponse<SettingConfig> settingConfigResponse = await dataService.GetSettingConfig();
-            if (G.StatusMessage.HandleAPIResponse(settingConfigResponse)) return;
-            settingConfig = settingConfigResponse.Data;
+            await settingConfigService.InitSettingConfig();
+            await settingConfigService.SettingConfigFromDb();
 
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
@@ -142,7 +142,7 @@ namespace Gosuji.Client.Components.Pages
                     kataGoServiceRef,
                     userName,
                     kataGoVersion,
-                    settingConfig.CalcStoneVolume(),
+                    settingConfigService.SettingConfig.CalcStoneVolume(),
 
                     game.Boardsize,
                     game.Handicap,
@@ -162,7 +162,7 @@ namespace Gosuji.Client.Components.Pages
                     kataGoServiceRef,
                     userName,
                     kataGoVersion,
-                    settingConfig.CalcStoneVolume());
+                    settingConfigService.SettingConfig.CalcStoneVolume());
             }
         }
 

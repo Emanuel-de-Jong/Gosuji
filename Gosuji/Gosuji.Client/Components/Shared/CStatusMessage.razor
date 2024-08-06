@@ -67,11 +67,12 @@
         isError = false;
     }
 
-    public void SetMessage(string message)
+    public void SetMessage(string message, bool isSuccess = true)
     {
         Reset();
 
         this.message = message;
+        this.isSuccess = isSuccess;
         Show = true;
     }
 

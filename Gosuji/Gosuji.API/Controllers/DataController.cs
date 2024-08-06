@@ -271,7 +271,7 @@ namespace Gosuji.API.Controllers
         public async Task<ActionResult<Dictionary<string, Language>>> GetLanguages()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Dictionary<string, Language> languages = await dbContext.Languages.ToDictionaryAsync(l => l.Short);
+            Dictionary<string, Language> languages = await dbContext.Languages.ToDictionaryAsync(l => l.Id);
             await dbContext.DisposeAsync();
             return Ok(languages);
         }

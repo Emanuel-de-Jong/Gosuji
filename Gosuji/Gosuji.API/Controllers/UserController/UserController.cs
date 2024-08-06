@@ -48,11 +48,8 @@ namespace Gosuji.API.Controllers.UserController
             string backupCode = Guid.NewGuid().ToString().Replace("-", "");
             user.BackupCode = backupCode;
 
-            long? languageId = (await dbContext.Languages.Where(l => l.Short == CultureInfo.CurrentCulture.TwoLetterISOLanguageName).FirstOrDefaultAsync())?.Id;
-            languageId ??= 1;
-
             SettingConfig settingConfig = new();
-            settingConfig.LanguageId = languageId.Value;
+            settingConfig.LanguageId = model.Language;
             settingConfig.IsGetChangelogEmail = model.IsGetChangelogEmail;
             await dbContext.SettingConfigs.AddAsync(settingConfig);
             await dbContext.SaveChangesAsync();

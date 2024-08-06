@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data.Attributes;
+using Gosuji.Client.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
@@ -7,10 +8,10 @@ namespace Gosuji.Client.Data
     {
         [Key] public long Id { get; set; }
         [Required]
-        public long LanguageId { get; set; }
+        public string LanguageId { get; set; } = "en";
         public Language? Language { get; set; }
         [CustomPersonalData]
-        public bool IsDarkMode { get; set; } = true;
+        public EThemeType Theme { get; set; } = EThemeType.DARK;
         [Range(0, 100)]
         public int MasterVolume { get; set; } = 100;
         [Range(0, 100)]

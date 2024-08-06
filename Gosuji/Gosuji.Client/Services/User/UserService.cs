@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Helpers.HttpResponseHandler;
+using System.Globalization;
 
 namespace Gosuji.Client.Services.User
 {
@@ -17,6 +18,8 @@ namespace Gosuji.Client.Services.User
 
         public async Task<APIResponse<string>> Register(VMRegister model)
         {
+            model.Language = CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+
             return await HttpResponseHandler.Post<string>(HTTP,
                 $"{MAP_GROUP}/Register", model);
         }

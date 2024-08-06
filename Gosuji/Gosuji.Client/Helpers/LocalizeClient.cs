@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+﻿using Gosuji.Client.Services;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.JSInterop;
 using System.Globalization;
 
@@ -11,7 +12,7 @@ namespace Gosuji.Client.Helpers
             CultureInfo culture = CultureInfo.CurrentCulture; // Just so it's not null. CurrentCulture is never used.
 
             IJSRuntime js = host.Services.GetRequiredService<IJSRuntime>();
-            string? localLang = await js.InvokeAsync<string>("utils.getLocal", G.LangLocalStorageName);
+            string? localLang = await js.InvokeAsync<string>("utils.getLocal", SettingConfigService.LANGUAGE_ID_STORAGE_NAME);
             if (localLang != null)
             {
                 culture = CultureInfo.GetCultureInfo(localLang);

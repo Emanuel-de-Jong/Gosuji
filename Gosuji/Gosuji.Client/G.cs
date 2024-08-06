@@ -16,7 +16,6 @@ namespace Gosuji.Client
         public const string ControllerRateLimitPolicyName = "ControllerRateLimitPolicy";
         public const string RazorRateLimitPolicyName = "RazorRateLimitPolicy";
 
-        public const string LangLocalStorageName = "lang";
         public static string[] SupportedLangs = { "en", "zh", "ko", "ja" };
 
         public const string ReturnUriName = "ReturnUri";

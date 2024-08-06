@@ -14,7 +14,7 @@ if (typeof theme === "undefined") {
     theme.init = function () {
         theme.themeChangedEvent = new CEvent();
 
-        let tempTheme = utils.getCookie("theme");
+        let tempTheme = utils.getLocal("theme");
         if (tempTheme == null || tempTheme == "") {
             tempTheme = theme.TYPES.DARK;
         } else {
@@ -37,12 +37,16 @@ if (typeof theme === "undefined") {
     };
 
     theme.set = (newTheme = theme.theme) => {
-        document.getElementsByTagName("html")[0].dataset.bsTheme = theme.numToName(newTheme).toLowerCase();
+        let htmlElement = document.getElementsByTagName("html")[0];
+        let newThemeName = theme.numToName(newTheme).toLowerCase();
+        if (newThemeName == htmlElement.dataset.bsTheme) return;
+
+        htmlElement.dataset.bsTheme = newThemeName;
 
         theme.theme = newTheme;
         theme.themeChangedEvent.dispatch({ theme: theme.theme });
 
-        utils.setCookie("theme", theme.theme);
+        utils.setLocal("theme", theme.theme);
     };
 
     window.theme = theme;
