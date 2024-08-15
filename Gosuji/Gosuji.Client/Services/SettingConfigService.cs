@@ -85,34 +85,6 @@ namespace Gosuji.Client.Services
             }
         }
 
-        public async Task ChangeMasterVolume(ChangeEventArgs e)
-        {
-            int volume = Convert.ToInt32(e.Value);
-            await ChangeMasterVolume(volume);
-        }
-
-        public async Task ChangeMasterVolume(int volume)
-        {
-            if (SettingConfig.MasterVolume == volume) return;
-
-            SettingConfig.MasterVolume = volume;
-            await UpdateSettingConfig();
-        }
-
-        public async Task ChangeStoneVolume(ChangeEventArgs e)
-        {
-            int volume = Convert.ToInt32(e.Value);
-            await ChangeStoneVolume(volume);
-        }
-
-        public async Task ChangeStoneVolume(int volume)
-        {
-            if (SettingConfig.StoneVolume == volume) return;
-
-            SettingConfig.StoneVolume = volume;
-            await UpdateSettingConfig();
-        }
-
         public async Task ChangeIsDarkMode(ChangeEventArgs e)
         {
             bool isDarkMode = (bool)e.Value;
@@ -142,6 +114,62 @@ namespace Gosuji.Client.Services
                 await js.InvokeVoidAsync("utils.setLocal", LANGUAGE_ID_STORAGE_NAME, SettingConfig.LanguageId);
                 navigationManager.NavigateTo(navigationManager.Uri, true);
             }
+        }
+
+        public async Task ChangeMasterVolume(ChangeEventArgs e)
+        {
+            int volume = Convert.ToInt32(e.Value);
+            await ChangeMasterVolume(volume);
+        }
+
+        public async Task ChangeMasterVolume(int volume)
+        {
+            if (SettingConfig.MasterVolume == volume) return;
+
+            SettingConfig.MasterVolume = volume;
+            await UpdateSettingConfig();
+        }
+
+        public async Task ChangeStoneVolume(ChangeEventArgs e)
+        {
+            int volume = Convert.ToInt32(e.Value);
+            await ChangeStoneVolume(volume);
+        }
+
+        public async Task ChangeStoneVolume(int volume)
+        {
+            if (SettingConfig.StoneVolume == volume) return;
+
+            SettingConfig.StoneVolume = volume;
+            await UpdateSettingConfig();
+        }
+
+        public async Task ChangeIsPreMoveStoneSound(ChangeEventArgs e)
+        {
+            bool val = Convert.ToBoolean(e.Value);
+            await ChangeIsPreMoveStoneSound(val);
+        }
+
+        public async Task ChangeIsPreMoveStoneSound(bool isStoneSound)
+        {
+            if (SettingConfig.IsPreMoveStoneSound == isStoneSound) return;
+
+            SettingConfig.IsPreMoveStoneSound = isStoneSound;
+            await UpdateSettingConfig();
+        }
+
+        public async Task ChangeIsSelfplayStoneSound(ChangeEventArgs e)
+        {
+            bool val = Convert.ToBoolean(e.Value);
+            await ChangeIsSelfplayStoneSound(val);
+        }
+
+        public async Task ChangeIsSelfplayStoneSound(bool isStoneSound)
+        {
+            if (SettingConfig.IsSelfplayStoneSound == isStoneSound) return;
+
+            SettingConfig.IsSelfplayStoneSound = isStoneSound;
+            await UpdateSettingConfig();
         }
     }
 }

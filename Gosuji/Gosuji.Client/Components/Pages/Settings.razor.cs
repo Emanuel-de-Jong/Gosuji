@@ -25,6 +25,8 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private NavigationManager navigationManager { get; set; }
         [Inject]
+        private SettingConfigService settingConfigService { get; set; }
+        [Inject]
         private UserService userService { get; set; }
         [Inject]
         private IStringLocalizer<APIResponses> tlAPI { get; set; }
@@ -51,6 +53,8 @@ namespace Gosuji.Client.Components.Pages
                 UserName = currentUserName,
                 Email = currentEmail
             };
+
+            await settingConfigService.SettingConfigFromDb();
         }
 
         public async Task UpdatePrivacy()
