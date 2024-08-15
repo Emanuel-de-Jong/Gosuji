@@ -41,28 +41,29 @@ namespace Gosuji.Client
                 return;
             }
 
-            MethodBase? method = new StackFrame(2, false).GetMethod();
-            if (method == null)
-            {
+            MethodBase? method = new StackFrame(1).GetMethod();
+            if (method == null) {
                 Console.WriteLine("G.Log MethodBase null");
-                return;
-            }
-            if (method.DeclaringType == null) {
-                Console.WriteLine("G.Log MethodBase.DeclaringType null");
                 return;
             }
 
             string methodName = method.Name;
-            string className = method.DeclaringType.Name;
+            string className = method.DeclaringType?.Name ?? "UnknownClass";
 
             if (methodName == "MoveNext") {
-                if (method.DeclaringType.DeclaringType == null) {
-                    Console.WriteLine("G.Log MethodBase.DeclaringType.DeclaringType null");
+                method = new StackFrame(2).GetMethod();
+                if (method == null) {
+                    Console.WriteLine("G.Log MethodBase null after MoveNext");
                     return;
                 }
 
-                methodName = method.DeclaringType.Name.Split('<', '>')[1];
-                className = method.DeclaringType.DeclaringType.Name;
+                methodName = method.Name;
+                className = method.DeclaringType?.Name ?? "UnknownClass";
+
+                if (method.DeclaringType?.DeclaringType != null) {
+                    methodName = method.DeclaringType.Name.Split('<', '>')[1];
+                    className = method.DeclaringType.DeclaringType.Name;
+                }
             }
 
             Console.WriteLine($"{className}.{methodName}");
