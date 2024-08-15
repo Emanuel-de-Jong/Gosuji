@@ -6,7 +6,10 @@ namespace Gosuji.Client.Components.Pages
     {
         protected override async Task OnInitializedAsync()
         {
-            G.StatusMessage.Show = false;
+            if (G.StatusMessage != null)
+            {
+                G.StatusMessage.Show = false;
+            }
         }
     }
 }

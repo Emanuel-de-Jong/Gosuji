@@ -4,11 +4,11 @@ namespace Gosuji.Client
 {
     public static class G
     {
-        public static bool Log =
+        public static LogLevel Log =
 #if DEBUG
-                true;
+                LogLevel.Trace;
 #else
-                false;
+                LogLevel.None;
 #endif
 
         public static CStatusMessage? StatusMessage = null;
