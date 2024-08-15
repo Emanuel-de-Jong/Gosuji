@@ -41,32 +41,39 @@ namespace Gosuji.Client
                 return;
             }
 
-            MethodBase? method = new StackFrame(1).GetMethod();
-            if (method == null) {
-                Console.WriteLine("G.Log MethodBase null");
-                return;
-            }
+            int frameIndex = 1;
+            MethodBase? method = null;
+            string? methodName = null;
+            string? className = null;
 
-            string methodName = method.Name;
-            string className = method.DeclaringType?.Name ?? "UnknownClass";
-
-            if (methodName == "MoveNext") {
-                method = new StackFrame(2).GetMethod();
+            while (frameIndex < 10) {
+                method = new StackFrame(frameIndex).GetMethod();
                 if (method == null) {
-                    Console.WriteLine("G.Log MethodBase null after MoveNext");
-                    return;
+                    break;
                 }
 
                 methodName = method.Name;
-                className = method.DeclaringType?.Name ?? "UnknownClass";
+                className = method.DeclaringType?.Name;
 
-                if (method.DeclaringType?.DeclaringType != null) {
-                    methodName = method.DeclaringType.Name.Split('<', '>')[1];
-                    className = method.DeclaringType.DeclaringType.Name;
+                if (methodName != "MoveNext" && method.DeclaringType == null ||
+                    (methodName != "Start" && method.DeclaringType?.Name != "AsyncMethodBuilderCore")) {
+                    break;
                 }
+
+                frameIndex++;
             }
 
-            Console.WriteLine($"{className}.{methodName}");
+            if (method == null) {
+                Console.WriteLine($"G.Log MethodBase null ({className}.{methodName} {frameIndex})");
+                return;
+            }
+
+            if (methodName == "MoveNext" && method.DeclaringType?.DeclaringType != null) {
+                methodName = method.DeclaringType.Name.Split('<', '>')[1];
+                className = method.DeclaringType.DeclaringType.Name;
+            }
+
+            Console.WriteLine($"{className ?? "UnknownClass"}.{methodName ?? "UnknownMethod"}");
         }
 
         public static string ColorNumToName(int colorNum)
