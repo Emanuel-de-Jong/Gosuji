@@ -62,7 +62,6 @@ namespace Gosuji.Client.Components.Pages
 
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
 
-            await settingConfigService.InitSettingConfig();
             await settingConfigService.SettingConfigFromDb();
 
             trainerRef = DotNetObjectReference.Create(this);

@@ -1,6 +1,7 @@
 ﻿@using Gosuji.Client.Models
+@using System.Globalization;
 
-@if (currentLanguageSrc != null)
+@if (languages != null)
 {
     <header id="mainNavMenu" class="mb-5 border-bottom bg-light-subtle">
         <div class="container">
@@ -44,21 +45,15 @@
 
                     <div class="languageSelect dropdown px-2">
                         <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img id="currentLanguage" src="@currentLanguageSrc" />
+                            <img id="currentLanguage" src="@($"{BASE_LANGUAGE_SRC}{CultureInfo.CurrentCulture.TwoLetterISOLanguageName}.svg")" />
                         </a>
                         <ul class="dropdown-menu text-small px-2">
-                            <li>
-                                <img src="@(BASE_LANGUAGE_SRC)en.svg" @onclick='() => settingConfigService.ChangeLanguage("en")' />
-                            </li>
-                            <li>
-                                <img src="@(BASE_LANGUAGE_SRC)zh.svg" @onclick='() => settingConfigService.ChangeLanguage("zh")' />
-                            </li>
-                            <li>
-                                <img src="@(BASE_LANGUAGE_SRC)ko.svg" @onclick='() => settingConfigService.ChangeLanguage("ko")' />
-                            </li>
-                            <li>
-                                <img src="@(BASE_LANGUAGE_SRC)ja.svg" @onclick='() => settingConfigService.ChangeLanguage("ja")' />
-                            </li>
+                            @foreach (string langId in languages.Keys)
+                            {
+                                <li>
+                                    <img src="@($"{BASE_LANGUAGE_SRC}{langId}.svg")" @onclick="() => settingConfigService.ChangeLanguage(langId)" />
+                                </li>
+                            }
                         </ul>
                     </div>
 

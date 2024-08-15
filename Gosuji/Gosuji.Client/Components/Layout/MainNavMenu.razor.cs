@@ -21,19 +21,12 @@ namespace Gosuji.Client.Components.Layout
         [Inject]
         private SettingConfigService settingConfigService { get; set; }
 
-        private string? currentLanguageSrc;
         private Dictionary<string, Language>? languages;
-        private Language? currentLanguage;
         private bool isSettingConfigInitialized = false;
 
         protected override async Task OnInitializedAsync()
         {
             await settingConfigService.InitSettingConfig();
-
-            APIResponse<Dictionary<string, Language>> languagesResponse = await dataService.GetLanguages();
-            if (G.StatusMessage.HandleAPIResponse(languagesResponse)) return;
-            languages = languagesResponse.Data;
-
 
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
@@ -43,8 +36,9 @@ namespace Gosuji.Client.Components.Layout
                 await settingConfigService.ChangeLanguage(settingConfigService.SettingConfig.LanguageId);
             }
 
-            currentLanguage = languages[settingConfigService.SettingConfig.LanguageId];
-            currentLanguageSrc = BASE_LANGUAGE_SRC + CultureInfo.CurrentCulture.TwoLetterISOLanguageName + ".svg";
+            APIResponse<Dictionary<string, Language>> languagesResponse = await dataService.GetLanguages();
+            if (G.StatusMessage.HandleAPIResponse(languagesResponse)) return;
+            languages = languagesResponse.Data;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
