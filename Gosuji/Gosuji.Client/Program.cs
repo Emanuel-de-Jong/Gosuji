@@ -12,6 +12,7 @@ namespace Gosuji.Client
     {
         public static async Task Main(string[] args)
         {
+            G.Log();
             WebAssemblyHostBuilder builder = WebAssemblyHostBuilder.CreateDefault(args);
 
             builder.RootComponents.Add<App>("#app");

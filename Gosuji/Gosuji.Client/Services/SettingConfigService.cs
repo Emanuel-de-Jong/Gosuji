@@ -33,8 +33,6 @@ namespace Gosuji.Client.Services
 
         public async Task InitSettingConfig()
         {
-            Console.WriteLine("InitSettingConfig");
-
             string? languageId = await js.InvokeAsync<string>("utils.getLocal", LANGUAGE_ID_STORAGE_NAME);
             string? theme = await js.InvokeAsync<string>("utils.getLocal", THEME_STORAGE_NAME);
             string? masterVolume = await js.InvokeAsync<string>("utils.getLocal", MASTER_VOLUME_STORAGE_NAME);

@@ -24,6 +24,7 @@ namespace Gosuji.Client.Components.Layout
         private string? currentLanguageSrc;
         private Dictionary<string, Language>? languages;
         private Language? currentLanguage;
+        private bool isSettingConfigInitialized = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -48,8 +49,9 @@ namespace Gosuji.Client.Components.Layout
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            if (firstRender)
+            if (!isSettingConfigInitialized && settingConfigService.SettingConfig != null)
             {
+                isSettingConfigInitialized = true;
                 await settingConfigService.ChangeTheme(settingConfigService.SettingConfig.Theme);
             }
         }

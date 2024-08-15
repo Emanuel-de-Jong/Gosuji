@@ -10,6 +10,11 @@ namespace Gosuji.Client.Services.User
         public HttpClient? HTTP { get; set; }
         public JwtAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
+        //public UserService()
+        //{
+        //    G.Log();
+        //}
+
         public async Task<bool> CheckAuthorized()
         {
             return (await HttpResponseHandler.Get(HTTP,
