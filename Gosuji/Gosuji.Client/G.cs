@@ -1,10 +1,12 @@
 ﻿using Gosuji.Client.Components.Shared;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace Gosuji.Client
 {
     public static class G
     {
-        public static LogLevel Log =
+        public static LogLevel LogLevel =
 #if DEBUG
                 LogLevel.Trace;
 #else
@@ -32,6 +34,39 @@ namespace Gosuji.Client
             { "Moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" },
             { "ChartJS", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" },
         };
+
+        public static void Log()
+        {
+            if (LogLevel > LogLevel.Trace) {
+                return;
+            }
+
+            MethodBase? method = new StackFrame(2, false).GetMethod();
+            if (method == null)
+            {
+                Console.WriteLine("G.Log MethodBase null");
+                return;
+            }
+            if (method.DeclaringType == null) {
+                Console.WriteLine("G.Log MethodBase.DeclaringType null");
+                return;
+            }
+
+            string methodName = method.Name;
+            string className = method.DeclaringType.Name;
+
+            if (methodName == "MoveNext") {
+                if (method.DeclaringType.DeclaringType == null) {
+                    Console.WriteLine("G.Log MethodBase.DeclaringType.DeclaringType null");
+                    return;
+                }
+
+                methodName = method.DeclaringType.Name.Split('<', '>')[1];
+                className = method.DeclaringType.DeclaringType.Name;
+            }
+
+            Console.WriteLine($"{className}.{methodName}");
+        }
 
         public static string ColorNumToName(int colorNum)
         {
