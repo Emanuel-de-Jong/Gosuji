@@ -125,7 +125,6 @@ namespace Gosuji.Client.Services
         public async Task ChangeMasterVolume(int volume)
         {
             if (SettingConfig.MasterVolume == volume) return;
-
             SettingConfig.MasterVolume = volume;
             await UpdateSettingConfig();
         }
@@ -139,7 +138,6 @@ namespace Gosuji.Client.Services
         public async Task ChangeStoneVolume(int volume)
         {
             if (SettingConfig.StoneVolume == volume) return;
-
             SettingConfig.StoneVolume = volume;
             await UpdateSettingConfig();
         }
@@ -153,7 +151,6 @@ namespace Gosuji.Client.Services
         public async Task ChangeIsPreMoveStoneSound(bool isStoneSound)
         {
             if (SettingConfig.IsPreMoveStoneSound == isStoneSound) return;
-
             SettingConfig.IsPreMoveStoneSound = isStoneSound;
             await UpdateSettingConfig();
         }
@@ -167,8 +164,20 @@ namespace Gosuji.Client.Services
         public async Task ChangeIsSelfplayStoneSound(bool isStoneSound)
         {
             if (SettingConfig.IsSelfplayStoneSound == isStoneSound) return;
-
             SettingConfig.IsSelfplayStoneSound = isStoneSound;
+            await UpdateSettingConfig();
+        }
+
+        public async Task ChangeIsGetChangelogEmail(ChangeEventArgs e)
+        {
+            bool val = Convert.ToBoolean(e.Value);
+            await ChangeIsGetChangelogEmail(val);
+        }
+
+        public async Task ChangeIsGetChangelogEmail(bool isGetChangelogEmail)
+        {
+            if (SettingConfig.IsGetChangelogEmail == isGetChangelogEmail) return;
+            SettingConfig.IsGetChangelogEmail = isGetChangelogEmail;
             await UpdateSettingConfig();
         }
     }

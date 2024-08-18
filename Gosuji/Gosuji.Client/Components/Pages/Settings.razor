@@ -19,12 +19,16 @@
                     <div class="tab-pane show active" id="v-pills-general">
                         @if (settingConfigService.SettingConfig != null)
                         {
+                            <h3>Theme</h3>
                             <div class="mb-3">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="darkThemeSwitch" checked="@(settingConfigService.SettingConfig.Theme == EThemeType.DARK)" @onchange="settingConfigService.ChangeIsDarkMode">
                                     <label class="form-check-label text-body-emphasis" for="darkThemeSwitch">Dark theme</label>
                                 </div>
                             </div>
+                            
+                            <hr />
+                            <h3>Sound</h3>
                             <div class="mb-3">
                                 <label for="masterVolumeRange" class="form-label">Master Volume</label>
                                 <input type="range" class="form-range" id="masterVolumeRange" max="100" value="@settingConfigService.SettingConfig.MasterVolume" @onchange="settingConfigService.ChangeMasterVolume">
@@ -36,13 +40,13 @@
                             <div class="mb-3">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="isPreMoveStoneSoundSwitch" checked="@(settingConfigService.SettingConfig.IsPreMoveStoneSound)" @onchange="settingConfigService.ChangeIsPreMoveStoneSound">
-                                    <label class="form-check-label text-body-emphasis" for="isPreMoveStoneSoundSwitch">Stone sounds on trainer pre moves</label>
+                                    <label class="form-check-label" for="isPreMoveStoneSoundSwitch">Stone sounds on trainer pre moves</label>
                                 </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="IsSelfplayStoneSoundSwitch" checked="@(settingConfigService.SettingConfig.IsSelfplayStoneSound)" @onchange="settingConfigService.ChangeIsSelfplayStoneSound">
-                                    <label class="form-check-label text-body-emphasis" for="IsSelfplayStoneSoundSwitch">Stone sounds on trainer selfplay moves</label>
+                                    <label class="form-check-label" for="IsSelfplayStoneSoundSwitch">Stone sounds on trainer selfplay moves</label>
                                 </div>
                             </div>
                         }
@@ -73,6 +77,7 @@
                     <div class="tab-pane" id="v-pills-privacy">
                         <CStatusMessage @ref=statusMessage />
 
+                        <h3>Information</h3>
                         <EditForm Model="privacyInput" FormName="privacy" OnValidSubmit="UpdatePrivacy" method="post">
                             <DataAnnotationsValidator />
 
@@ -109,8 +114,23 @@
                         </EditForm>
 
                         <p>Can't access email</p>
-                        <p>Changelog emails</p>
-                        <p>Personal data</p>
+
+                        @if (settingConfigService.SettingConfig != null)
+                        {
+                            <hr />
+                            <h3>Notifications</h3>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="isGetChangelogEmailSwitch" checked="@(settingConfigService.SettingConfig.IsGetChangelogEmail)" @onchange="settingConfigService.ChangeIsGetChangelogEmail">
+                                    <label class="form-check-label" for="isGetChangelogEmailSwitch">Receive changelog emails</label>
+                                </div>
+                            </div>
+                        }
+
+                        <hr />
+                        <h3>Personal data</h3>
+                        <button type="button" class="btn btn-primary">Download</button>
+                        <button type="button" class="btn btn-danger">Delete</button>
                     </div>
                 </div>
             </div>

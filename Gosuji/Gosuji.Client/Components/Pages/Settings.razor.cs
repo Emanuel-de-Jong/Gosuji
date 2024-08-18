@@ -138,5 +138,10 @@ namespace Gosuji.Client.Components.Pages
             [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string CurrentPassword { get; set; }
         }
+
+        private async Task DownloadPersonalData()
+        {
+
+        }
     }
 }
