@@ -29,12 +29,15 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private UserService userService { get; set; }
         [Inject]
+        private DataService dataService { get; set; }
+        [Inject]
         private IStringLocalizer<APIResponses> tlAPI { get; set; }
 
         private CStatusMessage statusMessage;
 
         private string? currentUserName;
         private string? currentEmail;
+        private Subscription? subscription;
 
         protected override async Task OnInitializedAsync()
         {
@@ -55,6 +58,10 @@ namespace Gosuji.Client.Components.Pages
             };
 
             await settingConfigService.SettingConfigFromDb();
+
+            APIResponse<Subscription?> response = await dataService.GetSubscription(true);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            subscription = response.Data;
         }
 
         public async Task UpdatePrivacy()

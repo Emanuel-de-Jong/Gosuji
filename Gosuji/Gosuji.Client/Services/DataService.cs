@@ -15,6 +15,12 @@ namespace Gosuji.Client.Services
             http = httpClientFactory.CreateClient("Auth");
         }
 
+        public async Task<APIResponse<Subscription?>> GetSubscription(bool includeDiscount = false)
+        {
+            return await HttpResponseHandler.Get<Subscription?>(http,
+                $"{MAP_GROUP}/GetSubscription?includeDiscount={includeDiscount}");
+        }
+
         public async Task<Changelog[]?> GetChangelogs()
         {
             return (await HttpResponseHandler.Get<Changelog[]>(http,

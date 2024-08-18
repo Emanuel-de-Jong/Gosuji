@@ -27,12 +27,20 @@ namespace Gosuji.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Subscription>> GetSubscription()
+        public async Task<ActionResult<Subscription?>> GetSubscription(bool includeDiscount = false)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Subscription subscription = await dbContext.Users.Where(u => u.Id == GetUserId())
+            Subscription? subscription = await dbContext.Users.Where(u => u.Id == GetUserId())
                 .Select(u => u.CurrentSubscription)
                 .FirstOrDefaultAsync();
+
+            if (includeDiscount && subscription != null && subscription.DiscountId != null)
+            {
+                subscription.Discount = await dbContext.Discounts
+                    .Where(d => d.Id == subscription.DiscountId)
+                    .FirstOrDefaultAsync();
+            }
+
             await dbContext.DisposeAsync();
             return Ok(subscription);
         }

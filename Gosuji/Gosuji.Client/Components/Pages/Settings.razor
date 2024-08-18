@@ -49,8 +49,25 @@
                     </div>
 
                     <div class="tab-pane" id="v-pills-subscription">
-                        <p>Current</p>
-                        <p>Cancel</p>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Subscription</th>
+                                    <td>@(subscription != null ? subscription.SubscriptionType : "Free")</td>
+                                </tr>
+                                <tr>
+                                    <th>Discount</th>
+                                    <td>@(subscription?.Discount != null ? subscription.Discount.Percent + "%" : "None")</td>
+                                </tr>
+                                <tr>
+                                    <th>End date</th>
+                                    <td>@(subscription != null ? subscription.EndDate : "Unlimited")</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <a class="btn btn-secondary" href="subscriptions">Upgrade</a>
+                        <button type="button" class="btn btn-secondary">Cancel</button>
                     </div>
 
                     <div class="tab-pane" id="v-pills-privacy">
