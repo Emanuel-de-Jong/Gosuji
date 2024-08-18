@@ -65,6 +65,12 @@ namespace Gosuji.Client.Services.User
                 $"{MAP_GROUP}/DownloadPersonalData", new object());
         }
 
+        public async Task<APIResponse> DeletePersonalData(VMDeletePersonalData model)
+        {
+            return await HttpResponseHandler.Post(HTTP,
+                $"{MAP_GROUP}/DeletePersonalData", model);
+        }
+
         public async Task<string?> GetToken()
         {
             return (await HttpResponseHandler.Get<string>(HTTP,

@@ -20,6 +20,8 @@ namespace Gosuji.Client.Components.Pages
     {
         [SupplyParameterFromForm]
         private PrivacyInputModel? privacyInput { get; set; }
+        [SupplyParameterFromForm]
+        private DeletePersonalDataInputModel? deletePersonalDataInput { get; set; } = new();
 
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
@@ -36,7 +38,8 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IStringLocalizer<APIResponses> tlAPI { get; set; }
 
-        private CStatusMessage statusMessage;
+        private CStatusMessage privacyStatusMessage;
+        private CStatusMessage deletePersonalDataStatusMessage;
 
         private string? currentUserName;
         private string? currentEmail;
@@ -89,7 +92,7 @@ namespace Gosuji.Client.Components.Pages
 
             if (vmUpdatePrivacy.UserName == null && vmUpdatePrivacy.Email == null && vmUpdatePrivacy.NewPassword == null)
             {
-                statusMessage.SetMessage(tlAPI[APIResponses.User_UpdatePrivacy_NoChanges]);
+                privacyStatusMessage.SetMessage(tlAPI[APIResponses.User_UpdatePrivacy_NoChanges]);
                 return;
             }
 
@@ -97,18 +100,18 @@ namespace Gosuji.Client.Components.Pages
 
             if (response.IsSuccess)
             {
-                statusMessage.SetMessage("Privacy changes pending. A confirmation email has been sent to your current email address. Please use the link in the email to confirm your changes.");
+                privacyStatusMessage.SetMessage("Privacy changes pending. A confirmation email has been sent to your current email address. Please use the link in the email to confirm your changes.");
                 privacyInput.NewPassword = string.Empty;
                 privacyInput.ConfirmNewPassword = string.Empty;
                 privacyInput.CurrentPassword = string.Empty;
             }
             else if (response.Message == APIResponses.User_UpdatePrivacy_NoChanges)
             {
-                statusMessage.HandleAPIResponse(response, true);
+                privacyStatusMessage.HandleAPIResponse(response, true);
             }
             else
             {
-                statusMessage.HandleAPIResponse(response);
+                privacyStatusMessage.HandleAPIResponse(response);
             }
         }
 
@@ -153,6 +156,31 @@ namespace Gosuji.Client.Components.Pages
                 "json",
                 fileBytes,
                 "application/json");
+        }
+
+        private async Task DeletePersonalData()
+        {
+            VMDeletePersonalData vmDeletePersonalData = new()
+            {
+                Password = deletePersonalDataInput.Password
+            };
+
+            APIResponse response = await userService.DeletePersonalData(vmDeletePersonalData);
+            if (response.IsSuccess)
+            {
+                deletePersonalDataStatusMessage.SetMessage("A confirmation email has been sent. Please use the link in the email to confirm the deletion.");
+                deletePersonalDataInput = new();
+            } else
+            {
+                deletePersonalDataStatusMessage.HandleAPIResponse(response);
+            }
+        }
+
+        private sealed class DeletePersonalDataInputModel
+        {
+            [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            public string Password { get; set; }
         }
     }
 }

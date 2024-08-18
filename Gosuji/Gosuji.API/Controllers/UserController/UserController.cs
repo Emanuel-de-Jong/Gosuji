@@ -275,6 +275,24 @@ namespace Gosuji.API.Controllers.UserController
             return Ok(fileBytes);
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult> DeletePersonalData(VMDeletePersonalData model)
+        {
+            User? user = await GetUser(userManager);
+            if (user == null)
+            {
+                return Forbid();
+            }
+
+            if (!await userManager.CheckPasswordAsync(user, model.Password))
+            {
+                return Accepted("User_DeletePersonalData_WrongPassword");
+            }
+
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<ActionResult<string>> GetToken()
         {

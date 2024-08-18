@@ -75,7 +75,7 @@
                     </div>
 
                     <div class="tab-pane" id="v-pills-privacy">
-                        <CStatusMessage @ref=statusMessage />
+                        <CStatusMessage @ref=privacyStatusMessage />
 
                         <h3>Information</h3>
                         <EditForm Model="privacyInput" FormName="privacy" OnValidSubmit="UpdatePrivacy" method="post">
@@ -129,8 +129,21 @@
 
                         <hr />
                         <h3>Personal data</h3>
-                        <button type="button" class="btn btn-primary" @onclick=DownloadPersonalData>Download</button>
-                        <button type="button" class="btn btn-danger">Delete</button>
+                        <div class="mb-3">
+                            <button type="button" class="btn btn-primary" @onclick=DownloadPersonalData>Download</button>
+                        </div>
+
+                        <CStatusMessage @ref=deletePersonalDataStatusMessage />
+
+                        <EditForm Model="deletePersonalDataInput" FormName="deletePersonalData" OnValidSubmit="DeletePersonalData" method="post">
+                            <DataAnnotationsValidator />
+
+                            <div class="mb-3 input-group">
+                                <InputText type="password" @bind-Value="deletePersonalDataInput.Password" class="form-control" placeholder="password" />
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <ValidationMessage For="() => deletePersonalDataInput.Password" class="text-danger" />
+                            </div>
+                        </EditForm>
                     </div>
                 </div>
             </div>
