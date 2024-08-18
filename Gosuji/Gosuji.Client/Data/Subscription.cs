@@ -11,7 +11,7 @@ namespace Gosuji.Client.Data
         Level3 = 3,
     }
 
-    public class UserSubscription : DbModel
+    public class Subscription : DbModel
     {
         [Key] public long Id { get; set; }
         [Required]

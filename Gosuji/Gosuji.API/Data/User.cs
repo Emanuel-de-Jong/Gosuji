@@ -11,7 +11,7 @@ namespace Gosuji.API.Data
         public long SettingConfigId { get; set; }
         public SettingConfig? SettingConfig { get; set; }
         public long? CurrentSubscriptionId { get; set; }
-        public UserSubscription? CurrentSubscription { get; set; }
+        public Subscription? CurrentSubscription { get; set; }
 
         [CustomPersonalData]
         public bool IsBanned { get; set; }

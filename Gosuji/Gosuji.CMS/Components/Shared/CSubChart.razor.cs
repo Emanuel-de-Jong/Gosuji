@@ -22,7 +22,7 @@ namespace Gosuji.CMS.Components.Shared
         [Inject]
         private IDbContextFactory<ApplicationDbContext> dbContextFactory { get; set; }
 
-        private List<UserSubscription> subs;
+        private List<Subscription> subs;
 
         private int[] dayChartSubs;
         private int[] dayChartNewSubs;
@@ -48,11 +48,11 @@ namespace Gosuji.CMS.Components.Shared
             int daySubCount = subs.Count(s => s.CreateDate.Date < GraphDays.First());
             int monthSubCount = subs.Count(s => s.CreateDate.Date < GraphMonths.First());
 
-            List<UserSubscription> monthSubs = subs.Where(s => s.CreateDate.Date >= GraphMonths.First()).ToList();
+            List<Subscription> monthSubs = subs.Where(s => s.CreateDate.Date >= GraphMonths.First()).ToList();
 
             // dayChartNewSubs
             dayChartNewSubs = new int[dayCount];
-            List<UserSubscription> daySubs = monthSubs.Where(s => s.CreateDate.Date >= GraphDays.First()).ToList();
+            List<Subscription> daySubs = monthSubs.Where(s => s.CreateDate.Date >= GraphDays.First()).ToList();
             for (int i = 0; i < GraphDays.Count; i++)
             {
                 DateTime time = GraphDays[i];

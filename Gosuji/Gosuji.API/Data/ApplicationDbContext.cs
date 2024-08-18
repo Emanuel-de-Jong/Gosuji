@@ -11,7 +11,7 @@ namespace Gosuji.API.Data
         IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>(options)
     {
         public DbSet<SettingConfig> SettingConfigs { get; set; }
-        public DbSet<UserSubscription> UserSubscriptions { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<UserActivity> UserActivities { get; set; }
         public DbSet<UserMoveCount> UserMoveCounts { get; set; }
@@ -38,7 +38,7 @@ namespace Gosuji.API.Data
                 .HasForeignKey(e => e.CurrentSubscriptionId);
 
             builder.Entity<SettingConfig>();
-            builder.Entity<UserSubscription>();
+            builder.Entity<Subscription>();
             builder.Entity<Discount>();
 
             builder.Entity<UserActivity>(b =>
