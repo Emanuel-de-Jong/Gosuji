@@ -27,6 +27,17 @@ namespace Gosuji.API.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult<UserSubscription>> GetSubscription()
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            UserSubscription subscription = await dbContext.Users.Where(u => u.Id == GetUserId())
+                .Select(u => u.CurrentSubscription)
+                .FirstOrDefaultAsync();
+            await dbContext.DisposeAsync();
+            return Ok(subscription);
+        }
+
+        [HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<Changelog[]>> GetChangelogs()
         {

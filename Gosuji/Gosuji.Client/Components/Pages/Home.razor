@@ -55,8 +55,8 @@
     {
         await base.OnInitializedAsync();
 
-        // navigationManager.NavigateTo("settings");
-        // return;
+        navigationManager.NavigateTo("settings");
+        return;
 
         changelogs = await dataService.GetChangelogs();
         if (changelogs != null)
