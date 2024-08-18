@@ -24,7 +24,7 @@ namespace Gosuji.Client.Services
 
         public async Task<APIResponse> Return()
         {
-            return await HttpResponseHandler.Get(http,
+            return await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/Return");
         }
 
@@ -37,7 +37,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<bool> ClearBoard()
         {
-            APIResponse response = await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/ClearBoard");
             return !G.StatusMessage.HandleAPIResponse(response);
         }
@@ -45,7 +45,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<bool> Restart()
         {
-            APIResponse response = await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/Restart");
             return !G.StatusMessage.HandleAPIResponse(response);
         }
@@ -53,7 +53,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<bool> SetBoardsize(int boardsize)
         {
-            APIResponse response = await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/SetBoardsize/{boardsize}");
             return !G.StatusMessage.HandleAPIResponse(response);
         }
@@ -61,7 +61,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<bool> SetRuleset(string ruleset)
         {
-            APIResponse response = await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/SetRuleset/{ruleset}");
             return !G.StatusMessage.HandleAPIResponse(response);
         }
@@ -69,7 +69,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<bool> SetKomi(double komi)
         {
-            APIResponse response = await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/SetKomi/{komi}");
             return !G.StatusMessage.HandleAPIResponse(response);
         }
@@ -77,7 +77,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<bool> SetHandicap(int handicap)
         {
-            APIResponse response = await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/SetHandicap/{handicap}");
             return !G.StatusMessage.HandleAPIResponse(response);
         }
@@ -85,7 +85,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<MoveSuggestion?> AnalyzeMove(string color, string coord)
         {
-            APIResponse<MoveSuggestion> response = await HttpResponseHandler.Get<MoveSuggestion>(http,
+            APIResponse<MoveSuggestion> response = await HttpResponseHandler.Post<MoveSuggestion>(http,
                 $"{MAP_GROUP}/AnalyzeMove/{color}/{coord}");
             return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
@@ -93,7 +93,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<List<MoveSuggestion>?> Analyze(string color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
-            APIResponse<List<MoveSuggestion>> response = await HttpResponseHandler.Get<List<MoveSuggestion>>(http,
+            APIResponse<List<MoveSuggestion>> response = await HttpResponseHandler.Post<List<MoveSuggestion>>(http,
                 $"{MAP_GROUP}/Analyze/{color}" +
                 $"?maxVisits={maxVisits}" +
                 $"&minVisitsPerc={minVisitsPerc}" +
@@ -104,7 +104,7 @@ namespace Gosuji.Client.Services
         [JSInvokable]
         public async Task<bool> Play(string color, string coord)
         {
-            APIResponse response = await HttpResponseHandler.Get(http,
+            APIResponse response = await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/Play/{color}/{coord}");
             return !G.StatusMessage.HandleAPIResponse(response);
         }

@@ -30,9 +30,14 @@ namespace Gosuji.API.Controllers
             return Ok(await pool.GetVersion());
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Return()
+        [HttpPost]
+        public async Task<ActionResult> Return([FromBody] object empty)
         {
+            if (empty == null)
+            {
+                return Forbid();
+            }
+
             await pool.Return(GetUserId());
             return Ok();
         }
@@ -43,29 +48,39 @@ namespace Gosuji.API.Controllers
             return Ok(pool.UserHasInstance(GetUserId()));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> ClearBoard()
+        [HttpPost]
+        public async Task<ActionResult> ClearBoard([FromBody] object empty)
         {
+            if (empty == null)
+            {
+                return Forbid();
+            }
+
             (await pool.Get(GetUserId())).ClearBoard();
             return Ok();
         }
 
-        [HttpGet]
+        [HttpPost]
         [EnableRateLimiting("rl5")]
-        public async Task<ActionResult> Restart()
+        public async Task<ActionResult> Restart([FromBody] object empty)
         {
+            if (empty == null)
+            {
+                return Forbid();
+            }
+
             await (await pool.Get(GetUserId())).Restart();
             return Ok();
         }
 
-        [HttpGet("{boardsize}")]
+        [HttpPost("{boardsize}")]
         public async Task<ActionResult> SetBoardsize([RegularExpression("^(9|13|19)$")] int boardsize)
         {
             (await pool.Get(GetUserId())).SetBoardsize(boardsize);
             return Ok();
         }
 
-        [HttpGet("{ruleset}")]
+        [HttpPost("{ruleset}")]
         public async Task<ActionResult> SetRuleset(string ruleset)
         {
             ruleset = sanitizeService.Sanitize(ruleset);
@@ -73,28 +88,28 @@ namespace Gosuji.API.Controllers
             return Ok();
         }
 
-        [HttpGet("{komi}")]
+        [HttpPost("{komi}")]
         public async Task<ActionResult> SetKomi([Range(-150, 150)] double komi)
         {
             (await pool.Get(GetUserId())).SetKomi(komi);
             return Ok();
         }
 
-        [HttpGet("{handicap}")]
+        [HttpPost("{handicap}")]
         public async Task<ActionResult> SetHandicap([Range(0, 9)] int handicap)
         {
             (await pool.Get(GetUserId())).SetHandicap(handicap);
             return Ok();
         }
 
-        [HttpGet("{color}/{coord}")]
+        [HttpPost("{color}/{coord}")]
         public async Task<ActionResult<MoveSuggestion>> AnalyzeMove([RegularExpression(@"(B|W)")] string color,
             [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
         {
             return Ok((await pool.Get(GetUserId())).AnalyzeMove(color, coord));
         }
 
-        [HttpGet("{color}")]
+        [HttpPost("{color}")]
         public async Task<ActionResult<List<MoveSuggestion>>> Analyze([RegularExpression(@"(B|W)")] string color,
             [Required, Range(2, 100_000)] int maxVisits,
             [Required, Range(0, 100)] double minVisitsPerc,
@@ -103,7 +118,7 @@ namespace Gosuji.API.Controllers
             return Ok((await pool.Get(GetUserId())).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
         }
 
-        [HttpGet("{color}/{coord}")]
+        [HttpPost("{color}/{coord}")]
         public async Task<ActionResult> Play([RegularExpression(@"(B|W)")] string color,
             [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
         {

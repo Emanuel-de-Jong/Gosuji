@@ -46,7 +46,7 @@ namespace Gosuji.Client.Services.User
         public async Task<APIResponse> Logout()
         {
             APIResponse response = await HttpResponseHandler.Post(HTTP,
-                $"{MAP_GROUP}/Logout", new object());
+                $"{MAP_GROUP}/Logout");
 
             await AuthenticationStateProvider.NotifyLogout();
 
@@ -62,7 +62,7 @@ namespace Gosuji.Client.Services.User
         public async Task<APIResponse<byte[]>> DownloadPersonalData()
         {
             return await HttpResponseHandler.Post<byte[]>(HTTP,
-                $"{MAP_GROUP}/DownloadPersonalData", new object());
+                $"{MAP_GROUP}/DownloadPersonalData");
         }
 
         public async Task<APIResponse> DeletePersonalData(VMDeletePersonalData model)
@@ -79,7 +79,7 @@ namespace Gosuji.Client.Services.User
 
         public async Task<bool> GetNewTokens()
         {
-            APIResponse<string> response = await HttpResponseHandler.Get<string>(HTTP,
+            APIResponse<string> response = await HttpResponseHandler.Post<string>(HTTP,
                 $"{MAP_GROUP}/GetNewTokens");
 
             if (response.IsSuccess)

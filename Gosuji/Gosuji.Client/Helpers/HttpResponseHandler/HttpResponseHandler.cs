@@ -16,9 +16,19 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             return await TryCatch<T>(http.GetAsync(uri), uri);
         }
 
+        public static async Task<APIResponse> Post(HttpClient http, string uri)
+        {
+            return await TryCatch(http.PostAsJsonAsync(uri, new object()), uri);
+        }
+
         public static async Task<APIResponse> Post(HttpClient http, string uri, object obj)
         {
             return await TryCatch(http.PostAsJsonAsync(uri, obj), uri);
+        }
+
+        public static async Task<APIResponse<T>> Post<T>(HttpClient http, string uri)
+        {
+            return await TryCatch<T>(http.PostAsJsonAsync(uri, new object()), uri);
         }
 
         public static async Task<APIResponse<T>> Post<T>(HttpClient http, string uri, object obj)

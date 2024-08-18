@@ -301,9 +301,14 @@ namespace Gosuji.API.Controllers.UserController
                 : (ActionResult<string>)Ok(Request.Cookies[SG.TokenCookieName]);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<string>> GetNewTokens()
+        [HttpPost]
+        public async Task<ActionResult<string>> GetNewTokens([FromBody] object empty)
         {
+            if (empty == null)
+            {
+                return Forbid();
+            }
+
             string? token = Request.Cookies[SG.TokenCookieName];
             if (string.IsNullOrEmpty(token))
             {

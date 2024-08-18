@@ -16,13 +16,13 @@ namespace Gosuji.Client.Services
 
         public async Task<APIResponse> AddSession(int sessionId)
         {
-            return await HttpResponseHandler.Get(http,
+            return await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/AddSession/{sessionId}");
         }
 
         public async Task<APIResponse> RemoveSession(int sessionId)
         {
-            return await HttpResponseHandler.Get(http,
+            return await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/RemoveSession/{sessionId}");
         }
 
@@ -34,19 +34,19 @@ namespace Gosuji.Client.Services
 
         public async Task<APIResponse> ToParent(int sessionId)
         {
-            return await HttpResponseHandler.Get(http,
+            return await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/ToParent/{sessionId}");
         }
 
         public async Task<APIResponse<int>> ToLastBranch(int sessionId)
         {
-            return await HttpResponseHandler.Get<int>(http,
+            return await HttpResponseHandler.Post<int>(http,
                 $"{MAP_GROUP}/ToLastBranch/{sessionId}");
         }
 
         public async Task<APIResponse> ToFirst(int sessionId)
         {
-            return await HttpResponseHandler.Get(http,
+            return await HttpResponseHandler.Post(http,
                 $"{MAP_GROUP}/ToFirst/{sessionId}");
         }
 

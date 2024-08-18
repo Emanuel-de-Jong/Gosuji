@@ -35,7 +35,7 @@ namespace Gosuji.API.Controllers
             }
         }
 
-        [HttpGet("{sessionId}")]
+        [HttpPost("{sessionId}")]
         [EnableRateLimiting("rl5")]
         public async Task<ActionResult> AddSession(int sessionId)
         {
@@ -43,7 +43,7 @@ namespace Gosuji.API.Controllers
             return Ok();
         }
 
-        [HttpGet("{sessionId}")]
+        [HttpPost("{sessionId}")]
         [EnableRateLimiting("rl5")]
         public async Task<ActionResult> RemoveSession(int sessionId)
         {
@@ -64,7 +64,7 @@ namespace Gosuji.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{sessionId}")]
+        [HttpPost("{sessionId}")]
         public async Task<ActionResult> ToParent(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
@@ -82,7 +82,7 @@ namespace Gosuji.API.Controllers
             return Ok();
         }
 
-        [HttpGet("{sessionId}")]
+        [HttpPost("{sessionId}")]
         public async Task<ActionResult<int>> ToLastBranch(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
@@ -111,7 +111,7 @@ namespace Gosuji.API.Controllers
             return Ok(returnCount);
         }
 
-        [HttpGet("{sessionId}")]
+        [HttpPost("{sessionId}")]
         public async Task<ActionResult> ToFirst(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
