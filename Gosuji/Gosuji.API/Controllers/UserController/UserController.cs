@@ -210,8 +210,13 @@ namespace Gosuji.API.Controllers.UserController
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<string>> DownloadPersonalData()
+        public async Task<ActionResult<byte[]>> DownloadPersonalData([FromBody] object empty)
         {
+            if (empty == null)
+            {
+                return Forbid();
+            }
+
             User? user = await GetUser(userManager);
             if (user == null)
             {
@@ -267,9 +272,7 @@ namespace Gosuji.API.Controllers.UserController
             await dbContext.DisposeAsync();
 
             byte[] fileBytes = JsonSerializer.SerializeToUtf8Bytes(personalData);
-
-            Response.Headers.TryAdd("Content-Disposition", "attachment; filename=PersonalData.json");
-            return Ok(File(fileBytes, "application/json", "PersonalData.json"));
+            return Ok(fileBytes);
         }
 
         [HttpGet]

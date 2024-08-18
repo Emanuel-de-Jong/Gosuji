@@ -9,6 +9,7 @@ using Gosuji.Client.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Localization;
+using Microsoft.JSInterop;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Xml.Linq;
@@ -30,6 +31,8 @@ namespace Gosuji.Client.Components.Pages
         private UserService userService { get; set; }
         [Inject]
         private DataService dataService { get; set; }
+        [Inject]
+        private IJSRuntime js { get; set; }
         [Inject]
         private IStringLocalizer<APIResponses> tlAPI { get; set; }
 
@@ -141,7 +144,15 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task DownloadPersonalData()
         {
+            APIResponse<byte[]> response = await userService.DownloadPersonalData();
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            byte[] fileBytes = response.Data;
 
+            await js.InvokeVoidAsync("utils.downloadFile",
+                "PersonalData",
+                "json",
+                fileBytes,
+                "application/json");
         }
     }
 }

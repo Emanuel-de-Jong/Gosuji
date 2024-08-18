@@ -59,6 +59,12 @@ namespace Gosuji.Client.Services.User
                 $"{MAP_GROUP}/UpdatePrivacy", model);
         }
 
+        public async Task<APIResponse<byte[]>> DownloadPersonalData()
+        {
+            return await HttpResponseHandler.Post<byte[]>(HTTP,
+                $"{MAP_GROUP}/DownloadPersonalData", new object());
+        }
+
         public async Task<string?> GetToken()
         {
             return (await HttpResponseHandler.Get<string>(HTTP,

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using System.Security.Claims;
+using System.Text;
 
 namespace Gosuji.Client.Components.Pages
 {
@@ -112,7 +113,11 @@ namespace Gosuji.Client.Components.Pages
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             Game? fullGame = response.Data;
 
-            await jsRef.InvokeVoidAsync("profilePage.downloadSGF", fullGame.Name, fullGame.SGF);
+            await js.InvokeVoidAsync("utils.downloadFile",
+                fullGame.Name,
+                "sgf",
+                Encoding.UTF8.GetBytes(fullGame.SGF),
+                "text/plain;charset=UTF-8");
         }
 
         private async Task CreateGameTable()

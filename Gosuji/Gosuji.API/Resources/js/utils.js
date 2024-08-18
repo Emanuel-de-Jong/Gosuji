@@ -12,6 +12,20 @@ if (typeof utils === "undefined") {
     };
 
 
+    utils.downloadFile = function (name, extension, bytes, type) {
+        let byteArray = new Uint8Array(bytes);
+        let blob = new Blob([byteArray], { type: type });
+        let url = URL.createObjectURL(blob);
+    
+        let anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = name + "." + extension;
+        anchor.click();
+        
+        URL.revokeObjectURL(url);
+    };
+
+
     utils.setLocal = function (name, value) {
         window.localStorage[name] = value;
     };

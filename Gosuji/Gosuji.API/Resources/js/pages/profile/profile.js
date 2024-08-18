@@ -43,18 +43,6 @@ profilePage.createGameTable = function () {
     });
 };
 
-profilePage.downloadSGF = function (name, sgf) {
-    let link = document.createElement("a");
-    let blob = new Blob([sgf], { encoding: "UTF-8", type: "text/plain;charset=UTF-8" });
-
-    link.download = name + ".sgf";
-    link.href = URL.createObjectURL(blob);
-    link.style.display = "none";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-};
-
 profilePage.createPercentPerGameLineChart = function (rightPercents, perfectPercents) {
     let datasets = [];
     datasets.push({
