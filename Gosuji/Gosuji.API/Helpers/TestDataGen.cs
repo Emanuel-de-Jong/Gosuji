@@ -47,6 +47,8 @@ namespace Gosuji.API.Helpers
             GeneratePresets();
             GenerateChangelogs();
             GenerateFeedbacks();
+            GenerateDiscounts();
+            GenerateSubscriptions();
         }
 
         public void GenerateEssentials()
@@ -371,6 +373,66 @@ namespace Gosuji.API.Helpers
                     CreateDate = date = date.AddDays(-1)
                 },
             ]);
+            dbContext.SaveChanges();
+            dbContext.Dispose();
+        }
+
+        public void GenerateDiscounts()
+        {
+            ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
+            dbContext.Discounts.AddRange([
+                new() {
+                    Code = "LAUNCH",
+                    Percent = 10,
+                    ExpireDate = DateTimeOffset.UtcNow.AddMonths(1)
+                },
+            ]);
+            dbContext.SaveChanges();
+            dbContext.Dispose();
+        }
+
+        public void GenerateSubscriptions()
+        {
+            ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
+            User[] users = dbContext.Users.ToArray();
+            Discount[] discounts = dbContext.Discounts.ToArray();
+            Subscription[] subscriptions = [
+                new() {
+                    UserId = users[0].Id,
+                    SubscriptionType = ESubscriptionType.Level3,
+                    Months = 3,
+                    DiscountId = RandomItem(discounts).Id,
+                    CreateDate = DateTimeOffset.UtcNow.AddMonths(-1),
+                },
+                new() {
+                    UserId = users[0].Id,
+                    SubscriptionType = ESubscriptionType.Level1,
+                    Months = 3,
+                    DiscountId = null,
+                    CreateDate = DateTimeOffset.UtcNow.AddMonths(-2),
+                },
+                new() {
+                    UserId = users[1].Id,
+                    SubscriptionType = ESubscriptionType.Level1,
+                    Months = 6,
+                    DiscountId = null,
+                    CreateDate = DateTimeOffset.UtcNow.AddMinutes(-1),
+                },
+            ];
+            dbContext.Subscriptions.AddRange(subscriptions);
+            dbContext.SaveChanges();
+
+            Dictionary<string, User> usersById = users.ToDictionary(u => u.Id);
+            foreach (Subscription subscription in subscriptions)
+            {
+                Subscription? currentSubscription = usersById[subscription.UserId].CurrentSubscription;
+                if (currentSubscription == null ||
+                    currentSubscription.EndDate < subscription.EndDate)
+                {
+                    usersById[subscription.UserId].CurrentSubscriptionId = subscription.Id;
+                    currentSubscription = subscription;
+                }
+            }
             dbContext.SaveChanges();
             dbContext.Dispose();
         }
