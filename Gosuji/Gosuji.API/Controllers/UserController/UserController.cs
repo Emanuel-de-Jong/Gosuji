@@ -36,7 +36,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (await dbContext.Users.AnyAsync(u => u.NormalizedEmail == model.Email.ToUpper()))
             {
-                return Accepted(APIResponses.User_Register_EmailExists);
+                return Accepted("", "User_Register_EmailExists");
             }
 
             User user = new()
@@ -98,7 +98,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
             {
-                return Accepted(APIResponses.User_Login_WrongCredentials);
+                return Accepted("", "User_Login_WrongCredentials");
             }
 
             string token = await jwtService.CreateCookies(user, userManager, HttpContext);
@@ -165,12 +165,12 @@ namespace Gosuji.API.Controllers.UserController
 
             if (model.UserName == null && model.Email == null && model.NewPassword == null)
             {
-                return Accepted(APIResponses.User_UpdatePrivacy_NoChanges);
+                return Accepted("", "User_UpdatePrivacy_NoChanges");
             }
 
             if (!await userManager.CheckPasswordAsync(user, model.CurrentPassword))
             {
-                return Accepted(APIResponses.User_UpdatePrivacy_WrongPassword);
+                return Accepted("", "User_UpdatePrivacy_WrongPassword");
             }
 
             string? passwordHash = null;
@@ -287,7 +287,7 @@ namespace Gosuji.API.Controllers.UserController
 
             if (!await userManager.CheckPasswordAsync(user, model.Password))
             {
-                return Accepted("User_DeletePersonalData_WrongPassword");
+                return Accepted("", "User_DeletePersonalData_WrongPassword");
             }
 
             return Ok();
