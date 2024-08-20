@@ -6,40 +6,72 @@
 
 <PageTitle>Change Email</PageTitle>
 
-<div id="changeEmailPage">
-    <CStatusMessage @ref=statusMessage />
+@if (isLoggedIn != null)
+{
+    <div id="changeEmailPage">
+        <CStatusMessage @ref=statusMessage />
 
-    <EditForm Model="input" OnValidSubmit="TryChangeEmail" method="post">
-        <DataAnnotationsValidator />
+        @if (isLoggedIn == true)
+        {
+            <EditForm Model="userInput" FormName="user-change-email" OnValidSubmit="TryChangeEmail" method="post">
+                <DataAnnotationsValidator />
 
-        <div class="form-floating mb-3">
-            <InputText @bind-Value="input.UserName" class="form-control" placeholder="User" id="userName" />
-            <label for="userName">Username or Email</label>
-            <ValidationMessage For="() => input.UserName" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
-            <InputText type="password" @bind-Value="input.Password" class="form-control" placeholder="password" id="password" />
-            <label for="password">Password</label>
-            <ValidationMessage For="() => input.Password" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
-            <InputText @bind-Value="input.BackupCode" class="form-control" placeholder="User" id="backupCode" />
-            <label for="backupCode">Backup Code</label>
-            <ValidationMessage For="() => input.BackupCode" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
-            <InputText @bind-Value="input.NewEmail" class="form-control" placeholder="name@example.com" id="newEmail" />
-            <label for="newEmail">New Email</label>
-            <ValidationMessage For="() => input.NewEmail" class="text-danger" />
-        </div>
-        <div class="form-floating mb-3">
-            <InputText @bind-Value="input.ConfirmNewEmail" class="form-control" placeholder="name@example.com" id="confirmNewEmail" />
-            <label for="confirmNewEmail">Confirm New Email</label>
-            <ValidationMessage For="() => input.ConfirmNewEmail" class="text-danger" />
-        </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="userInput.BackupCode" class="form-control" placeholder="User" id="backupCode" />
+                    <label for="backupCode">Backup Code</label>
+                    <ValidationMessage For="() => userInput.BackupCode" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="userInput.NewEmail" class="form-control" placeholder="name@example.com" id="newEmail" />
+                    <label for="newEmail">New Email</label>
+                    <ValidationMessage For="() => userInput.NewEmail" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="userInput.ConfirmNewEmail" class="form-control" placeholder="name@example.com" id="confirmNewEmail" />
+                    <label for="confirmNewEmail">Confirm New Email</label>
+                    <ValidationMessage For="() => userInput.ConfirmNewEmail" class="text-danger" />
+                </div>
 
-        <div>
-            <button type="submit" class="btn btn-lg btn-primary">Update</button>
-        </div>
-    </EditForm>
-</div>
+                <div>
+                    <button type="submit" class="btn btn-lg btn-primary">Update</button>
+                </div>
+            </EditForm>
+        }
+        else
+        {
+            <EditForm Model="guestInput" FormName="guest-change-email" OnValidSubmit="TryChangeEmail" method="post">
+                <DataAnnotationsValidator />
+
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="guestInput.UserName" class="form-control" placeholder="User" id="userName" />
+                    <label for="userName">Username or Email</label>
+                    <ValidationMessage For="() => guestInput.UserName" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="guestInput.Password" class="form-control" placeholder="password" id="password" />
+                    <label for="password">Password</label>
+                    <ValidationMessage For="() => guestInput.Password" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="guestInput.BackupCode" class="form-control" placeholder="User" id="backupCode" />
+                    <label for="backupCode">Backup Code</label>
+                    <ValidationMessage For="() => guestInput.BackupCode" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="guestInput.NewEmail" class="form-control" placeholder="name@example.com" id="newEmail" />
+                    <label for="newEmail">New Email</label>
+                    <ValidationMessage For="() => guestInput.NewEmail" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="guestInput.ConfirmNewEmail" class="form-control" placeholder="name@example.com" id="confirmNewEmail" />
+                    <label for="confirmNewEmail">Confirm New Email</label>
+                    <ValidationMessage For="() => guestInput.ConfirmNewEmail" class="text-danger" />
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-lg btn-primary">Update</button>
+                </div>
+            </EditForm>
+        }
+    </div>
+}

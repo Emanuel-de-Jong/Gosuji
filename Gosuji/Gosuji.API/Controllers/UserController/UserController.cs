@@ -151,15 +151,24 @@ namespace Gosuji.API.Controllers.UserController
         [HttpPost]
         public async Task<ActionResult> ChangeEmail([FromBody] VMChangeEmail model)
         {
-            User? user = await userManager.FindByNameAsync(model.UserName);
-            if (user == null && Regex.IsMatch(model.UserName, @"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)*\.[a-zA-Z]{2,}$"))
+            User? user = await GetUser(userManager);
+            if (user == null)
             {
-                user = await userManager.FindByEmailAsync(model.UserName);
-            }
+                if (model.UserName == null || model.Password == null)
+                {
+                    return Accepted("", "User_Login_WrongCredentials");
+                }
 
-            if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
-            {
-                return Accepted("", "User_Login_WrongCredentials");
+                user = await userManager.FindByNameAsync(model.UserName);
+                if (user == null && Regex.IsMatch(model.UserName, @"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)*\.[a-zA-Z]{2,}$"))
+                {
+                    user = await userManager.FindByEmailAsync(model.UserName);
+                }
+
+                if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
+                {
+                    return Accepted("", "User_Login_WrongCredentials");
+                }
             }
 
             if (user.BackupCode != model.BackupCode)

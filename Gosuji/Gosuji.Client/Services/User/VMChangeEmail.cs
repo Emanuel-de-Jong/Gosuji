@@ -5,11 +5,9 @@ namespace Gosuji.Client.Services.User
 {
     public class VMChangeEmail
     {
-        [Required]
         [MaxLength(50)]
         public string UserName { get; set; }
 
-        [Required]
         [MaxLength(50)]
         public string Password { get; set; }
 

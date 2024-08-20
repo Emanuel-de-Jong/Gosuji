@@ -15,11 +15,23 @@ namespace Gosuji.API.Controllers
 
         protected async Task<User?> GetUser(ApplicationDbContext dbContext)
         {
-            return await dbContext.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
+            string? userId = GetUserId();
+            if (userId == null)
+            {
+                return null;
+            }
+
+            return await dbContext.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
 
         protected async Task<User?> GetUser(IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
+            string? userId = GetUserId();
+            if (userId == null)
+            {
+                return null;
+            }
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             User? user = await GetUser(dbContext);
             await dbContext.DisposeAsync();
@@ -28,7 +40,13 @@ namespace Gosuji.API.Controllers
 
         protected async Task<User?> GetUser(UserManager<User> userManager)
         {
-            return await userManager.FindByIdAsync(GetUserId());
+            string? userId = GetUserId();
+            if (userId == null)
+            {
+                return null;
+            }
+
+            return await userManager.FindByIdAsync(userId);
         }
     }
 }

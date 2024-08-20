@@ -6,35 +6,68 @@ using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
 {
     public partial class ChangeEmail : CustomPage
     {
         [SupplyParameterFromForm]
-        private InputModel input { get; set; } = new();
+        private UserInputModel userInput { get; set; } = new();
+        [SupplyParameterFromForm]
+        private GuestInputModel guestInput { get; set; } = new();
 
+        [Inject]
+        private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
         private UserService userService { get; set; }
 
         private CStatusMessage statusMessage;
+        private bool? isLoggedIn;
+
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+
+            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
+            {
+                isLoggedIn = true;
+            } else
+            {
+                isLoggedIn = false;
+            }
+        }
 
         private async Task TryChangeEmail()
         {
-            VMChangeEmail vmChangeEmail = new()
+            VMChangeEmail vmChangeEmail = null;
+            if (isLoggedIn == true)
             {
-                UserName = input.UserName,
-                Password = input.Password,
-                BackupCode = input.BackupCode,
-                NewEmail = input.NewEmail
-            };
+                vmChangeEmail = new()
+                {
+                    BackupCode = userInput.BackupCode,
+                    NewEmail = userInput.NewEmail
+                };
+            } else
+            {
+                vmChangeEmail = new()
+                {
+                    UserName = guestInput.UserName,
+                    Password = guestInput.Password,
+                    BackupCode = guestInput.BackupCode,
+                    NewEmail = guestInput.NewEmail
+                };
+            }
 
             APIResponse response = await userService.ChangeEmail(vmChangeEmail);
             if (response.IsSuccess)
             {
                 statusMessage.SetMessage("A confirmation email has been sent to your new email. Please use the link in the email to confirm the change.");
-                input = new();
+                guestInput = new();
+                userInput = new();
             }
             else
             {
@@ -42,16 +75,8 @@ namespace Gosuji.Client.Components.Pages
             }
         }
 
-        private sealed class InputModel
+        private class UserInputModel
         {
-            [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
-            [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
-            public string UserName { get; set; }
-
-            [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
-            [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
-            public string Password { get; set; }
-
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [MinLength(32, ErrorMessageResourceName = "MinLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [MaxLength(32, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
@@ -65,6 +90,17 @@ namespace Gosuji.Client.Components.Pages
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [Compare(nameof(NewEmail), ErrorMessageResourceName = "CompareError", ErrorMessageResourceType = typeof(ValidateMessages))]
             public string ConfirmNewEmail { get; set; }
+        }
+
+        private sealed class GuestInputModel : UserInputModel
+        {
+            [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            public string UserName { get; set; }
+
+            [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            [MaxLength(50, ErrorMessageResourceName = "MaxLengthError", ErrorMessageResourceType = typeof(ValidateMessages))]
+            public string Password { get; set; }
         }
     }
 }
