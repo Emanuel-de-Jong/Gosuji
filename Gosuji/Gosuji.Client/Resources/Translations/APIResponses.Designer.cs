@@ -63,6 +63,15 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        public static string User_ChangeEmail_WrongBackupCode {
+            get {
+                return ResourceManager.GetString("User_ChangeEmail_WrongBackupCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         public static string User_DeletePersonalData_WrongPassword {
             get {
                 return ResourceManager.GetString("User_DeletePersonalData_WrongPassword", resourceCulture);

@@ -19,7 +19,7 @@
 
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="input.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="Username" />
-                    <label for="username" class="form-label">Username</label>
+                    <label for="username" class="form-label">Username or Email</label>
                     <ValidationMessage For="() => input.UserName" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
@@ -41,6 +41,9 @@
                     </p>
                     <p>
                         <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+                    </p>
+                    <p>
+                        <a href="change-email">Can't access your email? Change it.</a>
                     </p>
                 </div>
             </EditForm>

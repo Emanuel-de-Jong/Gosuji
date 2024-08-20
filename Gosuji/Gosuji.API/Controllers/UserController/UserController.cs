@@ -22,6 +22,18 @@ namespace Gosuji.API.Controllers.UserController
     public class UserController(IDbContextFactory<ApplicationDbContext> dbContextFactory, UserManager<User> userManager,
         JwtService jwtService) : CustomControllerBase
     {
+        private string IdentityResultToString(IdentityResult result)
+        {
+            StringBuilder stringBuilder = new("IdentityResult ");
+            foreach (string message in result.Errors.Select(e => e.Code))
+            {
+                stringBuilder.Append(message);
+                stringBuilder.Append(", ");
+            }
+            stringBuilder.Remove(stringBuilder.Length - 2, 2);
+            return stringBuilder.ToString();
+        }
+
         [HttpGet]
         [Authorize]
         public async Task<ActionResult> CheckAuthorized()
@@ -61,14 +73,7 @@ namespace Gosuji.API.Controllers.UserController
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
             {
-                StringBuilder stringBuilder = new("IdentityResult ");
-                foreach (string message in result.Errors.Select(e => e.Code))
-                {
-                    stringBuilder.Append(message);
-                    stringBuilder.Append(", ");
-                }
-                stringBuilder.Remove(stringBuilder.Length - 2, 2);
-                return BadRequest(stringBuilder.ToString());
+                return BadRequest(IdentityResultToString(result));
             }
 
             string userId = await userManager.GetUserIdAsync(user);
@@ -92,8 +97,7 @@ namespace Gosuji.API.Controllers.UserController
             User? user = await userManager.FindByNameAsync(model.UserName);
             if (user == null && Regex.IsMatch(model.UserName, @"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)*\.[a-zA-Z]{2,}$"))
             {
-                model.UserName = (await userManager.FindByEmailAsync(model.UserName))?.UserName;
-                user = await userManager.FindByNameAsync(model.UserName);
+                user = await userManager.FindByEmailAsync(model.UserName);
             }
 
             if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
@@ -140,6 +144,34 @@ namespace Gosuji.API.Controllers.UserController
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
+
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangeEmail([FromBody] VMChangeEmail model)
+        {
+            User? user = await userManager.FindByNameAsync(model.UserName);
+            if (user == null && Regex.IsMatch(model.UserName, @"^[^@\s]+@[^@\s.]+(\.[^@\s.]+)*\.[a-zA-Z]{2,}$"))
+            {
+                user = await userManager.FindByEmailAsync(model.UserName);
+            }
+
+            if (user == null || !await userManager.CheckPasswordAsync(user, model.Password))
+            {
+                return Accepted("", "User_Login_WrongCredentials");
+            }
+
+            if (user.BackupCode != model.BackupCode)
+            {
+                return Accepted("", "User_ChangeEmail_WrongBackupCode");
+            }
+
+            IdentityResult result = await userManager.SetEmailAsync(user, model.NewEmail);
+            if (!result.Succeeded)
+            {
+                return BadRequest(IdentityResultToString(result));
+            }
 
             return Ok();
         }
