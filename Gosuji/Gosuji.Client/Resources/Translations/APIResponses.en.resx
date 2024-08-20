@@ -123,6 +123,9 @@
   <data name="User_DeletePersonalData_WrongPassword" xml:space="preserve">
     <value>The given password is incorrect.</value>
   </data>
+  <data name="User_ForgotPassword_EmailNotFound" xml:space="preserve">
+    <value>No user with that email exists.</value>
+  </data>
   <data name="User_Login_WrongCredentials" xml:space="preserve">
     <value>The username and password do not match.</value>
   </data>

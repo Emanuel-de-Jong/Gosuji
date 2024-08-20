@@ -81,6 +81,15 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        public static string User_ForgotPassword_EmailNotFound {
+            get {
+                return ResourceManager.GetString("User_ForgotPassword_EmailNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         public static string User_Login_WrongCredentials {
             get {
                 return ResourceManager.GetString("User_Login_WrongCredentials", resourceCulture);

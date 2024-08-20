@@ -186,6 +186,18 @@ namespace Gosuji.API.Controllers.UserController
         }
 
         [HttpPost]
+        public async Task<ActionResult> ForgotPassword([FromBody] VMForgotPassword model)
+        {
+            User? user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return Accepted("", "User_ForgotPassword_EmailNotFound");
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
         [Authorize]
         public async Task<ActionResult> UpdatePrivacy([FromBody] VMUpdatePrivacy model)
         {

@@ -113,8 +113,6 @@
                             </div>
                         </EditForm>
 
-                        <a href="change-email">Can't access your email? Change it.</a>
-
                         @if (settingConfigService.SettingConfig != null)
                         {
                             <hr />
@@ -144,6 +142,16 @@
                                 <ValidationMessage For="() => deletePersonalDataInput.Password" class="text-danger" />
                             </div>
                         </EditForm>
+
+                        <hr />
+                        <h3 id="issues">Issues</h3>
+                        <CStatusMessage @ref=issuesStatusMessage />
+                        <p>
+                            <a href="javascript:;" @onclick=TryForgotPassword>Forgot your password?</a>
+                        </p>
+                        <p>
+                            <a href="change-email">Can't access your email? Change it.</a>
+                        </p>
                     </div>
                 </div>
             </div>

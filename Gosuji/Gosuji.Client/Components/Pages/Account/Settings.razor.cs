@@ -8,6 +8,7 @@ using Gosuji.Client.Services.User;
 using Gosuji.Client.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using System.ComponentModel.DataAnnotations;
@@ -40,6 +41,7 @@ namespace Gosuji.Client.Components.Pages.Account
 
         private CStatusMessage privacyStatusMessage;
         private CStatusMessage deletePersonalDataStatusMessage;
+        private CStatusMessage issuesStatusMessage;
 
         private string? currentUserName;
         private string? currentEmail;
@@ -174,6 +176,29 @@ namespace Gosuji.Client.Components.Pages.Account
             else
             {
                 deletePersonalDataStatusMessage.HandleAPIResponse(response);
+            }
+        }
+
+        private async Task TryForgotPassword()
+        {
+            if (currentEmail == null)
+            {
+                navigationManager.NavigateTo("forgot-password");
+            }
+
+            VMForgotPassword vmForgotPassword = new()
+            {
+                Email = currentEmail
+            };
+
+            APIResponse response = await userService.ForgotPassword(vmForgotPassword);
+            if (response.IsSuccess)
+            {
+                issuesStatusMessage.SetMessage("An email has been sent. Please use the link in the email to set a new password.");
+            }
+            else
+            {
+                issuesStatusMessage.HandleAPIResponse(response);
             }
         }
 

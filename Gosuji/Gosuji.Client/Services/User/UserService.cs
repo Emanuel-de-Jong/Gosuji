@@ -59,6 +59,12 @@ namespace Gosuji.Client.Services.User
                 $"{MAP_GROUP}/ChangeEmail", model);
         }
 
+        public async Task<APIResponse> ForgotPassword(VMForgotPassword model)
+        {
+            return await HttpResponseHandler.Post(HTTP,
+                $"{MAP_GROUP}/ForgotPassword", model);
+        }
+
         public async Task<APIResponse> UpdatePrivacy(VMUpdatePrivacy model)
         {
             return await HttpResponseHandler.Post(HTTP,
