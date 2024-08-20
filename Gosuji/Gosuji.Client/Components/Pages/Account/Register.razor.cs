@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.ComponentModel.DataAnnotations;
 
-namespace Gosuji.Client.Components.Pages
+namespace Gosuji.Client.Components.Pages.Account
 {
     public partial class Register : CustomPage
     {

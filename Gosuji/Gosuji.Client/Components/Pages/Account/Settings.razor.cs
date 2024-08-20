@@ -14,7 +14,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Xml.Linq;
 
-namespace Gosuji.Client.Components.Pages
+namespace Gosuji.Client.Components.Pages.Account
 {
     public partial class Settings : CustomPage
     {
@@ -170,7 +170,8 @@ namespace Gosuji.Client.Components.Pages
             {
                 deletePersonalDataStatusMessage.SetMessage("A confirmation email has been sent. Please use the link in the email to confirm the deletion.");
                 deletePersonalDataInput = new();
-            } else
+            }
+            else
             {
                 deletePersonalDataStatusMessage.HandleAPIResponse(response);
             }

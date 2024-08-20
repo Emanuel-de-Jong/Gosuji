@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
-namespace Gosuji.Client.Components.Pages
+namespace Gosuji.Client.Components.Pages.Account
 {
     public partial class ChangeEmail : CustomPage
     {
@@ -35,7 +35,8 @@ namespace Gosuji.Client.Components.Pages
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
                 isLoggedIn = true;
-            } else
+            }
+            else
             {
                 isLoggedIn = false;
             }
@@ -51,7 +52,8 @@ namespace Gosuji.Client.Components.Pages
                     BackupCode = userInput.BackupCode,
                     NewEmail = userInput.NewEmail
                 };
-            } else
+            }
+            else
             {
                 vmChangeEmail = new()
                 {

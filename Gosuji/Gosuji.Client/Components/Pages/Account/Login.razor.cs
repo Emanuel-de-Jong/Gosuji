@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Localization;
 using System.Security.Claims;
 
-namespace Gosuji.Client.Components.Pages
+namespace Gosuji.Client.Components.Pages.Account
 {
     public partial class Login : CustomPage
     {

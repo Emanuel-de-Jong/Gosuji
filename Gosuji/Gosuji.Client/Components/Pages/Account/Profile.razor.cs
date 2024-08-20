@@ -8,7 +8,7 @@ using Microsoft.JSInterop;
 using System.Security.Claims;
 using System.Text;
 
-namespace Gosuji.Client.Components.Pages
+namespace Gosuji.Client.Components.Pages.Account
 {
     public enum DaysChartDayTypes
     {

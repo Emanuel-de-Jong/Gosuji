@@ -1,7 +1,7 @@
 ﻿using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components;
 
-namespace Gosuji.Client.Components.Pages
+namespace Gosuji.Client.Components.Pages.Account
 {
     public partial class Logout : CustomPage
     {
