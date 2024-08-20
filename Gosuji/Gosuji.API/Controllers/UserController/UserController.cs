@@ -198,6 +198,27 @@ namespace Gosuji.API.Controllers.UserController
         }
 
         [HttpPost]
+        public async Task<ActionResult> ChangePassword([FromBody] VMChangePassword model)
+        {
+            return Ok();
+
+            User user = null; // TODO: Get from email token
+            IdentityResult result = await userManager.RemovePasswordAsync(user);
+            if (!result.Succeeded)
+            {
+                return BadRequest(IdentityResultToString(result));
+            }
+
+            result = await userManager.AddPasswordAsync(user, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                return BadRequest(IdentityResultToString(result));
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
         [Authorize]
         public async Task<ActionResult> UpdatePrivacy([FromBody] VMUpdatePrivacy model)
         {
