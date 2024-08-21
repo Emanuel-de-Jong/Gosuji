@@ -182,6 +182,8 @@ namespace Gosuji.API.Controllers.UserController
                 return BadRequest(IdentityResultToString(result));
             }
 
+            await LogOutEverywhere(user);
+
             return Ok();
         }
 
@@ -214,6 +216,8 @@ namespace Gosuji.API.Controllers.UserController
             {
                 return BadRequest(IdentityResultToString(result));
             }
+
+            await LogOutEverywhere(user);
 
             return Ok();
         }
@@ -280,6 +284,20 @@ namespace Gosuji.API.Controllers.UserController
             await dbContext.DisposeAsync();
 
             return Ok();
+        }
+
+        private async Task LogOutEverywhere(User user)
+        {
+            jwtService.RemoveCookies(HttpContext);
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+            await dbContext.RefreshTokens
+                .Where(t => t.UserId == user.Id)
+                .ForEachAsync(t => dbContext.RefreshTokens.Remove(t));
+
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
         }
 
         [HttpPost]
