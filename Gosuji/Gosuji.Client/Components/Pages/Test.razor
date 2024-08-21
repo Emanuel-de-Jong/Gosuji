@@ -44,7 +44,10 @@
         };
 
         await kataGoService.Start();
-        await kataGoService.Test();
+
+        APIResponse<string> response = await kataGoService.Test();
+        if (G.StatusMessage.HandleAPIResponse(response)) return;
+        Console.WriteLine(response.Data);
     }
 
     public async ValueTask DisposeAsync()
