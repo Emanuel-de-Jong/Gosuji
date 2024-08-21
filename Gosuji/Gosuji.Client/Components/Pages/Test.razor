@@ -20,6 +20,8 @@
     {
         <p>3: @test3Result</p>
     }
+
+    <p>connectionLost: @connectionLost</p>
 </div>
 
 @code {
@@ -27,11 +29,19 @@
     bool? test2Result;
     bool? test3Result;
 
+    bool connectionLost = false;
+
     protected override async Task OnInitializedAsync()
     {
         testResult = await testService.Test();
         test2Result = await testService.Test2();
         test3Result = await testService.Test3();
+
+        kataGoService.HubConnection.Closed += async (error) =>
+        {
+            connectionLost = true;
+            await InvokeAsync(StateHasChanged);
+        };
 
         await kataGoService.Start();
         await kataGoService.Test();

@@ -5,27 +5,27 @@ namespace Gosuji.Client.Services
 {
     public class KataGoSignalRService
     {
-        private readonly HubConnection hubConnection;
+        public HubConnection HubConnection { get; private set; }
 
         public KataGoSignalRService(HubConnection hubConnection)
         {
-            this.hubConnection = hubConnection;
+            HubConnection = hubConnection;
         }
 
         public async Task Test()
         {
-            string output = await hubConnection.InvokeAsync<string>("Test", "Input");
+            string output = await HubConnection.InvokeAsync<string>("Test", "Input");
             Console.WriteLine(output);
         }
 
         public async Task Start()
         {
-            await hubConnection.StartAsync();
+            await HubConnection.StartAsync();
         }
 
         public async Task Stop()
         {
-            await hubConnection.StopAsync();
+            await HubConnection.StopAsync();
         }
     }
 }
