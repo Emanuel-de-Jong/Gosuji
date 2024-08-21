@@ -104,6 +104,7 @@ namespace Gosuji.Client.Components.Pages
 
                 jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js");
 
+                await kataGoService.Start();
                 APIResponse<bool> response = await kataGoService.UserHasInstance();
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
                 bool userHasInstance = response.Data;
@@ -371,6 +372,7 @@ namespace Gosuji.Client.Components.Pages
             if (userName != null)
             {
                 kataGoService.Return().Wait();
+                kataGoService.Stop().Wait();
             }
         }
     }

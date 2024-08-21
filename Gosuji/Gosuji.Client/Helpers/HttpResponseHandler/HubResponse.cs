@@ -7,6 +7,8 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
         public HttpStatusCode StatusCode { get; set; }
         public T? Data { get; set; }
 
+        public HubResponse() { }
+
         public HubResponse(HttpStatusCode statusCode)
         {
             StatusCode = statusCode;
@@ -21,7 +23,8 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
 
     public class HubResponse : HubResponse<object?>
     {
-        public HubResponse(HttpStatusCode statusCode) : base(statusCode) {}
+        public HubResponse() : base() { }
+        public HubResponse(HttpStatusCode statusCode) : base(statusCode) { }
         public HubResponse(HttpStatusCode statusCode, object? data) : base(statusCode, data) { }
     }
 }
