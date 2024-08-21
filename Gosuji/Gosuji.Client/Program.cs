@@ -5,7 +5,6 @@ using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Gosuji.Client
 {
@@ -39,8 +38,6 @@ namespace Gosuji.Client
             .AddHttpMessageHandler<AuthMessageHandler>();
 
             builder.Services.AddLocalization();
-
-            builder.Services.AddSingleton<KataGoSignalRService>();
 
             builder.Services.AddSingleton<DataService>();
             builder.Services.AddSingleton<KataGoService>();

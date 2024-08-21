@@ -3,7 +3,6 @@
 @inherits CustomPage
 
 @inject TestService testService
-@inject KataGoSignalRService kataGoService
 
 <div id="testPage">
     <h3>Test</h3>
@@ -20,8 +19,6 @@
     {
         <p>3: @test3Result</p>
     }
-
-    <p>connectionLost: @connectionLost</p>
 </div>
 
 @code {
@@ -36,22 +33,5 @@
         testResult = await testService.Test();
         test2Result = await testService.Test2();
         test3Result = await testService.Test3();
-
-        kataGoService.HubConnection.Closed += async (error) =>
-        {
-            connectionLost = true;
-            await InvokeAsync(StateHasChanged);
-        };
-
-        await kataGoService.Start();
-
-        APIResponse<string> response = await kataGoService.Test();
-        if (G.StatusMessage.HandleAPIResponse(response)) return;
-        Console.WriteLine(response.Data);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await kataGoService.Stop();
     }
 }
