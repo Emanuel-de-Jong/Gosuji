@@ -6,26 +6,16 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
 {
     public class SignalRResponseHandler
     {
-        public static async Task<APIResponse> Invoke(HubConnection hubConnection, string uri, params object[] args)
-        {
-            return await TryCatch(hubConnection.InvokeAsync(uri, args), uri);
-        }
-
-        public static async Task<APIResponse<T>> Invoke<T>(HubConnection hubConnection, string uri, params object[] args)
-        {
-            return await TryCatch(hubConnection.InvokeAsync<T>(uri, args), uri);
-        }
-
-        private static async Task<APIResponse> TryCatch(Task task, string uri)
+        public static async Task<APIResponse> TryCatch(string uri, Task task)
         {
             Task<object?> newTask = task.ContinueWith<object?>(t => {
                 t.GetAwaiter().GetResult();
                 return null;
             });
-            return await TryCatch(newTask, uri);
+            return await TryCatch(uri, newTask);
         }
 
-        private static async Task<APIResponse<T>> TryCatch<T>(Task<T> task, string uri)
+        public static async Task<APIResponse<T>> TryCatch<T>(string uri, Task<T> task)
         {
             APIResponse<T> response = new();
 
@@ -35,18 +25,11 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
                 response.StatusCode = HttpStatusCode.OK;
                 response.Data = result;
             }
-            catch (HubException hubEx)
-            {
-                Console.WriteLine($"{uri}: HubException {hubEx.Message} ({hubEx.StackTrace})");
-
-                response.StatusCode = HttpStatusCode.BadRequest;
-                response.Message = hubEx.Message;
-            }
             catch (Exception e)
             {
                 Console.WriteLine($"{uri}: {e.GetType().Name} {e.Message} ({e.StackTrace})");
 
-                response.StatusCode = HttpStatusCode.InternalServerError;
+                response.StatusCode = e is HubException ? HttpStatusCode.BadRequest : HttpStatusCode.NotImplemented;
                 response.Message = e.Message;
             }
 

@@ -1,6 +1,7 @@
 ﻿using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.AspNetCore.SignalR.Client;
+using System;
 
 namespace Gosuji.Client.Services
 {
@@ -15,7 +16,9 @@ namespace Gosuji.Client.Services
 
         public async Task<APIResponse<string>> Test()
         {
-            return await SignalRResponseHandler.Invoke<string>(HubConnection, "Test", "Input");
+            string uri = "Test";
+            return await SignalRResponseHandler.TryCatch(uri, HubConnection.InvokeAsync<string>(uri,
+                "Input"));
         }
 
         public async Task Start()
