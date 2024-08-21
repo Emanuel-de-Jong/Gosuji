@@ -1,15 +1,12 @@
 ﻿@page "/test"
 
-@using Gosuji.Client.Services
-
 @inherits CustomPage
 
 @inject TestService testService
+@inject KataGoSignalRService kataGoService
 
 <div id="testPage">
     <h3>Test</h3>
-
-    <p>FromQuery: @FromQuery</p>
 
     @if (testResult.HasValue)
     {
@@ -23,17 +20,9 @@
     {
         <p>3: @test3Result</p>
     }
-
-    <NavLink href="/" @onclick=LinkClicked>Link</NavLink>
 </div>
 
 @code {
-    [Inject]
-    private NavigationManager navigationManager { get; set; }
-
-    [SupplyParameterFromQuery]
-    public string? FromQuery { get; set; }
-
     bool? testResult;
     bool? test2Result;
     bool? test3Result;
@@ -43,10 +32,13 @@
         testResult = await testService.Test();
         test2Result = await testService.Test2();
         test3Result = await testService.Test3();
+
+        await kataGoService.Start();
+        await kataGoService.Test();
     }
 
-    private void LinkClicked()
+    public async ValueTask DisposeAsync()
     {
-        navigationManager.NavigateTo("login");
+        await kataGoService.Stop();
     }
 }

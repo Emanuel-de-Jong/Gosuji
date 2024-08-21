@@ -5,6 +5,7 @@ using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Gosuji.Client
 {
@@ -38,6 +39,26 @@ namespace Gosuji.Client
             .AddHttpMessageHandler<AuthMessageHandler>();
 
             builder.Services.AddLocalization();
+
+            builder.Services.AddSingleton(sp =>
+            {
+                IConfiguration configuration = sp.GetRequiredService<IConfiguration>();
+                string backendUrl = configuration["BackendUrl"] ?? "https://localhost:5001";
+
+                return new HubConnectionBuilder()
+                    .WithUrl($"{backendUrl}/katagohub", options =>
+                    {
+                        options.AccessTokenProvider = async () =>
+                        {
+                            UserService userService = sp.GetRequiredService<UserService>();
+                            return await userService.GetToken();
+                        };
+                        options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
+                    })
+                    .WithAutomaticReconnect()
+                    .Build();
+            });
+            builder.Services.AddSingleton<KataGoSignalRService>();
 
             builder.Services.AddSingleton<DataService>();
             builder.Services.AddSingleton<KataGoService>();

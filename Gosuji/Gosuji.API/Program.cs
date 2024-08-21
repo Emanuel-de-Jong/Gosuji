@@ -1,3 +1,4 @@
+using Gosuji.API.Controllers;
 using Gosuji.API.Data;
 using Gosuji.API.Helpers;
 using Gosuji.API.Services;
@@ -61,6 +62,19 @@ namespace Gosuji.API
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = tokenValidationParameters;
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        string token = context.Request.Cookies[SG.TokenCookieName];
+                        PathString path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(token) && path.StartsWithSegments("/katagohub"))
+                        {
+                            context.Token = token;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
             builder.Services.AddCors(
@@ -109,6 +123,8 @@ namespace Gosuji.API
                 });
             });
 
+            builder.Services.AddSignalR();
+
             builder.Services.AddSingleton<SanitizeService>();
             builder.Services.AddSingleton<KataGoPoolService>();
 
@@ -141,6 +157,8 @@ namespace Gosuji.API
             // to set the appropriate headers.
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapHub<KataGoHub>("/katagohub");
 
             app.MapControllers();
 
