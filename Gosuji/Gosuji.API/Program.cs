@@ -81,8 +81,8 @@ namespace Gosuji.API
                 options => options.AddPolicy(
                     "wasm",
                     policy => policy.WithOrigins([
-                        builder.Configuration["BackendUrl"] ?? "https://localhost:5001",
-                        builder.Configuration["FrontendUrl"] ?? "https://localhost:5002"])
+                        builder.Configuration["BackendUrl"],
+                        builder.Configuration["FrontendUrl"]])
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials()));

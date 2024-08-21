@@ -26,7 +26,7 @@ namespace Gosuji.Client
             builder.Services.AddSingleton<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 
             builder.Services.AddScoped(sp =>
-                new HttpClient { BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "https://localhost:5002") });
+                new HttpClient { BaseAddress = new Uri(builder.Configuration["FrontendUrl"]) });
 
             builder.Services.AddSingleton<UserService>();
 
@@ -34,30 +34,12 @@ namespace Gosuji.Client
 
             builder.Services.AddHttpClient("Auth", client =>
             {
-                client.BaseAddress = new Uri(builder.Configuration["BackendUrl"] ?? "https://localhost:5001");
+                client.BaseAddress = new Uri(builder.Configuration["BackendUrl"]);
             })
             .AddHttpMessageHandler<AuthMessageHandler>();
 
             builder.Services.AddLocalization();
 
-            builder.Services.AddSingleton(sp =>
-            {
-                IConfiguration configuration = sp.GetRequiredService<IConfiguration>();
-                string backendUrl = configuration["BackendUrl"] ?? "https://localhost:5001";
-
-                return new HubConnectionBuilder()
-                    .WithUrl($"{backendUrl}/katagohub", options =>
-                    {
-                        options.AccessTokenProvider = async () =>
-                        {
-                            UserService userService = sp.GetRequiredService<UserService>();
-                            return await userService.GetToken();
-                        };
-                        options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets;
-                    })
-                    .WithAutomaticReconnect()
-                    .Build();
-            });
             builder.Services.AddSingleton<KataGoSignalRService>();
 
             builder.Services.AddSingleton<DataService>();

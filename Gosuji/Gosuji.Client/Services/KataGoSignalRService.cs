@@ -1,7 +1,7 @@
 ﻿using Gosuji.Client.Helpers.HttpResponseHandler;
-using Gosuji.Client.Models.KataGo;
+using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.SignalR.Client;
-using System;
+using Microsoft.AspNetCore.Http.Connections;
 
 namespace Gosuji.Client.Services
 {
@@ -9,9 +9,16 @@ namespace Gosuji.Client.Services
     {
         public HubConnection HubConnection { get; private set; }
 
-        public KataGoSignalRService(HubConnection hubConnection)
+        public KataGoSignalRService(IConfiguration configuration, UserService userService)
         {
-            HubConnection = hubConnection;
+            HubConnection = new HubConnectionBuilder()
+                .WithUrl($"{configuration["BackendUrl"]}/katagohub", options =>
+                {
+                    options.AccessTokenProvider = async () => await userService.GetToken();
+                    options.Transports = HttpTransportType.WebSockets;
+                })
+                .WithAutomaticReconnect()
+                .Build();
         }
 
         public async Task<APIResponse<string>> Test()
