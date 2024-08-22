@@ -1,5 +1,4 @@
 ﻿using Gosuji.API.Services;
-using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.AspNetCore.Authorization;
