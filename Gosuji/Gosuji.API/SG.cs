@@ -6,6 +6,5 @@
         public const string RefreshTokenCookieName = "refreshToken";
 
         public const string ControllerRateLimitPolicyName = "ControllerRateLimitPolicy";
-        public const string HubRateLimitPolicyName = "HubRateLimitPolicy";
     }
 }

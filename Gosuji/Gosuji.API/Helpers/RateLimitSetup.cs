@@ -24,16 +24,6 @@ namespace Gosuji.API.Helpers
                     });
                 });
 
-                options.AddPolicy(SG.HubRateLimitPolicyName, context =>
-                {
-                    return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
-                    {
-                        PermitLimit = 25,
-                        Window = TimeSpan.FromSeconds(10),
-                        QueueLimit = 0
-                    });
-                });
-
                 options.AddPolicy("rl5", context =>
                 {
                     return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
@@ -58,9 +48,9 @@ namespace Gosuji.API.Helpers
             });
         }
 
-        private static string GetPartitionKey(HttpContext context)
+        public static string GetPartitionKey(HttpContext? context)
         {
-            return context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            return context?.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         }
 
         private static ValueTask OnRejected(OnRejectedContext context, CancellationToken cancellationToken)

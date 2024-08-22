@@ -39,8 +39,19 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             {
                 Console.WriteLine($"{uri}: {e.GetType().Name} {e.Message} ({e.StackTrace})");
 
-                response.StatusCode = e is HubException ? HttpStatusCode.BadRequest : HttpStatusCode.NotImplemented;
+                response.StatusCode = HttpStatusCode.NotImplemented;
                 response.Message = e.Message;
+
+                if (e is HubException hubException)
+                {
+                    if (hubException.Message == "Hub_RateLimit")
+                    {
+                        response.StatusCode = HttpStatusCode.TooManyRequests;
+                    } else
+                    {
+                        response.StatusCode = HttpStatusCode.BadRequest;
+                    }
+                }
             }
 
             return response;

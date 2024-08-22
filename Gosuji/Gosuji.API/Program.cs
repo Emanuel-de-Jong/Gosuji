@@ -1,9 +1,11 @@
 using Gosuji.API.Controllers;
+using Gosuji.API.Controllers.HubFilters;
 using Gosuji.API.Data;
 using Gosuji.API.Helpers;
 using Gosuji.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -123,7 +125,10 @@ namespace Gosuji.API
                 });
             });
 
-            builder.Services.AddSignalR();
+            builder.Services.AddSignalR(options =>
+            {
+                options.AddFilter<RateLimitHubFilter>();
+            });
 
             builder.Services.AddSingleton<SanitizeService>();
             builder.Services.AddSingleton<KataGoPoolService>();
