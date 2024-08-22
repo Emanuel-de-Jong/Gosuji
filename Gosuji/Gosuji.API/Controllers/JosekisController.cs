@@ -13,7 +13,7 @@ namespace Gosuji.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]
-    [EnableRateLimiting(SG.ControllerRateLimitPolicyName)]
+    [EnableRateLimiting(RateLimitSetup.CONTROLLER_POLICY_NAME)]
     public class JosekisController : CustomControllerBase
     {
         private static readonly string SESSION_UNKNOWN_ERR = "SessionId unknown.";

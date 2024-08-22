@@ -68,7 +68,7 @@ namespace Gosuji.API
                 {
                     OnMessageReceived = context =>
                     {
-                        string token = context.Request.Cookies[SG.TokenCookieName];
+                        string token = context.Request.Cookies[JwtService.TOKEN_COOKIE_NAME];
                         PathString path = context.HttpContext.Request.Path;
                         if (!string.IsNullOrEmpty(token) && path.StartsWithSegments("/katagohub"))
                         {
@@ -125,6 +125,7 @@ namespace Gosuji.API
                 });
             });
 
+            builder.Services.AddSingleton<RateLimitHubFilter>();
             builder.Services.AddSignalR(options =>
             {
                 options.AddFilter<RateLimitHubFilter>();

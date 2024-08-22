@@ -11,6 +11,9 @@ namespace Gosuji.API.Services
 {
     public class JwtService
     {
+        public const string TOKEN_COOKIE_NAME = "token";
+        public const string REFRESH_TOKEN_COOKIE_NAME = "refreshToken";
+
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
         private IConfiguration configuration;
         private TokenValidationParameters tokenValidationParameters;
@@ -86,16 +89,16 @@ namespace Gosuji.API.Services
                 Expires = DateTime.UtcNow.AddDays(7)
             };
 
-            httpContext.Response.Cookies.Append(SG.TokenCookieName, token, options);
-            httpContext.Response.Cookies.Append(SG.RefreshTokenCookieName, refreshToken, options);
+            httpContext.Response.Cookies.Append(TOKEN_COOKIE_NAME, token, options);
+            httpContext.Response.Cookies.Append(REFRESH_TOKEN_COOKIE_NAME, refreshToken, options);
 
             return token;
         }
 
         public void RemoveCookies(HttpContext httpContext)
         {
-            httpContext.Response.Cookies.Delete(SG.TokenCookieName);
-            httpContext.Response.Cookies.Delete(SG.RefreshTokenCookieName);
+            httpContext.Response.Cookies.Delete(TOKEN_COOKIE_NAME);
+            httpContext.Response.Cookies.Delete(REFRESH_TOKEN_COOKIE_NAME);
         }
 
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)

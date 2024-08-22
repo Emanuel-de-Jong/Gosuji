@@ -7,6 +7,8 @@ namespace Gosuji.Client.Helpers
 {
     public class LocalizeClient
     {
+        public static string[] SUPPORTED_LANGUAGES = { "en", "zh", "ko", "ja" };
+
         public static async Task Setup(WebAssemblyHost host)
         {
             CultureInfo culture = CultureInfo.CurrentCulture; // Just so it's not null. CurrentCulture is never used.
@@ -20,12 +22,12 @@ namespace Gosuji.Client.Helpers
             else
             {
                 string? navigatorLang = await js.InvokeAsync<string>("eval", "navigator.language");
-                culture = navigatorLang != null ? CultureInfo.GetCultureInfo(navigatorLang) : CultureInfo.GetCultureInfo(G.SupportedLangs[0]);
+                culture = navigatorLang != null ? CultureInfo.GetCultureInfo(navigatorLang) : CultureInfo.GetCultureInfo(SUPPORTED_LANGUAGES[0]);
             }
 
-            if (!G.SupportedLangs.Contains(culture.TwoLetterISOLanguageName))
+            if (!SUPPORTED_LANGUAGES.Contains(culture.TwoLetterISOLanguageName))
             {
-                culture = CultureInfo.GetCultureInfo(G.SupportedLangs[0]);
+                culture = CultureInfo.GetCultureInfo(SUPPORTED_LANGUAGES[0]);
             }
 
             CultureInfo.DefaultThreadCurrentCulture = culture;

@@ -8,13 +8,17 @@ namespace Gosuji.API.Helpers
 {
     public class RateLimitSetup
     {
+        public const string CONTROLLER_POLICY_NAME = "ControllerRateLimitPolicy";
+        public const int HUB_PERMIT_LIMIT = 50;
+        public static readonly TimeSpan HUB_WINDOW = TimeSpan.FromSeconds(10);
+
         public static void AddRateLimiters(WebApplicationBuilder builder)
         {
             builder.Services.AddSingleton<RateLimitLogger>();
 
             builder.Services.AddRateLimiter(options =>
             {
-                options.AddPolicy(SG.ControllerRateLimitPolicyName, context =>
+                options.AddPolicy(CONTROLLER_POLICY_NAME, context =>
                 {
                     return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
                     {

@@ -7,9 +7,6 @@ namespace Gosuji.API.Controllers.HubFilters
 {
     public class RateLimitHubFilter : IHubFilter
     {
-        private const int PERMIT_LIMIT = 2;
-        private static readonly TimeSpan WINDOW = TimeSpan.FromSeconds(10);
-
         private RateLimitLogger rateLimitLogger;
 
         private readonly ConcurrentDictionary<string, RateLimitInfo> rateLimits = new();
@@ -48,10 +45,10 @@ namespace Gosuji.API.Controllers.HubFilters
                 {
                     lock (rateLimitInfo)
                     {
-                        if (now - rateLimitInfo.Timestamp < WINDOW)
+                        if (now - rateLimitInfo.Timestamp < RateLimitSetup.HUB_WINDOW)
                         {
                             rateLimitInfo.Count++;
-                            if (rateLimitInfo.Count > PERMIT_LIMIT)
+                            if (rateLimitInfo.Count > RateLimitSetup.HUB_PERMIT_LIMIT)
                             {
                                 isRateLimited = true;
                             }

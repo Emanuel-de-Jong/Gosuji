@@ -118,7 +118,7 @@ namespace Gosuji.API.Controllers.UserController
                 return Forbid();
             }
 
-            string? refreshToken = Request.Cookies[SG.RefreshTokenCookieName];
+            string? refreshToken = Request.Cookies[JwtService.REFRESH_TOKEN_COOKIE_NAME];
             jwtService.RemoveCookies(HttpContext);
 
 
@@ -388,9 +388,9 @@ namespace Gosuji.API.Controllers.UserController
         [HttpGet]
         public async Task<ActionResult<string>> GetToken()
         {
-            return !Request.Cookies.ContainsKey(SG.TokenCookieName)
+            return !Request.Cookies.ContainsKey(JwtService.TOKEN_COOKIE_NAME)
                 ? (ActionResult<string>)BadRequest("No token in cookie")
-                : (ActionResult<string>)Ok(Request.Cookies[SG.TokenCookieName]);
+                : (ActionResult<string>)Ok(Request.Cookies[JwtService.TOKEN_COOKIE_NAME]);
         }
 
         [HttpPost]
@@ -401,13 +401,13 @@ namespace Gosuji.API.Controllers.UserController
                 return Forbid();
             }
 
-            string? token = Request.Cookies[SG.TokenCookieName];
+            string? token = Request.Cookies[JwtService.TOKEN_COOKIE_NAME];
             if (string.IsNullOrEmpty(token))
             {
                 return GetNewTokensError(BadRequest("No token"));
             }
 
-            string? refreshToken = Request.Cookies[SG.RefreshTokenCookieName];
+            string? refreshToken = Request.Cookies[JwtService.REFRESH_TOKEN_COOKIE_NAME];
             if (string.IsNullOrEmpty(refreshToken))
             {
                 return GetNewTokensError(BadRequest("No refreshToken"));

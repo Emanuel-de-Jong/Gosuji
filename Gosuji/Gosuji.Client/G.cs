@@ -15,8 +15,6 @@ namespace Gosuji.Client
 
         public static CStatusMessage? StatusMessage = null;
 
-        public static string[] SupportedLangs = { "en", "zh", "ko", "ja" };
-
         public const string ReturnUriName = "ReturnUri";
 
         public static Dictionary<string, string> CSSLibUrls = new()
