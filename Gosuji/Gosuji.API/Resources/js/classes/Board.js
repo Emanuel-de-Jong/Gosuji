@@ -80,6 +80,13 @@ if (typeof Board === "undefined") {
 
             besogo.create(this.element, this.besogoOptions);
 
+            const stack = [this.element];
+            while (stack.length > 0) {
+                const currentElement = stack.pop();
+                currentElement.classList.add("bsg");
+                stack.push(...currentElement.children);
+            }
+
             this.editor = this.element.besogoEditor;
 
             this.commentElement = document.querySelector("#game .besogo-comment textarea");

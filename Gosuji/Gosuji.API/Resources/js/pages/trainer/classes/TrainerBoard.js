@@ -54,10 +54,16 @@ export class TrainerBoard extends Board {
         document.querySelector('#game input[value="Edit Info"]').remove();
         document.querySelector('#game input[value="Info"]').remove();
 
-        document
-            .querySelector("#game .besogo-board")
+        document.querySelector("#game .besogo-board")
             .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary next" disabled>></button>');
         this.nextButton = document.querySelector(".next");
+
+        document.querySelector("#game .besogo-board")
+            .insertAdjacentHTML("afterbegin",`
+                <div id="startOverlay">
+                    <input type="button" class="btn btn-primary" id="startBtn" value="Start">
+                </div>`);
+        this.startOverlay = document.getElementById("startOverlay");
 
         this.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
         this.editor.addListener(gameplay.treeJumpedCheckListener);

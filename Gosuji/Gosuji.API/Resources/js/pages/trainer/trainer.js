@@ -61,13 +61,15 @@ trainerPage.init = async function (
     trainerG.init(trainerRef, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
-    trainerPage.startButton = document.getElementById("startBtn");
     trainerPage.restartButton = document.getElementById("restartBtn");
-    trainerPage.startButton.addEventListener("click", trainerPage.startButtonClickListener);
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
     settings.init(serverColor);
     trainerG.board.init(serverBoardsize, serverHandicap, stoneVolume, serverSGF);
+
+    trainerPage.startButton = document.getElementById("startBtn");
+    trainerPage.startButton.addEventListener("click", trainerPage.startButtonClickListener);
+
     await sgf.init(userName, serverKomi, serverRuleset);
     sgfComment.init();
     scoreChart.init();
@@ -124,8 +126,8 @@ trainerPage.start = async function () {
 };
 
 trainerPage.startButtonClickListener = async function () {
-    trainerPage.startButton.hidden = true;
-    trainerPage.restartButton.hidden = false;
+    trainerG.board.startOverlay.hidden = true;
+    trainerPage.restartButton.disabled = false;
     await trainerPage.start();
 };
 
