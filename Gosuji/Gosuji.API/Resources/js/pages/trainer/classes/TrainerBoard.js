@@ -55,15 +55,31 @@ export class TrainerBoard extends Board {
         document.querySelector('#game input[value="Info"]').remove();
 
         document.querySelector("#game .besogo-board")
-            .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary next" disabled>></button>');
+            .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary btn-sm next" disabled>></button>');
         this.nextButton = document.querySelector(".next");
 
         document.querySelector("#game .besogo-board")
             .insertAdjacentHTML("afterbegin",`
-                <div id="startOverlay">
-                    <input type="button" class="btn btn-primary" id="startBtn" value="Start">
+                <div id="startOverlay" class="boardOverlay" hidden>
+                    <button type="button" class="btn btn-primary btn-lg" id="startBtn">Start</button>
                 </div>`);
         this.startOverlay = document.getElementById("startOverlay");
+        if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
+            this.startOverlay.hidden = false;
+        }
+
+        document.querySelector("#game .besogo-board")
+            .insertAdjacentHTML("afterbegin",`
+                <div id="finishedOverlay" class="boardOverlay" hidden>
+                    <p>Game finished!</p>
+                    <div>
+                        <button type="button" class="btn btn-primary" id="closeOverlayBtn">Close</button>
+                        <button type="button" class="btn btn-primary" id="newGameBtn">New game</button>
+                        <a href="/profile" class="btn btn-primary">Statistics</a>
+                    </div>
+                </div>`);
+        this.finishedOverlay = document.getElementById("finishedOverlay");
+        document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
 
         this.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
         this.editor.addListener(gameplay.treeJumpedCheckListener);
@@ -155,7 +171,11 @@ export class TrainerBoard extends Board {
         super.setHandicap(handicap);
 
         this.handicapElement.textContent = handicap;
-        if (trainerG.phase != trainerG.PHASE_TYPE.NONE && trainerG.phase != trainerG.PHASE_TYPE.INIT) sgf.setHandicapMeta();
+        if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
+            trainerG.phase != trainerG.PHASE_TYPE.INIT &&
+            trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
+            sgf.setHandicapMeta();
+        }
     }
 
     keydownAndMousedownListener = (event) => {

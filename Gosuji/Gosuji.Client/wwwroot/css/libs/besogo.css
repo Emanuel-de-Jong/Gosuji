@@ -4,11 +4,11 @@
     background: #d0fefe;
 }
 
-.besogo-container * {
+.besogo-container *.bsg {
     box-sizing: border-box;
 }
 
-.besogo-container button {
+.besogo-container button.bsg {
     height: 30px;
     width: 30px;
     padding: 0px;
@@ -16,20 +16,20 @@
     border-color: #ffffff #e6e6e6 #e6e6e6 #ffffff;
 }
 
-.besogo-container input {
+.besogo-container input.bsg {
     font-size: 12pt;
 }
 
-.besogo-container input[type='button'] {
+.besogo-container input[type='button'].bsg {
     background: #d8dcd6;
     border-color: #ffffff #e6e6e6 #e6e6e6 #ffffff;
 }
 
-.besogo-container input[type='text'] {
+.besogo-container input[type='text'].bsg {
     width: 30px;
 }
 
-.besogo-container svg { /* Prevent text selection within SVG */
+.besogo-container svg.bsg { /* Prevent text selection within SVG */
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none;   /* Chrome/Safari/Opera */
     -moz-user-select: none;      /* Firefox */
@@ -44,7 +44,7 @@
     padding: 0px 5px;
 }
 
-.besogo-panels > * {
+.besogo-panels > *.bsg {
     margin: 3px 0px;
 }
 
@@ -104,11 +104,11 @@
     width: 100%;
 }
 
-.besogo-comment input[type='button'] {
+.besogo-comment input[type='button'].bsg {
     float: right;
 }
 
-.besogo-comment textarea {
+.besogo-comment textarea.bsg {
     height: 100%;
     width: 100%;
 }
@@ -118,7 +118,7 @@
     border-collapse: collapse;
 }
 
-.besogo-gameInfo td, tr {
+.besogo-gameInfo td.bsg, tr.bsg {
     border: 1px solid black;
     padding: 3px;
 }

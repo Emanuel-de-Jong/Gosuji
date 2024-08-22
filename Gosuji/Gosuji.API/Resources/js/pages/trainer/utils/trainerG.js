@@ -24,11 +24,12 @@ trainerG.MOVE_TYPE = {
 trainerG.PHASE_TYPE = {
     NONE: 0,
     INIT: 1,
-    CORNERS: 2,
-    PREMOVES: 3,
-    GAMEPLAY: 4,
-    SELFPLAY: 5,
-    FINISHED: 6,
+    RESTART: 2,
+    CORNERS: 3,
+    PREMOVES: 4,
+    GAMEPLAY: 5,
+    SELFPLAY: 6,
+    FINISHED: 7,
 };
 
 
@@ -108,7 +109,9 @@ trainerG.setColor = function (color = trainerG.board.getNextColor()) {
     }
 
     trainerG.color = color;
-    if (trainerG.phase != trainerG.PHASE_TYPE.NONE && trainerG.phase != trainerG.PHASE_TYPE.INIT) {
+    if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
+        trainerG.phase != trainerG.PHASE_TYPE.INIT &&
+        trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
         sgf.setPlayersMeta();
         sgf.setRankPlayerMeta();
         sgf.setRankAIMeta();

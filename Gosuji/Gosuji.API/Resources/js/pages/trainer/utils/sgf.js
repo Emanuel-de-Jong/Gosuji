@@ -90,14 +90,22 @@ sgf.setRuleset = async function (ruleset) {
     sgf.ruleset = ruleset;
     sgf.setRulesetMeta();
     sgf.rulesetElement.textContent = ruleset;
-    if (trainerG.phase != trainerG.PHASE_TYPE.NONE && trainerG.phase != trainerG.PHASE_TYPE.INIT) await katago.setRuleset();
+    if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
+        trainerG.phase != trainerG.PHASE_TYPE.INIT &&
+        trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
+        await katago.setRuleset();
+    }
 };
 
 sgf.setKomi = async function (komi) {
     sgf.komi = komi;
     sgf.setKomiMeta();
     sgf.komiElement.textContent = komi;
-    if (trainerG.phase != trainerG.PHASE_TYPE.NONE && trainerG.phase != trainerG.PHASE_TYPE.INIT) await katago.setKomi();
+    if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
+        trainerG.phase != trainerG.PHASE_TYPE.INIT &&
+        trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
+        await katago.setKomi();
+    }
 };
 
 

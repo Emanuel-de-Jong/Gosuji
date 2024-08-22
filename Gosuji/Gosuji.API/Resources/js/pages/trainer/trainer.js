@@ -60,15 +60,15 @@ trainerPage.init = async function (
 
     trainerG.init(trainerRef, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
-
-    trainerPage.restartButton = document.getElementById("restartBtn");
-    trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
-
     settings.init(serverColor);
     trainerG.board.init(serverBoardsize, serverHandicap, stoneVolume, serverSGF);
 
     trainerPage.startButton = document.getElementById("startBtn");
+    trainerPage.restartButton = document.getElementById("restartBtn");
+    trainerPage.newGameButton = document.getElementById("newGameBtn");
     trainerPage.startButton.addEventListener("click", trainerPage.startButtonClickListener);
+    trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
+    trainerPage.newGameButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
     await sgf.init(userName, serverKomi, serverRuleset);
     sgfComment.init();
@@ -93,7 +93,7 @@ trainerPage.init = async function (
 };
 
 trainerPage.clear = async function () {
-    trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
+    trainerG.setPhase(trainerG.PHASE_TYPE.RESTART);
 
     trainerG.clear();
     settings.clear();
@@ -128,6 +128,8 @@ trainerPage.start = async function () {
 trainerPage.startButtonClickListener = async function () {
     trainerG.board.startOverlay.hidden = true;
     trainerPage.restartButton.disabled = false;
+    preMovePlacer.stopButton.disabled = false;
+    db.saveButton.disabled = false;
     await trainerPage.start();
 };
 
