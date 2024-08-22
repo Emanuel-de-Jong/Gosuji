@@ -1,7 +1,6 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.API.Helpers;
 using Gosuji.API.Services;
-using Gosuji.Client;
 using Gosuji.Client.Data;
 using Gosuji.Client.ViewModels;
 using Microsoft.AspNetCore.Authorization;

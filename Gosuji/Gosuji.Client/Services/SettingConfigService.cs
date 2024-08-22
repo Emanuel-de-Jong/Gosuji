@@ -76,7 +76,8 @@ namespace Gosuji.Client.Services
             {
                 APIResponse response = await dataService.PutSettingConfig(SettingConfig);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
-            } else
+            }
+            else
             {
                 await js.InvokeVoidAsync("utils.setLocal", MASTER_VOLUME_STORAGE_NAME, SettingConfig.MasterVolume);
                 await js.InvokeVoidAsync("utils.setLocal", STONE_VOLUME_STORAGE_NAME, SettingConfig.StoneVolume);

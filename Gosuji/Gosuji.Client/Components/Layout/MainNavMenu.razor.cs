@@ -1,11 +1,8 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
-using Gosuji.Client.Models;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.JSInterop;
-using System.Globalization;
 using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Layout
@@ -31,7 +28,10 @@ namespace Gosuji.Client.Components.Layout
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
-                if (!await settingConfigService.SettingConfigFromDb()) return;
+                if (!await settingConfigService.SettingConfigFromDb())
+                {
+                    return;
+                }
 
                 await settingConfigService.ChangeLanguage(settingConfigService.SettingConfig.LanguageId);
             }

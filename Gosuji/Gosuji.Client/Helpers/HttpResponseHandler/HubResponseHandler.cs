@@ -47,7 +47,8 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
                     if (hubException.Message.Contains("Hub_RateLimit"))
                     {
                         response.StatusCode = HttpStatusCode.TooManyRequests;
-                    } else
+                    }
+                    else
                     {
                         response.StatusCode = HttpStatusCode.BadRequest;
                     }

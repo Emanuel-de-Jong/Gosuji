@@ -1,5 +1,4 @@
 ﻿using Gosuji.Client.Components.Shared;
-using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services.User;
@@ -23,7 +22,7 @@ namespace Gosuji.Client.Components.Pages.Account
 
         private string? message;
         private bool isMessageError;
-        string? backupCode;
+        private string? backupCode;
 
         public async Task RegisterUser()
         {

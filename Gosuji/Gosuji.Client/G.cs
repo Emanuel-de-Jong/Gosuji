@@ -32,7 +32,8 @@ namespace Gosuji.Client
 
         public static void Log()
         {
-            if (LogLevel > LogLevel.Trace) {
+            if (LogLevel > LogLevel.Trace)
+            {
                 return;
             }
 
@@ -41,9 +42,11 @@ namespace Gosuji.Client
             string? methodName = null;
             string? className = null;
 
-            while (frameIndex < 10) {
+            while (frameIndex < 10)
+            {
                 method = new StackFrame(frameIndex).GetMethod();
-                if (method == null) {
+                if (method == null)
+                {
                     break;
                 }
 
@@ -51,19 +54,22 @@ namespace Gosuji.Client
                 className = method.DeclaringType?.Name;
 
                 if (methodName != "MoveNext" && method.DeclaringType == null ||
-                    (methodName != "Start" && method.DeclaringType?.Name != "AsyncMethodBuilderCore")) {
+                    (methodName != "Start" && method.DeclaringType?.Name != "AsyncMethodBuilderCore"))
+                {
                     break;
                 }
 
                 frameIndex++;
             }
 
-            if (method == null) {
+            if (method == null)
+            {
                 Console.WriteLine($"G.Log MethodBase null ({className}.{methodName} {frameIndex})");
                 return;
             }
 
-            if (methodName == "MoveNext" && method.DeclaringType?.DeclaringType != null) {
+            if (methodName == "MoveNext" && method.DeclaringType?.DeclaringType != null)
+            {
                 methodName = method.DeclaringType.Name.Split('<', '>')[1];
                 className = method.DeclaringType.DeclaringType.Name;
             }

@@ -1,5 +1,4 @@
-﻿using Gosuji.Client.Resources.Translations;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Services.User
 {

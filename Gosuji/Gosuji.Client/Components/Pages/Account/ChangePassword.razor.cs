@@ -1,5 +1,4 @@
-﻿using Gosuji.Client.Attributes;
-using Gosuji.Client.Components.Shared;
+﻿using Gosuji.Client.Components.Shared;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services.User;

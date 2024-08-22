@@ -2,13 +2,11 @@
 using Gosuji.API.Services;
 using Gosuji.Client.Data;
 using Gosuji.Client.Data.Attributes;
-using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Globalization;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;

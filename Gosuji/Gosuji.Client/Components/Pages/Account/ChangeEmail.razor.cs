@@ -1,9 +1,6 @@
-﻿using Gosuji.Client.Attributes;
-using Gosuji.Client.Components.Shared;
-using Gosuji.Client.Data;
+﻿using Gosuji.Client.Components.Shared;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Resources.Translations;
-using Gosuji.Client.Services;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;

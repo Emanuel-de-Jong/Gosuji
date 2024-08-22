@@ -52,8 +52,19 @@ namespace Gosuji.API.Controllers
             return await userManager.FindByIdAsync(userId);
         }
 
-        public static HubResponse Ok() => new(HttpStatusCode.OK);
-        public static HubResponse<T> Ok<T>(T? data) => new(HttpStatusCode.OK, data);
-        public static HubResponse Forbid() => new(HttpStatusCode.Forbidden);
+        public static HubResponse Ok()
+        {
+            return new(HttpStatusCode.OK);
+        }
+
+        public static HubResponse<T> Ok<T>(T? data)
+        {
+            return new(HttpStatusCode.OK, data);
+        }
+
+        public static HubResponse Forbid()
+        {
+            return new(HttpStatusCode.Forbidden);
+        }
     }
 }

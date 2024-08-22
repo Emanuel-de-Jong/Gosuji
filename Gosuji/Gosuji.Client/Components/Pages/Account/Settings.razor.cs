@@ -5,15 +5,12 @@ using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Gosuji.Client.Services.User;
-using Gosuji.Client.ViewModels;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
-using System.Xml.Linq;
 
 namespace Gosuji.Client.Components.Pages.Account
 {

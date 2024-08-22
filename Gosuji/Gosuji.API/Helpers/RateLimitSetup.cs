@@ -1,5 +1,4 @@
 ﻿using Gosuji.API.Services;
-using Gosuji.Client;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Globalization;
 using System.Threading.RateLimiting;

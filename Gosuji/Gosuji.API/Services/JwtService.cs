@@ -108,8 +108,7 @@ namespace Gosuji.API.Services
             validationParameters.ValidateLifetime = false;
 
             ClaimsPrincipal principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
-            JwtSecurityToken? jwtSecurityToken = securityToken as JwtSecurityToken;
-            return jwtSecurityToken != null ? principal : null;
+            return securityToken is JwtSecurityToken jwtSecurityToken ? principal : null;
         }
     }
 }

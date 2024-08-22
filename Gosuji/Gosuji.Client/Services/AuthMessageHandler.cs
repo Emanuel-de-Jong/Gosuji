@@ -28,7 +28,8 @@ namespace Gosuji.Client.Services
             if (authenticationStateProvider.Token != null)
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("bearer", authenticationStateProvider.Token);
-            } else
+            }
+            else
             {
                 request.Headers.Authorization = null;
             }

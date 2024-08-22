@@ -1,6 +1,5 @@
 ﻿using Gosuji.API.Helpers;
 using Gosuji.API.Services;
-using Gosuji.Client;
 using Gosuji.Client.Models.Josekis;
 using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
