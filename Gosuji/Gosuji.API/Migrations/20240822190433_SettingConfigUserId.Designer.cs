@@ -3,6 +3,7 @@ using System;
 using Gosuji.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gosuji.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240822190433_SettingConfigUserId")]
+    partial class SettingConfigUserId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
@@ -159,6 +162,10 @@ namespace Gosuji.API.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SettingConfigId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
@@ -176,6 +183,8 @@ namespace Gosuji.API.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("SettingConfigId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -974,7 +983,15 @@ namespace Gosuji.API.Migrations
                         .WithMany()
                         .HasForeignKey("CurrentSubscriptionId");
 
+                    b.HasOne("Gosuji.Client.Data.SettingConfig", "SettingConfig")
+                        .WithMany()
+                        .HasForeignKey("SettingConfigId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CurrentSubscription");
+
+                    b.Navigation("SettingConfig");
                 });
 
             modelBuilder.Entity("Gosuji.API.Data.UserActivity", b =>

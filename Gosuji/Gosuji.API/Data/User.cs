@@ -7,9 +7,6 @@ namespace Gosuji.API.Data
 {
     public class User : IdentityUser, IDbModel
     {
-        [Required]
-        public long SettingConfigId { get; set; }
-        public SettingConfig? SettingConfig { get; set; }
         public long? CurrentSubscriptionId { get; set; }
         public Subscription? CurrentSubscription { get; set; }
 

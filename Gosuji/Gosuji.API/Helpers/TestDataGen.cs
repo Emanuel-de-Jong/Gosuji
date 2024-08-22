@@ -39,8 +39,8 @@ namespace Gosuji.API.Helpers
         public void GenerateTestData()
         {
             GenerateEssentials();
-            GenerateSettingConfigs();
             GenerateUsers();
+            GenerateSettingConfigs();
             GenerateUserRoles();
             GenerateUserStates();
             GenerateTrainerSettingConfigs();
@@ -177,23 +177,51 @@ namespace Gosuji.API.Helpers
             dbContext.Dispose();
         }
 
+        public void GenerateUsers()
+        {
+            int settingConfigIndex = 0;
+            string password = "@Password1";
+            userManager.CreateAsync(new()
+            {
+                UserName = "Admino",
+                Email = "admino@gmail.com",
+                EmailConfirmed = true,
+            }, password).Wait();
+            userManager.CreateAsync(new()
+            {
+                UserName = "Bob",
+                Email = "bob@gmail.com",
+                EmailConfirmed = true,
+            }, password).Wait();
+            userManager.CreateAsync(new()
+            {
+                UserName = "Jessy",
+                Email = "jessy@gmail.com",
+                EmailConfirmed = false,
+            }, password).Wait();
+        }
+
         public void GenerateSettingConfigs()
         {
             ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
+            string[] userIds = dbContext.Users.Select(u => u.Id).ToArray();
             dbContext.SettingConfigs.AddRange([
                 new() {
+                    Id = userIds[0],
                     LanguageId = "en",
                     Theme = EThemeType.DARK,
                     MasterVolume = 100,
                     IsGetChangelogEmail = true,
                 },
                 new() {
+                    Id = userIds[1],
                     LanguageId = "en",
                     Theme = EThemeType.DARK,
                     MasterVolume = 80,
                     IsGetChangelogEmail = false,
                 },
                 new() {
+                    Id = userIds[2],
                     LanguageId = "zh",
                     Theme = EThemeType.LIGHT,
                     MasterVolume = 100,
@@ -202,37 +230,6 @@ namespace Gosuji.API.Helpers
             ]);
             dbContext.SaveChanges();
             dbContext.Dispose();
-        }
-
-        public void GenerateUsers()
-        {
-            ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
-            long[] settingConfigIds = dbContext.SettingConfigs.Select(sc => sc.Id).ToArray();
-            dbContext.Dispose();
-
-            int settingConfigIndex = 0;
-            string password = "@Password1";
-            userManager.CreateAsync(new()
-            {
-                UserName = "Admino",
-                Email = "admino@gmail.com",
-                EmailConfirmed = true,
-                SettingConfigId = settingConfigIds[settingConfigIndex++],
-            }, password).Wait();
-            userManager.CreateAsync(new()
-            {
-                UserName = "Bob",
-                Email = "bob@gmail.com",
-                EmailConfirmed = true,
-                SettingConfigId = settingConfigIds[settingConfigIndex++],
-            }, password).Wait();
-            userManager.CreateAsync(new()
-            {
-                UserName = "Jessy",
-                Email = "jessy@gmail.com",
-                EmailConfirmed = false,
-                SettingConfigId = settingConfigIds[settingConfigIndex++],
-            }, password).Wait();
         }
 
         public void GenerateUserRoles()

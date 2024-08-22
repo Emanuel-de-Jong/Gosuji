@@ -253,9 +253,8 @@ namespace Gosuji.API.Controllers
         public async Task<ActionResult<SettingConfig>> GetSettingConfig()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            SettingConfig? settingConfig = await dbContext.Users
-                .Where(u => u.Id == GetUserId())
-                .Select(u => u.SettingConfig)
+            SettingConfig? settingConfig = await dbContext.SettingConfigs
+                .Where(cs => cs.Id == GetUserId())
                 .FirstOrDefaultAsync();
             await dbContext.DisposeAsync();
             return Ok(settingConfig);
@@ -264,18 +263,12 @@ namespace Gosuji.API.Controllers
         [HttpPut]
         public async Task<ActionResult> PutSettingConfig(SettingConfig settingConfig)
         {
+            settingConfig.Id = GetUserId();
+
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             if (dbContext.SettingConfigs.Any(cs => cs.Id == settingConfig.Id) == false)
             {
                 return NotFound();
-            }
-
-            User user = await dbContext.Users
-                .Where(u => u.Id == GetUserId())
-                .FirstOrDefaultAsync();
-            if (user.SettingConfigId != settingConfig.Id)
-            {
-                return Forbid();
             }
 
             sanitizeService.Sanitize(settingConfig);

@@ -49,6 +49,8 @@ namespace Gosuji.API.Controllers.UserController
                 return Accepted("", "User_Register_EmailExists");
             }
 
+            await dbContext.DisposeAsync();
+
             User user = new()
             {
                 UserName = model.UserName,
@@ -57,16 +59,6 @@ namespace Gosuji.API.Controllers.UserController
 
             string backupCode = Guid.NewGuid().ToString().Replace("-", "");
             user.BackupCode = backupCode;
-
-            SettingConfig settingConfig = new();
-            settingConfig.LanguageId = model.Language;
-            settingConfig.IsGetChangelogEmail = model.IsGetChangelogEmail;
-            await dbContext.SettingConfigs.AddAsync(settingConfig);
-            await dbContext.SaveChangesAsync();
-
-            user.SettingConfigId = settingConfig.Id;
-
-            await dbContext.DisposeAsync();
 
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
@@ -77,6 +69,12 @@ namespace Gosuji.API.Controllers.UserController
             string userId = await userManager.GetUserIdAsync(user);
 
             dbContext = await dbContextFactory.CreateDbContextAsync();
+
+            SettingConfig settingConfig = new();
+            settingConfig.Id = userId;
+            settingConfig.LanguageId = model.Language;
+            settingConfig.IsGetChangelogEmail = model.IsGetChangelogEmail;
+            await dbContext.SettingConfigs.AddAsync(settingConfig);
 
             UserState userState = new();
             userState.Id = userId;
