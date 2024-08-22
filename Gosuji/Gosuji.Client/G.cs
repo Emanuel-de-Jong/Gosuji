@@ -1,6 +1,8 @@
 ﻿using Gosuji.Client.Components.Shared;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Gosuji.Client
 {
@@ -28,6 +30,14 @@ namespace Gosuji.Client
             { "DataTables", "https://cdn.datatables.net/v/bs5/dt-2.0.8/sl-2.0.3/datatables.min.js" },
             { "Moment", "https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js" },
             { "ChartJS", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" },
+        };
+
+        public static JsonSerializerOptions JsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         };
 
         public static void Log()

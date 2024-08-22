@@ -44,18 +44,15 @@ namespace Gosuji.Client.Components.Pages
         {
             jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/josekis/bundle.js");
 
-            if (firstRender)
+            if (settingConfig != null && !isJSInitialized)
             {
+                isJSInitialized = true;
+
                 APIResponse startResponse = await josekisService.Start();
                 if (G.StatusMessage.HandleAPIResponse(startResponse)) return;
 
                 APIResponse response = await josekisService.AddSession(sessionId);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
-            }
-
-            if (settingConfig != null && !isJSInitialized)
-            {
-                isJSInitialized = true;
 
                 await jsRef.InvokeVoidAsync("josekisPage.init", josekisRef, settingConfig.CalcStoneVolume());
                 await AddMarkups();

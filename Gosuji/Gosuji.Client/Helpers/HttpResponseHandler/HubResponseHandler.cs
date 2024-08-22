@@ -6,11 +6,6 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
 {
     public class HubResponseHandler
     {
-        public static JsonSerializerOptions jsonSerializerOptions = new()
-        {
-            PropertyNameCaseInsensitive = true,
-        };
-
         public static async Task<APIResponse> TryCatch(string uri, Task<HubResponse> responseTask)
         {
             return await TryCatch<object?>(uri, responseTask);
@@ -66,18 +61,9 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             return response;
         }
 
-        private static async Task<T?> Convert<T>(object data)
+        private static async Task<T?> Convert<T>(string data)
         {
-            if (data is JsonElement jsonElement)
-            {
-                data = typeof(T) == typeof(string) ? jsonElement.GetString()
-                    : typeof(T) == typeof(long) ? jsonElement.GetInt64()
-                    : typeof(T) == typeof(int) ? jsonElement.GetInt32()
-                    : typeof(T) == typeof(bool) ? jsonElement.GetBoolean()
-                    : JsonSerializer.Deserialize<T>(jsonElement.GetRawText(), jsonSerializerOptions);
-            }
-
-            return (T)data;
+            return JsonSerializer.Deserialize<T>(data, G.JsonSerializerOptions);
         }
     }
 }
