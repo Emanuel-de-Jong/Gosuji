@@ -21,7 +21,7 @@ if (typeof besogo === "undefined") {
             insideText = container.textContent || container.innerText || '',
             i, panelName; // Scratch iteration variables
 
-        container.className += ' besogo-container'; // Marks this div as initialized
+        container.classList.add('besogo-container'); // Marks this div as initialized
 
         // Process options and set defaults
         options = options || {}; // Makes option checking simpler
@@ -231,8 +231,9 @@ if (typeof besogo === "undefined") {
         // Creates and adds divs to specified parent or container
         function makeDiv(className, parent) {
             var div = document.createElement("div");
+            div.classList.add("bsg");
             if (className) {
-                div.className = className;
+                div.classList.add(className);
             }
             parent = parent || container;
             parent.appendChild(div);
@@ -302,7 +303,7 @@ if (typeof besogo === "undefined") {
         }
 
         function hasClass(element, str) {
-            return (element.className.split(' ').indexOf(str) !== -1);
+            return element.classList.contains(str);
         }
     };
 
@@ -1036,6 +1037,11 @@ if (typeof besogo === "undefined") {
                 SO: 'Source',
                 CP: 'Copyright'
             };
+        
+        gameInfoTable.classList.add("bsg");
+        gameInfoEdit.classList.add("bsg");
+        commentBox.classList.add("bsg");
+        commentEdit.classList.add("bsg");
 
         container.appendChild(makeInfoButton());
         container.appendChild(makeInfoEditButton());
@@ -1088,20 +1094,25 @@ if (typeof besogo === "undefined") {
         function updateGameInfoTable(gameInfo) {
             var table = document.createElement('table'),
                 i, id, row, cell, text; // Scratch iteration variable
+            
+            table.classList.add("bsg");
 
-            table.className = 'besogo-gameInfo';
+            table.classList.add('besogo-gameInfo');
             for (i = 0; i < infoOrder.length ; i++) { // Iterate in specified order
                 id = infoOrder[i];
 
                 if (gameInfo[id]) { // Only add row if property exists
                     row = document.createElement('tr');
+                    row.classList.add("bsg");
                     table.appendChild(row);
 
                     cell = document.createElement('td');
+                    cell.classList.add("bsg");
                     cell.appendChild(document.createTextNode(infoIds[id]));
                     row.appendChild(cell);
 
                     cell = document.createElement('td');
+                    cell.classList.add("bsg");
                     text = document.createTextNode(gameInfo[id]);
                     cell.appendChild(text);
                     row.appendChild(cell);
@@ -1118,19 +1129,25 @@ if (typeof besogo === "undefined") {
             var table = document.createElement('table'),
                 infoTableOrder = playerInfoOrder.concat(infoOrder),
                 i, id, row, cell, text;
+            
+            table.classList.add("bsg");
 
-            table.className = 'besogo-gameInfo';
+            table.classList.add('besogo-gameInfo');
             for (i = 0; i < infoTableOrder.length ; i++) { // Iterate in specified order
                 id = infoTableOrder[i];
                 row = document.createElement('tr');
+                row.classList.add("bsg");
                 table.appendChild(row);
 
                 cell = document.createElement('td');
+                cell.classList.add("bsg");
                 cell.appendChild(document.createTextNode(infoIds[id]));
                 row.appendChild(cell);
 
                 cell = document.createElement('td');
+                cell.classList.add("bsg");
                 text = document.createElement('input');
+                text.classList.add("bsg");
                 if (gameInfo[id]) {
                     text.value = gameInfo[id];
                 }
@@ -1161,6 +1178,7 @@ if (typeof besogo === "undefined") {
 
         function makeInfoButton() {
             var button = document.createElement('input');
+            button.classList.add("bsg");
             button.type = 'button';
             button.value = 'Info';
             button.title = 'Show/hide game info';
@@ -1178,6 +1196,7 @@ if (typeof besogo === "undefined") {
 
         function makeInfoEditButton() {
             var button = document.createElement('input');
+            button.classList.add("bsg");
             button.type = 'button';
             button.value = 'Edit Info';
             button.title = 'Edit game info';
@@ -1195,6 +1214,7 @@ if (typeof besogo === "undefined") {
 
         function makeCommentButton() {
             var button = document.createElement('input');
+            button.classList.add("bsg");
             button.type = 'button';
             button.value = 'Comment';
             button.title = 'Edit comment';
@@ -1335,6 +1355,8 @@ if (typeof besogo === "undefined") {
                         stroke: 'none',
                         fill: 'black'
                     });
+                
+                button.classList.add("bsg");
 
                 button.title = tooltip;
                 button.onclick = action;
@@ -1351,6 +1373,7 @@ if (typeof besogo === "undefined") {
             var svg, element, coordStyleButton;
 
             variantStyleButton = document.createElement('button');
+            variantStyleButton.classList.add("bsg");
             variantStyleButton.onclick = function() {
                 editor.toggleVariantStyle(false); // Toggles child/sibling variants
             };
@@ -1387,6 +1410,7 @@ if (typeof besogo === "undefined") {
             svg.appendChild(element);
 
             hideVariantButton = document.createElement('button');
+            hideVariantButton.classList.add("bsg");
             hideVariantButton.onclick = function() {
                 editor.toggleVariantStyle(true); // Toggles show/hide variants
             };
@@ -1398,6 +1422,7 @@ if (typeof besogo === "undefined") {
             svg.appendChild(hideVariantElement);
 
             coordStyleButton = document.createElement('button');
+            coordStyleButton.classList.add("bsg");
             coordStyleButton.onclick = function() {
                 editor.toggleCoordStyle(); // Toggles coordinate style
             };
@@ -2126,6 +2151,7 @@ if (typeof besogo === "undefined") {
 
         // Load file button
         element = document.createElement('input');
+        element.classList.add("bsg");
         element.type = 'button';
         element.value = 'Open';
         element.title = 'Import SGF';
@@ -2136,6 +2162,7 @@ if (typeof besogo === "undefined") {
 
         // Save file button
         element = document.createElement('input');
+        element.classList.add("bsg");
         element.type = 'button';
         element.value = 'Save';
         element.title = 'Export SGF';
@@ -2151,6 +2178,7 @@ if (typeof besogo === "undefined") {
         // Makes a new board button
         function makeNewBoardButton(size) {
             var button = document.createElement('input');
+            button.classList.add("bsg");
             button.type = 'button';
             button.value = size + "x" + size;
             if (size === '?') { // Make button for custom sized board
@@ -2179,6 +2207,7 @@ if (typeof besogo === "undefined") {
         // Creates the file selector
         function makeFileChooser() {
             var chooser = document.createElement('input');
+            chooser.classList.add("bsg");
             chooser.type = 'file';
             chooser.style.display = 'none'; // Keep hidden
             chooser.onchange = readFile; // Read, parse and load on file select
@@ -2213,6 +2242,8 @@ if (typeof besogo === "undefined") {
         function saveFile(fileName, text) {
             var link = document.createElement('a'),
                 blob = new Blob([text], { encoding:"UTF-8", type:"text/plain;charset=UTF-8" });
+
+            link.classList.add("bsg");
 
             link.download = fileName; // Set download file name
             link.href = URL.createObjectURL(blob);
@@ -2731,13 +2762,19 @@ if (typeof besogo === "undefined") {
             blackInfo = document.createTextNode(''),
             whiteCaps = document.createElement('span'),
             blackCaps = document.createElement('span');
+        
+        playerBox.classList.add("bsg");
+        whiteBox.classList.add("bsg");
+        blackBox.classList.add("bsg");
+        whiteCaps.classList.add("bsg");
+        blackCaps.classList.add("bsg");
 
-        playerBox.className = 'besogo-playerInfo';
-        whiteBox.className = 'besogo-whiteInfo';
-        blackBox.className = 'besogo-blackInfo';
-        whiteCaps.className = 'besogo-whiteCaps';
+        playerBox.classList.add('besogo-playerInfo');
+        whiteBox.classList.add('besogo-whiteInfo');
+        blackBox.classList.add('besogo-blackInfo');
+        whiteCaps.classList.add('besogo-whiteCaps');
         whiteCaps.title = 'White captures';
-        blackCaps.className = 'besogo-blackCaps';
+        blackCaps.classList.add('besogo-blackCaps');
         blackCaps.title = 'Black captures';
         whiteBox.appendChild(whiteInfo);
         whiteBox.appendChild(whiteCaps);
@@ -3135,6 +3172,8 @@ if (typeof besogo === "undefined") {
         var attr, // Scratch iteration variable
             element = document.createElementNS("http://www.w3.org/2000/svg", name);
 
+        element.classList.add("bsg");
+
         for ( attr in (attributes || {}) ) { // Add attributes if supplied
             if (attributes.hasOwnProperty(attr)) {
                 element.setAttribute(attr, attributes[attr]);
@@ -3386,6 +3425,7 @@ if (typeof besogo === "undefined") {
         svg.appendChild(besogo.svgLabel(0, 0, 'black', 'A1'));
 
         labelText = document.createElement("input"); // Label entry text field
+        labelText.classList.add("bsg");
         labelText.type = "text";
         labelText.title = 'Next label';
         labelText.onblur = function() {
@@ -3441,6 +3481,8 @@ if (typeof besogo === "undefined") {
                     visibility: 'hidden'
                 });
 
+            button.classList.add("bsg");
+
             container.appendChild(button);
             button.appendChild(svg);
             button.onclick = function() {
@@ -3459,6 +3501,7 @@ if (typeof besogo === "undefined") {
         // Creates text button
         function makeButtonText(text, tip, callback) {
             var button = document.createElement('input');
+            button.classList.add("bsg");
             button.type = 'button';
             button.value = text;
             button.title = tip;
