@@ -11,8 +11,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using Microsoft.AspNetCore.Http.Json;
-using Gosuji.Client;
 
 namespace Gosuji.API
 {
@@ -21,14 +19,6 @@ namespace Gosuji.API
         public static async Task Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-            builder.Services.Configure<JsonOptions>(options =>
-            {
-                options.SerializerOptions.PropertyNamingPolicy = G.JsonSerializerOptions.PropertyNamingPolicy;
-                options.SerializerOptions.PropertyNameCaseInsensitive = G.JsonSerializerOptions.PropertyNameCaseInsensitive;
-                options.SerializerOptions.DefaultIgnoreCondition = G.JsonSerializerOptions.DefaultIgnoreCondition;
-                options.SerializerOptions.Converters.Add(G.JsonSerializerOptions.Converters.First());
-            });
 
             string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>

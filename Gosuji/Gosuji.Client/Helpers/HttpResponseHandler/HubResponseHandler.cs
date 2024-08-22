@@ -61,9 +61,18 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             return response;
         }
 
-        private static async Task<T?> Convert<T>(string data)
+        private static async Task<T?> Convert<T>(object data)
         {
-            return JsonSerializer.Deserialize<T>(data, G.JsonSerializerOptions);
+            if (data is JsonElement jsonElement)
+            {
+                data = typeof(T) == typeof(string) ? jsonElement.GetString()
+                    : typeof(T) == typeof(long) ? jsonElement.GetInt64()
+                    : typeof(T) == typeof(int) ? jsonElement.GetInt32()
+                    : typeof(T) == typeof(bool) ? jsonElement.GetBoolean()
+                    : JsonSerializer.Deserialize<T>(jsonElement.GetRawText(), G.JsonSerializerOptions);
+            }
+
+            return (T)data;
         }
     }
 }

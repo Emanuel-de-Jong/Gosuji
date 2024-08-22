@@ -1,12 +1,10 @@
 ﻿using Gosuji.API.Data;
-using Gosuji.Client;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security.Claims;
-using System.Text.Json;
 
 namespace Gosuji.API.Controllers
 {
@@ -54,21 +52,16 @@ namespace Gosuji.API.Controllers
             return await userManager.FindByIdAsync(userId);
         }
 
-        private static string ToJson<T>(T data)
-        {
-            return JsonSerializer.Serialize(data, G.JsonSerializerOptions);
-        }
-
         public static readonly HubResponse Ok = new(HttpStatusCode.OK);
 
-        public static HubResponse OkData<T>(T data)
+        public static HubResponse OkData(object data)
         {
-            return new(HttpStatusCode.OK, ToJson(data));
+            return new(HttpStatusCode.OK, data);
         }
 
-        public static HubResponse BadRequest<T>(T data)
+        public static HubResponse BadRequest(object data)
         {
-            return new(HttpStatusCode.BadRequest, ToJson(data));
+            return new(HttpStatusCode.BadRequest, data);
         }
 
         public static readonly HubResponse Forbid = new(HttpStatusCode.Forbidden);
