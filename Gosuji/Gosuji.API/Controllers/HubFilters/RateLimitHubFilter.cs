@@ -40,22 +40,32 @@ namespace Gosuji.API.Controllers.HubFilters
         private bool IsRateLimitExceeded(string partitionKey)
         {
             DateTime now = DateTime.UtcNow;
+            bool isRateLimited = false;
 
-            if (rateLimits.TryGetValue(partitionKey, out RateLimitInfo? rateLimitInfo) &&
-                now - rateLimitInfo.Timestamp < WINDOW)
-            {
-                rateLimitInfo.Count++;
-                if (rateLimitInfo.Count > PERMIT_LIMIT)
+            rateLimits.AddOrUpdate(partitionKey,
+                _ => new RateLimitInfo { Count = 1, Timestamp = now }, // Add
+                (_, rateLimitInfo) => // Update
                 {
-                    return true;
-                }
-            }
-            else
-            {
-                rateLimits[partitionKey] = new RateLimitInfo { Count = 1, Timestamp = now };
-            }
+                    lock (rateLimitInfo)
+                    {
+                        if (now - rateLimitInfo.Timestamp < WINDOW)
+                        {
+                            rateLimitInfo.Count++;
+                            if (rateLimitInfo.Count > PERMIT_LIMIT)
+                            {
+                                isRateLimited = true;
+                            }
+                        }
+                        else
+                        {
+                            rateLimitInfo.Count = 1;
+                            rateLimitInfo.Timestamp = now;
+                        }
+                    }
+                    return rateLimitInfo;
+                });
 
-            return false;
+            return isRateLimited;
         }
 
         private class RateLimitInfo
