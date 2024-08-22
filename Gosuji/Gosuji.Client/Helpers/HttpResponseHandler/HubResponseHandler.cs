@@ -7,18 +7,16 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
     {
         public static async Task<APIResponse> TryCatch(string uri, Task<HubResponse> responseTask)
         {
-            Task<HubResponse<object>> newResponse = responseTask.ContinueWith(t =>
-                new HubResponse<object>(t.GetAwaiter().GetResult().StatusCode));
-            return await TryCatch<object>(uri, newResponse);
+            return await TryCatch<object?>(uri, responseTask);
         }
 
-        public static async Task<APIResponse<T>> TryCatch<T>(string uri, Task<HubResponse<T>> responseTask)
+        public static async Task<APIResponse<T>> TryCatch<T>(string uri, Task<HubResponse> responseTask)
         {
             APIResponse<T> response = new();
 
             try
             {
-                HubResponse<T> hubResponse = await responseTask;
+                HubResponse hubResponse = await responseTask;
                 response.StatusCode = hubResponse.StatusCode;
 
                 if (hubResponse.StatusCode != HttpStatusCode.OK)
@@ -30,9 +28,9 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
                         Console.WriteLine($"{uri}: {(int)hubResponse.StatusCode} {response.Message}");
                     }
                 }
-                else
+                else if (hubResponse.Data != null)
                 {
-                    response.Data = hubResponse.Data;
+                    response.Data = (T)hubResponse.Data;
                 }
             }
             catch (Exception e)
@@ -44,14 +42,7 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
 
                 if (e is HubException hubException)
                 {
-                    if (hubException.Message.Contains("Hub_RateLimit"))
-                    {
-                        response.StatusCode = HttpStatusCode.TooManyRequests;
-                    }
-                    else
-                    {
-                        response.StatusCode = HttpStatusCode.BadRequest;
-                    }
+                    response.StatusCode = HttpStatusCode.BadRequest;
                 }
             }
 

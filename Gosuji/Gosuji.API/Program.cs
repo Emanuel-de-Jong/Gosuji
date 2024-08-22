@@ -126,9 +126,11 @@ namespace Gosuji.API
             });
 
             builder.Services.AddSingleton<RateLimitHubFilter>();
+            builder.Services.AddSingleton<ValidateHubFilter>();
             builder.Services.AddSignalR(options =>
             {
                 options.AddFilter<RateLimitHubFilter>();
+                options.AddFilter<ValidateHubFilter>();
             });
 
             builder.Services.AddSingleton<SanitizeService>();

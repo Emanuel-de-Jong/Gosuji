@@ -37,8 +37,8 @@ namespace Gosuji.Client.Services
         public async Task<APIResponse<KataGoVersion>> GetVersion()
         {
             string uri = "GetVersion";
-            return await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse<KataGoVersion>>(uri));
+            return await HubResponseHandler.TryCatch<KataGoVersion>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri));
         }
 
         public async Task<APIResponse> Return()
@@ -51,8 +51,8 @@ namespace Gosuji.Client.Services
         public async Task<APIResponse<bool>> UserHasInstance()
         {
             string uri = "UserHasInstance";
-            return await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse<bool>>(uri));
+            return await HubResponseHandler.TryCatch<bool>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri));
         }
 
         [JSInvokable]
@@ -117,8 +117,8 @@ namespace Gosuji.Client.Services
         public async Task<MoveSuggestion?> AnalyzeMove(string color, string coord)
         {
             string uri = "AnalyzeMove";
-            APIResponse<MoveSuggestion> response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse<MoveSuggestion>>(uri,
+            APIResponse<MoveSuggestion> response = await HubResponseHandler.TryCatch<MoveSuggestion>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri,
                 color, coord));
             return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
@@ -127,8 +127,8 @@ namespace Gosuji.Client.Services
         public async Task<List<MoveSuggestion>?> Analyze(string color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
             string uri = "Analyze";
-            APIResponse<List<MoveSuggestion>> response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse<List<MoveSuggestion>>>(uri,
+            APIResponse<List<MoveSuggestion>> response = await HubResponseHandler.TryCatch<List<MoveSuggestion>>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri,
                 color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
             return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
