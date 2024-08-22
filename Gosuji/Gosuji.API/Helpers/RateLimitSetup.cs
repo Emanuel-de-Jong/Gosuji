@@ -14,21 +14,21 @@ namespace Gosuji.API.Helpers
 
             builder.Services.AddRateLimiter(options =>
             {
-                options.AddPolicy(G.RazorRateLimitPolicyName, context =>
+                options.AddPolicy(SG.ControllerRateLimitPolicyName, context =>
                 {
                     return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
                     {
-                        PermitLimit = 100,
+                        PermitLimit = 20,
                         Window = TimeSpan.FromSeconds(10),
                         QueueLimit = 0
                     });
                 });
 
-                options.AddPolicy(G.ControllerRateLimitPolicyName, context =>
+                options.AddPolicy(SG.HubRateLimitPolicyName, context =>
                 {
                     return RateLimitPartition.GetFixedWindowLimiter(GetPartitionKey(context), partition => new()
                     {
-                        PermitLimit = 20,
+                        PermitLimit = 25,
                         Window = TimeSpan.FromSeconds(10),
                         QueueLimit = 0
                     });

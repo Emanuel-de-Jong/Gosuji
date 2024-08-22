@@ -2,10 +2,12 @@
 using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.KataGo;
+using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.API.Controllers
 {
+    [Authorize]
     public class KataGoHub : CustomHubBase
     {
         private SanitizeService sanitizeService;

@@ -4,5 +4,8 @@
     {
         public const string TokenCookieName = "token";
         public const string RefreshTokenCookieName = "refreshToken";
+
+        public const string ControllerRateLimitPolicyName = "ControllerRateLimitPolicy";
+        public const string HubRateLimitPolicyName = "HubRateLimitPolicy";
     }
 }

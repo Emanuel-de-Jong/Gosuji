@@ -14,7 +14,7 @@ namespace Gosuji.API.Controllers
     [ApiController]
     [Route("api/[controller]/[action]")]
     [Authorize]
-    [EnableRateLimiting(G.ControllerRateLimitPolicyName)]
+    [EnableRateLimiting(SG.ControllerRateLimitPolicyName)]
     public class DataController : CustomControllerBase
     {
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;

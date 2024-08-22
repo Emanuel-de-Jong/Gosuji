@@ -15,9 +15,6 @@ namespace Gosuji.Client
 
         public static CStatusMessage? StatusMessage = null;
 
-        public const string ControllerRateLimitPolicyName = "ControllerRateLimitPolicy";
-        public const string RazorRateLimitPolicyName = "RazorRateLimitPolicy";
-
         public static string[] SupportedLangs = { "en", "zh", "ko", "ja" };
 
         public const string ReturnUriName = "ReturnUri";
