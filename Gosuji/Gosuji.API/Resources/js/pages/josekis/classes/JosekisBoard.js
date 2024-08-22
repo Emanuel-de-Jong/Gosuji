@@ -36,6 +36,8 @@ export class JosekisBoard extends Board {
         document.querySelector(".passBtn").addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("Pass"); });
         document.querySelector(".lastBranchBtn").addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("LastBranch"); });
         document.querySelector('button[title="First node"]').addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("First"); });
+        document.querySelector('button[title="Previous node"]').addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("Prev"); });
+
         this.editor.addListener(this.crossPlacedListener);
     }
 

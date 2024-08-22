@@ -7,10 +7,6 @@ josekisPage.init = function (josekisRef, stoneVolume) {
 
     this.board = new JosekisBoard();
     this.board.init(19, 0, stoneVolume);
-
-    document.querySelector('button[title="Previous node"]').addEventListener("click", async () => {
-        await this.josekisRef.invokeMethodAsync("Prev");
-    });
 };
 
 export { josekisPage };

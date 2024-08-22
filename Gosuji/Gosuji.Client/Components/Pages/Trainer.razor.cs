@@ -383,7 +383,7 @@ namespace Gosuji.Client.Components.Pages
             trainerRef?.Dispose();
             kataGoServiceRef?.Dispose();
 
-            if (userName != null)
+            if (kataGoService.IsConnected)
             {
                 await kataGoService.Return();
                 await kataGoService.Stop();

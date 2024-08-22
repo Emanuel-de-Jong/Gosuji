@@ -3,7 +3,9 @@ using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
 {
@@ -15,48 +17,66 @@ namespace Gosuji.Client.Components.Pages
         private const string EDITOR = $"{BOARD}.editor";
 
         [Inject]
+        private AuthenticationStateProvider authenticationStateProvider { get; set; }
+        [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
         private JosekisService josekisService { get; set; }
         [Inject]
         private DataService dataService { get; set; }
+        [Inject]
+        private SettingConfigService settingConfigService { get; set; }
 
         private DotNetObjectReference<Josekis>? josekisRef;
         private int sessionId;
         private IJSObjectReference jsRef;
 
-        private SettingConfig? settingConfig;
         private bool isJSInitialized = false;
 
         public string[]? Comment { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            josekisRef = DotNetObjectReference.Create(this);
-            sessionId = random.Next(100_000_000, 999_999_999);
+            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
+            {
+                await settingConfigService.InitSettingConfig();
+            }
+            else
+            {
+                await settingConfigService.SettingConfigFromDb();
+            }
 
-            APIResponse<SettingConfig> response = await dataService.GetSettingConfig();
-            if (G.StatusMessage.HandleAPIResponse(response)) return;
-            settingConfig = response.Data;
+            sessionId = random.Next(100_000_000, 999_999_999);
+            josekisRef = DotNetObjectReference.Create(this);
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/josekis/bundle.js");
 
-            if (settingConfig != null && !isJSInitialized)
+            if (josekisRef != null && !isJSInitialized)
             {
                 isJSInitialized = true;
 
-                APIResponse startResponse = await josekisService.Start();
-                if (G.StatusMessage.HandleAPIResponse(startResponse)) return;
-
-                APIResponse response = await josekisService.AddSession(sessionId);
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-
-                await jsRef.InvokeVoidAsync("josekisPage.init", josekisRef, settingConfig.CalcStoneVolume());
-                await AddMarkups();
+                await jsRef.InvokeVoidAsync("josekisPage.init", josekisRef, settingConfigService.SettingConfig.CalcStoneVolume());
             }
+        }
+
+        private async Task<bool> Start()
+        {
+            if (josekisService.IsConnected)
+            {
+                return true;
+            }
+
+            APIResponse startResponse = await josekisService.Start();
+            if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
+
+            APIResponse response = await josekisService.AddSession(sessionId);
+            if (G.StatusMessage.HandleAPIResponse(response)) return false;
+
+            return true;
         }
 
         private async Task Play()
@@ -154,6 +174,8 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task Pass()
         {
+            if (!await Start()) return;
+
             APIResponse response = await josekisService.ToChild(sessionId, new JosekisNode(20, 20));
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             
@@ -163,6 +185,8 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task Prev()
         {
+            if (!await Start()) return;
+
             APIResponse response = await josekisService.ToParent(sessionId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             
@@ -173,6 +197,8 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task LastBranch()
         {
+            if (!await Start()) return;
+
             APIResponse<int> response = await josekisService.ToLastBranch(sessionId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             int returnCount = response.Data;
@@ -186,6 +212,8 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task First()
         {
+            if (!await Start()) return;
+
             APIResponse response = await josekisService.ToFirst(sessionId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
@@ -196,6 +224,8 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task Next(int x, int y)
         {
+            if (!await Start()) return;
+
             APIResponse<bool> response = await josekisService.ToChild(sessionId, new JosekisNode(x, y));
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
@@ -207,18 +237,15 @@ namespace Gosuji.Client.Components.Pages
             await Play();
         }
 
-        public void Dispose()
-        {
-            josekisRef?.Dispose();
-            josekisService.RemoveSession(sessionId);
-        }
-
         public async ValueTask DisposeAsync()
         {
             josekisRef?.Dispose();
 
-            await josekisService.RemoveSession(sessionId);
-            await josekisService.Stop();
+            if (josekisService.IsConnected)
+            {
+                await josekisService.RemoveSession(sessionId);
+                await josekisService.Stop();
+            }
         }
     }
 }
