@@ -15,6 +15,13 @@ export class JosekisBoard extends Board {
     clear(boardsize, handicap, sgf) {
         super.clear(boardsize, handicap, sgf);
 
+        this.addMarkup(16, 4, "A");
+        this.addMarkup(17, 4, "B");
+        this.addMarkup(16, 5, "C");
+        this.addMarkup(17, 3, "D");
+        this.addMarkup(17, 5, "E");
+        this.redraw();
+
         document.querySelector('button[title="Jump back"]').remove();
         document.querySelector('button[title="Next node"]').remove();
         document.querySelector('button[title="Jump forward"]').remove();
