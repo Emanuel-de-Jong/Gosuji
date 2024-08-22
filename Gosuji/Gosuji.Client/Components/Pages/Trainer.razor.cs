@@ -103,30 +103,12 @@ namespace Gosuji.Client.Components.Pages
                 isJSInitialized = true;
 
                 jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js");
-
-                APIResponse startResponse = await kataGoService.Start();
-                if (G.StatusMessage.HandleAPIResponse(startResponse)) return;
-
-                APIResponse<bool> response = await kataGoService.UserHasInstance();
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-                bool userHasInstance = response.Data;
-
-                if (userHasInstance)
-                {
-                    await js.InvokeVoidAsync("alert", "You already use this page somewhere else!");
-                    return;
-                }
-
                 await InitJS();
             }
         }
 
         public async Task InitJS()
         {
-            APIResponse<KataGoVersion> response = await kataGoService.GetVersion();
-            if (G.StatusMessage.HandleAPIResponse(response)) return;
-            kataGoVersion = response.Data;
-
             if (GameId != null)
             {
                 game = (await dataService.GetGame(GameId.Value)).Data;
@@ -143,7 +125,6 @@ namespace Gosuji.Client.Components.Pages
                     trainerRef,
                     kataGoServiceRef,
                     userName,
-                    kataGoVersion,
                     settingConfigService.SettingConfig.CalcStoneVolume(),
 
                     game.Boardsize,
@@ -163,9 +144,38 @@ namespace Gosuji.Client.Components.Pages
                     trainerRef,
                     kataGoServiceRef,
                     userName,
-                    kataGoVersion,
                     settingConfigService.SettingConfig.CalcStoneVolume());
             }
+        }
+
+        [JSInvokable]
+        public async Task<bool> Start()
+        {
+            if (kataGoService.IsConnected)
+            {
+                return true;
+            }
+
+            APIResponse startResponse = await kataGoService.Start();
+            if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
+
+            APIResponse<bool> userHasInstanceResponse = await kataGoService.UserHasInstance();
+            if (G.StatusMessage.HandleAPIResponse(userHasInstanceResponse)) return false;
+            bool userHasInstance = userHasInstanceResponse.Data;
+
+            if (userHasInstance)
+            {
+                G.StatusMessage.SetMessage("You already use this page somewhere else!", false);
+                return false;
+            }
+
+            APIResponse<KataGoVersion> getVersionResponse = await kataGoService.GetVersion();
+            if (G.StatusMessage.HandleAPIResponse(getVersionResponse)) return false;
+            kataGoVersion = getVersionResponse.Data;
+
+            await jsRef.InvokeVoidAsync("trainerG.setKataGoVersion", kataGoVersion);
+
+            return true;
         }
 
         private async Task SelectPreset(ChangeEventArgs e)
@@ -364,6 +374,8 @@ namespace Gosuji.Client.Components.Pages
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
             game = newGame;
+
+            G.StatusMessage.SetMessage("Game saved.");
         }
 
         public async ValueTask DisposeAsync()

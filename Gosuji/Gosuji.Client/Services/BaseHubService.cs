@@ -9,6 +9,7 @@ namespace Gosuji.Client.Services
     public abstract class BaseHubService
     {
         public HubConnection HubConnection { get; private set; }
+        public bool IsConnected => HubConnection.State == HubConnectionState.Connected;
 
         public BaseHubService(IConfiguration configuration, UserService userService, string uri)
         {

@@ -23,7 +23,6 @@ db.save = async function () {
     await db.saveTrainerSettingConfig();
     await db.saveGameStats();
     await db.saveGame();
-    alert("Game saved successfully");
 };
 
 db.saveTrainerSettingConfig = async function () {

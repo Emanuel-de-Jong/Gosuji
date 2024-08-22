@@ -35,9 +35,8 @@ trainerG.PHASE_TYPE = {
 trainerG.isLoadingServerData = false;
 
 
-trainerG.init = function (trainerRef, kataGoVersion, serverSuggestions, serverMoveTypes) {
+trainerG.init = function (trainerRef, serverSuggestions, serverMoveTypes) {
     trainerG.trainerRef = trainerRef;
-    trainerG.kataGoVersion = kataGoVersion;
 
     trainerG.loadAnimation = document.querySelector("#game .loadAnimation");
     trainerG.phaseChangedEvent = new CEvent();
@@ -115,6 +114,11 @@ trainerG.setColor = function (color = trainerG.board.getNextColor()) {
         sgf.setRankAIMeta();
     }
 };
+
+trainerG.setKataGoVersion = function (kataGoVersion) {
+    trainerG.kataGoVersion = kataGoVersion;
+};
+
 
 trainerG.showLoadAnimation = function() {
     trainerG.loadAnimation.hidden = false;

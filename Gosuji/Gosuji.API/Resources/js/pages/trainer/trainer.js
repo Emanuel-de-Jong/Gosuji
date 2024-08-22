@@ -28,7 +28,6 @@ trainerPage.init = async function (
     trainerRef,
     kataGoServiceRef,
     userName,
-    kataGoVersion,
     stoneVolume,
 
     serverBoardsize,
@@ -59,7 +58,7 @@ trainerPage.init = async function (
     // console.log(serverMoveTypes);
     // console.log(serverChosenNotPlayedCoords);
 
-    trainerG.init(trainerRef, kataGoVersion, serverSuggestions, serverMoveTypes);
+    trainerG.init(trainerRef, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
 
     trainerPage.startButton = document.getElementById("startBtn");
@@ -113,6 +112,8 @@ trainerPage.clear = async function () {
 
 trainerPage.start = async function () {
     await katago.start();
+
+    sgfComment.setComment(trainerG.MOVE_TYPE.INIT);
     
     if (trainerG.isLoadingServerData || debug.testData) {
         trainerG.isLoadingServerData = false;

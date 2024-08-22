@@ -24,6 +24,19 @@ katago.start = async function () {
     }
     katago.isStarted = true;
 
+    let startResult = await trainerG.trainerRef
+        .invokeMethodAsync("Start")
+        .then((response) => {
+            return response;
+        })
+        .catch((error) => {
+            return error;
+        });
+    
+    if (startResult == false) {
+        return;
+    }
+
     await katago.restart();
     await katago.setBoardsize();
     await katago.setRuleset();

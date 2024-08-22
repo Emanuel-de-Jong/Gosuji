@@ -6,7 +6,11 @@
 
 @if (Show)
 {
-    <div class="alert alert-@(isSuccess ? "success" : "danger")" role="alert">
+    <div class="alert alert-@(isSuccess ? "success" : "danger") statusMessage" role="alert">
+        <span class="closeIconDiv" @onclick="() => show = false">
+            <i class="fa-regular fa-circle-xmark"></i>
+        </span>
+
         @if (isUnauthorized)
         {
             <span>Access denied. Please <a href="login" class="alert-link">Log in</a>.</span>
