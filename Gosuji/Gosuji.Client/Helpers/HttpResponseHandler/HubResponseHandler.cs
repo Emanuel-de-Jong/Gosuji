@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Net;
+using System.Text.Json;
 
 namespace Gosuji.Client.Helpers.HttpResponseHandler
 {
@@ -21,7 +22,7 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
 
                 if (hubResponse.StatusCode != HttpStatusCode.OK)
                 {
-                    response.Message = hubResponse.Data != null ? hubResponse.Data.ToString() : "";
+                    response.Message = hubResponse.Data != null ? await Convert<string>(hubResponse.Data) : "";
 
                     if (hubResponse.StatusCode != HttpStatusCode.Accepted)
                     {
@@ -30,7 +31,7 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
                 }
                 else if (hubResponse.Data != null)
                 {
-                    response.Data = (T)hubResponse.Data;
+                    response.Data = await Convert<T>(hubResponse.Data);
                 }
             }
             catch (Exception e)
@@ -47,6 +48,20 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             }
 
             return response;
+        }
+
+        private static async Task<T?> Convert<T>(object data)
+        {
+            if (data is JsonElement jsonElement)
+            {
+                data = typeof(T) == typeof(string) ? jsonElement.GetString()
+                    : typeof(T) == typeof(long) ? jsonElement.GetInt64()
+                    : typeof(T) == typeof(int) ? jsonElement.GetInt32()
+                    : typeof(T) == typeof(bool) ? jsonElement.GetBoolean()
+                    : JsonSerializer.Deserialize<T>(jsonElement.GetRawText());
+            }
+
+            return (T)data;
         }
     }
 }

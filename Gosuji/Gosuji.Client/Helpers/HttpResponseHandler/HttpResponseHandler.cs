@@ -87,7 +87,7 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
                 }
                 else if (!string.IsNullOrEmpty(content))
                 {
-                    response.Data = await Convert<T>(httpResponse, uri);
+                    response.Data = await Convert<T>(httpResponse);
                 }
             }
             catch (Exception e)
@@ -101,7 +101,7 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
             return response;
         }
 
-        private static async Task<T?> Convert<T>(HttpResponseMessage httpResponse, string uri)
+        private static async Task<T?> Convert<T>(HttpResponseMessage httpResponse)
         {
             return typeof(T) == typeof(string) ? (T)(object)await httpResponse.Content.ReadAsStringAsync()
                 : typeof(T) == typeof(long) ? (T)(object)long.Parse(await httpResponse.Content.ReadAsStringAsync())

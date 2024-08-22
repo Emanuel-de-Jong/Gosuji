@@ -54,7 +54,7 @@ namespace Gosuji.API.Controllers
 
         public static readonly HubResponse Ok = new(HttpStatusCode.OK);
 
-        public static HubResponse OkData<T>(T? data)
+        public static HubResponse OkData(object data)
         {
             return new(HttpStatusCode.OK, data);
         }

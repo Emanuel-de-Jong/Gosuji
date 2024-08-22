@@ -4,6 +4,7 @@ using Gosuji.API.Data;
 using Gosuji.API.Helpers;
 using Gosuji.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -166,7 +167,10 @@ namespace Gosuji.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapHub<KataGoHub>("/katagohub");
+            app.MapHub<KataGoHub>("/katagohub", options =>
+            {
+                options.Transports = HttpTransportType.WebSockets;
+            });
 
             app.MapControllers();
 
