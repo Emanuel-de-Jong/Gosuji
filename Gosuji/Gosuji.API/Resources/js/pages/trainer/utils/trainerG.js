@@ -163,8 +163,9 @@ trainerG.pass = async function (suggestion) {
 
     trainerG.board.pass();
 
-    alert("Game finished!");
-    // await db.save();
+    trainerG.board.finishedOverlay.hidden = false;
+
+    await db.save();
 };
 
 trainerG.getResultStr = function () {
