@@ -8,7 +8,7 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
     {
         public static JsonSerializerOptions jsonSerializerOptions = new()
         {
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
         };
 
         public static async Task<APIResponse> TryCatch(string uri, Task<HubResponse> responseTask)
@@ -39,17 +39,28 @@ namespace Gosuji.Client.Helpers.HttpResponseHandler
                     response.Data = await Convert<T>(hubResponse.Data);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                Console.WriteLine($"{uri}: {e.GetType().Name} {e.Message} ({e.StackTrace})");
+                response = HandleException<T>(exception, uri);
+            }
 
-                response.StatusCode = HttpStatusCode.NotImplemented;
-                response.Message = e.Message;
+            return response;
+        }
 
-                if (e is HubException hubException)
-                {
-                    response.StatusCode = HttpStatusCode.BadRequest;
-                }
+        public static APIResponse HandleException(Exception exception, string uri)
+        {
+            return HandleException<object?>(exception, uri);
+        }
+
+        public static APIResponse<T> HandleException<T>(Exception exception, string uri)
+        {
+            Console.WriteLine($"{uri}: {exception.GetType().Name} {exception.Message} ({exception.StackTrace})");
+
+            APIResponse<T> response = new(HttpStatusCode.NotImplemented, exception.Message);
+
+            if (exception is HubException hubException)
+            {
+                response.StatusCode = HttpStatusCode.BadRequest;
             }
 
             return response;

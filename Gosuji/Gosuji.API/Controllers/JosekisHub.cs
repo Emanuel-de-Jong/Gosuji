@@ -1,5 +1,6 @@
 ﻿using Gosuji.API.Helpers;
 using Gosuji.API.Services;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Josekis;
 using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
@@ -10,10 +11,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace Gosuji.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]/[action]")]
-    [EnableRateLimiting(RateLimitSetup.CONTROLLER_POLICY_NAME)]
-    public class JosekisController : CustomControllerBase
+    public class JosekisHub : CustomHubBase
     {
         private static readonly string SESSION_UNKNOWN_ERR = "SessionId unknown.";
 
@@ -22,7 +20,7 @@ namespace Gosuji.API.Controllers
         private static Dictionary<int, GoNode> josekisGoNodes = [];
         private static GoGame baseGame;
 
-        public JosekisController(SanitizeService _sanitizeService)
+        public JosekisHub(SanitizeService _sanitizeService)
         {
             sanitizeService = _sanitizeService;
 
@@ -34,24 +32,19 @@ namespace Gosuji.API.Controllers
             }
         }
 
-        [HttpPost("{sessionId}")]
-        [EnableRateLimiting("rl5")]
-        public async Task<ActionResult> AddSession(int sessionId)
+        public async Task<HubResponse> AddSession(int sessionId)
         {
             josekisGoNodes[sessionId] = baseGame.RootNode;
-            return Ok();
+            return Ok;
         }
 
-        [HttpPost("{sessionId}")]
-        [EnableRateLimiting("rl5")]
-        public async Task<ActionResult> RemoveSession(int sessionId)
+        public async Task<HubResponse> RemoveSession(int sessionId)
         {
             josekisGoNodes.Remove(sessionId);
-            return Ok();
+            return Ok;
         }
 
-        [HttpGet("{sessionId}")]
-        public async Task<ActionResult<JosekisNode>> Current(int sessionId)
+        public async Task<HubResponse> Current(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
@@ -60,11 +53,10 @@ namespace Gosuji.API.Controllers
 
             GoNode node = josekisGoNodes[sessionId];
             JosekisNode result = node is GoMoveNode moveNode ? JosekisNodeConverter.Convert(moveNode) : JosekisNodeConverter.Convert(node);
-            return Ok(result);
+            return OkData(result);
         }
 
-        [HttpPost("{sessionId}")]
-        public async Task<ActionResult> ToParent(int sessionId)
+        public async Task<HubResponse> ToParent(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
@@ -74,15 +66,14 @@ namespace Gosuji.API.Controllers
             GoNode node = josekisGoNodes[sessionId];
             if (node.ParentNode == null)
             {
-                return Ok();
+                return Ok;
             }
 
             josekisGoNodes[sessionId] = node.ParentNode;
-            return Ok();
+            return Ok;
         }
 
-        [HttpPost("{sessionId}")]
-        public async Task<ActionResult<int>> ToLastBranch(int sessionId)
+        public async Task<HubResponse> ToLastBranch(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
@@ -107,11 +98,10 @@ namespace Gosuji.API.Controllers
 
             josekisGoNodes[sessionId] = node;
 
-            return Ok(returnCount);
+            return OkData(returnCount);
         }
 
-        [HttpPost("{sessionId}")]
-        public async Task<ActionResult> ToFirst(int sessionId)
+        public async Task<HubResponse> ToFirst(int sessionId)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
@@ -119,11 +109,10 @@ namespace Gosuji.API.Controllers
             }
 
             josekisGoNodes[sessionId] = baseGame.RootNode;
-            return Ok();
+            return Ok;
         }
 
-        [HttpPost("{sessionId}")]
-        public async Task<ActionResult<bool>> ToChild(int sessionId, JosekisNode childToGo)
+        public async Task<HubResponse> ToChild(int sessionId, JosekisNode childToGo)
         {
             if (!josekisGoNodes.ContainsKey(sessionId))
             {
@@ -137,12 +126,12 @@ namespace Gosuji.API.Controllers
                     if (childToGo.X == childMove.Stone.X && childToGo.Y == childMove.Stone.Y)
                     {
                         josekisGoNodes[sessionId] = childMove;
-                        return Ok(true);
+                        return OkData(true);
                     }
                 }
             }
 
-            return Ok(false);
+            return OkData(false);
         }
     }
 }

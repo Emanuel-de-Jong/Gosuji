@@ -59,6 +59,11 @@ namespace Gosuji.API.Controllers
             return new(HttpStatusCode.OK, data);
         }
 
+        public static HubResponse BadRequest(object data)
+        {
+            return new(HttpStatusCode.OK, data);
+        }
+
         public static readonly HubResponse Forbid = new(HttpStatusCode.Forbidden);
     }
 }

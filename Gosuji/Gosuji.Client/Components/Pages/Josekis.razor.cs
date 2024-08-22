@@ -7,7 +7,7 @@ using Microsoft.JSInterop;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Josekis : CustomPage, IDisposable
+    public partial class Josekis : CustomPage, IAsyncDisposable
     {
         private static Random random = new();
 
@@ -46,6 +46,9 @@ namespace Gosuji.Client.Components.Pages
 
             if (firstRender)
             {
+                APIResponse startResponse = await josekisService.Start();
+                if (G.StatusMessage.HandleAPIResponse(startResponse)) return;
+
                 APIResponse response = await josekisService.AddSession(sessionId);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
@@ -211,6 +214,14 @@ namespace Gosuji.Client.Components.Pages
         {
             josekisRef?.Dispose();
             josekisService.RemoveSession(sessionId);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            josekisRef?.Dispose();
+
+            await josekisService.RemoveSession(sessionId);
+            await josekisService.Stop();
         }
     }
 }

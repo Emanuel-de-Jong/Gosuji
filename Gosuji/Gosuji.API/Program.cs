@@ -70,8 +70,7 @@ namespace Gosuji.API
                     OnMessageReceived = context =>
                     {
                         string token = context.Request.Cookies[JwtService.TOKEN_COOKIE_NAME];
-                        PathString path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(token) && path.StartsWithSegments("/katagohub"))
+                        if (!string.IsNullOrEmpty(token))
                         {
                             context.Token = token;
                         }
@@ -168,6 +167,10 @@ namespace Gosuji.API
             app.UseAuthorization();
 
             app.MapHub<KataGoHub>("/katagohub", options =>
+            {
+                options.Transports = HttpTransportType.WebSockets;
+            });
+            app.MapHub<JosekisHub>("/josekishub", options =>
             {
                 options.Transports = HttpTransportType.WebSockets;
             });

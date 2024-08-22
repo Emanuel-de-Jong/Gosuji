@@ -2,36 +2,16 @@
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services.User;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 
 namespace Gosuji.Client.Services
 {
-    public class KataGoService
+    public class KataGoService : BaseHubService
     {
-        public HubConnection HubConnection { get; private set; }
-
         public KataGoService(IConfiguration configuration, UserService userService)
+            :base(configuration, userService, "katagohub")
         {
-            HubConnection = new HubConnectionBuilder()
-                .WithUrl($"{configuration["BackendUrl"]}/katagohub", options =>
-                {
-                    options.AccessTokenProvider = async () => await userService.GetToken();
-                    options.Transports = HttpTransportType.WebSockets;
-                })
-                .WithAutomaticReconnect()
-                .Build();
-        }
-
-        public async Task Start()
-        {
-            await HubConnection.StartAsync();
-        }
-
-        public async Task Stop()
-        {
-            await HubConnection.StopAsync();
         }
 
         public async Task<APIResponse<KataGoVersion>> GetVersion()

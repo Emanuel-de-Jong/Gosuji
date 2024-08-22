@@ -12,7 +12,7 @@ using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
 {
-    public partial class Trainer : CustomPage, IDisposable
+    public partial class Trainer : CustomPage, IAsyncDisposable
     {
         [Parameter]
         public long? GameId { get; set; }
@@ -104,7 +104,9 @@ namespace Gosuji.Client.Components.Pages
 
                 jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js");
 
-                await kataGoService.Start();
+                APIResponse startResponse = await kataGoService.Start();
+                if (G.StatusMessage.HandleAPIResponse(startResponse)) return;
+
                 APIResponse<bool> response = await kataGoService.UserHasInstance();
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
                 bool userHasInstance = response.Data;
@@ -364,15 +366,15 @@ namespace Gosuji.Client.Components.Pages
             game = newGame;
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
             trainerRef?.Dispose();
             kataGoServiceRef?.Dispose();
 
             if (userName != null)
             {
-                kataGoService.Return().Wait();
-                kataGoService.Stop().Wait();
+                await kataGoService.Return();
+                await kataGoService.Stop();
             }
         }
     }

@@ -1,59 +1,65 @@
 ﻿using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Josekis;
+using Gosuji.Client.Services.User;
+using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Gosuji.Client.Services
 {
-    public class JosekisService
+    public class JosekisService : BaseHubService
     {
-        private static string MAP_GROUP = "/api/Josekis";
-
-        private HttpClient http;
-
-        public JosekisService(IHttpClientFactory httpClientFactory)
+        public JosekisService(IConfiguration configuration, UserService userService)
+            :base(configuration, userService, "josekishub")
         {
-            http = httpClientFactory.CreateClient("Auth");
         }
 
         public async Task<APIResponse> AddSession(int sessionId)
         {
-            return await HttpResponseHandler.Post(http,
-                $"{MAP_GROUP}/AddSession/{sessionId}");
+            string uri = "AddSession";
+            return await HubResponseHandler.TryCatch(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri, sessionId));
         }
 
         public async Task<APIResponse> RemoveSession(int sessionId)
         {
-            return await HttpResponseHandler.Post(http,
-                $"{MAP_GROUP}/RemoveSession/{sessionId}");
+            string uri = "RemoveSession";
+            return await HubResponseHandler.TryCatch(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri, sessionId));
         }
 
         public async Task<APIResponse<JosekisNode>> Current(int sessionId)
         {
-            return await HttpResponseHandler.Get<JosekisNode>(http,
-                $"{MAP_GROUP}/Current/{sessionId}");
+            string uri = "Current";
+            return await HubResponseHandler.TryCatch<JosekisNode>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri, sessionId));
         }
 
         public async Task<APIResponse> ToParent(int sessionId)
         {
-            return await HttpResponseHandler.Post(http,
-                $"{MAP_GROUP}/ToParent/{sessionId}");
+            string uri = "ToParent";
+            return await HubResponseHandler.TryCatch(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri, sessionId));
         }
 
         public async Task<APIResponse<int>> ToLastBranch(int sessionId)
         {
-            return await HttpResponseHandler.Post<int>(http,
-                $"{MAP_GROUP}/ToLastBranch/{sessionId}");
+            string uri = "ToLastBranch";
+            return await HubResponseHandler.TryCatch<int>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri, sessionId));
         }
 
         public async Task<APIResponse> ToFirst(int sessionId)
         {
-            return await HttpResponseHandler.Post(http,
-                $"{MAP_GROUP}/ToFirst/{sessionId}");
+            string uri = "ToFirst";
+            return await HubResponseHandler.TryCatch(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri, sessionId));
         }
 
         public async Task<APIResponse<bool>> ToChild(int sessionId, JosekisNode childToGo)
         {
-            return await HttpResponseHandler.Post<bool>(http,
-                $"{MAP_GROUP}/ToChild/{sessionId}", childToGo);
+            string uri = "ToChild";
+            return await HubResponseHandler.TryCatch<bool>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri, sessionId,
+                childToGo));
         }
     }
 }
