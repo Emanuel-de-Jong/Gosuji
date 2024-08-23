@@ -47,6 +47,7 @@ namespace Gosuji.Client.Components.Pages
         private UserState? userState;
         private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
+        private KataGoVisits kataGoVisits;
 
         private Game? game;
         private GameStat? gameStat;
@@ -64,6 +65,14 @@ namespace Gosuji.Client.Components.Pages
             }
 
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
+
+            kataGoVisits = new()
+            {
+                PreVisits = 200,
+                SelfplayVisits = 200,
+                SuggestionVisits = 200,
+                OpponentVisits = 200,
+            };
 
             await settingConfigService.SettingConfigFromDb();
 
@@ -392,5 +401,13 @@ namespace Gosuji.Client.Components.Pages
                 await kataGoService.Stop();
             }
         }
+    }
+
+    public class KataGoVisits
+    {
+        public int PreVisits { get; set; }
+        public int SelfplayVisits { get; set; }
+        public int SuggestionVisits { get; set; }
+        public int OpponentVisits { get; set; }
     }
 }

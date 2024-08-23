@@ -23,14 +23,6 @@ namespace Gosuji.Client.Data
         public bool PreMovesSwitch { get; set; }
         [Required]
         public int PreMoves { get; set; }
-        [Range(2, 100_000)]
-        public int? PreVisits { get; set; }
-        [Range(2, 100_000)]
-        public int? SelfplayVisits { get; set; }
-        [Range(2, 100_000)]
-        public int? SuggestionVisits { get; set; }
-        [Range(2, 100_000)]
-        public int? OpponentVisits { get; set; }
         [Required]
         public bool DisableAICorrection { get; set; }
 
@@ -111,10 +103,6 @@ namespace Gosuji.Client.Data
             builder.Append(config.ColorType);
             builder.Append(config.PreMovesSwitch);
             builder.Append(config.PreMoves);
-            builder.Append(config.PreVisits);
-            builder.Append(config.SelfplayVisits);
-            builder.Append(config.SuggestionVisits);
-            builder.Append(config.OpponentVisits);
             builder.Append(config.DisableAICorrection);
 
             builder.Append(config.Ruleset);
