@@ -29,6 +29,8 @@ trainerPage.init = async function (
     kataGoServiceRef,
     userName,
     stoneVolume,
+    isPreMoveStoneSound,
+    isSelfplayStoneSound,
 
     serverBoardsize,
     serverHandicap,
@@ -61,7 +63,8 @@ trainerPage.init = async function (
     trainerG.init(trainerRef, serverSuggestions, serverMoveTypes);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
     settings.init(serverColor);
-    trainerG.board.init(serverBoardsize, serverHandicap, stoneVolume, serverSGF);
+    trainerG.board.init(serverBoardsize, serverHandicap, serverSGF,
+        stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound);
 
     trainerPage.startButton = document.getElementById("startBtn");
     trainerPage.restartButton = document.getElementById("restartBtn");
@@ -97,7 +100,7 @@ trainerPage.clear = async function () {
 
     trainerG.clear();
     settings.clear();
-    trainerG.board.clear();
+    trainerG.board.init();
     await sgf.clear();
     sgfComment.clear();
     scoreChart.clear();

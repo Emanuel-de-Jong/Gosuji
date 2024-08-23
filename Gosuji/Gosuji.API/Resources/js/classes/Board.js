@@ -44,22 +44,21 @@ if (typeof Board === "undefined") {
             nowheel: true,
         };
 
-        init(boardsize, handicap, stoneVolume, sgf) {
-            this.placeStoneAudios = [];
+        init(boardsize, handicap, sgf, stoneVolume) {
+            if (this.placeStoneAudios == null) {
+                this.placeStoneAudios = [];
 
-            let fileDir = "resources/audio/pages/trainer/";
-            for (let i = 0; i < 5; i++) {
-                let audio = new Audio(fileDir + "placeStone" + i + ".mp3");
-                audio.volume = stoneVolume;
-                this.placeStoneAudios.push(audio);
+                let fileDir = "resources/audio/pages/trainer/";
+                for (let i = 0; i < 5; i++) {
+                    let audio = new Audio(fileDir + "placeStone" + i + ".mp3");
+                    this.placeStoneAudios.push(audio);
+                }
             }
 
-            this.lastPlaceStoneAudioIndex = 0;
+            if (stoneVolume != null) {
+                this.setStoneVolume(stoneVolume);
+            }
 
-            this.clear(boardsize, handicap, sgf);
-        }
-
-        clear(boardsize, handicap, sgf) {
             this.boardsize = boardsize;
             this.setHandicap(handicap);
 
@@ -94,11 +93,15 @@ if (typeof Board === "undefined") {
             this.lastMove = this.editor.getCurrent();
         }
 
+        setStoneVolume(volume) {
+            this.placeStoneAudios.forEach((audio) => audio.volume = volume);
+        }
+
         playPlaceStoneAudio() {
             let placeStoneAudioIndex;
             do {
                 placeStoneAudioIndex = utils.randomInt(5);
-            } while (placeStoneAudioIndex == this.lastPlaceStoneAudioIndex);
+            } while (this.lastPlaceStoneAudioIndex != null && placeStoneAudioIndex == this.lastPlaceStoneAudioIndex);
             this.lastPlaceStoneAudioIndex = placeStoneAudioIndex;
 
             this.placeStoneAudios[placeStoneAudioIndex].play();

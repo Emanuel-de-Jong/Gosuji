@@ -25,24 +25,24 @@ export class TrainerBoard extends Board {
         }
     }
 
-    init(serverBoardsize, serverHandicap, stoneVolume, serverSGF) {
-        this.handicapElement = document.getElementById("currentHandicap");
+    init(serverBoardsize, serverHandicap, serverSGF, stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
+        if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
+            this.handicapElement = document.getElementById("currentHandicap");
 
-        super.init(serverBoardsize, serverHandicap, stoneVolume, serverSGF);
+            // Disable mouse 3/4 triggering prev/next in browser
+            document.addEventListener("mouseup", (e) => {
+                if (typeof e === "object" && (e.button == 3 || e.button == 4)) {
+                    e.preventDefault();
+                }
+            });
+            utils.addEventsListener(document, ["keydown", "mousedown"], this.keydownAndMousedownListener);
+        }
 
-        // Disable mouse 3/4 triggering prev/next in browser
-        document.addEventListener("mouseup", (e) => {
-            if (typeof e === "object" && (e.button == 3 || e.button == 4)) {
-                e.preventDefault();
-            }
-        });
-        utils.addEventsListener(document, ["keydown", "mousedown"], this.keydownAndMousedownListener);
-    }
-
-    clear(serverBoardsize, serverHandicap, serverSGF) {
-        super.clear(serverBoardsize ? serverBoardsize : settings.boardsize,
+        super.init(serverBoardsize ? serverBoardsize : settings.boardsize,
             serverHandicap != null ? serverHandicap : settings.handicap,
-            serverSGF);
+            serverSGF, stoneVolume);
+        
+        this.setStoneVolume(stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound);
 
         document.querySelector('#game button[title="Variants: [child]/sibling"]').remove();
         document.querySelector('#game button[title="Variants: show/[hide]"]').remove();
@@ -104,7 +104,11 @@ export class TrainerBoard extends Board {
         this.editor.setTool("navOnly");
 
         if (tool == "auto" || tool == "playB" || tool == "playW") {
-            if (trainerG.phase == trainerG.PHASE_TYPE.CORNERS || trainerG.phase == trainerG.PHASE_TYPE.PREMOVES || trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY) {
+            if (trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY ||
+                this.isPreMoveStoneSound &&
+                    (trainerG.phase == trainerG.PHASE_TYPE.CORNERS || trainerG.phase == trainerG.PHASE_TYPE.PREMOVES) ||
+                this.isSelfplayStoneSound && trainerG.phase == trainerG.PHASE_TYPE.SELFPLAY
+            ) {
                 this.playPlaceStoneAudio();
             }
 
@@ -122,6 +126,12 @@ export class TrainerBoard extends Board {
                 }
             }
         }
+    }
+
+    setStoneVolume(volume, isPreMoveStoneSound, isSelfplayStoneSound) {
+        super.setStoneVolume(volume);
+        this.isPreMoveStoneSound = isPreMoveStoneSound;
+        this.isSelfplayStoneSound = isSelfplayStoneSound;
     }
 
     async syncWithServer() {

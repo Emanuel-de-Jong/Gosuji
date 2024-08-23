@@ -126,38 +126,33 @@ namespace Gosuji.Client.Components.Pages
                 game = (await dataService.GetGame(GameId.Value)).Data;
             }
 
-            if (game != null)
-            {
-                Dictionary<short, Dictionary<short, ERatio>> decodedRatios = GameDecoder.DecodeRatios(game.Ratios).ToDict();
-                Dictionary<short, Dictionary<short, SuggestionList>> decodedSuggestions = GameDecoder.DecodeSuggestions(game.Suggestions);
-                Dictionary<short, Dictionary<short, EMoveType>> decodedMoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
-                Dictionary<short, Dictionary<short, Coord>> decodedChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords);
+            Dictionary<short, Dictionary<short, ERatio>>? decodedRatios =
+                game != null ? GameDecoder.DecodeRatios(game.Ratios).ToDict() : null;
+            Dictionary<short, Dictionary<short, SuggestionList>>? decodedSuggestions =
+                game != null ? GameDecoder.DecodeSuggestions(game.Suggestions) : null;
+            Dictionary<short, Dictionary<short, EMoveType>>? decodedMoveTypes =
+                game != null ? GameDecoder.DecodeMoveTypes(game.MoveTypes) : null;
+            Dictionary<short, Dictionary<short, Coord>>? decodedChosenNotPlayedCoords =
+                game != null ? GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords) : null;
 
-                await jsRef.InvokeVoidAsync("trainerPage.init",
-                    trainerRef,
-                    kataGoServiceRef,
-                    userName,
-                    settingConfigService.SettingConfig.CalcStoneVolume(),
+            await jsRef.InvokeVoidAsync("trainerPage.init",
+                trainerRef,
+                kataGoServiceRef,
+                userName,
+                settingConfigService.SettingConfig.CalcStoneVolume(),
+                settingConfigService.SettingConfig.IsPreMoveStoneSound,
+                settingConfigService.SettingConfig.IsSelfplayStoneSound,
 
-                    game.Boardsize,
-                    game.Handicap,
-                    game.Color,
-                    game.Komi,
-                    game.Ruleset,
-                    game.SGF,
-                    decodedRatios,
-                    decodedSuggestions,
-                    decodedMoveTypes,
-                    decodedChosenNotPlayedCoords);
-            }
-            else
-            {
-                await jsRef.InvokeVoidAsync("trainerPage.init",
-                    trainerRef,
-                    kataGoServiceRef,
-                    userName,
-                    settingConfigService.SettingConfig.CalcStoneVolume());
-            }
+                game?.Boardsize,
+                game?.Handicap,
+                game?.Color,
+                game?.Komi,
+                game?.Ruleset,
+                game?.SGF,
+                decodedRatios,
+                decodedSuggestions,
+                decodedMoveTypes,
+                decodedChosenNotPlayedCoords);
         }
 
         [JSInvokable]
