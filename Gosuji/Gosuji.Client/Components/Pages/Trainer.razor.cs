@@ -74,8 +74,6 @@ namespace Gosuji.Client.Components.Pages
                 OpponentVisits = 200,
             };
 
-            await settingConfigService.SettingConfigFromDb();
-
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 

@@ -43,7 +43,7 @@ namespace Gosuji.Client
             builder.Services.AddSingleton<KataGoService>();
             builder.Services.AddSingleton<JosekisService>();
             builder.Services.AddSingleton<TestService>();
-            builder.Services.AddTransient<SettingConfigService>();
+            builder.Services.AddSingleton<SettingConfigService>();
 
             WebAssemblyHost host = builder.Build();
 

@@ -26,7 +26,7 @@ namespace Gosuji.Client.Services
         public event Action<bool>? IsSelfplayStoneSoundChanged;
 
         public bool IsUser { get; private set; } = false;
-        public SettingConfig SettingConfig { get; private set; }
+        public SettingConfig? SettingConfig { get; private set; }
 
         public SettingConfigService(DataService dataService, IJSRuntime js, NavigationManager navigationManager)
         {
@@ -35,8 +35,13 @@ namespace Gosuji.Client.Services
             this.navigationManager = navigationManager;
         }
 
-        public async Task InitSettingConfig()
+        public async Task Init()
         {
+            if (SettingConfig != null)
+            {
+                return;
+            }
+
             string? languageId = await js.InvokeAsync<string>("utils.getLocal", LANGUAGE_ID_STORAGE_NAME);
             string? theme = await js.InvokeAsync<string>("utils.getLocal", THEME_STORAGE_NAME);
             string? masterVolume = await js.InvokeAsync<string>("utils.getLocal", MASTER_VOLUME_STORAGE_NAME);
@@ -53,7 +58,7 @@ namespace Gosuji.Client.Services
             SettingConfig.IsSelfplayStoneSound = !string.IsNullOrWhiteSpace(isSelfplayStoneSound) ? bool.Parse(isSelfplayStoneSound) : SettingConfig.IsSelfplayStoneSound;
         }
 
-        public async Task<bool> SettingConfigFromDb()
+        public async Task<bool> FromDb()
         {
             APIResponse<SettingConfig> settingConfigResponse = await dataService.GetSettingConfig();
 

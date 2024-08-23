@@ -62,8 +62,6 @@ namespace Gosuji.Client.Components.Pages.Account
                 Email = currentEmail
             };
 
-            await settingConfigService.SettingConfigFromDb();
-
             APIResponse<Subscription?> response = await dataService.GetSubscription(true);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             subscription = response.Data;

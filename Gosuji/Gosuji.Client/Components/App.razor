@@ -1,4 +1,9 @@
-﻿<CascadingAuthenticationState>
+﻿@using System.Security.Claims
+
+@inject AuthenticationStateProvider authenticationStateProvider
+@inject SettingConfigService settingConfigService
+
+<CascadingAuthenticationState>
     <Router AppAssembly="typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
@@ -24,9 +29,34 @@
     </Router>
 </CascadingAuthenticationState>
 
-@* @code {
+@code {
+    private bool isInitialized = false;
+    private bool isRendered = false;
+
     protected override async Task OnInitializedAsync()
     {
-        G.Log();
+        if (!isInitialized)
+        {
+            isInitialized = true;
+
+            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+            if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
+            {
+                if (await settingConfigService.FromDb())
+                {
+                    await settingConfigService.ChangeLanguage(settingConfigService.SettingConfig.LanguageId);
+                }
+            }
+        }
     }
-} *@
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!isRendered)
+        {
+            isRendered = true;
+
+            await settingConfigService.Init();
+        }
+    }
+}

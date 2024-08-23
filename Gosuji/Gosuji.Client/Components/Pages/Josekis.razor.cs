@@ -17,8 +17,6 @@ namespace Gosuji.Client.Components.Pages
         private const string EDITOR = $"{BOARD}.editor";
 
         [Inject]
-        private AuthenticationStateProvider authenticationStateProvider { get; set; }
-        [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
         private JosekisService josekisService { get; set; }
@@ -37,16 +35,6 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            if (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated)
-            {
-                await settingConfigService.InitSettingConfig();
-            }
-            else
-            {
-                await settingConfigService.SettingConfigFromDb();
-            }
-
             sessionId = random.Next(100_000_000, 999_999_999);
             josekisRef = DotNetObjectReference.Create(this);
         }

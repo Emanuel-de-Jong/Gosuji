@@ -12,8 +12,6 @@ namespace Gosuji.Client.Components.Layout
         private static readonly string BASE_LANGUAGE_SRC = "resources/imgs/flags/";
 
         [Inject]
-        private AuthenticationStateProvider authenticationStateProvider { get; set; }
-        [Inject]
         private DataService dataService { get; set; }
         [Inject]
         private SettingConfigService settingConfigService { get; set; }
@@ -23,19 +21,6 @@ namespace Gosuji.Client.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
-            await settingConfigService.InitSettingConfig();
-
-            ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
-            if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
-            {
-                if (!await settingConfigService.SettingConfigFromDb())
-                {
-                    return;
-                }
-
-                await settingConfigService.ChangeLanguage(settingConfigService.SettingConfig.LanguageId);
-            }
-
             APIResponse<Dictionary<string, Language>> languagesResponse = await dataService.GetLanguages();
             if (G.StatusMessage.HandleAPIResponse(languagesResponse)) return;
             languages = languagesResponse.Data;

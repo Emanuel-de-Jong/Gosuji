@@ -43,7 +43,7 @@ namespace Gosuji.Client.Components.Pages.Account
             APIResponse apiResponse = await userService.Login(input);
             if (!statusMessage.HandleAPIResponse(apiResponse))
             {
-                navigationManager.NavigateTo(string.IsNullOrEmpty(ReturnUri) ? "/" : ReturnUri);
+                navigationManager.NavigateTo(string.IsNullOrEmpty(ReturnUri) ? "/" : ReturnUri, true);
             }
         }
     }
