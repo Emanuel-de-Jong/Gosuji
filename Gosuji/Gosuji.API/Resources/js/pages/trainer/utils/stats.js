@@ -61,11 +61,11 @@ stats.clear = function (serverRatios) {
 };
 
 
-stats.updateRatioHistory = function (isRight, isPerfect) {
+stats.updateRatioHistory = function () {
     let type = stats.RATIO_TYPE.WRONG;
-    if (isPerfect) {
+    if (trainerG.isPerfectChoice) {
         type = stats.RATIO_TYPE.PERFECT;
-    } else if (isRight) {
+    } else if (trainerG.isRightChoice) {
         type = stats.RATIO_TYPE.RIGHT;
     }
 

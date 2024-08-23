@@ -78,50 +78,42 @@ gameplay.playerTurn = async function (markupCoord) {
     if (playerTurnId != gameplay.playerTurnId) return;
 
     let suggestionToPlay = trainerG.suggestions.get(0);
-    let isRightChoice = false;
-    let isPerfectChoice = false;
+    trainerG.isRightChoice = false;
+    trainerG.isPerfectChoice = false;
     for (let i = 0; i < trainerG.suggestions.length(); i++) {
         if (markupCoord.compare(trainerG.suggestions.get(i).coord)) {
             if (i == 0 || trainerG.suggestions.get(i).visits == trainerG.suggestions.get(0).visits) {
-                isPerfectChoice = true;
+                trainerG.isPerfectChoice = true;
             }
 
-            isRightChoice = true;
+            trainerG.isRightChoice = true;
             suggestionToPlay = trainerG.suggestions.get(i);
             break;
         }
     }
 
-    await gameplay.playerPlay(isRightChoice, isPerfectChoice, suggestionToPlay, markupCoord);
+    await gameplay.playerPlay(suggestionToPlay, markupCoord);
 
-    if (settings.hideOptions != settings.HIDE_OPTIONS.ALWAYS) {
+    if (gameplay.shouldShowPlayerOptions()) {
         trainerG.board.nextButton.disabled = false;
     } else {
         await gameplay.nextButtonClickListener();
     }
 };
 
-gameplay.handleJumped = async function () {
-    if (gameplay.isJumped) {
-        await trainerG.board.syncWithServer();
-        gameplay.suggestionsPromise = trainerG.analyze();
-        gameplay.isJumped = false;
-    }
-};
-
-gameplay.playerPlay = async function (isRightChoice, isPerfectChoice, suggestionToPlay, markupCoord) {
+gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
     let opponentOptions = gameplay.getOpponentOptions();
 
-    stats.updateRatioHistory(isRightChoice, isPerfectChoice);
+    stats.updateRatioHistory();
 
-    if (!settings.disableAICorrection || isRightChoice) {
-        if (!isRightChoice) {
+    if (!settings.disableAICorrection || trainerG.isRightChoice) {
+        if (!trainerG.isRightChoice) {
             gameplay.chosenNotPlayedCoordHistory.add(markupCoord, trainerG.board.getNodeX() + 1);
         }
 
         await trainerG.board.play(suggestionToPlay, trainerG.MOVE_TYPE.PLAYER);
 
-        if (!isRightChoice) {
+        if (!trainerG.isRightChoice) {
             await trainerG.board.draw(markupCoord, "cross");
         }
     } else {
@@ -135,6 +127,14 @@ gameplay.playerPlay = async function (isRightChoice, isPerfectChoice, suggestion
             gameplay.OPPONENT_MIN_VISITS_PERC,
             gameplay.OPPONENT_MAX_VISIT_DIFF_PERC
         );
+    }
+};
+
+gameplay.handleJumped = async function () {
+    if (gameplay.isJumped) {
+        await trainerG.board.syncWithServer();
+        gameplay.suggestionsPromise = trainerG.analyze();
+        gameplay.isJumped = false;
     }
 };
 
@@ -172,14 +172,14 @@ gameplay.opponentTurn = async function () {
     gameplay.givePlayerControl();
 };
 
-gameplay.treeJumpedCheckListener = function (event) {
+gameplay.updateStats = function (event) {
     if (event.navChange) {
         stats.setRatio();
         stats.clearVisits();
 
         if (
             !event.treeChange ||
-            (settings.hideOptions != settings.HIDE_OPTIONS.ALWAYS && trainerG.color == trainerG.board.getColor()) ||
+            (gameplay.shouldShowPlayerOptions() && trainerG.color == trainerG.board.getColor()) ||
             (settings.showOpponentOptions && trainerG.color != trainerG.board.getColor())
         ) {
             if (trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY) {
@@ -204,6 +204,12 @@ gameplay.treeJumpedCheckListener = function (event) {
             }
         }
     }
+};
+
+gameplay.shouldShowPlayerOptions = function () {
+    return settings.hideOptions == settings.HIDE_OPTIONS.NEVER ||
+        settings.hideOptions == settings.HIDE_OPTIONS.PERFECT && !trainerG.isPerfectChoice ||
+        settings.hideOptions == settings.HIDE_OPTIONS.RIGHT && !trainerG.isRightChoice;
 };
 
 export { gameplay };

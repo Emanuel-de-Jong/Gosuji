@@ -82,7 +82,7 @@ export class TrainerBoard extends Board {
         document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
 
         this.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
-        this.editor.addListener(gameplay.treeJumpedCheckListener);
+        this.editor.addListener(gameplay.updateStats);
         this.editor.addListener(sgf.boardEditorListener);
         this.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
         trainerG.phaseChangedEvent.add(this.phaseChangedListener);
