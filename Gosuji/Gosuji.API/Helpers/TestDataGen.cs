@@ -344,7 +344,7 @@ namespace Gosuji.API.Helpers
             dbContext.Feedbacks.AddRange([
                 new() {
                     UserId = RandomItem(users).Id,
-                    FeedbackType = EFeedbackType.ReportBug,
+                    FeedbackType = EFeedbackType.REPORT_BUG,
                     Subject = "I found a bug",
                     Message = "If you do this then everything explodes",
                     IsRead = false,
@@ -353,7 +353,7 @@ namespace Gosuji.API.Helpers
                 },
                 new() {
                     UserId = RandomItem(users).Id,
-                    FeedbackType = EFeedbackType.Support,
+                    FeedbackType = EFeedbackType.SUPPORT,
                     Subject = "My subscription didn't activate",
                     Message = null,
                     IsRead = true,
@@ -362,7 +362,7 @@ namespace Gosuji.API.Helpers
                 },
                 new() {
                     UserId = RandomItem(users).Id,
-                    FeedbackType = EFeedbackType.Suggestion,
+                    FeedbackType = EFeedbackType.SUGGESTION,
                     Subject = "This would be cool",
                     Message = "When you\nAnd then\n\nCould you do that?",
                     IsRead = true,
@@ -396,21 +396,21 @@ namespace Gosuji.API.Helpers
             Subscription[] subscriptions = [
                 new() {
                     UserId = users[0].Id,
-                    SubscriptionType = ESubscriptionType.Level3,
+                    SubscriptionType = ESubscriptionType.LEVEL_3,
                     Months = 3,
                     DiscountId = RandomItem(discounts).Id,
                     CreateDate = DateTimeOffset.UtcNow.AddMonths(-1),
                 },
                 new() {
                     UserId = users[0].Id,
-                    SubscriptionType = ESubscriptionType.Level1,
+                    SubscriptionType = ESubscriptionType.LEVEL_1,
                     Months = 3,
                     DiscountId = null,
                     CreateDate = DateTimeOffset.UtcNow.AddMonths(-2),
                 },
                 new() {
                     UserId = users[1].Id,
-                    SubscriptionType = ESubscriptionType.Level1,
+                    SubscriptionType = ESubscriptionType.LEVEL_1,
                     Months = 6,
                     DiscountId = null,
                     CreateDate = DateTimeOffset.UtcNow.AddMinutes(-1),

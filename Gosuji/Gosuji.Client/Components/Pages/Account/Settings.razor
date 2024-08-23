@@ -57,7 +57,7 @@
                             <tbody>
                                 <tr>
                                     <th>Subscription</th>
-                                    <td>@(subscription != null ? subscription.SubscriptionType : "Free")</td>
+                                    <td>@(subscription != null ? G.CapSentence(subscription.SubscriptionType.ToString()) : "Free")</td>
                                 </tr>
                                 <tr>
                                     <th>Discount</th>

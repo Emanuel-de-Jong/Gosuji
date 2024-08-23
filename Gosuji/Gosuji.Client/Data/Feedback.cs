@@ -5,10 +5,10 @@ namespace Gosuji.Client.Data
 {
     public enum EFeedbackType
     {
-        Support = 1,
-        Suggestion = 2,
-        ReportBug = 3,
-        Other = 4,
+        SUPPORT = 1,
+        SUGGESTION = 2,
+        REPORT_BUG = 3,
+        OTHER = 4,
     }
 
     public class Feedback : DbModel

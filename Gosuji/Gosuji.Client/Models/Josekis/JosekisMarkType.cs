@@ -2,10 +2,10 @@
 {
     public enum JosekisMarkType
     {
-        Square,
-        Circle,
-        Triangle,
-        Mark,
-        Selected
+        SQUARE,
+        CIRCLE,
+        TRIANGLE,
+        MARK,
+        SELECTED
     }
 }

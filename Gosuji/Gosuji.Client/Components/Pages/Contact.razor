@@ -51,7 +51,7 @@
                                     {
                                         <li class="feedback-element">
                                             <InputRadio Value="feedbackType" id="@feedbackType" />
-                                            <label for="@feedbackType">@(feedbackType == EFeedbackType.ReportBug ? "Report Bug" : feedbackType)</label>
+                                            <label for="@feedbackType">@G.CapSentence(feedbackType.ToString())</label>
                                         </li>
                                     }
                                 </InputRadioGroup>

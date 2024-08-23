@@ -133,7 +133,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddGhostStone(JosekisMark mark)
         {
-            int color = mark.MarkType == JosekisMarkType.Mark ? -1 : 1;
+            int color = mark.MarkType == JosekisMarkType.MARK ? -1 : 1;
 
             await jsRef.InvokeVoidAsync($"{BOARD}.addGhostStone", mark.X + 1, mark.Y + 1, color);
         }
@@ -143,16 +143,16 @@ namespace Gosuji.Client.Components.Pages
             int markId = 0;
             switch (mark.MarkType)
             {
-                case JosekisMarkType.Circle:
+                case JosekisMarkType.CIRCLE:
                     markId = 1;
                     break;
-                case JosekisMarkType.Square:
+                case JosekisMarkType.SQUARE:
                     markId = 2;
                     break;
-                case JosekisMarkType.Triangle:
+                case JosekisMarkType.TRIANGLE:
                     markId = 3;
                     break;
-                case JosekisMarkType.Mark:
+                case JosekisMarkType.MARK:
                     //markId = 4;
                     markId = 2; // Cross is used for selecting
                     break;

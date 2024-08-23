@@ -64,7 +64,7 @@ namespace Gosuji.Client.Components.Pages
 
             [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(ValidateMessages))]
             [EnumDataType(typeof(EFeedbackType))]
-            public EFeedbackType FeedbackType { get; set; } = EFeedbackType.Support;
+            public EFeedbackType FeedbackType { get; set; } = EFeedbackType.SUPPORT;
         }
     }
 }

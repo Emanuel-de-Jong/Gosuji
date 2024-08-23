@@ -23,7 +23,7 @@ namespace Gosuji.API.Helpers
 
         private static List<JosekisMark> ToJosekisMarks(List<Mark> marks)
         {
-            return marks.Select(m => new JosekisMark(m.X, m.Y, (JosekisMarkType)m.MarkType)).ToList();
+            return marks.Select(m => new JosekisMark(m.X, m.Y, (JosekisMarkType)(int)m.MarkType)).ToList();
         }
     }
 }

@@ -87,6 +87,13 @@ namespace Gosuji.Client
             Console.WriteLine($"{className ?? "UnknownClass"}.{methodName ?? "UnknownMethod"}");
         }
 
+        public static string CapSentence(string sentence)
+        {
+            sentence = sentence.Replace("_", " ").ToLower();
+            sentence = char.ToUpper(sentence[0]) + sentence[1..];
+            return sentence;
+        }
+
         public static string ColorNumToName(int colorNum)
         {
             return colorNum == -1 ? "B" : "W";
