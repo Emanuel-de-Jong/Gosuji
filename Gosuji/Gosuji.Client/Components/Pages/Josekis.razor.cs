@@ -60,6 +60,8 @@ namespace Gosuji.Client.Components.Pages
                 isJSInitialized = true;
 
                 await jsRef.InvokeVoidAsync("josekisPage.init", josekisRef, settingConfigService.SettingConfig.CalcStoneVolume());
+                settingConfigService.StoneVolumeChanged += async (int volume) =>
+                    await jsRef.InvokeVoidAsync("josekisPage.board.setStoneVolume", settingConfigService.SettingConfig.CalcStoneVolume());
             }
         }
 

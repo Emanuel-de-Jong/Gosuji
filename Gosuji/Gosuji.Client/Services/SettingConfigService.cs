@@ -21,6 +21,10 @@ namespace Gosuji.Client.Services
         private IJSRuntime js;
         private NavigationManager navigationManager;
 
+        public event Action<int>? StoneVolumeChanged;
+        public event Action<bool>? IsPreMoveStoneSoundChanged;
+        public event Action<bool>? IsSelfplayStoneSoundChanged;
+
         public bool IsUser { get; private set; } = false;
         public SettingConfig SettingConfig { get; private set; }
 
@@ -140,6 +144,7 @@ namespace Gosuji.Client.Services
         {
             if (SettingConfig.StoneVolume == volume) return;
             SettingConfig.StoneVolume = volume;
+            StoneVolumeChanged?.Invoke(volume);
             await UpdateSettingConfig();
         }
 
@@ -153,6 +158,7 @@ namespace Gosuji.Client.Services
         {
             if (SettingConfig.IsPreMoveStoneSound == isStoneSound) return;
             SettingConfig.IsPreMoveStoneSound = isStoneSound;
+            IsPreMoveStoneSoundChanged?.Invoke(isStoneSound);
             await UpdateSettingConfig();
         }
 
@@ -166,6 +172,7 @@ namespace Gosuji.Client.Services
         {
             if (SettingConfig.IsSelfplayStoneSound == isStoneSound) return;
             SettingConfig.IsSelfplayStoneSound = isStoneSound;
+            IsSelfplayStoneSoundChanged?.Invoke(isStoneSound);
             await UpdateSettingConfig();
         }
 

@@ -94,7 +94,9 @@ if (typeof Board === "undefined") {
         }
 
         setStoneVolume(volume) {
+            console.log(this.placeStoneAudios[0].volume);
             this.placeStoneAudios.forEach((audio) => audio.volume = volume);
+            console.log(this.placeStoneAudios[0].volume);
         }
 
         playPlaceStoneAudio() {

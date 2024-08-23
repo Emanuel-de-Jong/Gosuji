@@ -121,6 +121,13 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task InitJS()
         {
+            settingConfigService.StoneVolumeChanged += async (int volume) =>
+                await jsRef.InvokeVoidAsync("trainerG.board.setStoneVolume", settingConfigService.SettingConfig.CalcStoneVolume());
+            settingConfigService.IsPreMoveStoneSoundChanged += async (bool isStoneSound) =>
+                await jsRef.InvokeVoidAsync("trainerG.board.setIsPreMoveStoneSound", isStoneSound);
+            settingConfigService.IsSelfplayStoneSoundChanged += async (bool isStoneSound) =>
+                await jsRef.InvokeVoidAsync("trainerG.board.setIsSelfplayStoneSound", isStoneSound);
+
             if (GameId != null)
             {
                 game = (await dataService.GetGame(GameId.Value)).Data;

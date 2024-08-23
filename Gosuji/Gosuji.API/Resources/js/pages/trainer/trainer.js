@@ -176,7 +176,7 @@ export {
     // sgf,
     // sgfComment,
     // stats,
-    // trainerG,
+    trainerG,
 
     // cornerPlacer,
     // debug,

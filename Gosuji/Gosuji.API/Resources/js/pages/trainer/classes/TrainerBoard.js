@@ -42,7 +42,8 @@ export class TrainerBoard extends Board {
             serverHandicap != null ? serverHandicap : settings.handicap,
             serverSGF, stoneVolume);
         
-        this.setStoneVolume(stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound);
+        this.setIsPreMoveStoneSound(isPreMoveStoneSound);
+        this.setIsSelfplayStoneSound(isSelfplayStoneSound);
 
         document.querySelector('#game button[title="Variants: [child]/sibling"]').remove();
         document.querySelector('#game button[title="Variants: show/[hide]"]').remove();
@@ -128,9 +129,11 @@ export class TrainerBoard extends Board {
         }
     }
 
-    setStoneVolume(volume, isPreMoveStoneSound, isSelfplayStoneSound) {
-        super.setStoneVolume(volume);
+    setIsPreMoveStoneSound(isPreMoveStoneSound) {
         this.isPreMoveStoneSound = isPreMoveStoneSound;
+    }
+
+    setIsSelfplayStoneSound(isSelfplayStoneSound) {
         this.isSelfplayStoneSound = isSelfplayStoneSound;
     }
 
