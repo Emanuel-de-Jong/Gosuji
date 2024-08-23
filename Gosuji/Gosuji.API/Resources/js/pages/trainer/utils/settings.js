@@ -35,7 +35,7 @@ settings.SETTINGS = {
     cornerChance35: utils.TYPE.INT,
 
     suggestionOptions: utils.TYPE.INT,
-    showOptions: utils.TYPE.BOOL,
+    hideOptions: utils.TYPE.STRING,
     showWeakerOptions: utils.TYPE.BOOL,
     minVisitsPercSwitch: utils.TYPE.BOOL,
     minVisitsPerc: utils.TYPE.FLOAT,
@@ -46,6 +46,13 @@ settings.SETTINGS = {
     opponentOptions: utils.TYPE.INT,
     opponentOptionPerc: utils.TYPE.FLOAT,
     showOpponentOptions: utils.TYPE.BOOL,
+};
+
+settings.HIDE_OPTIONS = {
+    NEVER: "NEVER",
+    PERFECT: "PERFECT",
+    RIGHT: "RIGHT",
+    ALWAYS: "ALWAYS",
 };
 
 
@@ -65,7 +72,6 @@ settings.init = function (serverColor) {
     settings.handicapElement.addEventListener("input", settings.setKomi);
     settings.rulesetElement.addEventListener("input", settings.setKomi);
     settings.boardsizeElement.addEventListener("input", settings.setKomi);
-    settings.showOptionsElement.addEventListener("input", settings.showOptionsElementInputListener);
 
     utils.querySelectorAlls(["#settingsAccordion input", "#settingsAccordion select"]).forEach((input) => {
         if (input.type != "checkbox") {
@@ -194,14 +200,6 @@ settings.setKomi = function () {
 
     if (komi != oldKomi) {
         settings.setSetting("komi", komi);
-    }
-};
-
-settings.showOptionsElementInputListener = function () {
-    if (!settings.showOptionsElement.checked) {
-        if (!trainerG.board.nextButton.disabled) {
-            trainerG.board.nextButton.click();
-        }
     }
 };
 

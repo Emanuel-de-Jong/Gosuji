@@ -6,6 +6,7 @@ using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.Extensions.Localization;
 using Microsoft.JSInterop;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
@@ -29,6 +30,8 @@ namespace Gosuji.Client.Components.Pages
         private DataService dataService { get; set; }
         [Inject]
         private SettingConfigService settingConfigService { get; set; }
+        [Inject]
+        private IStringLocalizer<General> tl { get; set; }
 
         [SupplyParameterFromForm]
         private PresetModel addPresetModel { get; set; } = new();

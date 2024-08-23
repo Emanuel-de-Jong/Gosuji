@@ -77,5 +77,41 @@ namespace Gosuji.Client.Resources.Translations {
                 return ResourceManager.GetString("Login_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EHideOptions_ALWAYS {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EHideOptions_ALWAYS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EHideOptions_NEVER {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EHideOptions_NEVER", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EHideOptions_PERFECT {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EHideOptions_PERFECT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EHideOptions_RIGHT {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EHideOptions_RIGHT", resourceCulture);
+            }
+        }
     }
 }

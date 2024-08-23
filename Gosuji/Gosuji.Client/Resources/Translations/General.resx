@@ -123,4 +123,16 @@
   <data name="Login_Title" xml:space="preserve">
     <value />
   </data>
+  <data name="TrainerSettingConfig_EHideOptions_ALWAYS" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EHideOptions_NEVER" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EHideOptions_PERFECT" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EHideOptions_RIGHT" xml:space="preserve">
+    <value />
+  </data>
 </root>

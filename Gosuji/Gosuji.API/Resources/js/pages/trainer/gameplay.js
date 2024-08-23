@@ -94,7 +94,7 @@ gameplay.playerTurn = async function (markupCoord) {
 
     await gameplay.playerPlay(isRightChoice, isPerfectChoice, suggestionToPlay, markupCoord);
 
-    if (settings.showOptions) {
+    if (settings.hideOptions != settings.HIDE_OPTIONS.ALWAYS) {
         trainerG.board.nextButton.disabled = false;
     } else {
         await gameplay.nextButtonClickListener();
@@ -179,7 +179,7 @@ gameplay.treeJumpedCheckListener = function (event) {
 
         if (
             !event.treeChange ||
-            (settings.showOptions && trainerG.color == trainerG.board.getColor()) ||
+            (settings.hideOptions != settings.HIDE_OPTIONS.ALWAYS && trainerG.color == trainerG.board.getColor()) ||
             (settings.showOpponentOptions && trainerG.color != trainerG.board.getColor())
         ) {
             if (trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY) {

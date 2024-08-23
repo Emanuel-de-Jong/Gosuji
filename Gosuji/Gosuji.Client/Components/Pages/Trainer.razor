@@ -295,12 +295,13 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="showOptions" @bind=trainerSettingConfig.ShowOptions>
-                                                                <label class="form-check-label" for="showOptions">
-                                                                    Show options
-                                                                </label>
-                                                            </div>
+                                                            <label for="hideOptions" class="form-label">Hide options</label>
+                                                            <select class="form-select" id="hideOptions" @bind=trainerSettingConfig.HideOptions>
+                                                                @foreach (EHideOptions hideOption in Enum.GetValues(typeof(EHideOptions)))
+                                                                {
+                                                                    <option value="@hideOption">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
+                                                                }
+                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="row">

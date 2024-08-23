@@ -119,7 +119,7 @@ namespace Gosuji.API.Helpers
                 CornerChance35 = 2,
 
                 SuggestionOptions = 6,
-                ShowOptions = true,
+                HideOptions = EHideOptions.PERFECT,
                 ShowWeakerOptions = false,
                 MinVisitsPercSwitch = true,
                 MinVisitsPerc = 10,
@@ -146,7 +146,7 @@ namespace Gosuji.API.Helpers
 
             config = GetTrainerSettingConfigBase();
             config.DisableAICorrection = true;
-            config.ShowOptions = false;
+            config.HideOptions = EHideOptions.ALWAYS;
             dbContext.TrainerSettingConfigs.Add(config.SetHash());
             dbContext.SaveChanges();
             dbContext.Dispose();

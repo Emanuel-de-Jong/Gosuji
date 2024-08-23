@@ -75,7 +75,7 @@ namespace Gosuji.Client.Data
         [Required]
         public int SuggestionOptions { get; set; }
         [Required]
-        public bool ShowOptions { get; set; }
+        public EHideOptions HideOptions { get; set; }
         [Required]
         public bool ShowWeakerOptions { get; set; }
         [Required]
@@ -136,7 +136,7 @@ namespace Gosuji.Client.Data
             builder.Append(config.CornerChance35);
 
             builder.Append(config.SuggestionOptions);
-            builder.Append(config.ShowOptions);
+            builder.Append(config.HideOptions);
             builder.Append(config.ShowWeakerOptions);
             builder.Append(config.MinVisitsPercSwitch);
             builder.Append(config.MinVisitsPerc);
@@ -152,5 +152,13 @@ namespace Gosuji.Client.Data
             byte[] hashBytes = MD5.HashData(inputBytes);
             return string.Join("", hashBytes.Select(x => x.ToString("X2")));
         }
+    }
+
+    public enum EHideOptions
+    {
+        NEVER = 0,
+        PERFECT = 1,
+        RIGHT = 2,
+        ALWAYS = 3
     }
 }
