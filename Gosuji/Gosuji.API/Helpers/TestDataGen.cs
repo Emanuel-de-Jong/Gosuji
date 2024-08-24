@@ -130,6 +130,8 @@ namespace Gosuji.API.Helpers
                 OpponentOptions = 5,
                 OpponentOptionPerc = 10,
                 ShowOpponentOptions = false,
+
+                SelfplayPlaySpeed = 2.5,
             };
         }
 

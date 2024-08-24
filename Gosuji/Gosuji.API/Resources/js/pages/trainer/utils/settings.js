@@ -46,6 +46,8 @@ settings.SETTINGS = {
     opponentOptions: utils.TYPE.INT,
     opponentOptionPerc: utils.TYPE.FLOAT,
     showOpponentOptions: utils.TYPE.BOOL,
+    
+    selfplayPlaySpeed: utils.TYPE.FLOAT,
 };
 
 settings.HIDE_OPTIONS = {

@@ -164,9 +164,17 @@ gameplay.opponentTurn = async function () {
     } else {
         await gameplay.suggestionsPromise;
         if (trainerG.isPassed) return;
-        if (opponentTurnId != gameplay.opponentTurnId) return;
 
-        await trainerG.board.play(trainerG.suggestions.get(utils.randomInt(trainerG.suggestions.length())), trainerG.MOVE_TYPE.OPPONENT);
+        let suggestion;
+        if (trainerG.suggestions.length() == 1) {
+            suggestion = trainerG.suggestions.get(0);
+        } else {
+            suggestion = trainerG.suggestions.get(utils.randomInt(trainerG.suggestions.length() - 1) + 1);
+        }
+
+        if (opponentTurnId != gameplay.opponentTurnId) return;
+        
+        await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.OPPONENT);
     }
 
     gameplay.givePlayerControl();

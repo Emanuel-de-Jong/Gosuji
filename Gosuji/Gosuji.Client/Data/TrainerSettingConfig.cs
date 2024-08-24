@@ -88,6 +88,10 @@ namespace Gosuji.Client.Data
         [Required]
         public bool ShowOpponentOptions { get; set; }
 
+        [Required]
+        [Range(1.5, 4)]
+        public double SelfplayPlaySpeed { get; set; }
+
         public TrainerSettingConfig SetHash()
         {
             Hash = GenerateHash(this);
@@ -135,6 +139,8 @@ namespace Gosuji.Client.Data
             builder.Append(config.OpponentOptions);
             builder.Append(config.OpponentOptionPerc);
             builder.Append(config.ShowOpponentOptions);
+
+            builder.Append(config.SelfplayPlaySpeed);
 
             byte[] inputBytes = ASCIIEncoding.ASCII.GetBytes(builder.ToString());
             byte[] hashBytes = MD5.HashData(inputBytes);

@@ -75,7 +75,13 @@ preMovePlacer.play = async function (isForced = false) {
     if (trainerG.isPassed) preMovePlacer.isStopped = true;
     if (!isForced && preMovePlacer.isStopped) return;
 
-    await trainerG.board.play(trainerG.suggestions.get(utils.randomInt(trainerG.suggestions.length())), trainerG.MOVE_TYPE.PRE);
+    let suggestion;
+    if (trainerG.suggestions.length() == 1) {
+        suggestion = trainerG.suggestions.get(0);
+    } else {
+        suggestion = trainerG.suggestions.get(utils.randomInt(trainerG.suggestions.length() - 1) + 1);
+    }
+    await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.PRE);
 };
 
 export { preMovePlacer };
