@@ -12,16 +12,16 @@ namespace Gosuji.Client.Services
         {
         }
 
-        public async Task<APIResponse> AddSession(int sessionId)
+        public async Task<APIResponse<int>> StartSession()
         {
-            string uri = "AddSession";
-            return await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri, sessionId));
+            string uri = "StartSession";
+            return await HubResponseHandler.TryCatch<int>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri));
         }
 
-        public async Task<APIResponse> RemoveSession(int sessionId)
+        public async Task<APIResponse> StopSession(int sessionId)
         {
-            string uri = "RemoveSession";
+            string uri = "StopSession";
             return await HubResponseHandler.TryCatch(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri, sessionId));
         }

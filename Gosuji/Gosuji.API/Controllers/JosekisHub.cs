@@ -15,10 +15,11 @@ namespace Gosuji.API.Controllers
     {
         private static readonly string SESSION_UNKNOWN_ERR = "SessionId unknown.";
 
-        private SanitizeService sanitizeService;
-
         private static Dictionary<int, GoNode> josekisGoNodes = [];
         private static GoGame baseGame;
+        private static Random random = new();
+
+        private SanitizeService sanitizeService;
 
         public JosekisHub(SanitizeService _sanitizeService)
         {
@@ -32,13 +33,14 @@ namespace Gosuji.API.Controllers
             }
         }
 
-        public async Task<HubResponse> AddSession(int sessionId)
+        public async Task<HubResponse> StartSession()
         {
+            int sessionId = random.Next(100_000_000, 999_999_999);
             josekisGoNodes[sessionId] = baseGame.RootNode;
-            return Ok;
+            return OkData(sessionId);
         }
 
-        public async Task<HubResponse> RemoveSession(int sessionId)
+        public async Task<HubResponse> StopSession(int sessionId)
         {
             josekisGoNodes.Remove(sessionId);
             return Ok;

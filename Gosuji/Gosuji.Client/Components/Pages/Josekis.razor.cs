@@ -11,8 +11,6 @@ namespace Gosuji.Client.Components.Pages
 {
     public partial class Josekis : CustomPage, IAsyncDisposable
     {
-        private static Random random = new();
-
         private const string BOARD = "josekisPage.board";
         private const string EDITOR = $"{BOARD}.editor";
 
@@ -35,7 +33,6 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            sessionId = random.Next(100_000_000, 999_999_999);
             josekisRef = DotNetObjectReference.Create(this);
         }
 
@@ -63,8 +60,9 @@ namespace Gosuji.Client.Components.Pages
             APIResponse startResponse = await josekisService.Start();
             if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
 
-            APIResponse response = await josekisService.AddSession(sessionId);
+            APIResponse<int> response = await josekisService.StartSession();
             if (G.StatusMessage.HandleAPIResponse(response)) return false;
+            sessionId = response.Data;
 
             return true;
         }
@@ -233,7 +231,7 @@ namespace Gosuji.Client.Components.Pages
 
             if (josekisService.IsConnected)
             {
-                await josekisService.RemoveSession(sessionId);
+                await josekisService.StopSession(sessionId);
                 await josekisService.Stop();
             }
         }
