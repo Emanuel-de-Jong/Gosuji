@@ -396,21 +396,21 @@ namespace Gosuji.API.Helpers
             Subscription[] subscriptions = [
                 new() {
                     UserId = users[0].Id,
-                    SubscriptionType = ESubscriptionType.LEVEL_3,
+                    SubscriptionType = ESubscriptionType.TIER_3,
                     Months = 3,
                     DiscountId = RandomItem(discounts).Id,
                     CreateDate = DateTimeOffset.UtcNow.AddMonths(-1),
                 },
                 new() {
                     UserId = users[0].Id,
-                    SubscriptionType = ESubscriptionType.LEVEL_1,
+                    SubscriptionType = ESubscriptionType.TIER_1,
                     Months = 3,
                     DiscountId = null,
                     CreateDate = DateTimeOffset.UtcNow.AddMonths(-2),
                 },
                 new() {
                     UserId = users[1].Id,
-                    SubscriptionType = ESubscriptionType.LEVEL_1,
+                    SubscriptionType = ESubscriptionType.TIER_1,
                     Months = 6,
                     DiscountId = null,
                     CreateDate = DateTimeOffset.UtcNow.AddMinutes(-1),

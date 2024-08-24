@@ -6,9 +6,9 @@ namespace Gosuji.Client.Data
 {
     public enum ESubscriptionType
     {
-        LEVEL_1 = 1,
-        LEVEL_2 = 2,
-        LEVEL_3 = 3,
+        TIER_1 = 1,
+        TIER_2 = 2,
+        TIER_3 = 3,
     }
 
     public class Subscription : DbModel
