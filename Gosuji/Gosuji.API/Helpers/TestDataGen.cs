@@ -120,7 +120,7 @@ namespace Gosuji.API.Helpers
 
                 SuggestionOptions = 6,
                 HideOptions = EHideOptions.PERFECT,
-                ShowWeakerOptions = false,
+                HideWeakerOptions = true,
                 MinVisitsPercSwitch = true,
                 MinVisitsPerc = 10,
                 MaxVisitDiffPercSwitch = false,

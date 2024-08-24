@@ -36,7 +36,7 @@ settings.SETTINGS = {
 
     suggestionOptions: utils.TYPE.INT,
     hideOptions: utils.TYPE.STRING,
-    showWeakerOptions: utils.TYPE.BOOL,
+    hideWeakerOptions: utils.TYPE.BOOL,
     minVisitsPercSwitch: utils.TYPE.BOOL,
     minVisitsPerc: utils.TYPE.FLOAT,
     maxVisitDiffPercSwitch: utils.TYPE.BOOL,

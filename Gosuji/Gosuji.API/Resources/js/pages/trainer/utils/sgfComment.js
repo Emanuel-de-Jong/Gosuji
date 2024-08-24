@@ -83,7 +83,7 @@ sgfComment.createInitComment = function () {
         "\n\nFilters" +
         "\nSuggestion options: " + settings.suggestionOptions +
         "\nHide options: " + settings.hideOptions +
-        "\nShow weaker options: " + settings.showWeakerOptions +
+        "\nHide weaker options: " + settings.hideWeakerOptions +
         "\nMin strength switch: " + settings.minVisitsPercSwitch +
         "\nMin strength: " + settings.minVisitsPerc + "%" +
         "\nMax strength difference switch: " + settings.maxVisitDiffPercSwitch +

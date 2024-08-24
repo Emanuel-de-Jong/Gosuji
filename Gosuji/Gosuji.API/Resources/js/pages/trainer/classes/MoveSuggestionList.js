@@ -78,7 +78,7 @@ export class MoveSuggestionList {
 
         let playedCoord = new Coord(move.x, move.y);
 
-        if (settings.showWeakerOptions || gameplay.chosenNotPlayedCoordHistory.get() || !this.find(playedCoord)) {
+        if (!settings.hideWeakerOptions || gameplay.chosenNotPlayedCoordHistory.get() || !this.find(playedCoord)) {
             return this.suggestions;
         }
 

@@ -69,7 +69,7 @@ namespace Gosuji.Client.Data
         [Required]
         public EHideOptions HideOptions { get; set; }
         [Required]
-        public bool ShowWeakerOptions { get; set; }
+        public bool HideWeakerOptions { get; set; }
         [Required]
         public bool MinVisitsPercSwitch { get; set; }
         [Required]
@@ -125,7 +125,7 @@ namespace Gosuji.Client.Data
 
             builder.Append(config.SuggestionOptions);
             builder.Append(config.HideOptions);
-            builder.Append(config.ShowWeakerOptions);
+            builder.Append(config.HideWeakerOptions);
             builder.Append(config.MinVisitsPercSwitch);
             builder.Append(config.MinVisitsPerc);
             builder.Append(config.MaxVisitDiffPercSwitch);
