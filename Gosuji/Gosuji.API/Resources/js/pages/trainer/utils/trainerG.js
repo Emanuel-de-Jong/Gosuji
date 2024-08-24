@@ -39,7 +39,7 @@ trainerG.isLoadingServerData = false;
 trainerG.init = function (trainerRef, serverSuggestions, serverMoveTypes) {
     trainerG.trainerRef = trainerRef;
 
-    trainerG.loadAnimation = document.querySelector("#game .loadAnimation");
+    trainerG.loadAnimation = document.querySelector("#trainerGame .loadAnimation");
     trainerG.phaseChangedEvent = new CEvent();
     trainerG.board = new TrainerBoard();
 

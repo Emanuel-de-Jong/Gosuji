@@ -65,17 +65,17 @@
 }
 
 
-#trainerPage #game .besogo-board {
+#trainerPage #trainerGame .besogo-board {
     position: relative;
 }
 
-#trainerPage #game .next {
+#trainerPage #trainerGame .next {
     position: absolute;
     top: 5px;
     right: 5px;
 }
 
-#trainerPage #game .boardOverlay {
+#trainerPage #trainerGame .boardOverlay {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -86,50 +86,50 @@
     background-color: rgba(54, 54, 54, 0.5);
 }
 
-#trainerPage #game #startOverlay {
+#trainerPage #trainerGame #startOverlay {
     z-index: 30;
 }
 
-#trainerPage #game #startOverlay * {
+#trainerPage #trainerGame #startOverlay * {
     z-index: 40;
 }
 
-#trainerPage #game #finishedOverlay {
+#trainerPage #trainerGame #finishedOverlay {
     z-index: 10;
 }
 
-#trainerPage #game #finishedOverlay * {
+#trainerPage #trainerGame #finishedOverlay * {
     z-index: 20;
 }
 
-#trainerPage #game #finishedOverlay p {
+#trainerPage #trainerGame #finishedOverlay p {
     margin-bottom: 75px;
     font-size: 50px;
     font-weight: 800;
     text-decoration: underline;
 }
 
-#trainerPage #game #finishedOverlay div {
+#trainerPage #trainerGame #finishedOverlay div {
     display: flex;
     justify-content: space-between;
     width: 60%;
 }
 
-#trainerPage #game #finishedOverlay .btn {
+#trainerPage #trainerGame #finishedOverlay .btn {
     margin: 0 15px;
     width: 100%;
     text-wrap: nowrap;
 }
 
-#trainerPage #game .besogo-gameInfo {
+#trainerPage #trainerGame .besogo-gameInfo {
     display: none !important;
 }
 
-#trainerPage #game .besogo-tree {
+#trainerPage #trainerGame .besogo-tree {
     flex-basis: 3%;
 }
 
-#trainerPage #settings .form-invalid-message {
+#trainerPage #trainerSettings .form-invalid-message {
     width: 100%;
     color: red;
     font-size: 0.8125rem;

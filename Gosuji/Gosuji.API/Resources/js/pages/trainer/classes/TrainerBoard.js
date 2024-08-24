@@ -45,21 +45,21 @@ export class TrainerBoard extends Board {
         this.setIsPreMoveStoneSound(isPreMoveStoneSound);
         this.setIsSelfplayStoneSound(isSelfplayStoneSound);
 
-        document.querySelector('#game button[title="Variants: [child]/sibling"]').remove();
-        document.querySelector('#game button[title="Variants: show/[hide]"]').remove();
-        document.querySelector('#game input[value="9x9"]').remove();
-        document.querySelector('#game input[value="13x13"]').remove();
-        document.querySelector('#game input[value="19x19"]').remove();
-        document.querySelector('#game input[value="?x?"]').remove();
-        document.querySelector('#game input[value="Comment"]').remove();
-        document.querySelector('#game input[value="Edit Info"]').remove();
-        document.querySelector('#game input[value="Info"]').remove();
+        document.querySelector('#trainerGame button[title="Variants: [child]/sibling"]').remove();
+        document.querySelector('#trainerGame button[title="Variants: show/[hide]"]').remove();
+        document.querySelector('#trainerGame input[value="9x9"]').remove();
+        document.querySelector('#trainerGame input[value="13x13"]').remove();
+        document.querySelector('#trainerGame input[value="19x19"]').remove();
+        document.querySelector('#trainerGame input[value="?x?"]').remove();
+        document.querySelector('#trainerGame input[value="Comment"]').remove();
+        document.querySelector('#trainerGame input[value="Edit Info"]').remove();
+        document.querySelector('#trainerGame input[value="Info"]').remove();
 
-        document.querySelector("#game .besogo-board")
+        document.querySelector("#trainerGame .besogo-board")
             .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary btn-sm next" disabled>></button>');
         this.nextButton = document.querySelector(".next");
 
-        document.querySelector("#game .besogo-board")
+        document.querySelector("#trainerGame .besogo-board")
             .insertAdjacentHTML("afterbegin",`
                 <div id="startOverlay" class="boardOverlay" hidden>
                     <button type="button" class="btn btn-primary btn-lg" id="startBtn">Start</button>
@@ -69,7 +69,7 @@ export class TrainerBoard extends Board {
             this.startOverlay.hidden = false;
         }
 
-        document.querySelector("#game .besogo-board")
+        document.querySelector("#trainerGame .besogo-board")
             .insertAdjacentHTML("afterbegin",`
                 <div id="finishedOverlay" class="boardOverlay" hidden>
                     <p>Game finished!</p>

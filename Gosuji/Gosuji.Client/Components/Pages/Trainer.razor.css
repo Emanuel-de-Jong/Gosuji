@@ -1,20 +1,4 @@
-﻿#trainerPage #debug {
-    background-color: lightgrey;
-    padding: 15px 25px;
-}
-
-    #trainerPage #debug ul {
-        margin: 0;
-        padding: 0;
-    }
-
-    #trainerPage #debug li {
-        display: inline-block;
-        text-decoration: none;
-    }
-
-
-#trainerPage #flex-container {
+﻿#trainerPage .flex-container {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -22,109 +6,128 @@
 }
 
 #trainerPage .flex-item {
-    flex: auto;
-    overflow: hidden;
+    /*flex: auto;*/
+    /*overflow: hidden;*/
 }
-
-
-#presetSettings {
-    padding-bottom: 16px;
-}
-
-    #presetSettings .row {
-        margin-bottom: 15px;
-    }
-
-    #presetSettings .generalPresetOption {
-        font-weight: 600;
-        color: lightblue;
-    }
-
-
-    #game {
-        position: relative;
-        max-width: 725px;
-    }
-
-    #game .loadAnimation {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 100;
-    }
-
-    #game .loadAnimation:after {
-        width: 26px;
-        height: 26px;
-    }
-
-
-#trainerPage #stats {
-    width: 400px;
-    font-size: 22px;
-}
-
-    #trainerPage #stats > div {
-        margin-bottom: 10px;
-    }
-
-    #trainerPage #stats #keyValues > div {
-        margin-bottom: 35px;
-    }
-
-    #trainerPage #stats #title {
-        font-size: 1.5rem;
-        font-weight: 800;
-    }
-
-    #trainerPage #stats #scoreChartColor {
-        max-width: 163px;
-    }
-
-
-#trainerPage #settings {
-    width: 400px;
-}
-
-    #trainerPage #settings .accordion-body .row .row {
-        margin-bottom: 15px;
-    }
-
-    #trainerPage #settings input:invalid {
-        border-color: red !important;
-    }
-
-    #trainerPage #settings .input-group-text input[type="checkbox"] {
-        min-width: 16px;
-    }
-
-    #trainerPage #settings .input-group input[type="number"],
-    #trainerPage #settings #opponentOptionPercDiv span,
-    #trainerPage #settings #preOptionPercDiv span,
-    #trainerPage #settings #minVisitsPercDiv span,
-    #trainerPage #settings #maxVisitDiffPercDiv span {
-        border-top-right-radius: 0.375rem;
-        border-bottom-right-radius: 0.375rem;
-    }
-
-    #trainerPage #settings #opponentOptionPercDiv input[type="number"],
-    #trainerPage #settings #preOptionPercDiv input[type="number"],
-    #trainerPage #settings #minVisitsPercDiv input[type="number"],
-    #trainerPage #settings #maxVisitDiffPercDiv input[type="number"] {
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-    }
-
 
 #trainerPage .accordion-button {
     padding: 8px 20px 8px 10px !important;
 }
 
 #trainerPage .accordion-body {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    /*padding-left: 0 !important;*/
+    /*padding-right: 0 !important;*/
 }
 
+
+#trainerDebug {
+    background-color: lightgrey;
+    padding: 15px 25px;
+}
+
+    #trainerDebug ul {
+        margin: 0;
+        padding: 0;
+    }
+
+    #trainerDebug li {
+        display: inline-block;
+        text-decoration: none;
+    }
+
+
+#trainerSettings {
+    width: 450px;
+}
+
+    #trainerSettings .accordion-body .row .row {
+        margin-bottom: 15px;
+    }
+
+    #trainerSettings input:invalid {
+        border-color: red !important;
+    }
+
+    #trainerSettings .input-group-text input[type="checkbox"] {
+        min-width: 16px;
+    }
+
+    #trainerSettings .input-group input[type="number"],
+    #trainerSettings #opponentOptionPercDiv span,
+    #trainerSettings #preOptionPercDiv span,
+    #trainerSettings #minVisitsPercDiv span,
+    #trainerSettings #maxVisitDiffPercDiv span {
+        border-top-right-radius: 0.375rem;
+        border-bottom-right-radius: 0.375rem;
+    }
+
+    #trainerSettings #opponentOptionPercDiv input[type="number"],
+    #trainerSettings #preOptionPercDiv input[type="number"],
+    #trainerSettings #minVisitsPercDiv input[type="number"],
+    #trainerSettings #maxVisitDiffPercDiv input[type="number"] {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+
+    #trainerSettings #presetSettings {
+        padding-bottom: 16px;
+    }
+
+    #trainerSettings #presetSettings .row {
+        margin-bottom: 15px;
+    }
+
+    #trainerSettings #presetSettings .generalPresetOption {
+        font-weight: 600;
+        color: lightblue;
+    }
+
+    #trainerSettings #visitsDiv span {
+        min-width: 106px;
+        max-width: 106px;
+    }
+
+
+#trainerGame {
+    position: relative;
+    max-width: 725px;
+}
+
+    #trainerGame .loadAnimation {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+    }
+
+        #trainerGame .loadAnimation:after {
+            width: 26px;
+            height: 26px;
+        }
+
+
+#trainerStats {
+    width: 450px;
+    font-size: 22px;
+}
+
+    #trainerStats > div {
+        margin-bottom: 10px;
+    }
+
+    #trainerStats #keyValues > div {
+        margin-bottom: 35px;
+    }
+
+    #trainerStats #title {
+        font-size: 1.5rem;
+        font-weight: 800;
+    }
+
+    #trainerStats #scoreChartColor {
+        max-width: 163px;
+    }
 
 
 /* DARK MODE */

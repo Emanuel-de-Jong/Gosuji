@@ -9,18 +9,18 @@
 
 @if (userName != null) {
     <div id="trainerPage">
-        <div id="debug" hidden>
+        <div id="trainerDebug" hidden>
             <ul>
                 <li>
                 </li>
             </ul>
         </div>
 
-        <div id="flex-container">
+        <div class="flex-container">
             <div class="flex-item">
                 @if (trainerSettingConfig != null)
                 {
-                    <div id="settings" class="collapse show">
+                    <div id="trainerSettings" class="collapse show">
                         <div id="presetSettings">
                             <EditForm Model="addPresetModel" OnValidSubmit="AddPreset" FormName="add-preset" Context="formContext" method="post">
                                 <DataAnnotationsValidator />
@@ -114,23 +114,24 @@
 
                                                 <div class="col-6">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <label for="preVisits" class="form-label">Pre move strength</label>
-                                                            <input type="number" class="form-control" id="preVisits" min="2" max="25000" @bind=kataGoVisits.PreVisits>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <label for="selfplayVisits" class="form-label">Selfplay strength</label>
-                                                            <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000" @bind=kataGoVisits.SelfplayVisits>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <label for="suggestionVisits" class="form-label">Suggestion strength</label>
-                                                            <input type="number" class="form-control" id="suggestionVisits" min="2" max="25000" @bind=kataGoVisits.SuggestionVisits>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <label for="opponentVisits" class="form-label">Opponent strength</label>
-                                                            <input type="number" class="form-control" id="opponentVisits" min="2" max="25000" @bind=kataGoVisits.OpponentVisits>
+                                                        <div class="col-12" id="visitsDiv">
+                                                            <label for="suggestionVisits" class="form-label">AI strength</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text">Suggestion</span>
+                                                                <input type="number" class="form-control" id="suggestionVisits" min="2" max="25000" @bind=kataGoVisits.SuggestionVisits>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text">Opponent</span>
+                                                                <input type="number" class="form-control" id="opponentVisits" min="2" max="25000" @bind=kataGoVisits.OpponentVisits>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text">Pre move</span>
+                                                                <input type="number" class="form-control" id="preVisits" min="2" max="25000" @bind=kataGoVisits.PreVisits>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text">Selfplay</span>
+                                                                <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000" @bind=kataGoVisits.SelfplayVisits>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -406,14 +407,14 @@
             </div>
 
             <div class="flex-item">
-                <div id="game">
+                <div id="trainerGame">
                     <div class="loadAnimation" hidden></div>
                     <div class="board"></div>
                 </div>
             </div>
 
             <div class="flex-item">
-                <div id="stats">
+                <div id="trainerStats">
                     <div>
                         <button type="button" class="btn btn-primary" id="restartBtn" disabled>Restart</button>
                         <button type="button" class="btn btn-primary" id="stopPreMovesBtn" disabled>Stop pre moves</button>
