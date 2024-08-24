@@ -138,10 +138,25 @@ namespace Gosuji.API.Controllers.UserController
 
             dbContext.RefreshTokens.Remove(refreshTokenObj);
 
+            // Temp
+            await DeleteExpiredRefreshTokens(dbContext);
+
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
             return Ok();
+        }
+
+        private async Task DeleteExpiredRefreshTokens(ApplicationDbContext dbContext)
+        {
+            foreach (RefreshToken refreshToken in await dbContext.RefreshTokens.ToListAsync())
+            {
+                if (refreshToken.ExpireDate < DateTime.UtcNow)
+                {
+                    dbContext.RefreshTokens.Remove(refreshToken);
+                }
+            }
+            await dbContext.SaveChangesAsync();
         }
 
         [HttpPost]
