@@ -28,6 +28,17 @@ export class History {
         return this.grid[y] != null;
     }
 
+    count(data) {
+        let count = 0;
+        const y = trainerG.board.getNodeY();
+        for (let x = 0; x < this.grid[y].length; x++) {
+            if (this.grid[y][x] == data) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     encode() {
         if (!this.dataType) return [];
 

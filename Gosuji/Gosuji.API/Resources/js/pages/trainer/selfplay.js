@@ -6,6 +6,9 @@ import { gameplay } from "./gameplay";
 let selfplay = { id: "selfplay" };
 
 
+selfplay.PLAYER_MOVES_BEFORE_ENABLE = 10;
+
+
 selfplay.init = async function () {
     selfplay.button = document.getElementById("selfplayBtn");
     selfplay.button.addEventListener("click", selfplay.toggleSelfplay);
@@ -24,6 +27,14 @@ selfplay.clear = async function () {
     }
 };
 
+
+selfplay.enableButton = function () {
+    if (selfplay.button.disabled == true &&
+        trainerG.moveTypeHistory.count(trainerG.MOVE_TYPE.PLAYER) >= selfplay.PLAYER_MOVES_BEFORE_ENABLE
+    ) {
+        selfplay.button.disabled = false;
+    }
+};
 
 selfplay.start = async function () {
     trainerG.setPhase(trainerG.PHASE_TYPE.SELFPLAY);

@@ -5,6 +5,7 @@ import { sgf } from "./utils/sgf";
 import { stats } from "./utils/stats";
 import { trainerG } from "./utils/trainerG";
 import { cornerPlacer } from "./cornerPlacer";
+import { selfplay } from "./selfplay";
 import { debug } from "./debug";
 
 let gameplay = { id: "gameplay" };
@@ -112,6 +113,8 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
         }
 
         await trainerG.board.play(suggestionToPlay, trainerG.MOVE_TYPE.PLAYER);
+        
+        selfplay.enableButton();
 
         if (!trainerG.isRightChoice) {
             await trainerG.board.draw(markupCoord, "cross");
