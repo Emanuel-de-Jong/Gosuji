@@ -3,7 +3,6 @@ import { sgf } from "./utils/sgf";
 import { trainerG } from "./utils/trainerG";
 import { cornerPlacer } from "./cornerPlacer";
 import { gameplay } from "./gameplay";
-import { selfplay } from "./selfplay";
 
 let preMovePlacer = { id: "preMovePlacer" };
 

@@ -15,6 +15,7 @@ selfplay.init = async function () {
 
     selfplay.isPlaying = false;
     selfplay.startPromise = null;
+    selfplay.lastMoveTime = 0;
 
     await selfplay.clear();
 };
@@ -50,6 +51,13 @@ selfplay.start = async function () {
 
         if (!selfplay.isPlaying && trainerG.color == trainerG.board.getNextColor()) return;
 
+        const timeToWait = selfplay.lastMoveTime + settings.selfplayPlaySpeed * 1000 - Date.now();
+        if (timeToWait > 0) {
+            await utils.sleep(timeToWait);
+        }
+
+        selfplay.lastMoveTime = Date.now();
+        
         await trainerG.board.play(trainerG.suggestions.get(0), trainerG.MOVE_TYPE.SELFPLAY);
     }
 };

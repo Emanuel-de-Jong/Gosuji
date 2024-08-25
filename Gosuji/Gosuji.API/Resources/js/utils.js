@@ -69,6 +69,11 @@ if (typeof utils === "undefined") {
     };
 
 
+    utils.sleep = function (ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    };
+
+
     utils.deepCopyObject = function (obj) {
         let clone = Array.isArray(obj) ? [] : {};
         for (let key in obj) {
