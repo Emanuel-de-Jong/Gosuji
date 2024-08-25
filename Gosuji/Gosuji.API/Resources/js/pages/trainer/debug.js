@@ -22,9 +22,6 @@ debug.testData = 0;
 
 
 debug.init = function () {
-    debug.testButton = document.getElementById("testBtn");
-    debug.testButton.addEventListener("click", debug.testButtonClickListener);
-
     // debug.logAllFuncCalls();
 
     debug.clear();
@@ -93,10 +90,6 @@ debug.logAllFuncCalls = function () {
             })();
         }
     }
-};
-
-debug.testButtonClickListener = async function () {
-    console.log();
 };
 
 export { debug };

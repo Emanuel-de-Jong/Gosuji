@@ -20,22 +20,6 @@
 }
 
 
-#trainerDebug {
-    background-color: lightgrey;
-    padding: 15px 25px;
-}
-
-    #trainerDebug ul {
-        margin: 0;
-        padding: 0;
-    }
-
-    #trainerDebug li {
-        display: inline-block;
-        text-decoration: none;
-    }
-
-
 #trainerSettings {
     width: 450px;
 }

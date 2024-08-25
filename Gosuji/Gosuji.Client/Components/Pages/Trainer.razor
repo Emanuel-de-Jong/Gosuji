@@ -9,13 +9,6 @@
 
 @if (userName != null) {
     <div id="trainerPage">
-        <div id="trainerDebug" hidden>
-            <ul>
-                <li>
-                </li>
-            </ul>
-        </div>
-
         <div class="flex-container">
             <div class="flex-item">
                 @if (trainerSettingConfig != null)
@@ -444,7 +437,6 @@
                         <button type="button" class="btn btn-primary" id="selfplayBtn" hidden>Start selfplay</button>
                         <button type="button" class="btn btn-primary" id="saveBtn" disabled>Save</button>
                         <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#settings">Settings</button>
-                        <button type="button" class="btn btn-primary" id="testBtn" hidden>Test</button>
                     </div>
                     <div class="accordion accordion-flush">
                         <div class="accordion-item">

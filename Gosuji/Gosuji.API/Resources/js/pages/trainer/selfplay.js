@@ -8,7 +8,7 @@ let selfplay = { id: "selfplay" };
 
 selfplay.init = async function () {
     selfplay.button = document.getElementById("selfplayBtn");
-    selfplay.button.addEventListener("click", selfplay.buttonClickListener);
+    selfplay.button.addEventListener("click", selfplay.toggleSelfplay);
 
     selfplay.isPlaying = false;
     selfplay.startPromise = null;
@@ -18,7 +18,7 @@ selfplay.init = async function () {
 
 selfplay.clear = async function () {
     if (selfplay.isPlaying) {
-        await selfplay.buttonClickListener();
+        await selfplay.toggleSelfplay();
     }
 };
 
@@ -41,7 +41,7 @@ selfplay.start = async function () {
     }
 };
 
-selfplay.buttonClickListener = async function () {
+selfplay.toggleSelfplay = async function () {
     if (!selfplay.isPlaying) {
         selfplay.isPlaying = true;
         selfplay.button.textContent = "Stop selfplay";
