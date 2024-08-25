@@ -49,12 +49,24 @@ selfplay.start = async function () {
             return;
         }
 
-        if (!selfplay.isPlaying && trainerG.color == trainerG.board.getNextColor()) return;
-
-        const timeToWait = selfplay.lastMoveTime + settings.selfplayPlaySpeed * 1000 - Date.now();
-        if (timeToWait > 0) {
-            await utils.sleep(timeToWait);
+        if (selfplay.isPlaying) {
+            const timeToWait = selfplay.lastMoveTime + settings.selfplayPlaySpeed * 1000 - Date.now();
+            if (timeToWait > 0) {
+                await Promise.race([
+                    new Promise(resolve => setTimeout(resolve, timeToWait)),
+                    new Promise(resolve => {
+                        const interval = setInterval(() => {
+                            if (!selfplay.isPlaying) {
+                                clearInterval(interval);
+                                resolve();
+                            }
+                        }, 100);
+                    })
+                ]);
+            }
         }
+
+        if (!selfplay.isPlaying && trainerG.color == trainerG.board.getNextColor()) return;
 
         selfplay.lastMoveTime = Date.now();
         
