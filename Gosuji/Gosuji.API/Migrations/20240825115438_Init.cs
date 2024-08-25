@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -30,12 +31,12 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Version = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Version = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
                     Name = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 2500, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 2500, nullable: true),
                     Date = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,11 +49,11 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Code = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Percent = table.Column<float>(type: "REAL", nullable: false),
-                    ExpireDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    Code = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    Percent = table.Column<double>(type: "REAL", nullable: false),
+                    ExpireDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -65,14 +66,14 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
                     FeedbackType = table.Column<int>(type: "INTEGER", nullable: false),
                     Subject = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
                     Message = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
                     IsRead = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsResolved = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,7 +97,7 @@ namespace Gosuji.API.Migrations
                     PerfectStreak = table.Column<int>(type: "INTEGER", nullable: false),
                     PerfectTopStreak = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -113,7 +114,7 @@ namespace Gosuji.API.Migrations
                     Model = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Config = table.Column<string>(type: "TEXT", maxLength: 50000, nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,12 +125,10 @@ namespace Gosuji.API.Migrations
                 name: "Languages",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<string>(type: "TEXT", maxLength: 15, nullable: false),
                     Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Short = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -146,11 +145,26 @@ namespace Gosuji.API.Migrations
                     Endpoint = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
                     Method = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RateLimitViolations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Token = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    ExpireDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Token);
                 });
 
             migrationBuilder.CreateTable(
@@ -159,23 +173,19 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Hash = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    Hash = table.Column<string>(type: "TEXT", maxLength: 150, nullable: true),
                     Boardsize = table.Column<int>(type: "INTEGER", nullable: false),
                     Handicap = table.Column<int>(type: "INTEGER", nullable: false),
                     ColorType = table.Column<int>(type: "INTEGER", nullable: false),
                     PreMovesSwitch = table.Column<bool>(type: "INTEGER", nullable: false),
                     PreMoves = table.Column<int>(type: "INTEGER", nullable: false),
-                    PreVisits = table.Column<int>(type: "INTEGER", nullable: false),
-                    SelfplayVisits = table.Column<int>(type: "INTEGER", nullable: false),
-                    SuggestionVisits = table.Column<int>(type: "INTEGER", nullable: false),
-                    OpponentVisits = table.Column<int>(type: "INTEGER", nullable: false),
                     DisableAICorrection = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Ruleset = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    KomiChangeStyle = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    Komi = table.Column<float>(type: "REAL", nullable: false),
+                    Ruleset = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    KomiChangeStyle = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Komi = table.Column<double>(type: "REAL", nullable: false),
                     PreOptions = table.Column<int>(type: "INTEGER", nullable: false),
-                    PreOptionPerc = table.Column<float>(type: "REAL", nullable: false),
-                    ForceOpponentCorners = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    PreOptionPerc = table.Column<double>(type: "REAL", nullable: false),
+                    ForceOpponentCorners = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     CornerSwitch44 = table.Column<bool>(type: "INTEGER", nullable: false),
                     CornerSwitch34 = table.Column<bool>(type: "INTEGER", nullable: false),
                     CornerSwitch33 = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -187,18 +197,19 @@ namespace Gosuji.API.Migrations
                     CornerChance45 = table.Column<int>(type: "INTEGER", nullable: false),
                     CornerChance35 = table.Column<int>(type: "INTEGER", nullable: false),
                     SuggestionOptions = table.Column<int>(type: "INTEGER", nullable: false),
-                    ShowOptions = table.Column<bool>(type: "INTEGER", nullable: false),
-                    ShowWeakerOptions = table.Column<bool>(type: "INTEGER", nullable: false),
+                    HideOptions = table.Column<int>(type: "INTEGER", nullable: false),
+                    HideWeakerOptions = table.Column<bool>(type: "INTEGER", nullable: false),
                     MinVisitsPercSwitch = table.Column<bool>(type: "INTEGER", nullable: false),
-                    MinVisitsPerc = table.Column<float>(type: "REAL", nullable: false),
+                    MinVisitsPerc = table.Column<double>(type: "REAL", nullable: false),
                     MaxVisitDiffPercSwitch = table.Column<bool>(type: "INTEGER", nullable: false),
-                    MaxVisitDiffPerc = table.Column<float>(type: "REAL", nullable: false),
+                    MaxVisitDiffPerc = table.Column<double>(type: "REAL", nullable: false),
                     OpponentOptionsSwitch = table.Column<bool>(type: "INTEGER", nullable: false),
                     OpponentOptions = table.Column<int>(type: "INTEGER", nullable: false),
-                    OpponentOptionPerc = table.Column<float>(type: "REAL", nullable: false),
+                    OpponentOptionPerc = table.Column<double>(type: "REAL", nullable: false),
                     ShowOpponentOptions = table.Column<bool>(type: "INTEGER", nullable: false),
+                    SelfplayPlaySpeed = table.Column<double>(type: "REAL", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -227,23 +238,23 @@ namespace Gosuji.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserSubscriptions",
+                name: "Subscriptions",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
                     SubscriptionType = table.Column<int>(type: "INTEGER", nullable: false),
                     DiscountId = table.Column<long>(type: "INTEGER", nullable: true),
                     Months = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserSubscriptions", x => x.Id);
+                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserSubscriptions_Discounts_DiscountId",
+                        name: "FK_Subscriptions_Discounts_DiscountId",
                         column: x => x.DiscountId,
                         principalTable: "Discounts",
                         principalColumn: "Id");
@@ -253,20 +264,16 @@ namespace Gosuji.API.Migrations
                 name: "SettingConfigs",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    LanguageId = table.Column<long>(type: "INTEGER", nullable: false),
-                    IsDarkMode = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Volume = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    LanguageId = table.Column<string>(type: "TEXT", nullable: false),
+                    Theme = table.Column<int>(type: "INTEGER", nullable: false),
+                    MasterVolume = table.Column<int>(type: "INTEGER", nullable: false),
+                    StoneVolume = table.Column<int>(type: "INTEGER", nullable: false),
+                    IsPreMoveStoneSound = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsSelfplayStoneSound = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsGetChangelogEmail = table.Column<bool>(type: "INTEGER", nullable: false),
-                    KomiJP19 = table.Column<float>(type: "REAL", nullable: true),
-                    KomiJP13 = table.Column<float>(type: "REAL", nullable: true),
-                    KomiJP9 = table.Column<float>(type: "REAL", nullable: true),
-                    KomiCN19 = table.Column<float>(type: "REAL", nullable: true),
-                    KomiCN13 = table.Column<float>(type: "REAL", nullable: true),
-                    KomiCN9 = table.Column<float>(type: "REAL", nullable: true),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -285,7 +292,7 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
                     TrainerSettingConfigId = table.Column<long>(type: "INTEGER", nullable: false),
                     KataGoVersionId = table.Column<long>(type: "INTEGER", nullable: false),
                     GameStatId = table.Column<long>(type: "INTEGER", nullable: true),
@@ -300,7 +307,7 @@ namespace Gosuji.API.Migrations
                     Handicap = table.Column<int>(type: "INTEGER", nullable: false),
                     Color = table.Column<int>(type: "INTEGER", nullable: false),
                     Ruleset = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Komi = table.Column<float>(type: "REAL", nullable: false),
+                    Komi = table.Column<double>(type: "REAL", nullable: false),
                     SGF = table.Column<string>(type: "TEXT", maxLength: 100000, nullable: false),
                     Ratios = table.Column<byte[]>(type: "BLOB", nullable: false),
                     Suggestions = table.Column<byte[]>(type: "BLOB", nullable: false),
@@ -310,7 +317,7 @@ namespace Gosuji.API.Migrations
                     IsThirdPartySGF = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -350,16 +357,40 @@ namespace Gosuji.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Presets",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
+                    TrainerSettingConfigId = table.Column<long>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 22, nullable: false),
+                    Order = table.Column<int>(type: "INTEGER", nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Presets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Presets_TrainerSettingConfigs_TrainerSettingConfigId",
+                        column: x => x.TrainerSettingConfigId,
+                        principalTable: "TrainerSettingConfigs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    SettingConfigId = table.Column<long>(type: "INTEGER", nullable: false),
                     CurrentSubscriptionId = table.Column<long>(type: "INTEGER", nullable: true),
                     IsBanned = table.Column<bool>(type: "INTEGER", nullable: false),
                     EmailConfirmedDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    BackupCode = table.Column<string>(type: "TEXT", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -379,16 +410,30 @@ namespace Gosuji.API.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUsers_SettingConfigs_SettingConfigId",
-                        column: x => x.SettingConfigId,
-                        principalTable: "SettingConfigs",
+                        name: "FK_AspNetUsers_Subscriptions_CurrentSubscriptionId",
+                        column: x => x.CurrentSubscriptionId,
+                        principalTable: "Subscriptions",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserStates",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    LastPresetId = table.Column<long>(type: "INTEGER", nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStates_Presets_LastPresetId",
+                        column: x => x.LastPresetId,
+                        principalTable: "Presets",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_UserSubscriptions_CurrentSubscriptionId",
-                        column: x => x.CurrentSubscriptionId,
-                        principalTable: "UserSubscriptions",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -439,7 +484,7 @@ namespace Gosuji.API.Migrations
                     UserId = table.Column<string>(type: "TEXT", nullable: false),
                     RoleId = table.Column<string>(type: "TEXT", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -479,31 +524,23 @@ namespace Gosuji.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Presets",
+                name: "PendingUserChanges",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    TrainerSettingConfigId = table.Column<long>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", nullable: true),
+                    Email = table.Column<string>(type: "TEXT", nullable: true),
+                    Password = table.Column<string>(type: "TEXT", nullable: true),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Presets", x => x.Id);
+                    table.PrimaryKey("PK_PendingUserChanges", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Presets_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_PendingUserChanges_AspNetUsers_Id",
+                        column: x => x.Id,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Presets_TrainerSettingConfigs_TrainerSettingConfigId",
-                        column: x => x.TrainerSettingConfigId,
-                        principalTable: "TrainerSettingConfigs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -514,11 +551,11 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
                     Ip = table.Column<string>(type: "TEXT", maxLength: 120, nullable: false),
                     EndDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -537,11 +574,11 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
                     Moves = table.Column<int>(type: "INTEGER", nullable: false),
                     KataGoVisits = table.Column<int>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -591,11 +628,6 @@ namespace Gosuji.API.Migrations
                 column: "CurrentSubscriptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_SettingConfigId",
-                table: "AspNetUsers",
-                column: "SettingConfigId");
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -637,14 +669,14 @@ namespace Gosuji.API.Migrations
                 column: "TrainerSettingConfigId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Presets_UserId",
-                table: "Presets",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_SettingConfigs_LanguageId",
                 table: "SettingConfigs",
                 column: "LanguageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Subscriptions_DiscountId",
+                table: "Subscriptions",
+                column: "DiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TrainerSettingConfigs_Hash",
@@ -663,9 +695,9 @@ namespace Gosuji.API.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSubscriptions_DiscountId",
-                table: "UserSubscriptions",
-                column: "DiscountId");
+                name: "IX_UserStates_LastPresetId",
+                table: "UserStates",
+                column: "LastPresetId");
         }
 
         /// <inheritdoc />
@@ -696,16 +728,25 @@ namespace Gosuji.API.Migrations
                 name: "Games");
 
             migrationBuilder.DropTable(
-                name: "Presets");
+                name: "PendingUserChanges");
 
             migrationBuilder.DropTable(
                 name: "RateLimitViolations");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
+
+            migrationBuilder.DropTable(
+                name: "SettingConfigs");
 
             migrationBuilder.DropTable(
                 name: "UserActivities");
 
             migrationBuilder.DropTable(
                 name: "UserMoveCounts");
+
+            migrationBuilder.DropTable(
+                name: "UserStates");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -717,19 +758,19 @@ namespace Gosuji.API.Migrations
                 name: "KataGoVersions");
 
             migrationBuilder.DropTable(
-                name: "TrainerSettingConfigs");
+                name: "Languages");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "SettingConfigs");
+                name: "Presets");
 
             migrationBuilder.DropTable(
-                name: "UserSubscriptions");
+                name: "Subscriptions");
 
             migrationBuilder.DropTable(
-                name: "Languages");
+                name: "TrainerSettingConfigs");
 
             migrationBuilder.DropTable(
                 name: "Discounts");

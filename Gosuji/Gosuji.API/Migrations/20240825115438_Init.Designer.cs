@@ -11,14 +11,39 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gosuji.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240728171106_UserBackupCode")]
-    partial class UserBackupCode
+    [Migration("20240825115438_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
+
+            modelBuilder.Entity("Gosuji.API.Data.PendingUserChange", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("ModifyDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PendingUserChanges");
+                });
 
             modelBuilder.Entity("Gosuji.API.Data.RateLimitViolation", b =>
                 {
@@ -137,9 +162,6 @@ namespace Gosuji.API.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("SettingConfigId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
@@ -157,8 +179,6 @@ namespace Gosuji.API.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("SettingConfigId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -538,9 +558,9 @@ namespace Gosuji.API.Migrations
 
             modelBuilder.Entity("Gosuji.Client.Data.Language", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasMaxLength(15)
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
@@ -551,11 +571,6 @@ namespace Gosuji.API.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Short")
-                        .IsRequired()
-                        .HasMaxLength(15)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -599,15 +614,11 @@ namespace Gosuji.API.Migrations
 
             modelBuilder.Entity("Gosuji.Client.Data.SettingConfig", b =>
                 {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDarkMode")
-                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsGetChangelogEmail")
                         .HasColumnType("INTEGER");
@@ -618,8 +629,9 @@ namespace Gosuji.API.Migrations
                     b.Property<bool>("IsSelfplayStoneSound")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("LanguageId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("LanguageId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("MasterVolume")
                         .HasColumnType("INTEGER");
@@ -630,11 +642,47 @@ namespace Gosuji.API.Migrations
                     b.Property<int>("StoneVolume")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Theme")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("LanguageId");
 
                     b.ToTable("SettingConfigs");
+                });
+
+            modelBuilder.Entity("Gosuji.Client.Data.Subscription", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("CreateDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("DiscountId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset>("ModifyDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Months")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("SubscriptionType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(36)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiscountId");
+
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Gosuji.Client.Data.TrainerSettingConfig", b =>
@@ -697,6 +745,12 @@ namespace Gosuji.API.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("HideOptions")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("HideWeakerOptions")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("Komi")
                         .HasColumnType("REAL");
 
@@ -729,9 +783,6 @@ namespace Gosuji.API.Migrations
                     b.Property<bool>("OpponentOptionsSwitch")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OpponentVisits")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("PreMoves")
                         .HasColumnType("INTEGER");
 
@@ -744,30 +795,18 @@ namespace Gosuji.API.Migrations
                     b.Property<int>("PreOptions")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PreVisits")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Ruleset")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("SelfplayVisits")
-                        .HasColumnType("INTEGER");
+                    b.Property<double>("SelfplayPlaySpeed")
+                        .HasColumnType("REAL");
 
                     b.Property<bool>("ShowOpponentOptions")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("ShowOptions")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("ShowWeakerOptions")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("SuggestionOptions")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("SuggestionVisits")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -797,39 +836,6 @@ namespace Gosuji.API.Migrations
                     b.HasIndex("LastPresetId");
 
                     b.ToTable("UserStates");
-                });
-
-            modelBuilder.Entity("Gosuji.Client.Data.UserSubscription", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTimeOffset>("CreateDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long?>("DiscountId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTimeOffset>("ModifyDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Months")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("SubscriptionType")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(36)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DiscountId");
-
-                    b.ToTable("UserSubscriptions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -945,21 +951,24 @@ namespace Gosuji.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Gosuji.API.Data.User", b =>
+            modelBuilder.Entity("Gosuji.API.Data.PendingUserChange", b =>
                 {
-                    b.HasOne("Gosuji.Client.Data.UserSubscription", "CurrentSubscription")
-                        .WithMany()
-                        .HasForeignKey("CurrentSubscriptionId");
-
-                    b.HasOne("Gosuji.Client.Data.SettingConfig", "SettingConfig")
-                        .WithMany()
-                        .HasForeignKey("SettingConfigId")
+                    b.HasOne("Gosuji.API.Data.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Gosuji.API.Data.PendingUserChange", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("CurrentSubscription");
+                    b.Navigation("User");
+                });
 
-                    b.Navigation("SettingConfig");
+            modelBuilder.Entity("Gosuji.API.Data.User", b =>
+                {
+                    b.HasOne("Gosuji.Client.Data.Subscription", "CurrentSubscription")
+                        .WithMany()
+                        .HasForeignKey("CurrentSubscriptionId");
+
+                    b.Navigation("CurrentSubscription");
                 });
 
             modelBuilder.Entity("Gosuji.API.Data.UserActivity", b =>
@@ -1068,6 +1077,15 @@ namespace Gosuji.API.Migrations
                     b.Navigation("Language");
                 });
 
+            modelBuilder.Entity("Gosuji.Client.Data.Subscription", b =>
+                {
+                    b.HasOne("Gosuji.Client.Data.Discount", "Discount")
+                        .WithMany()
+                        .HasForeignKey("DiscountId");
+
+                    b.Navigation("Discount");
+                });
+
             modelBuilder.Entity("Gosuji.Client.Data.UserState", b =>
                 {
                     b.HasOne("Gosuji.Client.Data.Preset", "LastPreset")
@@ -1077,15 +1095,6 @@ namespace Gosuji.API.Migrations
                         .IsRequired();
 
                     b.Navigation("LastPreset");
-                });
-
-            modelBuilder.Entity("Gosuji.Client.Data.UserSubscription", b =>
-                {
-                    b.HasOne("Gosuji.Client.Data.Discount", "Discount")
-                        .WithMany()
-                        .HasForeignKey("DiscountId");
-
-                    b.Navigation("Discount");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
