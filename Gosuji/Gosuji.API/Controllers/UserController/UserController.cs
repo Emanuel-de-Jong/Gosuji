@@ -125,7 +125,7 @@ namespace Gosuji.API.Controllers.UserController
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-            RefreshToken? refreshTokenObj = await dbContext.RefreshTokens.Where(t => t.Token == refreshToken).FirstOrDefaultAsync();
+            RefreshToken? refreshTokenObj = await dbContext.RefreshTokens.FindAsync(refreshToken);
             if (refreshTokenObj == null)
             {
                 return BadRequest("Invalid RefreshToken");
@@ -138,25 +138,20 @@ namespace Gosuji.API.Controllers.UserController
 
             dbContext.RefreshTokens.Remove(refreshTokenObj);
 
-            // Temp
-            await DeleteExpiredRefreshTokens(dbContext);
+            // TEMP: Delete expired refresh tokens
+            foreach (RefreshToken rt in await dbContext.RefreshTokens.ToListAsync())
+            {
+                if (rt.ExpireDate < DateTime.UtcNow)
+                {
+                    dbContext.RefreshTokens.Remove(rt);
+                }
+            }
+            // TEMP END
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
             return Ok();
-        }
-
-        private async Task DeleteExpiredRefreshTokens(ApplicationDbContext dbContext)
-        {
-            foreach (RefreshToken refreshToken in await dbContext.RefreshTokens.ToListAsync())
-            {
-                if (refreshToken.ExpireDate < DateTime.UtcNow)
-                {
-                    dbContext.RefreshTokens.Remove(refreshToken);
-                }
-            }
-            await dbContext.SaveChangesAsync();
         }
 
         [HttpPost]
@@ -269,7 +264,7 @@ namespace Gosuji.API.Controllers.UserController
             }
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            PendingUserChange? pendingUserChange = await dbContext.PendingUserChanges.Where(p => p.Id == user.Id).FirstOrDefaultAsync();
+            PendingUserChange? pendingUserChange = await dbContext.PendingUserChanges.FindAsync(user.Id);
             if (pendingUserChange != null)
             {
                 pendingUserChange.UserName = model.UserName ?? pendingUserChange.UserName;
@@ -437,7 +432,7 @@ namespace Gosuji.API.Controllers.UserController
             }
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            RefreshToken? refreshTokenObj = await dbContext.RefreshTokens.Where(t => t.Token == refreshToken).FirstOrDefaultAsync();
+            RefreshToken? refreshTokenObj = await dbContext.RefreshTokens.FindAsync(refreshToken);
             if (refreshTokenObj == null || refreshTokenObj.ExpireDate < DateTime.UtcNow)
             {
                 return GetNewTokensError(BadRequest("Invalid refresh token"));
@@ -453,14 +448,11 @@ namespace Gosuji.API.Controllers.UserController
             {
                 return GetNewTokensError(Forbid());
             }
+
+            dbContext.RefreshTokens.Remove(refreshTokenObj);
             await dbContext.DisposeAsync();
 
             string newToken = await jwtService.CreateCookies(user, userManager, HttpContext);
-
-            dbContext = await dbContextFactory.CreateDbContextAsync();
-            dbContext.RefreshTokens.Remove(refreshTokenObj);
-            await dbContext.SaveChangesAsync();
-            await dbContext.DisposeAsync();
 
             return Ok(newToken);
         }

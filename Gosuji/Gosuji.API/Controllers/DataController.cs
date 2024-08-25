@@ -36,9 +36,7 @@ namespace Gosuji.API.Controllers
 
             if (includeDiscount && subscription != null && subscription.DiscountId != null)
             {
-                subscription.Discount = await dbContext.Discounts
-                    .Where(d => d.Id == subscription.DiscountId)
-                    .FirstOrDefaultAsync();
+                subscription.Discount = await dbContext.Discounts.FindAsync(subscription.DiscountId);
             }
 
             await dbContext.DisposeAsync();
@@ -103,7 +101,7 @@ namespace Gosuji.API.Controllers
         public async Task<ActionResult<Game>> GetGame(long gameId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Game? game = await dbContext.Games.Where(g => g.Id == gameId).FirstOrDefaultAsync();
+            Game? game = await dbContext.Games.FindAsync(gameId);
             await dbContext.DisposeAsync();
 
             if (game?.UserId != GetUserId())
@@ -118,9 +116,7 @@ namespace Gosuji.API.Controllers
         public async Task<ActionResult<TrainerSettingConfig>> GetTrainerSettingConfig(long configId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            TrainerSettingConfig? config = await dbContext.TrainerSettingConfigs
-                .Where(c => c.Id == configId)
-                .FirstOrDefaultAsync();
+            TrainerSettingConfig? config = await dbContext.TrainerSettingConfigs.FindAsync(configId);
             await dbContext.DisposeAsync();
 
             if (config == null)
@@ -253,9 +249,7 @@ namespace Gosuji.API.Controllers
         public async Task<ActionResult<SettingConfig>> GetSettingConfig()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            SettingConfig? settingConfig = await dbContext.SettingConfigs
-                .Where(cs => cs.Id == GetUserId())
-                .FirstOrDefaultAsync();
+            SettingConfig? settingConfig = await dbContext.SettingConfigs.FindAsync(GetUserId());
             await dbContext.DisposeAsync();
             return Ok(settingConfig);
         }
@@ -352,9 +346,7 @@ namespace Gosuji.API.Controllers
         public async Task<ActionResult> DeletePreset(long presetId)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Preset? preset = await dbContext.Presets
-                .Where(p => p.Id == presetId)
-                .FirstOrDefaultAsync();
+            Preset? preset = await dbContext.Presets.FindAsync(presetId);
             if (preset == null)
             {
                 return NotFound();
@@ -374,9 +366,7 @@ namespace Gosuji.API.Controllers
         public async Task<ActionResult<UserState>> GetUserState()
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            UserState? userState = dbContext.UserStates
-                .Where(us => us.Id == GetUserId())
-                .FirstOrDefault();
+            UserState? userState = await dbContext.UserStates.FindAsync(GetUserId());
             if (userState == null)
             {
                 return NotFound();
