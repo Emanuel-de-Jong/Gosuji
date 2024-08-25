@@ -107,7 +107,7 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
 
     stats.updateRatioHistory();
 
-    if (!settings.disableAICorrection || trainerG.isRightChoice) {
+    if (settings.wrongMoveCorrection || trainerG.isRightChoice) {
         if (!trainerG.isRightChoice) {
             gameplay.chosenNotPlayedCoordHistory.add(markupCoord, trainerG.board.getNodeX() + 1);
         }

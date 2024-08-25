@@ -98,7 +98,7 @@ namespace Gosuji.API.Helpers
                 ColorType = 0,
                 PreMovesSwitch = false,
                 PreMoves = 5,
-                DisableAICorrection = false,
+                WrongMoveCorrection = true,
 
                 Ruleset = "Japanese",
                 KomiChangeStyle = "Automatic",
@@ -147,7 +147,7 @@ namespace Gosuji.API.Helpers
             dbContext.TrainerSettingConfigs.Add(config.SetHash());
 
             config = GetTrainerSettingConfigBase();
-            config.DisableAICorrection = true;
+            config.WrongMoveCorrection = false;
             config.HideOptions = EHideOptions.ALWAYS;
             dbContext.TrainerSettingConfigs.Add(config.SetHash());
             dbContext.SaveChanges();
@@ -273,7 +273,7 @@ namespace Gosuji.API.Helpers
             config.ColorType = random.Next(3) - 1;
             config.PreMovesSwitch = random.Next(2) == 0;
             config.PreMoves = random.Next(11);
-            config.DisableAICorrection = random.Next(2) == 0;
+            config.WrongMoveCorrection = random.Next(2) == 0;
             return config.SetHash();
         }
 

@@ -107,32 +107,21 @@
 
                                                 <div class="col-6">
                                                     <div class="row">
-                                                        <div class="col-12" id="visitsDiv">
-                                                            <label for="suggestionVisits" class="form-label">AI strength</label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text">Suggestion</span>
-                                                                <input type="number" class="form-control" id="suggestionVisits" min="2" max="25000" @bind=kataGoVisits.SuggestionVisits>
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text">Opponent</span>
-                                                                <input type="number" class="form-control" id="opponentVisits" min="2" max="25000" @bind=kataGoVisits.OpponentVisits>
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text">Pre move</span>
-                                                                <input type="number" class="form-control" id="preVisits" min="2" max="25000" @bind=kataGoVisits.PreVisits>
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text">Selfplay</span>
-                                                                <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000" @bind=kataGoVisits.SelfplayVisits>
-                                                            </div>
+                                                        <div class="col-6">
+                                                            <label for="suggestionVisits" class="form-label">Suggestion strength</label>
+                                                            <input type="number" class="form-control" id="suggestionVisits" min="2" max="25000" @bind=kataGoVisits.SuggestionVisits>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="opponentVisits" class="form-label">Opponent strength</label>
+                                                            <input type="number" class="form-control" id="opponentVisits" min="2" max="25000" @bind=kataGoVisits.OpponentVisits>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="disableAICorrection" @bind=trainerSettingConfig.DisableAICorrection>
-                                                                <label class="form-check-label" for="disableAICorrection">
-                                                                    Disable AI correction
+                                                                <input class="form-check-input" type="checkbox" id="wrongMoveCorrection" @bind=trainerSettingConfig.WrongMoveCorrection>
+                                                                <label class="form-check-label" for="wrongMoveCorrection">
+                                                                    Wrong move correction
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -197,6 +186,10 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="row">
+                                                        <div class="col-6">
+                                                            <label for="preVisits" class="form-label">Pre move strength</label>
+                                                            <input type="number" class="form-control" id="preVisits" min="2" max="25000" @bind=kataGoVisits.PreVisits>
+                                                        </div>
                                                         <div class="col-6">
                                                             <label for="preOptions" class="form-label">Options</label>
                                                             <input type="number" class="form-control" id="preOptions" min="1" max="10" @bind=trainerSettingConfig.PreOptions>
@@ -406,6 +399,10 @@
                                                         <div class="col-6">
                                                             <label for="selfplayPlaySpeed" class="form-label">Play speed</label>
                                                             <input type="number" class="form-control" id="selfplayPlaySpeed" min="1.5" max="4" step="0.5" @bind=trainerSettingConfig.SelfplayPlaySpeed>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label for="selfplayVisits" class="form-label">Selfplay strength</label>
+                                                            <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000" @bind=kataGoVisits.SelfplayVisits>
                                                         </div>
                                                     </div>
                                                 </div>

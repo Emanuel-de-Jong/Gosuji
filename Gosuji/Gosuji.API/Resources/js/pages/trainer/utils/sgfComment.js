@@ -58,7 +58,7 @@ sgfComment.createInitComment = function () {
         "\nSelfplay strength: " + settings.selfplayVisits +
         "\nSuggestion strength: " + settings.suggestionVisits +
         "\nOpponent strength: " + settings.opponentVisits +
-        "\nDisable AI correction: " + settings.disableAICorrection +
+        "\nWrong move correction: " + settings.wrongMoveCorrection +
 
         "\n\nGame" +
         "\nRuleset: " + sgf.ruleset +

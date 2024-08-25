@@ -67,11 +67,6 @@
         color: lightblue;
     }
 
-    #trainerSettings #visitsDiv span {
-        min-width: 106px;
-        max-width: 106px;
-    }
-
 
 #trainerGame {
     position: relative;

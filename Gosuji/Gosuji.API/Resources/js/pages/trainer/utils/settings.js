@@ -14,7 +14,7 @@ settings.SETTINGS = {
     selfplayVisits: utils.TYPE.INT,
     suggestionVisits: utils.TYPE.INT,
     opponentVisits: utils.TYPE.INT,
-    disableAICorrection: utils.TYPE.BOOL,
+    wrongMoveCorrection: utils.TYPE.BOOL,
 
     ruleset: utils.TYPE.STRING,
     komiChangeStyle: utils.TYPE.STRING,

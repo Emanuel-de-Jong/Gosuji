@@ -24,7 +24,7 @@ namespace Gosuji.Client.Data
         [Required]
         public int PreMoves { get; set; }
         [Required]
-        public bool DisableAICorrection { get; set; }
+        public bool WrongMoveCorrection { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -107,7 +107,7 @@ namespace Gosuji.Client.Data
             builder.Append(config.ColorType);
             builder.Append(config.PreMovesSwitch);
             builder.Append(config.PreMoves);
-            builder.Append(config.DisableAICorrection);
+            builder.Append(config.WrongMoveCorrection);
 
             builder.Append(config.Ruleset);
             builder.Append(config.KomiChangeStyle);
