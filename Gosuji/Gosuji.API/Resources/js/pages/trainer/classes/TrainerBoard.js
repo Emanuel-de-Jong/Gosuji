@@ -36,6 +36,8 @@ export class TrainerBoard extends Board {
                 }
             });
             utils.addEventsListener(document, ["keydown", "mousedown"], this.keydownAndMousedownListener);
+            
+            trainerG.phaseChangedEvent.add(this.phaseChangedListener);
         }
 
         super.init(serverBoardsize ? serverBoardsize : settings.boardsize,
@@ -86,7 +88,6 @@ export class TrainerBoard extends Board {
         this.editor.addListener(gameplay.updateStats);
         this.editor.addListener(sgf.boardEditorListener);
         this.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
-        trainerG.phaseChangedEvent.add(this.phaseChangedListener);
 
         // console.log(besogo);
         // console.log(this.editor);

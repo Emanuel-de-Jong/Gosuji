@@ -13,14 +13,21 @@ preMovePlacer.MAX_VISIT_DIFF_PERC = 50;
 
 
 preMovePlacer.init = function () {
-    preMovePlacer.stopButton = document.getElementById("stopPreMovesBtn");
-    preMovePlacer.stopButton.addEventListener("click", preMovePlacer.stopButtonClickListener);
-
     preMovePlacer.clear();
 };
 
 preMovePlacer.clear = function () {
     preMovePlacer.isStopped = true;
+
+    document.querySelector("#trainerGame .besogo-board")
+        .insertAdjacentHTML("afterbegin",`
+            <div id="preMoveOverlay" class="boardOverlay" hidden>
+                <button type="button" class="btn btn-primary" id="stopPreMovesBtn">Stop pre moves</button>
+            </div>`);
+    preMovePlacer.overlay = document.getElementById("preMoveOverlay");
+
+    preMovePlacer.stopButton = document.getElementById("stopPreMovesBtn");
+    preMovePlacer.stopButton.addEventListener("click", preMovePlacer.stopButtonClickListener);
 };
 
 
@@ -29,10 +36,9 @@ preMovePlacer.start = async function () {
 
     preMovePlacer.isStopped = false;
 
-    preMovePlacer.stopButton.hidden = false;
-    selfplay.button.hidden = true;
-
     if (settings.preMovesSwitch) {
+        preMovePlacer.overlay.hidden = false;
+
         for (let i = 0; i < settings.preMoves; i++) {
             if (preMovePlacer.isStopped) break;
 
@@ -51,8 +57,7 @@ preMovePlacer.start = async function () {
         await preMovePlacer.play(true);
     }
 
-    preMovePlacer.stopButton.hidden = true;
-    selfplay.button.hidden = false;
+    preMovePlacer.overlay.hidden = true;
 
     if (!trainerG.isPassed && !sgf.isSGFLoading) {
         gameplay.givePlayerControl();

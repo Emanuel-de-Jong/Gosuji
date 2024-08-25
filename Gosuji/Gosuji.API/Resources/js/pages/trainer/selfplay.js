@@ -17,6 +17,8 @@ selfplay.init = async function () {
 };
 
 selfplay.clear = async function () {
+    selfplay.button.disabled = true;
+
     if (selfplay.isPlaying) {
         await selfplay.toggleSelfplay();
     }

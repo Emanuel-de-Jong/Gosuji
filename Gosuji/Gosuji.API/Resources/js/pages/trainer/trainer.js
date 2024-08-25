@@ -68,8 +68,9 @@ trainerPage.init = async function (
 
     trainerPage.startButton = document.getElementById("startBtn");
     trainerPage.restartButton = document.getElementById("restartBtn");
+    trainerPage.restartButton.disabled = true;
     trainerPage.newGameButton = document.getElementById("newGameBtn");
-    trainerPage.startButton.addEventListener("click", trainerPage.startButtonClickListener);
+    trainerPage.startButton.addEventListener("click", trainerPage.start);
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
     trainerPage.newGameButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
@@ -98,6 +99,8 @@ trainerPage.init = async function (
 trainerPage.clear = async function () {
     trainerG.setPhase(trainerG.PHASE_TYPE.RESTART);
 
+    trainerPage.restartButton.disabled = true;
+
     trainerG.clear();
     settings.clear();
     trainerG.board.init();
@@ -116,6 +119,9 @@ trainerPage.clear = async function () {
 
 
 trainerPage.start = async function () {
+    trainerG.board.startOverlay.hidden = true;
+    trainerPage.restartButton.disabled = false;
+
     await katago.start();
 
     sgfComment.setComment(trainerG.MOVE_TYPE.INIT);
@@ -126,14 +132,6 @@ trainerPage.start = async function () {
     } else {
         preMovePlacer.start();
     }
-};
-
-trainerPage.startButtonClickListener = async function () {
-    trainerG.board.startOverlay.hidden = true;
-    trainerPage.restartButton.disabled = false;
-    preMovePlacer.stopButton.disabled = false;
-    db.saveButton.disabled = false;
-    await trainerPage.start();
 };
 
 trainerPage.restartButtonClickListener = async function () {

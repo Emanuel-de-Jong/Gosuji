@@ -77,6 +77,7 @@
 
 #trainerPage #trainerGame .boardOverlay {
     position: absolute;
+    z-index: 30;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,20 +87,13 @@
     background-color: rgba(54, 54, 54, 0.5);
 }
 
-#trainerPage #trainerGame #startOverlay {
-    z-index: 30;
+#trainerPage #trainerGame #preMoveOverlay {
+    background-color: transparent;
+    justify-content: end;
 }
 
-#trainerPage #trainerGame #startOverlay * {
-    z-index: 40;
-}
-
-#trainerPage #trainerGame #finishedOverlay {
-    z-index: 10;
-}
-
-#trainerPage #trainerGame #finishedOverlay * {
-    z-index: 20;
+#trainerPage #trainerGame #stopPreMovesBtn {
+    margin-bottom: 20px;
 }
 
 #trainerPage #trainerGame #finishedOverlay p {
