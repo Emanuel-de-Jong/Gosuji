@@ -84,16 +84,6 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <label for="colorType" class="form-label">Color</label>
-                                                            <select class="form-select" id="colorType" @bind=trainerSettingConfig.ColorType>
-                                                                <option value="-1">Black</option>
-                                                                <option value="1">White</option>
-                                                                <option value="0">Random</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12">
                                                             <label for="preMoves" class="form-label">Pre moves</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-text">
@@ -103,9 +93,30 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <label for="hideOptions" class="form-label">Hide options</label>
+                                                            <select class="form-select" id="hideOptions" @bind=trainerSettingConfig.HideOptions>
+                                                                @foreach (EHideOptions hideOption in Enum.GetValues(typeof(EHideOptions)))
+                                                                {
+                                                                    <option value="@hideOption">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
+                                                                }
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <label for="colorType" class="form-label">Color</label>
+                                                            <select class="form-select" id="colorType" @bind=trainerSettingConfig.ColorType>
+                                                                <option value="-1">Black</option>
+                                                                <option value="1">White</option>
+                                                                <option value="0">Random</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                     <div class="row">
                                                         <div class="col-6">
                                                             <label for="suggestionVisits" class="form-label">Suggestion strength</label>
@@ -144,18 +155,6 @@
                                                 <div class="col-6">
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <label for="ruleset" class="form-label">Ruleset</label>
-                                                            <select class="form-select" id="ruleset" @bind=trainerSettingConfig.Ruleset>
-                                                                <option value="Japanese">Japanese</option>
-                                                                <option value="Chinese">Chinese</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-6">
-                                                    <div class="row">
-                                                        <div class="col-12">
                                                             <label for="komi" class="form-label">Komi</label>
                                                             <select class="form-select" id="komiChangeStyle" @bind=trainerSettingConfig.KomiChangeStyle>
                                                                 <option value="Automatic">Automatic</option>
@@ -164,9 +163,21 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-6">
+                                                        <div class="col-12">
                                                             <input type="number" class="form-control" id="komi" step="0.5" min="-150" max="150"
                                                                 @bind=trainerSettingConfig.Komi disabled="@(trainerSettingConfig.KomiChangeStyle == "Automatic" ? true : false)">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <label for="ruleset" class="form-label">Ruleset</label>
+                                                            <select class="form-select" id="ruleset" @bind=trainerSettingConfig.Ruleset>
+                                                                <option value="Japanese">Japanese</option>
+                                                                <option value="Chinese">Chinese</option>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -186,26 +197,6 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="row">
-                                                        <div class="col-6">
-                                                            <label for="preVisits" class="form-label">Pre move strength</label>
-                                                            <input type="number" class="form-control" id="preVisits" min="2" max="25000" @bind=kataGoVisits.PreVisits>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <label for="preOptions" class="form-label">Options</label>
-                                                            <input type="number" class="form-control" id="preOptions" min="1" max="10" @bind=trainerSettingConfig.PreOptions>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row" id="preOptionPercDiv">
-                                                        <div class="col-12">
-                                                            <label for="preOptionPerc" class="form-label">Option chance</label>
-                                                            <div class="input-group">
-                                                                <input type="number" class="form-control" id="preOptionPerc" step="0.1" min="0" max="100" @bind=trainerSettingConfig.PreOptionPerc>
-                                                                <span class="input-group-text">%</span>
-                                                                <div class="form-invalid-message"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
                                                         <div class="col-12">
                                                             <label for="forceOpponentCorners" class="form-label">Force opponent corners</label>
                                                             <select class="form-select" id="forceOpponentCorners" @bind=trainerSettingConfig.ForceOpponentCorners>
@@ -216,9 +207,6 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                </div>
-
-                                                <div class="col-6">
                                                     <div class="row" id="preCorner">
                                                         <div class="col-12">
                                                             <label for="cornerChance44" class="form-label">Opponent corner chances</label>
@@ -260,6 +248,31 @@
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <label for="preVisits" class="form-label">Pre move strength</label>
+                                                            <input type="number" class="form-control" id="preVisits" min="2" max="25000" @bind=kataGoVisits.PreVisits>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <label for="preOptions" class="form-label">Options</label>
+                                                            <input type="number" class="form-control" id="preOptions" min="1" max="10" @bind=trainerSettingConfig.PreOptions>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row" id="preOptionPercDiv">
+                                                        <div class="col-12">
+                                                            <label for="preOptionPerc" class="form-label">Option chance</label>
+                                                            <div class="input-group">
+                                                                <input type="number" class="form-control" id="preOptionPerc" step="0.1" min="0" max="100" @bind=trainerSettingConfig.PreOptionPerc>
+                                                                <span class="input-group-text">%</span>
+                                                                <div class="form-invalid-message"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -276,20 +289,9 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="row">
-                                                        <div class="col-6">
+                                                        <div class="col-12">
                                                             <label for="suggestionOptions" class="form-label">Suggestion options</label>
                                                             <input type="number" class="form-control" id="suggestionOptions" min="1" max="25" @bind=trainerSettingConfig.SuggestionOptions>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <label for="hideOptions" class="form-label">Hide options</label>
-                                                            <select class="form-select" id="hideOptions" @bind=trainerSettingConfig.HideOptions>
-                                                                @foreach (EHideOptions hideOption in Enum.GetValues(typeof(EHideOptions)))
-                                                                {
-                                                                    <option value="@hideOption">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
-                                                                }
-                                                            </select>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -356,6 +358,16 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox" id="showOpponentOptions" @bind=trainerSettingConfig.ShowOpponentOptions>
+                                                                <label class="form-check-label" for="showOpponentOptions">
+                                                                    Show options
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="col-6">
@@ -366,16 +378,6 @@
                                                                 <input type="number" class="form-control" id="opponentOptionPerc" step="0.1" min="0" max="100" @bind=trainerSettingConfig.OpponentOptionPerc>
                                                                 <span class="input-group-text">%</span>
                                                                 <div class="form-invalid-message"></div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="showOpponentOptions" @bind=trainerSettingConfig.ShowOpponentOptions>
-                                                                <label class="form-check-label" for="showOpponentOptions">
-                                                                    Show options
-                                                                </label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -396,18 +398,20 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <div class="row">
-                                                        <div class="col-6">
+                                                        <div class="col-12">
                                                             <label for="selfplayPlaySpeed" class="form-label">Play speed</label>
                                                             <input type="number" class="form-control" id="selfplayPlaySpeed" min="1.5" max="4" step="0.5" @bind=trainerSettingConfig.SelfplayPlaySpeed>
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <label for="selfplayVisits" class="form-label">Selfplay strength</label>
-                                                            <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000" @bind=kataGoVisits.SelfplayVisits>
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <div class="col-6">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <label for="selfplayVisits" class="form-label">Selfplay strength</label>
+                                                            <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000" @bind=kataGoVisits.SelfplayVisits>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
