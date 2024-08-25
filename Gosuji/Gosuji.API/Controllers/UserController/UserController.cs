@@ -453,11 +453,12 @@ namespace Gosuji.API.Controllers.UserController
             {
                 return GetNewTokensError(Forbid());
             }
+            await dbContext.DisposeAsync();
 
             string newToken = await jwtService.CreateCookies(user, userManager, HttpContext);
 
+            dbContext = await dbContextFactory.CreateDbContextAsync();
             dbContext.RefreshTokens.Remove(refreshTokenObj);
-
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
