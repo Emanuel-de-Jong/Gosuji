@@ -151,7 +151,10 @@ scoreChart.clear = function () {
 };
 
 
-scoreChart.themeChangedListener = function (e) {
+scoreChart.clearChart = function () {
+    scoreChart.labels.length = 0;
+    scoreChart.winrates.length = 0;
+    scoreChart.scores.length = 0;
     scoreChart.chart.update();
 };
 
@@ -173,18 +176,15 @@ scoreChart.fillHistoryWithSuggestionHistory = function (node = trainerG.board.ed
     scoreChart.history.add(suggestion.score, node.navTreeX, node.navTreeY);
 };
 
-scoreChart.clearChart = function () {
-    scoreChart.labels.length = 0;
-    scoreChart.winrates.length = 0;
-    scoreChart.scores.length = 0;
-    scoreChart.chart.update();
-};
-
 scoreChart.canvasClickListener = function (click) {
     const points = scoreChart.chart.getElementsAtEventForMode(click, "nearest", { intersect: false }, true);
     if (points[0]) {
         trainerG.board.goToNode(scoreChart.labels[points[0].index]);
     }
+};
+
+scoreChart.themeChangedListener = function () {
+    scoreChart.chart.update();
 };
 
 scoreChart.update = function (suggestion) {
@@ -199,9 +199,17 @@ scoreChart.update = function (suggestion) {
     }
 
     scoreChart.labels.splice(index, 0, moveNumber);
+    
+    let type = stats.RATIO_TYPE.WRONG;
+    if (trainerG.isPerfectChoice) {
+        type = stats.RATIO_TYPE.PERFECT;
+    } else if (trainerG.isRightChoice) {
+        type = stats.RATIO_TYPE.RIGHT;
+    }
+
+    stats.ratioHistory.add(type);
 
     let point = suggestion.score.copy();
-    if (scoreChart.colorElement.value != g.COLOR_TYPE.B) point.reverse();
     scoreChart.history.add(point, moveNumber);
 
     let winrate = point.formatWinrate();
