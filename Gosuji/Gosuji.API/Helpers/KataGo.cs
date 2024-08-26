@@ -3,7 +3,7 @@ using Gosuji.Client.Models.KataGo;
 using System.Diagnostics;
 using System.Text;
 
-namespace Gosuji.API.Models
+namespace Gosuji.API.Helpers
 {
     public class KataGo
     {
