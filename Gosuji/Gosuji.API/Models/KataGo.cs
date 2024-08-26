@@ -1,6 +1,7 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models.KataGo;
 using System.Diagnostics;
+using System.Text;
 
 namespace Gosuji.API.Models
 {
@@ -124,13 +125,25 @@ namespace Gosuji.API.Models
             Write("undo");
             ClearReader();
 
-            MoveSuggestion suggestion = new(
-                    color,
-                    coord,
-                    analysis[4],
-                    analysis[8],
-                    analysis[14]
-            );
+            MoveSuggestion suggestion = new();
+            suggestion.SetMove(color, coord);
+            for (int i = 0; i < analysis.Length; i++)
+            {
+                string element = analysis[i];
+                if (element == "visits")
+                {
+                    suggestion?.SetVisits(analysis[i + 1]);
+                }
+                else if (element == "winrate")
+                {
+                    suggestion?.SetWinrate(analysis[i + 1]);
+                }
+                else if (element == "scoreLead")
+                {
+                    suggestion?.SetScoreLead(analysis[i + 1]);
+                }
+            }
+
             return suggestion;
         }
 
@@ -247,6 +260,18 @@ namespace Gosuji.API.Models
             }
 
             return sgfStr;
+        }
+
+        private string ShowBoard()
+        {
+            Write("showboard");
+            StringBuilder stringBuilder = new();
+            string line = "";
+            while ((line = Read()) != "")
+            {
+                stringBuilder.AppendLine(line);
+            }
+            return stringBuilder.ToString();
         }
 
         private string Read()
