@@ -1,4 +1,4 @@
-﻿namespace Gosuji.Client.Models
+﻿namespace Gosuji.Client.Helpers.GameDecoder
 {
     public class Score
     {

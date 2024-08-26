@@ -17,7 +17,7 @@ stats.RATIO_TYPE = {
 stats.RATIO_Y_INDICATOR = -1;
 
 
-stats.init = function (serverRatios) {
+stats.init = async function (serverRatios) {
     stats.rightPercentElement = document.getElementById("rightPercent");
     stats.rightStreakElement = document.getElementById("rightStreak");
     stats.rightTopStreakElement = document.getElementById("rightTopStreak");
@@ -31,15 +31,15 @@ stats.init = function (serverRatios) {
     stats.resultDivElement = document.getElementById("resultDiv");
     stats.resultElement = document.getElementById("result");
 
-    stats.clear(serverRatios);
+    await stats.clear(serverRatios);
 };
 
-stats.clear = function (serverRatios) {
+stats.clear = async function (serverRatios) {
     stats.ratioHistory = serverRatios ? History.fromServer(serverRatios) : new History();
     stats.ratio = null;
 
     stats.clearRatio();
-    stats.clearVisits();
+    await stats.clearSuggestions();
     stats.clearResult();
 
     if (debug.testData == 1) {
@@ -274,21 +274,13 @@ stats.clearRatio = function () {
 };
 
 
-stats.setVisits = function (suggestionList) {
+stats.setSuggestions = async function (suggestionList) {
     let suggestions = suggestionList.getFilterByWeaker();
-
-    let visitsHtml = "";
-    for (let i = 0; i < suggestions.length; i++) {
-        let suggestion = suggestions[i];
-        if (i != 0 && suggestion.visits == suggestions[i - 1].visits) continue;
-
-        visitsHtml += "<div>" + suggestion.grade + ": " + suggestion.visits + "</div>";
-    }
-    stats.visitsElement.innerHTML = visitsHtml;
+    await trainerG.trainerRef.invokeMethodAsync("SetMoveSuggestionList", suggestions);
 };
 
-stats.clearVisits = function () {
-    stats.visitsElement.textContent = "";
+stats.clearSuggestions = async function () {
+    await trainerG.trainerRef.invokeMethodAsync("SetMoveSuggestionList", null);
 };
 
 

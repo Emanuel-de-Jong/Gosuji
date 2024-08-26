@@ -108,6 +108,36 @@
         max-width: 163px;
     }
 
+#suggestionCards {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.suggestionCard {
+    flex-basis: 48%;
+    display: flex;
+    outline: 1px solid var(--bs-body-color);
+    min-width: 168px;
+    font-size: 16px;
+    margin: 0.5px;
+}
+
+    .suggestionCard .cardTitle {
+        display: flex;
+        align-items: center;
+        font-size: 22px;
+        margin-left: 10px;
+        width: 26px;
+        border-right: 1px dotted var(--bs-body-color);
+    }
+
+    .suggestionCard .infoDiv {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        margin: 2px 10px;
+    }
+
 
 /* DARK MODE */
 

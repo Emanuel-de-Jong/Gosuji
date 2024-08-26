@@ -74,6 +74,30 @@ if (typeof utils === "undefined") {
     };
 
 
+    utils.classToObject = function (classInstance) {
+        if (typeof classInstance !== 'object' || classInstance === null) {
+            return classInstance;
+        }
+    
+        if (Array.isArray(classInstance)) {
+            return classInstance.map(item => utils.classToObject(item));
+        }
+    
+        const obj = {};
+        for (const key of Object.getOwnPropertyNames(classInstance)) {
+            if (classInstance.hasOwnProperty(key)) {
+                const value = classInstance[key];
+                if (typeof value === 'object' && value !== null) {
+                    obj[key] = utils.classToObject(value);
+                } else {
+                    obj[key] = value;
+                }
+            }
+        }
+    
+        return obj;
+    };
+
     utils.deepCopyObject = function (obj) {
         let clone = Array.isArray(obj) ? [] : {};
         for (let key in obj) {

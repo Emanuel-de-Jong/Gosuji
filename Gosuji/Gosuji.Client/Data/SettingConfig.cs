@@ -1,5 +1,4 @@
 ﻿using Gosuji.Client.Data.Attributes;
-using Gosuji.Client.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
@@ -30,5 +29,11 @@ namespace Gosuji.Client.Data
         {
             return StoneVolume / 100d * CalcMasterVolume();
         }
+    }
+
+    public enum EThemeType
+    {
+        DARK = 0,
+        LIGHT = 1
     }
 }

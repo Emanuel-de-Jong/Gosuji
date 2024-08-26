@@ -183,24 +183,24 @@ gameplay.opponentTurn = async function () {
     gameplay.givePlayerControl();
 };
 
-gameplay.updateStats = function (event) {
+gameplay.updateStats = async function (event) {
     if (event.navChange) {
         stats.setRatio();
-        stats.clearVisits();
 
-        if (
-            !event.treeChange ||
-            (gameplay.shouldShowPlayerOptions() && trainerG.color == trainerG.board.getColor()) ||
-            (settings.showOpponentOptions && trainerG.color != trainerG.board.getColor())
+        if (trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY && (
+                !event.treeChange ||
+                (gameplay.shouldShowPlayerOptions() && trainerG.color == trainerG.board.getColor()) ||
+                (settings.showOpponentOptions && trainerG.color != trainerG.board.getColor())
+            )
         ) {
-            if (trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY) {
-                if (!event.treeChange || trainerG.board.getNodeX() == 0) trainerG.suggestions = trainerG.suggestionsHistory.get();
+            if (!event.treeChange || trainerG.board.getNodeX() == 0) trainerG.suggestions = trainerG.suggestionsHistory.get();
 
-                if (trainerG.suggestions) {
-                    stats.setVisits(trainerG.suggestions);
-                    trainerG.board.drawCoords(trainerG.suggestions);
-                }
+            if (trainerG.suggestions) {
+                await stats.setSuggestions(trainerG.suggestions);
+                trainerG.board.drawCoords(trainerG.suggestions);
             }
+        } else {
+            await stats.clearSuggestions();
         }
 
         if (!event.treeChange) {

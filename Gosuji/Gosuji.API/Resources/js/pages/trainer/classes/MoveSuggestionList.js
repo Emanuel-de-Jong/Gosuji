@@ -147,8 +147,6 @@ export class MoveSuggestionList {
             suggestions.push(MoveSuggestion.fromKataGo(kataGoSuggestion));
         });
 
-        console.log(nameCoords);
-
         return new MoveSuggestionList(suggestions);
     }
 

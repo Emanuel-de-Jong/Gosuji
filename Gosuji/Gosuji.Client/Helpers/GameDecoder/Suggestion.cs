@@ -1,4 +1,6 @@
-﻿namespace Gosuji.Client.Models
+﻿using Gosuji.Client.Models;
+
+namespace Gosuji.Client.Helpers.GameDecoder
 {
     public class Suggestion
     {

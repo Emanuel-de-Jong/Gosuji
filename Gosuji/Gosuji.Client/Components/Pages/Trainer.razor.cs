@@ -2,6 +2,7 @@
 using Gosuji.Client.Helpers.GameDecoder;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
+using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
@@ -55,6 +56,8 @@ namespace Gosuji.Client.Components.Pages
         private GameStat? midgameStat;
         private GameStat? endgameStat;
         private KataGoVersion? kataGoVersion;
+
+        private MoveSuggestionList? moveSuggestionList;
 
         protected override async Task OnInitializedAsync()
         {
@@ -188,6 +191,12 @@ namespace Gosuji.Client.Components.Pages
             await jsRef.InvokeVoidAsync("trainerG.setKataGoVersion", kataGoVersion);
 
             return true;
+        }
+
+        [JSInvokable]
+        public async Task SetMoveSuggestionList(MoveSuggestionList? moveSuggestionList)
+        {
+            this.moveSuggestionList = moveSuggestionList;
         }
 
         private async Task SelectPreset(ChangeEventArgs e)
