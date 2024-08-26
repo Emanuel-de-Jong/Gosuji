@@ -1,4 +1,3 @@
-import { BaseChart } from "./classes/BaseChart";
 import { Board } from "./classes/Board";
 import { CEvent } from "./classes/CEvent";
 import { Coord } from "./classes/Coord";
@@ -38,4 +37,4 @@ if (typeof custom === "undefined") {
     window.onload = () => custom.init();
 }
 
-export { BaseChart, Board, CEvent, Coord, byteUtils, g, theme, utils, custom };
+export { Board, CEvent, Coord, byteUtils, g, theme, utils, custom };
