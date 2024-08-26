@@ -27,8 +27,6 @@ export class TrainerBoard extends Board {
 
     init(serverBoardsize, serverHandicap, serverSGF, stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
         if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
-            this.handicapElement = document.getElementById("currentHandicap");
-
             // Disable mouse 3/4 triggering prev/next in browser
             document.addEventListener("mouseup", (e) => {
                 if (typeof e === "object" && (e.button == 3 || e.button == 4)) {
@@ -82,6 +80,10 @@ export class TrainerBoard extends Board {
                 </div>`);
         this.finishedOverlay = document.getElementById("finishedOverlay");
         document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
+
+        document.querySelector("#trainerGame .besogo-whiteInfo")
+            .insertAdjacentHTML("afterend", '<div id="komiDisplay">' + settings.komi + '</div>');
+        this.komiDisplay = document.getElementById("komiDisplay");
 
         this.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
         this.editor.addListener(gameplay.updateStats);
@@ -183,7 +185,6 @@ export class TrainerBoard extends Board {
     setHandicap(handicap) {
         super.setHandicap(handicap);
 
-        this.handicapElement.textContent = handicap;
         if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
             trainerG.phase != trainerG.PHASE_TYPE.INIT &&
             trainerG.phase != trainerG.PHASE_TYPE.RESTART) {

@@ -7,9 +7,6 @@ let sgf = { id: "sgf" };
 
 
 sgf.init = async function (userName, serverKomi, serverRuleset) {
-    sgf.rulesetElement = document.getElementById("currentRuleset");
-    sgf.komiElement = document.getElementById("currentKomi");
-
     sgf.userName = userName;
 
     sgf.sgfLoadingEvent = new CEvent(sgf.sgfLoadingListener);
@@ -87,7 +84,6 @@ sgf.sgfLoadedListener = async function () {
 sgf.setRuleset = async function (ruleset) {
     sgf.ruleset = ruleset;
     sgf.setRulesetMeta();
-    sgf.rulesetElement.textContent = ruleset;
     if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
         trainerG.phase != trainerG.PHASE_TYPE.INIT &&
         trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
@@ -98,7 +94,7 @@ sgf.setRuleset = async function (ruleset) {
 sgf.setKomi = async function (komi) {
     sgf.komi = komi;
     sgf.setKomiMeta();
-    sgf.komiElement.textContent = komi;
+    trainerG.board.komiDisplay.textContent = komi;
     if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
         trainerG.phase != trainerG.PHASE_TYPE.INIT &&
         trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
