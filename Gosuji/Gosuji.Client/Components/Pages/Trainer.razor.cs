@@ -57,7 +57,7 @@ namespace Gosuji.Client.Components.Pages
         private GameStat? endgameStat;
         private KataGoVersion? kataGoVersion;
 
-        private MoveSuggestionList? moveSuggestionList;
+        private MoveSuggestion[]? suggestions;
 
         protected override async Task OnInitializedAsync()
         {
@@ -194,9 +194,13 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task SetMoveSuggestionList(MoveSuggestionList? moveSuggestionList)
+        public async Task SetSuggestions(MoveSuggestion[]? suggestions)
         {
-            this.moveSuggestionList = moveSuggestionList;
+            if (this.suggestions == null && suggestions != null)
+            {
+                this.suggestions = suggestions;
+                StateHasChanged();
+            }
         }
 
         private async Task SelectPreset(ChangeEventArgs e)

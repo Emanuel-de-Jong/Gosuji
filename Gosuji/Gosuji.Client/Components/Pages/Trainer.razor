@@ -475,94 +475,30 @@
                             </div>
                         </div>
 
-                        @if (moveSuggestionList != null)
+                        @if (suggestions != null)
                         {
                             <h3>Options</h3>
                             <div id="suggestionCards">
-                                @foreach(MoveSuggestion moveSuggestion in moveSuggestionList.Suggestions)
+                                @foreach(MoveSuggestion suggestion in suggestions)
                                 {
                                     <div class="suggestionCard">
-                                        <div class="cardTitle">@moveSuggestion.Grade</div>
+                                        <div class="cardTitle">@suggestion.Grade</div>
                                         <div class="infoDiv">
                                             <div>
-                                                <span class="infoTitle">Visits: </span>@moveSuggestion.Visits
+                                                <span class="infoTitle">Visits: </span>@suggestion.Visits
                                             </div>
                                             <div>
-                                                <span class="infoTitle">Score: </span>@moveSuggestion.Score.FormatScoreLead()
+                                                <span class="infoTitle">Score: </span>@suggestion.Score.FormatScoreLead()
                                             </div>
                                             <div>
-                                                <span class="infoTitle">Winrate: </span>@(moveSuggestion.Score.FormatWinrate())%
+                                                <span class="infoTitle">Winrate: </span>@(suggestion.Score.FormatWinrate())%
                                             </div>
                                         </div>
                                     </div>
                                 }
-
-                                <div class="suggestionCard">
-                                    <div class="cardTitle">A</div>
-                                    <div class="infoDiv">
-                                        <div>
-                                            <span class="infoTitle">Visits: </span>2000
-                                        </div>
-                                        <div>
-                                            <span class="infoTitle">Score: </span>-1.3
-                                        </div>
-                                        <div>
-                                            <span class="infoTitle">Winrate: </span>46.1%
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="suggestionCard">
-                                    <div class="cardTitle">B</div>
-                                    <div class="infoDiv">
-                                        <div>
-                                            <span class="infoTitle">Visits: </span>2000
-                                        </div>
-                                        <div>
-                                            <span class="infoTitle">Score: </span>-1.3
-                                        </div>
-                                        <div>
-                                            <span class="infoTitle">Winrate: </span>46.1%
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="suggestionCard">
-                                    <div class="cardTitle">C</div>
-                                    <div class="infoDiv">
-                                        <div>
-                                            <span class="infoTitle">Visits: </span>2000
-                                        </div>
-                                        <div>
-                                            <span class="infoTitle">Score: </span>-1.3
-                                        </div>
-                                        <div>
-                                            <span class="infoTitle">Winrate: </span>46.1%
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="suggestionCard">
-                                    <div class="cardTitle">D</div>
-                                    <div class="infoDiv">
-                                        <div>
-                                            <span class="infoTitle">Visits: </span>2000
-                                        </div>
-                                        <div>
-                                            <span class="infoTitle">Score: </span>-1.3
-                                        </div>
-                                        <div>
-                                            <span class="infoTitle">Winrate: </span>46.1%
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         }
 
-                        <div>
-                            <h3>Visits</h3>
-                            <div id="visits"></div>
-                        </div>
                         <div id="resultDiv" hidden>
                             <h3>Result</h3>
                             <span id="result"></span>

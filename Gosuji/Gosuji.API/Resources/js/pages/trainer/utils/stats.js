@@ -26,8 +26,6 @@ stats.init = async function (serverRatios) {
     stats.perfectStreakElement = document.getElementById("perfectStreak");
     stats.perfectTopStreakElement = document.getElementById("perfectTopStreak");
 
-    stats.visitsElement = document.getElementById("visits");
-
     stats.resultDivElement = document.getElementById("resultDiv");
     stats.resultElement = document.getElementById("result");
 
@@ -276,11 +274,19 @@ stats.clearRatio = function () {
 
 stats.setSuggestions = async function (suggestionList) {
     let suggestions = suggestionList.getFilterByWeaker();
-    await trainerG.trainerRef.invokeMethodAsync("SetMoveSuggestionList", suggestions);
+    let suggestionPerGrade = [];
+    for (let i = 0; i < suggestions.length; i++) {
+        let suggestion = suggestions[i];
+        if (i != 0 && suggestion.visits == suggestions[i - 1].visits) continue;
+        
+        suggestionPerGrade.push(suggestion);
+    }
+
+    await trainerG.trainerRef.invokeMethodAsync("SetSuggestions", suggestionPerGrade);
 };
 
 stats.clearSuggestions = async function () {
-    await trainerG.trainerRef.invokeMethodAsync("SetMoveSuggestionList", null);
+    await trainerG.trainerRef.invokeMethodAsync("SetSuggestions", null);
 };
 
 
