@@ -11,7 +11,7 @@ export class TrainerBoard extends Board {
     constructor() {
         super();
 
-        this.besogoOptions.panels = "control+names+tree+comment+file";
+        this.besogoOptions.panels = "control+names+tree+file";
 
         if (debug.testData == 1) {
             this.besogoOptions.sgf =
@@ -49,13 +49,12 @@ export class TrainerBoard extends Board {
 
         document.querySelector('#trainerGame button[title="Variants: [child]/sibling"]').remove();
         document.querySelector('#trainerGame button[title="Variants: show/[hide]"]').remove();
+        document.querySelector('#trainerGame button[title="Previous sibling"]').remove();
+        document.querySelector('#trainerGame button[title="Next sibling"]').remove();
         document.querySelector('#trainerGame input[value="9x9"]').remove();
         document.querySelector('#trainerGame input[value="13x13"]').remove();
         document.querySelector('#trainerGame input[value="19x19"]').remove();
         document.querySelector('#trainerGame input[value="?x?"]').remove();
-        document.querySelector('#trainerGame input[value="Comment"]').remove();
-        document.querySelector('#trainerGame input[value="Edit Info"]').remove();
-        document.querySelector('#trainerGame input[value="Info"]').remove();
 
         document.querySelector("#trainerGame .besogo-board")
             .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary btn-sm next" disabled>></button>');

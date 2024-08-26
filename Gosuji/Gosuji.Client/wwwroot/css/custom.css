@@ -115,12 +115,8 @@
     text-wrap: nowrap;
 }
 
-#trainerPage #trainerGame .besogo-gameInfo {
-    display: none !important;
-}
-
 #trainerPage #trainerGame .besogo-tree {
-    flex-basis: 3%;
+    max-height: 100px !important;
 }
 
 #trainerPage #trainerSettings .form-invalid-message {

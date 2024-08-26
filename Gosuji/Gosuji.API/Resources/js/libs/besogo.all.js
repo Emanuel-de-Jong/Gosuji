@@ -2795,14 +2795,14 @@ if (typeof besogo === "undefined") {
 
             if (msg.gameInfo) {
                 infoString = (msg.gameInfo.PW || 'White') + // White name
-                    ' (' + (msg.gameInfo.WR || '?') + ')' + // White rank
+                    (msg.gameInfo.WR ? ' (' + msg.gameInfo.WT + ')' : '') + // White rank
                     (msg.gameInfo.WT ? ' ' + msg.gameInfo.WT : ''); // White team
                 textNode = document.createTextNode(infoString);
                 whiteBox.replaceChild(textNode, whiteInfo);
                 whiteInfo = textNode;
 
                 infoString = (msg.gameInfo.PB || 'Black') + // Black name
-                    ' (' + (msg.gameInfo.BR || '?') + ')' + // Black rank
+                    (msg.gameInfo.BR ? ' (' + msg.gameInfo.BR + ')' : '') + // Black rank
                     (msg.gameInfo.BT ? ' ' + msg.gameInfo.BT : ''); // Black team
                 textNode = document.createTextNode(infoString);
                 blackBox.replaceChild(textNode, blackInfo);

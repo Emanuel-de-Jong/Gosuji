@@ -25,13 +25,11 @@ sgf.clear = async function (serverKomi, serverRuleset) {
     await sgf.setRuleset(serverKomi != null ? serverKomi : settings.ruleset);
     await sgf.setKomi(serverRuleset ? serverRuleset : settings.komi);
 
-    trainerG.board.editor.setGameInfo("GoTrainer-HumanAI", "GN");
-    trainerG.board.editor.setGameInfo("GoTrainer-HumanAI", "SO");
+    trainerG.board.editor.setGameInfo("Gosuji", "GN");
+    trainerG.board.editor.setGameInfo("Gosuji", "SO");
     trainerG.board.editor.setGameInfo(Date(), "DT");
 
     sgf.setPlayersMeta();
-    sgf.setRankPlayerMeta();
-    sgf.setRankAIMeta();
     sgf.setHandicapMeta();
 };
 
@@ -112,14 +110,6 @@ sgf.setKomi = async function (komi) {
 sgf.setPlayersMeta = function () {
     trainerG.board.editor.setGameInfo(sgf.userName ? sgf.userName : "Player", "P" + g.colorNumToName(trainerG.color));
     trainerG.board.editor.setGameInfo("AI", "P" + g.colorNumToName(trainerG.color * -1));
-};
-
-sgf.setRankPlayerMeta = function () {
-    trainerG.board.editor.setGameInfo(settings.suggestionVisits + "", g.colorNumToName(trainerG.color) + "R");
-};
-
-sgf.setRankAIMeta = function () {
-    trainerG.board.editor.setGameInfo(settings.opponentVisits + "", g.colorNumToName(trainerG.color * -1) + "R");
 };
 
 sgf.setHandicapMeta = function () {

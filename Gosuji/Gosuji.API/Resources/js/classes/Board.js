@@ -88,8 +88,6 @@ if (typeof Board === "undefined") {
 
             this.editor = this.element.besogoEditor;
 
-            this.commentElement = document.querySelector(".board .besogo-comment textarea");
-
             this.lastMove = this.editor.getCurrent();
         }
 

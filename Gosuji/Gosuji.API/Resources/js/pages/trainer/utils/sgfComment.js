@@ -42,7 +42,6 @@ sgfComment.setComment = function (moveType) {
     }
 
     trainerG.board.editor.setComment(comment);
-    trainerG.board.commentElement.scrollTop = 0;
 
     trainerG.moveTypeHistory.add(moveType);
 };

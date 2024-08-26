@@ -68,8 +68,6 @@ settings.init = function (serverColor) {
         "input",
         settings.inputAndSelectInputListener
     );
-    settings.suggestionVisitsElement.addEventListener("input", settings.suggestionVisitsElementInputListener);
-    settings.opponentVisitsElement.addEventListener("input", settings.opponentVisitsElementInputListener);
     settings.komiChangeStyleElement.addEventListener("input", settings.komiChangeStyleElementInputListener);
     settings.handicapElement.addEventListener("input", settings.setKomi);
     settings.rulesetElement.addEventListener("input", settings.setKomi);
@@ -145,14 +143,6 @@ settings.hideInvalidMessage = function (input) {
 
     let messageDiv = utils.getSiblingByClass(input, "form-invalid-message");
     messageDiv.textContent = "";
-};
-
-settings.suggestionVisitsElementInputListener = function () {
-    sgf.setRankPlayerMeta();
-};
-
-settings.opponentVisitsElementInputListener = function () {
-    sgf.setRankAIMeta();
 };
 
 settings.komiChangeStyleElementInputListener = function () {

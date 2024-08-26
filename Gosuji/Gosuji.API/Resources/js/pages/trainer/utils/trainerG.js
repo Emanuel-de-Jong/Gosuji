@@ -113,8 +113,6 @@ trainerG.setColor = function (color = trainerG.board.getNextColor()) {
         trainerG.phase != trainerG.PHASE_TYPE.INIT &&
         trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
         sgf.setPlayersMeta();
-        sgf.setRankPlayerMeta();
-        sgf.setRankAIMeta();
     }
 };
 
