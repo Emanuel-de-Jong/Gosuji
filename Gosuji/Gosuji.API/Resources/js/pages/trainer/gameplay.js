@@ -171,10 +171,11 @@ gameplay.opponentTurn = async function () {
         await gameplay.suggestionsPromise;
         if (trainerG.isPassed) return;
 
-        if (!trainerG.shouldBeImperfectSuggestion && settings.opponentOptionPercSwitch) {
-            if (utils.randomInt(100) + 1 <= settings.opponentOptionPerc) {
-                trainerG.shouldBeImperfectSuggestion = true;
-            }
+        if (!trainerG.shouldBeImperfectSuggestion &&
+            settings.opponentOptionPercSwitch &&
+            utils.randomInt(100) + 1 <= settings.opponentOptionPerc
+        ) {
+            trainerG.shouldBeImperfectSuggestion = true;
         }
 
         trainerG.isRightChoice = true;

@@ -71,20 +71,36 @@ preMovePlacer.play = async function (isForced = false) {
     if (!isForced && preMovePlacer.isStopped) return;
 
     let preOptions = 1;
-    if (trainerG.board.getNextColor() != trainerG.color && utils.randomInt(100) + 1 <= settings.preOptionPerc) {
+    if (trainerG.board.getNextColor() != trainerG.color && (
+            trainerG.shouldBeImperfectSuggestion || (
+                settings.preOptionPercSwitch &&
+                utils.randomInt(100) + 1 <= settings.preOptionPerc))
+    ) {
         preOptions = settings.preOptions;
+        trainerG.shouldBeImperfectSuggestion = true;
     }
 
     await trainerG.analyze(settings.preVisits, preOptions, preMovePlacer.MIN_VISITS_PERC, preMovePlacer.MAX_VISIT_DIFF_PERC);
     if (trainerG.isPassed) preMovePlacer.isStopped = true;
     if (!isForced && preMovePlacer.isStopped) return;
 
-    let suggestion;
-    if (trainerG.suggestions.length() == 1) {
-        suggestion = trainerG.suggestions.get(0);
-    } else {
-        suggestion = trainerG.suggestions.get(utils.randomInt(trainerG.suggestions.length() - 1) + 1);
+    let suggestion = trainerG.suggestions.get(0);
+
+    if (trainerG.shouldBeImperfectSuggestion) {
+        let imperfectSuggestions = [];
+        trainerG.suggestions.suggestions.forEach((s) => {
+            if (s.grade != "A") {
+                imperfectSuggestions.push(s);
+            }
+        });
+
+        if (imperfectSuggestions.length != 0) {
+            suggestion = imperfectSuggestions[utils.randomInt(imperfectSuggestions.length)];
+
+            trainerG.shouldBeImperfectSuggestion = false;
+        }
     }
+
     await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.PRE);
 };
 
