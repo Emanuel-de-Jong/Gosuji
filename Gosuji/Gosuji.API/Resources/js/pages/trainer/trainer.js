@@ -42,8 +42,12 @@ trainerPage.init = async function (
     trainerG.init(trainerRef, gameLoadInfo);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
     settings.init(gameLoadInfo);
-    trainerG.board.init(gameLoadInfo.boardsize, gameLoadInfo.handicap, gameLoadInfo.sgf,
-        stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound);
+    trainerG.board.init(gameLoadInfo ? gameLoadInfo.boardsize : null,
+        gameLoadInfo ? gameLoadInfo.handicap : null,
+        gameLoadInfo ? gameLoadInfo.sgf : null,
+        stoneVolume,
+        isPreMoveStoneSound,
+        isSelfplayStoneSound);
 
     trainerPage.startButton = document.getElementById("startBtn");
     trainerPage.restartButton = document.getElementById("restartBtn");

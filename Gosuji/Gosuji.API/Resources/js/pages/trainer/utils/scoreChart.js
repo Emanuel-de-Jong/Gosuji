@@ -1,5 +1,6 @@
 import { History } from "../classes/History";
 import { Score } from "../classes/Score";
+import { stats } from "./stats";
 import { trainerG } from "./trainerG";
 import { debug } from "../debug";
 
