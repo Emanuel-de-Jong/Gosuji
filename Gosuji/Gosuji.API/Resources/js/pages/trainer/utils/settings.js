@@ -90,7 +90,7 @@ settings.init = function (gameLoadInfo) {
 };
 
 settings.clear = function (gameLoadInfo) {
-    trainerG.setColor(gameLoadInfo ? gameLoadInfo.Color : settings.colorType);
+    trainerG.setColor(gameLoadInfo ? gameLoadInfo.color : settings.colorType);
 };
 
 

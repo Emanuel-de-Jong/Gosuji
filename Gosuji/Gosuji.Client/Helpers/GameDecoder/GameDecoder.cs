@@ -38,67 +38,83 @@ namespace Gosuji.Client.Helpers.GameDecoder
 
         public static RatioTree DecodeRatios(byte[] bytes)
         {
-            RatioTree rootNode = new();
-
-            int i = 0;
-            short y = 0;
-            RatioTree node = rootNode;
-            while (i < bytes.Length)
+            try
             {
-                short x = GetInt16(bytes, i);
-                i += 2;
+                RatioTree rootNode = new();
 
-                if (x == EncodeYIndicator)
+                int i = 0;
+                short y = 0;
+                RatioTree node = rootNode;
+                while (i < bytes.Length)
                 {
-                    y = GetInt16(bytes, i);
+                    short x = GetInt16(bytes, i);
                     i += 2;
 
-                    short nodeY = GetInt16(bytes, i);
-                    i += 2;
+                    if (x == EncodeYIndicator)
+                    {
+                        y = GetInt16(bytes, i);
+                        i += 2;
 
-                    short nodeX = GetInt16(bytes, i);
-                    i += 2;
+                        short nodeY = GetInt16(bytes, i);
+                        i += 2;
 
-                    node = rootNode.Nodes[nodeY][nodeX];
+                        short nodeX = GetInt16(bytes, i);
+                        i += 2;
+
+                        node = rootNode.Nodes[nodeY][nodeX];
+                    }
+                    else
+                    {
+                        node = node.Add((ERatio)bytes[i++], x, y);
+                    }
                 }
-                else
-                {
-                    node = node.Add((ERatio)bytes[i++], x, y);
-                }
+
+                return rootNode;
             }
-
-            return rootNode;
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return new();
+            }
         }
 
         public static Dictionary<short, Dictionary<short, SuggestionList>> DecodeSuggestions(byte[] bytes)
         {
-            return Decode(bytes, (i) =>
+            try
             {
-                int suggestionLength = GetInt16(bytes, i);
-                i += 2;
-
-                SuggestionList suggestionList = new();
-
-                (Suggestion, int) data;
-                if (suggestionLength == SuggestionsEncodeAnalyzeMoveIndicator)
+                return Decode(bytes, (i) =>
                 {
-                    data = DecodeSuggestion(bytes, i);
-                    i = data.Item2;
-                    suggestionList.AnalyzeMoveSuggestion = data.Item1;
-
-                    suggestionLength = GetInt16(bytes, i);
+                    int suggestionLength = GetInt16(bytes, i);
                     i += 2;
-                }
 
-                for (int j = 0; j < suggestionLength; j++)
-                {
-                    data = DecodeSuggestion(bytes, i);
-                    i = data.Item2;
-                    suggestionList.Add(data.Item1);
-                }
+                    SuggestionList suggestionList = new();
 
-                return (suggestionList, i);
-            });
+                    (Suggestion, int) data;
+                    if (suggestionLength == SuggestionsEncodeAnalyzeMoveIndicator)
+                    {
+                        data = DecodeSuggestion(bytes, i);
+                        i = data.Item2;
+                        suggestionList.AnalyzeMoveSuggestion = data.Item1;
+
+                        suggestionLength = GetInt16(bytes, i);
+                        i += 2;
+                    }
+
+                    for (int j = 0; j < suggestionLength; j++)
+                    {
+                        data = DecodeSuggestion(bytes, i);
+                        i = data.Item2;
+                        suggestionList.Add(data.Item1);
+                    }
+
+                    return (suggestionList, i);
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return [];
+            }
         }
 
         private static (Suggestion, int) DecodeSuggestion(byte[] bytes, int i)
@@ -126,22 +142,38 @@ namespace Gosuji.Client.Helpers.GameDecoder
 
         public static Dictionary<short, Dictionary<short, EMoveType>> DecodeMoveTypes(byte[] bytes)
         {
-            return Decode(bytes, (i) =>
+            try
             {
-                EMoveType moveType = (EMoveType)bytes[i++];
-                return (moveType, i);
-            });
+                return Decode(bytes, (i) =>
+                {
+                    EMoveType moveType = (EMoveType)bytes[i++];
+                    return (moveType, i);
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return [];
+            }
         }
 
         public static Dictionary<short, Dictionary<short, Coord>> DecodeChosenNotPlayedCoords(byte[] bytes)
         {
-            return Decode(bytes, (i) =>
+            try
             {
-                int coordX = bytes[i++];
-                int coordY = bytes[i++];
+                return Decode(bytes, (i) =>
+                {
+                    int coordX = bytes[i++];
+                    int coordY = bytes[i++];
 
-                return (new Coord() { X = coordX, Y = coordY }, i);
-            });
+                    return (new Coord() { X = coordX, Y = coordY }, i);
+                });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return [];
+            }
         }
 
 

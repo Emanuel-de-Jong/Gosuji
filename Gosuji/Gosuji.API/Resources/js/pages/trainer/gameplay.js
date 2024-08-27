@@ -22,7 +22,7 @@ gameplay.init = function (gameLoadInfo) {
 gameplay.clear = function (gameLoadInfo) {
     gameplay.suggestionsPromise = null;
     gameplay.chosenNotPlayedCoordHistory = gameLoadInfo
-        ? History.fromServer(gameLoadInfo.ChosenNotPlayedCoords, Coord)
+        ? History.fromServer(gameLoadInfo.chosenNotPlayedCoords, Coord)
         : new History();
     gameplay.isPlayerControlling = false;
     gameplay.isJumped = false;

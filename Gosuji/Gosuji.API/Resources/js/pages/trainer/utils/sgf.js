@@ -19,8 +19,8 @@ sgf.clear = async function (gameLoadInfo) {
     sgf.isSGFLoading = false;
     sgf.isThirdParty = false;
 
-    await sgf.setRuleset(gameLoadInfo ? gameLoadInfo.Ruleset : settings.ruleset);
-    await sgf.setKomi(gameLoadInfo ? gameLoadInfo.Komi : settings.komi);
+    await sgf.setRuleset(gameLoadInfo ? gameLoadInfo.ruleset : settings.ruleset);
+    await sgf.setKomi(gameLoadInfo ? gameLoadInfo.komi : settings.komi);
 
     trainerG.board.editor.setGameInfo("Gosuji", "GN");
     trainerG.board.editor.setGameInfo("Gosuji", "SO");

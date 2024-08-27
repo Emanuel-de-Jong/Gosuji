@@ -51,9 +51,9 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.setColor(null);
     trainerG.suggestions = null;
     trainerG.suggestionsHistory = gameLoadInfo
-        ? History.fromServer(gameLoadInfo.Suggestions, MoveSuggestionList)
+        ? History.fromServer(gameLoadInfo.suggestions, MoveSuggestionList)
         : new History();
-    trainerG.moveTypeHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.MoveTypes) : new History();
+    trainerG.moveTypeHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.moveTypes) : new History();
     trainerG.result = null;
     trainerG.isPassed = false;
     trainerG.wasPassed = false;

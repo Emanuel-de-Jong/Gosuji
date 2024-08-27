@@ -35,17 +35,17 @@ stats.init = async function (gameLoadInfo) {
 };
 
 stats.clear = async function (gameLoadInfo) {
-    stats.ratioHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.Ratios) : new History();
+    stats.ratioHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.ratios) : new History();
     stats.ratio = null;
 
     stats.clearRatio();
     await stats.clearSuggestions();
     stats.clearResult();
 
-    stats.rightStreak = gameLoadInfo ? gameLoadInfo.RightStreak : 0;
-    stats.perfectStreak = gameLoadInfo ? gameLoadInfo.PerfectStreak : 0;
-    stats.rightTopStreak = gameLoadInfo ? gameLoadInfo.RightTopStreak : 0;
-    stats.perfectTopStreak = gameLoadInfo ? gameLoadInfo.PerfectTopStreak : 0;
+    stats.rightStreak = gameLoadInfo ? gameLoadInfo.rightStreak : 0;
+    stats.perfectStreak = gameLoadInfo ? gameLoadInfo.perfectStreak : 0;
+    stats.rightTopStreak = gameLoadInfo ? gameLoadInfo.rightTopStreak : 0;
+    stats.perfectTopStreak = gameLoadInfo ? gameLoadInfo.perfectTopStreak : 0;
 
     trainerG.board.editor.addListener(stats.drawStats);
 
