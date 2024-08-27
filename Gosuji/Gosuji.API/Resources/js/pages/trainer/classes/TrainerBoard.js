@@ -147,7 +147,7 @@ export class TrainerBoard extends Board {
         }
     }
 
-    deleteBranch() {
+    deleteBranch = () => {
         if (!confirm("Delete this branch?")) return;
 
         stats.playerResultHistory.delete();
@@ -156,8 +156,16 @@ export class TrainerBoard extends Board {
         gameplay.chosenNotPlayedCoordHistory.delete();
         scoreChart.history.delete();
 
-        this.editor.prevNode(1);
-        this.editor.getCurrent().children = [];
+        let node = this.editor.getCurrent();
+        if (node.parent) {
+            this.editor.prevNode(1);
+            node.parent.removeChild(node);
+        } else {
+            let children = [];
+            node.children.forEach(child => children.push(child));
+            children.forEach(child => node.removeChild(child));
+        }
+
         this.editor.notifyListeners({ treeChange: true, navChange: true });
 
         gameplay.start();

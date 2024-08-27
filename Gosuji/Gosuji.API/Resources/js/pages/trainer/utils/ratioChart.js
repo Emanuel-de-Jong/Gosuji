@@ -177,16 +177,17 @@ ratioChart.refresh = function () {
     let ratios = [];
     let node = trainerG.board.editor.getCurrent();
     do {
-        let x = node.navTreeX;
-        let y = node.navTreeY;
+        const currentNode = node;
+        node = node.parent;
+
+        const x = currentNode.navTreeX;
+        const y = currentNode.navTreeY;
 
         if (trainerG.moveTypeHistory.get(x, y) !== trainerG.MOVE_TYPE.PLAYER) {
             continue;
         }
 
-        let ratio = ratioChart.getRatio(null, null, node);
-        
-        node = node.parent;
+        const ratio = ratioChart.getRatio(null, null, currentNode);
 
         if (!ratio) continue;
 
