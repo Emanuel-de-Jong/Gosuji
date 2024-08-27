@@ -36,15 +36,15 @@ namespace Gosuji.Client.Helpers.GameDecoder
             return result;
         }
 
-        public static RatioTree DecodeRatios(byte[] bytes)
+        public static PlayerResultTree DecodePlayerResults(byte[] bytes)
         {
             try
             {
-                RatioTree rootNode = new();
+                PlayerResultTree rootNode = new();
 
                 int i = 0;
                 short y = 0;
-                RatioTree node = rootNode;
+                PlayerResultTree node = rootNode;
                 while (i < bytes.Length)
                 {
                     short x = GetInt16(bytes, i);
@@ -65,7 +65,7 @@ namespace Gosuji.Client.Helpers.GameDecoder
                     }
                     else
                     {
-                        node = node.Add((ERatio)bytes[i++], x, y);
+                        node = node.Add((EPlayerResult)bytes[i++], x, y);
                     }
                 }
 

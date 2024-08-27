@@ -62,7 +62,7 @@ namespace Gosuji.Client.Data
 
         [MaxLength(100_000)]
         public string SGF { get; set; }
-        public byte[] Ratios { get; set; }
+        public byte[] PlayerResults { get; set; }
         public byte[] Suggestions { get; set; }
         public byte[] MoveTypes { get; set; }
         public byte[] ChosenNotPlayedCoords { get; set; }

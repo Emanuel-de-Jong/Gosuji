@@ -23,7 +23,7 @@ namespace Gosuji.Client.Models.Trainer
         public string Ruleset { get; set; }
 
         public string SGF { get; set; }
-        public Dictionary<short, Dictionary<short, ERatio>> Ratios { get; set; }
+        public Dictionary<short, Dictionary<short, EPlayerResult>> PlayerResults { get; set; }
         public Dictionary<short, Dictionary<short, SuggestionList>> Suggestions { get; set; }
         public Dictionary<short, Dictionary<short, EMoveType>> MoveTypes { get; set; }
         public Dictionary<short, Dictionary<short, Coord>> ChosenNotPlayedCoords { get; set; }
@@ -49,7 +49,7 @@ namespace Gosuji.Client.Models.Trainer
             Ruleset = game.Ruleset;
 
             SGF = game.SGF;
-            Ratios = GameDecoder.DecodeRatios(game.Ratios).ToDict();
+            PlayerResults = GameDecoder.DecodePlayerResults(game.PlayerResults).ToDict();
             Suggestions = GameDecoder.DecodeSuggestions(game.Suggestions);
             MoveTypes = GameDecoder.DecodeMoveTypes(game.MoveTypes);
             ChosenNotPlayedCoords = GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords);

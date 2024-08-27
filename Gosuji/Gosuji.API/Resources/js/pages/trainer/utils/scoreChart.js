@@ -201,14 +201,14 @@ scoreChart.update = function (suggestion) {
 
     scoreChart.labels.splice(index, 0, moveNumber);
     
-    let type = stats.RATIO_TYPE.WRONG;
+    let type = stats.PLAYER_RESULT_TYPE.WRONG;
     if (trainerG.isPerfectChoice) {
-        type = stats.RATIO_TYPE.PERFECT;
+        type = stats.PLAYER_RESULT_TYPE.PERFECT;
     } else if (trainerG.isRightChoice) {
-        type = stats.RATIO_TYPE.RIGHT;
+        type = stats.PLAYER_RESULT_TYPE.RIGHT;
     }
 
-    stats.ratioHistory.add(type);
+    stats.playerResultHistory.add(type);
 
     let point = suggestion.score.copy();
     scoreChart.history.add(point, moveNumber);

@@ -66,7 +66,7 @@ skillChart.CONFIG = {
 };
 
 
-skillChart.init = function (history) {
+skillChart.init = function (gameLoadInfo) {
     skillChart.element = document.getElementById("skillChart");
     skillChart.chart = new Chart(skillChart.element, skillChart.CONFIG);
     skillChart.labels = skillChart.chart.data.labels;
@@ -77,12 +77,12 @@ skillChart.init = function (history) {
 
     theme.themeChangedEvent.add(skillChart.themeChangedListener);
 
-    skillChart.clear(history);
+    skillChart.clear(gameLoadInfo);
 };
 
-skillChart.clear = function (history) {
+skillChart.clear = function (gameLoadInfo) {
     skillChart.clearChart();
-    skillChart.history = history != null ? history : new History();
+    skillChart.history = gameLoadInfo ? History.fromServer(gameLoadInfo.playerResults) : new History();
 };
 
 

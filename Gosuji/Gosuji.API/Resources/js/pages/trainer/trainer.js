@@ -9,6 +9,7 @@ import { TrainerBoard } from "./classes/TrainerBoard";
 import { db } from "./utils/db";
 import { katago } from "./utils/katago";
 import { scoreChart } from "./utils/scoreChart";
+import { skillChart } from "./utils/skillChart";
 import { settings } from "./utils/settings";
 import { sgfComment } from "./utils/sgfComment";
 import { sgf } from "./utils/sgf";
@@ -61,7 +62,7 @@ trainerPage.init = async function (
     sgfComment.init();
     scoreChart.init();
     await stats.init(gameLoadInfo);
-    // skillChart.init();
+    // skillChart.init(gameLoadInfo);
     debug.init();
     gameplay.init(gameLoadInfo);
     cornerPlacer.init();
@@ -70,7 +71,7 @@ trainerPage.init = async function (
     await katago.init(kataGoServiceRef);
     db.init();
 
-    // console.log(stats.ratioHistory);
+    // console.log(stats.playerResultHistory);
     // console.log(trainerG.suggestionsHistory);
     // console.log(trainerG.moveTypeHistory);
     // console.log(gameplay.chosenNotPlayedCoordHistory);
@@ -156,6 +157,7 @@ export {
     db,
     // katago,
     // scoreChart,
+    // skillChart,
     // settings,
     // sgf,
     // sgfComment,

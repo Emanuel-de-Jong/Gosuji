@@ -1,6 +1,6 @@
 ﻿namespace Gosuji.Client.Helpers.GameDecoder
 {
-    public enum ERatio
+    public enum EPlayerResult
     {
         NONE = 0,
         WRONG = 1,

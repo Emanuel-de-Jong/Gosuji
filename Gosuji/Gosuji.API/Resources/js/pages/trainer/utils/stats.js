@@ -9,14 +9,14 @@ import { gameplay } from "../gameplay";
 let stats = { id: "stats" };
 
 
-stats.RATIO_TYPE = {
+stats.PLAYER_RESULT_TYPE = {
     NONE: 0,
     WRONG: 1,
     RIGHT: 2,
     PERFECT: 3,
 };
 
-stats.RATIO_Y_INDICATOR = -1;
+stats.PLAYER_RESULT_Y_INDICATOR = -1;
 
 
 stats.init = async function (gameLoadInfo) {
@@ -35,7 +35,7 @@ stats.init = async function (gameLoadInfo) {
 };
 
 stats.clear = async function (gameLoadInfo) {
-    stats.ratioHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.ratios) : new History();
+    stats.playerResultHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.playerResults) : new History();
     stats.ratio = null;
 
     stats.clearRatio();
@@ -50,90 +50,90 @@ stats.clear = async function (gameLoadInfo) {
     trainerG.board.editor.addListener(stats.drawStats);
 
     if (debug.testData == 1) {
-        stats.ratioHistory.add(stats.RATIO_TYPE.WRONG, 1, 0);
-        stats.ratioHistory.add(stats.RATIO_TYPE.RIGHT, 3, 0);
-        stats.ratioHistory.add(stats.RATIO_TYPE.PERFECT, 5, 0);
+        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.WRONG, 1, 0);
+        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.RIGHT, 3, 0);
+        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.PERFECT, 5, 0);
 
-        stats.ratioHistory.add(stats.RATIO_TYPE.RIGHT, 1, 1);
-        stats.ratioHistory.add(stats.RATIO_TYPE.PERFECT, 3, 1);
-        stats.ratioHistory.add(stats.RATIO_TYPE.WRONG, 5, 1);
-        stats.ratioHistory.add(stats.RATIO_TYPE.WRONG, 7, 1);
+        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.RIGHT, 1, 1);
+        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.PERFECT, 3, 1);
+        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.WRONG, 5, 1);
+        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.WRONG, 7, 1);
 
-        stats.ratioHistory.add(stats.RATIO_TYPE.RIGHT, 5, 2);
+        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.RIGHT, 5, 2);
     } else if (debug.testData == 2) {
         for (let i = utils.randomInt(61, 1); i < utils.randomInt(241, 80); i += 2) {
-            stats.ratioHistory.add(utils.randomInt(4, 1), i, 0);
+            stats.playerResultHistory.add(utils.randomInt(4, 1), i, 0);
         }
     }
 };
 
 
 stats.update = function () {
-    let type = stats.RATIO_TYPE.WRONG;
+    let type = stats.PLAYER_RESULT_TYPE.WRONG;
     if (trainerG.isPerfectChoice) {
-        type = stats.RATIO_TYPE.PERFECT;
+        type = stats.PLAYER_RESULT_TYPE.PERFECT;
     } else if (trainerG.isRightChoice) {
-        type = stats.RATIO_TYPE.RIGHT;
+        type = stats.PLAYER_RESULT_TYPE.RIGHT;
     }
 
-    stats.ratioHistory.add(type);
+    stats.playerResultHistory.add(type);
 
     stats.updateStreaks(type);
 };
 
-stats.encodeRatioHistory = function () {
-    let encoded = stats.encodeRatioHistoryLoop();
+stats.encodePlayerResultHistory = function () {
+    let encoded = stats.encodePlayerResultHistoryLoop();
 
-    let firstY = byteUtils.numToBytes(stats.RATIO_Y_INDICATOR, 2);
+    let firstY = byteUtils.numToBytes(stats.PLAYER_RESULT_Y_INDICATOR, 2);
     firstY = byteUtils.numToBytes(0, 2, firstY);
     firstY = byteUtils.numToBytes(0, 2, firstY);
     firstY = byteUtils.numToBytes(0, 2, firstY);
 
     encoded = firstY.concat(encoded);
 
-    // stats.decodeRatioHistory(encoded);
+    // stats.decodePlayerResultHistory(encoded);
 
     return encoded;
 };
 
-stats.encodeRatioHistoryLoop = function (node = trainerG.board.editor.getRoot()) {
+stats.encodePlayerResultHistoryLoop = function (node = trainerG.board.editor.getRoot()) {
     let encoded = [];
 
     for (let i = 0; i < node.children.length; i++) {
         let childNode = node.children[i];
 
-        if (!stats.ratioHistory.hasY(childNode.navTreeY)) continue;
+        if (!stats.playerResultHistory.hasY(childNode.navTreeY)) continue;
 
         if (i > 0) {
             let parentNode = node;
             while (parentNode.parent != null) {
-                if (stats.ratioHistory.get(parentNode.navTreeX, parentNode.navTreeY)) {
+                if (stats.playerResultHistory.get(parentNode.navTreeX, parentNode.navTreeY)) {
                     break;
                 }
 
                 parentNode = parentNode.parent;
             }
 
-            encoded = byteUtils.numToBytes(stats.RATIO_Y_INDICATOR, 2, encoded);
+            encoded = byteUtils.numToBytes(stats.PLAYER_RESULT_Y_INDICATOR, 2, encoded);
             encoded = byteUtils.numToBytes(childNode.navTreeY, 2, encoded);
             encoded = byteUtils.numToBytes(parentNode.navTreeY, 2, encoded);
             encoded = byteUtils.numToBytes(parentNode.navTreeX, 2, encoded);
         }
 
-        let val = stats.ratioHistory.get(childNode.navTreeX, childNode.navTreeY);
+        let val = stats.playerResultHistory.get(childNode.navTreeX, childNode.navTreeY);
         if (val) {
             encoded = byteUtils.numToBytes(childNode.navTreeX, 2, encoded);
             encoded = byteUtils.numToBytes(val, 1, encoded);
             // console.log(childNode.navTreeY + ", " + childNode.navTreeX + ": " + val);
         }
 
-        encoded = encoded.concat(stats.encodeRatioHistoryLoop(childNode));
+        encoded = encoded.concat(stats.encodePlayerResultHistoryLoop(childNode));
     }
 
     return encoded;
 };
 
-stats.decodeRatioHistory = function (encoded) {
+stats.decodePlayerResultHistory = function (encoded) {
     let rootNode = new CNode();
 
     let i = 0;
@@ -141,7 +141,7 @@ stats.decodeRatioHistory = function (encoded) {
     let node = rootNode;
     while (i < encoded.length) {
         let x = encoded[i];
-        if (x == stats.RATIO_Y_INDICATOR) {
+        if (x == stats.PLAYER_RESULT_Y_INDICATOR) {
             y = encoded[i + 1];
             node = rootNode.nodes.get(encoded[i + 3], encoded[i + 2]);
             i += 4;
@@ -151,36 +151,36 @@ stats.decodeRatioHistory = function (encoded) {
         }
     }
 
-    stats.printDecodedRatioHistory(rootNode);
+    stats.printDecodedPlayerResultHistory(rootNode);
 };
 
-stats.printDecodedRatioHistory = function (node) {
+stats.printDecodedPlayerResultHistory = function (node) {
     for (let i = 0; i < node.children.length; i++) {
         let childNode = node.children[i];
         // console.log(childNode.y + ", " + childNode.x + ": " + childNode.value);
-        stats.printDecodedRatioHistory(childNode);
+        stats.printDecodedPlayerResultHistory(childNode);
     }
 };
 
-stats.getMostRatiosBranch = function (node = trainerG.board.editor.getRoot(), ratioCount = 0) {
-    if (stats.ratioHistory.get(node.navTreeX, node.navTreeY)) ratioCount++;
+stats.getMostPlayerResultsBranch = function (node = trainerG.board.editor.getRoot(), playerResultCount = 0) {
+    if (stats.playerResultHistory.get(node.navTreeX, node.navTreeY)) playerResultCount++;
 
     if (node.children.length == 0) {
         return {
             node: node,
-            count: ratioCount,
+            count: playerResultCount,
         };
     }
 
-    let childRatioCounts = [];
+    let childPlayerResultCounts = [];
     for (let i = 0; i < node.children.length; i++) {
-        childRatioCounts.push(stats.getMostRatiosBranch(node.children[i], ratioCount));
+        childPlayerResultCounts.push(stats.getMostPlayerResultsBranch(node.children[i], playerResultCount));
     }
 
-    childRatioCounts.sort((a, b) => {
+    childPlayerResultCounts.sort((a, b) => {
         return b.count - a.count;
     });
-    return childRatioCounts[0];
+    return childPlayerResultCounts[0];
 };
 
 stats.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER) {
@@ -204,7 +204,7 @@ stats.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER) {
 
         node = node.parent;
 
-        let ratio = stats.ratioHistory.get(x, y);
+        let ratio = stats.playerResultHistory.get(x, y);
         if (!ratio) continue;
 
         ratios.push(ratio);
@@ -216,11 +216,11 @@ stats.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER) {
     let right = 0;
 
     ratios.forEach((ratio) => {
-        if (ratio == stats.RATIO_TYPE.PERFECT || ratio == stats.RATIO_TYPE.RIGHT) {
+        if (ratio == stats.PLAYER_RESULT_TYPE.PERFECT || ratio == stats.PLAYER_RESULT_TYPE.RIGHT) {
             right++;
         }
 
-        if (ratio == stats.RATIO_TYPE.PERFECT) {
+        if (ratio == stats.PLAYER_RESULT_TYPE.PERFECT) {
             perfect++;
         }
     });
@@ -246,7 +246,7 @@ stats.clearRatio = function () {
 };
 
 stats.updateStreaks = function (type) {
-    if (type == stats.RATIO_TYPE.PERFECT || type == stats.RATIO_TYPE.RIGHT) {
+    if (type == stats.PLAYER_RESULT_TYPE.PERFECT || type == stats.PLAYER_RESULT_TYPE.RIGHT) {
         stats.rightStreak++;
         if (stats.rightTopStreak < stats.rightStreak) {
             stats.rightTopStreak = stats.rightStreak;
@@ -255,7 +255,7 @@ stats.updateStreaks = function (type) {
         stats.rightStreak = 0;
     }
 
-    if (type == stats.RATIO_TYPE.PERFECT) {
+    if (type == stats.PLAYER_RESULT_TYPE.PERFECT) {
         stats.perfectStreak++;
         if (stats.perfectTopStreak < stats.perfectStreak) {
             stats.perfectTopStreak = stats.perfectStreak;
