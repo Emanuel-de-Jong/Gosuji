@@ -27,6 +27,9 @@ export class TrainerBoard extends Board {
 
     init(boardsize, handicap, sgfContent, stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
         if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
+            this.setIsPreMoveStoneSound(isPreMoveStoneSound);
+            this.setIsSelfplayStoneSound(isSelfplayStoneSound);
+
             // Disable mouse 3/4 triggering prev/next in browser
             document.addEventListener("mouseup", (e) => {
                 if (typeof e === "object" && (e.button == 3 || e.button == 4)) {
@@ -41,9 +44,6 @@ export class TrainerBoard extends Board {
         super.init(boardsize ? boardsize : settings.boardsize,
             handicap != null ? handicap : settings.handicap,
             sgfContent, stoneVolume);
-        
-        this.setIsPreMoveStoneSound(isPreMoveStoneSound);
-        this.setIsSelfplayStoneSound(isSelfplayStoneSound);
 
         document.querySelector('#trainerGame button[title="Variants: [child]/sibling"]').remove();
         document.querySelector('#trainerGame button[title="Variants: show/[hide]"]').remove();
