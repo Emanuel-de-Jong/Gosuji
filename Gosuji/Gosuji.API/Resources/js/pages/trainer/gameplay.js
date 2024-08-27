@@ -61,6 +61,7 @@ gameplay.takePlayerControl = function () {
 
 gameplay.playerMarkupPlacedCheckListener = async function (event) {
     if (event.markupChange && event.mark == 4 && gameplay.isPlayerControlling && !sgf.isSGFLoading) {
+        trainerG.board.nextButton.disabled = true;
         gameplay.takePlayerControl();
 
         if (trainerG.board.getNextColor() != trainerG.color) {
@@ -155,7 +156,6 @@ gameplay.nextButtonClickListener = async function () {
     } else {
         trainerG.board.clearMarkups();
         trainerG.board.redraw();
-        gameplay.givePlayerControl(false);
     }
 };
 
@@ -207,9 +207,9 @@ gameplay.opponentTurn = async function () {
 
     if (gameplay.shouldShowOpponentOptions()) {
         trainerG.board.nextButton.disabled = false;
-    } else {
-        await gameplay.nextButtonClickListener();
     }
+    
+    gameplay.givePlayerControl();
 };
 
 gameplay.detectJump = async function (event) {
@@ -234,8 +234,9 @@ gameplay.shouldShowPlayerOptions = function () {
 };
 
 gameplay.shouldShowOpponentOptions = function () {
-    return settings.hideOpponentOptions == settings.HIDE_OPPONENT_OPTIONS.NEVER ||
-        settings.hideOpponentOptions == settings.HIDE_OPPONENT_OPTIONS.PERFECT && !trainerG.isPerfectChoice;
+    return !cornerPlacer.shouldForce(true) && (
+        settings.hideOpponentOptions == settings.HIDE_OPPONENT_OPTIONS.NEVER ||
+        settings.hideOpponentOptions == settings.HIDE_OPPONENT_OPTIONS.PERFECT && !trainerG.isPerfectChoice);
 };
 
 export { gameplay };

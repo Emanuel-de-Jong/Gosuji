@@ -27,7 +27,12 @@ cornerPlacer.init = function () {
 cornerPlacer.clear = function () { };
 
 
-cornerPlacer.shouldForce = function (moveNumber = trainerG.board.getMoveNumber()) {
+cornerPlacer.shouldForce = function (isAfterDraw = false) {
+    let moveNumber = trainerG.board.getMoveNumber();
+    if (isAfterDraw) {
+        moveNumber--;
+    }
+
     if (moveNumber > 4) return false;
 
     if (trainerG.board.handicap != 0 || (trainerG.board.boardsize != 19 && trainerG.board.boardsize != 13)) return false;
