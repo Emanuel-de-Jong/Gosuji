@@ -92,7 +92,10 @@ sgfComment.createInitComment = function () {
         "\nOptions switch: " + settings.opponentOptionsSwitch +
         "\nOptions: " + settings.opponentOptions +
         "\nOption chance: " + settings.opponentOptionPerc + "%" +
-        "\nShow options: " + settings.showOpponentOptions +
+        "\nHide options: " + settings.hideOpponentOptions +
+
+        "\n\nSelfplay" +
+        "\nPlay speed: " + settings.selfplayPlaySpeed +
 
         "\n" + sgfComment.createCommentKataGo();
 };

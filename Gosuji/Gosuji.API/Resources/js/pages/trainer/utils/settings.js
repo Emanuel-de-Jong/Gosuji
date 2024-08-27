@@ -44,7 +44,7 @@ settings.SETTINGS = {
     opponentOptionsSwitch: utils.TYPE.BOOL,
     opponentOptions: utils.TYPE.INT,
     opponentOptionPerc: utils.TYPE.FLOAT,
-    showOpponentOptions: utils.TYPE.BOOL,
+    hideOpponentOptions: utils.TYPE.STRING,
     
     selfplayPlaySpeed: utils.TYPE.FLOAT,
 };
@@ -53,6 +53,12 @@ settings.HIDE_OPTIONS = {
     NEVER: "NEVER",
     PERFECT: "PERFECT",
     RIGHT: "RIGHT",
+    ALWAYS: "ALWAYS",
+};
+
+settings.HIDE_OPPONENT_OPTIONS = {
+    NEVER: "NEVER",
+    PERFECT: "PERFECT",
     ALWAYS: "ALWAYS",
 };
 

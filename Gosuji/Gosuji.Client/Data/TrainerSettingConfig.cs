@@ -86,7 +86,7 @@ namespace Gosuji.Client.Data
         [Required]
         public double OpponentOptionPerc { get; set; }
         [Required]
-        public bool ShowOpponentOptions { get; set; }
+        public EHideOpponentOptions HideOpponentOptions { get; set; }
 
         [Required]
         [Range(1.5, 4)]
@@ -138,7 +138,7 @@ namespace Gosuji.Client.Data
             builder.Append(config.OpponentOptionsSwitch);
             builder.Append(config.OpponentOptions);
             builder.Append(config.OpponentOptionPerc);
-            builder.Append(config.ShowOpponentOptions);
+            builder.Append(config.HideOpponentOptions);
 
             builder.Append(config.SelfplayPlaySpeed);
 
@@ -153,6 +153,13 @@ namespace Gosuji.Client.Data
         NEVER = 0,
         PERFECT = 1,
         RIGHT = 2,
+        ALWAYS = 3
+    }
+
+    public enum EHideOpponentOptions
+    {
+        NEVER = 0,
+        PERFECT = 1,
         ALWAYS = 3
     }
 }

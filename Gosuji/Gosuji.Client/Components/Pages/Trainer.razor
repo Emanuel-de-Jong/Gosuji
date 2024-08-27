@@ -351,22 +351,18 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="opponentOptions" class="form-label">Options</label>
-                                                            <div class="input-group">
-                                                                <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="opponentOptionsSwitch" @bind=trainerSettingConfig.OpponentOptionsSwitch>
-                                                                </div>
-                                                                <input type="number" class="form-control" id="opponentOptions" min="1" max="10" @bind=trainerSettingConfig.OpponentOptions>
-                                                            </div>
+                                                            <input type="number" class="form-control" id="opponentOptions" min="1" max="10" @bind=trainerSettingConfig.OpponentOptions>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
-                                                            <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="showOpponentOptions" @bind=trainerSettingConfig.ShowOpponentOptions>
-                                                                <label class="form-check-label" for="showOpponentOptions">
-                                                                    Show options
-                                                                </label>
-                                                            </div>
+                                                            <label for="hideOpponentOptions" class="form-label">Hide options</label>
+                                                            <select class="form-select" id="hideOpponentOptions" @bind=trainerSettingConfig.HideOpponentOptions>
+                                                                @foreach (EHideOpponentOptions hideOption in Enum.GetValues(typeof(EHideOpponentOptions)))
+                                                                {
+                                                                    <option value="@hideOption">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
+                                                                }
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -376,6 +372,9 @@
                                                         <div class="col-12">
                                                             <label for="opponentOptionPerc" class="form-label">Option chance</label>
                                                             <div class="input-group">
+                                                                <div class="input-group-text">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="opponentOptionsSwitch" @bind=trainerSettingConfig.OpponentOptionsSwitch>
+                                                                </div>
                                                                 <input type="number" class="form-control" id="opponentOptionPerc" step="0.1" min="0" max="100" @bind=trainerSettingConfig.OpponentOptionPerc>
                                                                 <span class="input-group-text">%</span>
                                                                 <div class="form-invalid-message"></div>

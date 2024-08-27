@@ -128,7 +128,7 @@ namespace Gosuji.API.Helpers
                 OpponentOptionsSwitch = false,
                 OpponentOptions = 5,
                 OpponentOptionPerc = 10,
-                ShowOpponentOptions = false,
+                HideOpponentOptions = EHideOpponentOptions.ALWAYS,
 
                 SelfplayPlaySpeed = 2.5,
             };
