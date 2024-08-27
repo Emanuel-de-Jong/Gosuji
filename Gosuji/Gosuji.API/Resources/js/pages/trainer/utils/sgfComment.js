@@ -50,38 +50,37 @@ sgfComment.createInitComment = function () {
     return "GOSUJI " + g.VERSION +
         "\nBoard size: " + trainerG.board.boardsize +
         "\nHandicap: " + trainerG.board.handicap +
-        "\nColor: " + g.colorNumToFullName(trainerG.color) +
         "\nPre moves switch: " + settings.preMovesSwitch +
         "\nPre moves: " + settings.preMoves +
-        "\nPre move strength: " + settings.preVisits +
-        "\nSelfplay strength: " + settings.selfplayVisits +
+        "\nHide options: " + settings.hideOptions +
+        "\nColor: " + g.colorNumToFullName(trainerG.color) +
         "\nSuggestion strength: " + settings.suggestionVisits +
         "\nOpponent strength: " + settings.opponentVisits +
         "\nWrong move correction: " + settings.wrongMoveCorrection +
 
         "\n\nGame" +
-        "\nRuleset: " + sgf.ruleset +
         "\nKomi change style: " + settings.komiChangeStyle +
         "\nKomi: " + sgf.komi +
+        "\nRuleset: " + sgf.ruleset +
 
         "\n\nPre moves" +
-        "\nOptions: " + settings.preOptions +
-        "\nOption chance: " + settings.preOptionPerc + "%" +
         "\nForce opponent corners: " + settings.forceOpponentCorners +
         "\n4-4 switch: " + settings.cornerSwitch44 +
-        "\n4-4 chance: " + settings.cornerChance44 +
         "\n3-4 switch: " + settings.cornerSwitch34 +
-        "\n3-4 chance: " + settings.cornerChance34 +
         "\n3-3 switch: " + settings.cornerSwitch33 +
-        "\n3-3 chance: " + settings.cornerChance33 +
         "\n4-5 switch: " + settings.cornerSwitch45 +
-        "\n4-5 chance: " + settings.cornerChance45 +
         "\n3-5 switch: " + settings.cornerSwitch35 +
+        "\n4-4 chance: " + settings.cornerChance44 +
+        "\n3-4 chance: " + settings.cornerChance34 +
+        "\n3-3 chance: " + settings.cornerChance33 +
+        "\n4-5 chance: " + settings.cornerChance45 +
         "\n3-5 chance: " + settings.cornerChance35 +
+        "\nPre move strength: " + settings.preVisits +
+        "\nOptions: " + settings.preOptions +
+        "\nOption chance: " + settings.preOptionPerc + "%" +
 
         "\n\nFilters" +
         "\nSuggestion options: " + settings.suggestionOptions +
-        "\nHide options: " + settings.hideOptions +
         "\nHide weaker options: " + settings.hideWeakerOptions +
         "\nMin strength switch: " + settings.minVisitsPercSwitch +
         "\nMin strength: " + settings.minVisitsPerc + "%" +
@@ -89,13 +88,14 @@ sgfComment.createInitComment = function () {
         "\nMax strength difference: " + settings.maxVisitDiffPerc +
 
         "\n\nOpponent" +
-        "\nOptions switch: " + settings.opponentOptionsSwitch +
         "\nOptions: " + settings.opponentOptions +
-        "\nOption chance: " + settings.opponentOptionPerc + "%" +
         "\nHide options: " + settings.hideOpponentOptions +
+        "\nOptions switch: " + settings.opponentOptionsSwitch +
+        "\nOption chance: " + settings.opponentOptionPerc + "%" +
 
         "\n\nSelfplay" +
         "\nPlay speed: " + settings.selfplayPlaySpeed +
+        "\nSelfplay strength: " + settings.selfplayVisits +
 
         "\n" + sgfComment.createCommentKataGo();
 };

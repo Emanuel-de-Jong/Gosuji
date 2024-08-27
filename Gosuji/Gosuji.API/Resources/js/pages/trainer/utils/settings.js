@@ -6,21 +6,18 @@ let settings = { id: "settings" };
 settings.SETTINGS = {
     boardsize: utils.TYPE.INT,
     handicap: utils.TYPE.INT,
-    colorType: utils.TYPE.INT,
     preMovesSwitch: utils.TYPE.BOOL,
     preMoves: utils.TYPE.INT,
-    preVisits: utils.TYPE.INT,
-    selfplayVisits: utils.TYPE.INT,
+    hideOptions: utils.TYPE.STRING,
+    colorType: utils.TYPE.INT,
     suggestionVisits: utils.TYPE.INT,
     opponentVisits: utils.TYPE.INT,
     wrongMoveCorrection: utils.TYPE.BOOL,
 
-    ruleset: utils.TYPE.STRING,
     komiChangeStyle: utils.TYPE.STRING,
     komi: utils.TYPE.FLOAT,
+    ruleset: utils.TYPE.STRING,
 
-    preOptions: utils.TYPE.INT,
-    preOptionPerc: utils.TYPE.FLOAT,
     forceOpponentCorners: utils.TYPE.STRING,
     cornerSwitch44: utils.TYPE.BOOL,
     cornerSwitch34: utils.TYPE.BOOL,
@@ -32,21 +29,24 @@ settings.SETTINGS = {
     cornerChance33: utils.TYPE.INT,
     cornerChance45: utils.TYPE.INT,
     cornerChance35: utils.TYPE.INT,
+    preVisits: utils.TYPE.INT,
+    preOptions: utils.TYPE.INT,
+    preOptionPerc: utils.TYPE.FLOAT,
 
     suggestionOptions: utils.TYPE.INT,
-    hideOptions: utils.TYPE.STRING,
     hideWeakerOptions: utils.TYPE.BOOL,
     minVisitsPercSwitch: utils.TYPE.BOOL,
     minVisitsPerc: utils.TYPE.FLOAT,
     maxVisitDiffPercSwitch: utils.TYPE.BOOL,
     maxVisitDiffPerc: utils.TYPE.FLOAT,
 
-    opponentOptionsSwitch: utils.TYPE.BOOL,
     opponentOptions: utils.TYPE.INT,
-    opponentOptionPerc: utils.TYPE.FLOAT,
     hideOpponentOptions: utils.TYPE.STRING,
+    opponentOptionsSwitch: utils.TYPE.BOOL,
+    opponentOptionPerc: utils.TYPE.FLOAT,
     
     selfplayPlaySpeed: utils.TYPE.FLOAT,
+    selfplayVisits: utils.TYPE.INT,
 };
 
 settings.HIDE_OPTIONS = {
