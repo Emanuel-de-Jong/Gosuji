@@ -267,6 +267,9 @@
                                                         <div class="col-12">
                                                             <label for="preOptionPerc" class="form-label">Option chance</label>
                                                             <div class="input-group">
+                                                                <div class="input-group-text">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="preOptionPercSwitch" @bind=trainerSettingConfig.PreOptionPercSwitch>
+                                                                </div>
                                                                 <input type="number" class="form-control" id="preOptionPerc" step="0.1" min="0" max="100" @bind=trainerSettingConfig.PreOptionPerc>
                                                                 <span class="input-group-text">%</span>
                                                                 <div class="form-invalid-message"></div>
@@ -373,7 +376,7 @@
                                                             <label for="opponentOptionPerc" class="form-label">Option chance</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="opponentOptionsSwitch" @bind=trainerSettingConfig.OpponentOptionsSwitch>
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="opponentOptionPercSwitch" @bind=trainerSettingConfig.OpponentOptionPercSwitch>
                                                                 </div>
                                                                 <input type="number" class="form-control" id="opponentOptionPerc" step="0.1" min="0" max="100" @bind=trainerSettingConfig.OpponentOptionPerc>
                                                                 <span class="input-group-text">%</span>

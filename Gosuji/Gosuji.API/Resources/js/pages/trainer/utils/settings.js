@@ -31,6 +31,7 @@ settings.SETTINGS = {
     cornerChance35: utils.TYPE.INT,
     preVisits: utils.TYPE.INT,
     preOptions: utils.TYPE.INT,
+    preOptionPercSwitch: utils.TYPE.BOOL,
     preOptionPerc: utils.TYPE.FLOAT,
 
     suggestionOptions: utils.TYPE.INT,
@@ -42,7 +43,7 @@ settings.SETTINGS = {
 
     opponentOptions: utils.TYPE.INT,
     hideOpponentOptions: utils.TYPE.STRING,
-    opponentOptionsSwitch: utils.TYPE.BOOL,
+    opponentOptionPercSwitch: utils.TYPE.BOOL,
     opponentOptionPerc: utils.TYPE.FLOAT,
     
     selfplayPlaySpeed: utils.TYPE.FLOAT,

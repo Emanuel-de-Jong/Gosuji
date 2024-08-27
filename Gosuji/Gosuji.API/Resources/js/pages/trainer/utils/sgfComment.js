@@ -77,6 +77,7 @@ sgfComment.createInitComment = function () {
         "\n3-5 chance: " + settings.cornerChance35 +
         "\nPre move strength: " + settings.preVisits +
         "\nOptions: " + settings.preOptions +
+        "\nOption chance switch: " + settings.preOptionPercSwitch +
         "\nOption chance: " + settings.preOptionPerc + "%" +
 
         "\n\nFilters" +
@@ -90,7 +91,7 @@ sgfComment.createInitComment = function () {
         "\n\nOpponent" +
         "\nOptions: " + settings.opponentOptions +
         "\nHide options: " + settings.hideOpponentOptions +
-        "\nOptions switch: " + settings.opponentOptionsSwitch +
+        "\nOption chance switch: " + settings.opponentOptionPercSwitch +
         "\nOption chance: " + settings.opponentOptionPerc + "%" +
 
         "\n\nSelfplay" +

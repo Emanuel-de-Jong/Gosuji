@@ -94,17 +94,16 @@ namespace Gosuji.API.Helpers
             {
                 Boardsize = 19,
                 Handicap = 0,
-                ColorType = 0,
                 PreMovesSwitch = false,
                 PreMoves = 5,
+                HideOptions = EHideOptions.PERFECT,
+                ColorType = 0,
                 WrongMoveCorrection = true,
 
-                Ruleset = "Japanese",
                 KomiChangeStyle = "Automatic",
                 Komi = 6.5,
+                Ruleset = "Japanese",
 
-                PreOptions = 2,
-                PreOptionPerc = 20,
                 ForceOpponentCorners = "Both",
                 CornerSwitch44 = true,
                 CornerSwitch34 = true,
@@ -116,19 +115,21 @@ namespace Gosuji.API.Helpers
                 CornerChance33 = 20,
                 CornerChance45 = 20,
                 CornerChance35 = 20,
+                PreOptions = 2,
+                PreOptionPercSwitch = false,
+                PreOptionPerc = 20,
 
                 SuggestionOptions = 6,
-                HideOptions = EHideOptions.PERFECT,
                 HideWeakerOptions = true,
                 MinVisitsPercSwitch = true,
                 MinVisitsPerc = 10,
                 MaxVisitDiffPercSwitch = false,
                 MaxVisitDiffPerc = 40,
 
-                OpponentOptionsSwitch = false,
                 OpponentOptions = 5,
-                OpponentOptionPerc = 10,
                 HideOpponentOptions = EHideOpponentOptions.ALWAYS,
+                OpponentOptionPercSwitch = false,
+                OpponentOptionPerc = 10,
 
                 SelfplayPlaySpeed = 2.5,
             };

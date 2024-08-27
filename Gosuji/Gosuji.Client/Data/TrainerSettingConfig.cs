@@ -18,28 +18,26 @@ namespace Gosuji.Client.Data
         [Range(0, 9)]
         public int Handicap { get; set; }
         [Required]
-        public int ColorType { get; set; }
-        [Required]
         public bool PreMovesSwitch { get; set; }
         [Required]
         public int PreMoves { get; set; }
         [Required]
+        public EHideOptions HideOptions { get; set; }
+        [Required]
+        public int ColorType { get; set; }
+        [Required]
         public bool WrongMoveCorrection { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string Ruleset { get; set; }
         [Required]
         [MaxLength(100)]
         public string KomiChangeStyle { get; set; }
         [Required]
         [Range(-150, 150)]
         public double Komi { get; set; }
+        [Required]
+        [MaxLength(100)]
+        public string Ruleset { get; set; }
 
-        [Required]
-        public int PreOptions { get; set; }
-        [Required]
-        public double PreOptionPerc { get; set; }
         [Required]
         [MaxLength(100)]
         public string ForceOpponentCorners { get; set; }
@@ -63,11 +61,15 @@ namespace Gosuji.Client.Data
         public int CornerChance45 { get; set; }
         [Required]
         public int CornerChance35 { get; set; }
+        [Required]
+        public int PreOptions { get; set; }
+        [Required]
+        public bool PreOptionPercSwitch { get; set; }
+        [Required]
+        public double PreOptionPerc { get; set; }
 
         [Required]
         public int SuggestionOptions { get; set; }
-        [Required]
-        public EHideOptions HideOptions { get; set; }
         [Required]
         public bool HideWeakerOptions { get; set; }
         [Required]
@@ -80,13 +82,13 @@ namespace Gosuji.Client.Data
         public double MaxVisitDiffPerc { get; set; }
 
         [Required]
-        public bool OpponentOptionsSwitch { get; set; }
-        [Required]
         public int OpponentOptions { get; set; }
         [Required]
-        public double OpponentOptionPerc { get; set; }
-        [Required]
         public EHideOpponentOptions HideOpponentOptions { get; set; }
+        [Required]
+        public bool OpponentOptionPercSwitch { get; set; }
+        [Required]
+        public double OpponentOptionPerc { get; set; }
 
         [Required]
         [Range(1.5, 4)]
@@ -114,6 +116,7 @@ namespace Gosuji.Client.Data
             builder.Append(config.Komi);
 
             builder.Append(config.PreOptions);
+            builder.Append(config.PreOptionPercSwitch);
             builder.Append(config.PreOptionPerc);
             builder.Append(config.ForceOpponentCorners);
             builder.Append(config.CornerSwitch44);
@@ -135,7 +138,7 @@ namespace Gosuji.Client.Data
             builder.Append(config.MaxVisitDiffPercSwitch);
             builder.Append(config.MaxVisitDiffPerc);
 
-            builder.Append(config.OpponentOptionsSwitch);
+            builder.Append(config.OpponentOptionPercSwitch);
             builder.Append(config.OpponentOptions);
             builder.Append(config.OpponentOptionPerc);
             builder.Append(config.HideOpponentOptions);
