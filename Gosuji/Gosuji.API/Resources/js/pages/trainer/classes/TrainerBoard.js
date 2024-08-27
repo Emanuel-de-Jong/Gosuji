@@ -81,9 +81,24 @@ export class TrainerBoard extends Board {
         this.finishedOverlay = document.getElementById("finishedOverlay");
         document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
 
+        document.querySelector("#trainerGame .besogo-control")
+            .insertAdjacentHTML("beforeend", '<button class="bsg" id="deleteBranchBtn"><i class="fa-solid fa-trash"></i></button>');
+        this.deleteBranchButton = document.getElementById("deleteBranchBtn");
+        this.deleteBranchButton.addEventListener("click", this.deleteBranch);
+
+        this.navStartButton = document.querySelector('#trainerGame button[title="First node"]');
+        this.navBranchStartButton = document.querySelector('#trainerGame button[title="Jump back"]');
+        this.navPreviousButton = document.querySelector('#trainerGame button[title="Previous node"]');
+        this.navNextButton = document.querySelector('#trainerGame button[title="Next node"]');
+        this.navBranchEndButton = document.querySelector('#trainerGame button[title="Jump forward"]');
+        this.navEndButton = document.querySelector('#trainerGame button[title="Last node"]');
+        this.toggleCoordStyleButton = document.querySelector('#trainerGame button[title="Toggle coordinates"]');
+
         document.querySelector("#trainerGame .besogo-whiteInfo")
             .insertAdjacentHTML("afterend", '<div id="komiDisplay">' + settings.komi + '</div>');
         this.komiDisplay = document.getElementById("komiDisplay");
+
+        this.phaseChangedListener({ phase: trainerG.phase });
 
         // console.log(besogo);
         // console.log(this.editor);
@@ -128,6 +143,14 @@ export class TrainerBoard extends Board {
                 }
             }
         }
+    }
+
+    deleteBranch() {
+        if (!confirm("Delete this branch?")) return;
+
+        this.editor.prevNode(1);
+        this.editor.getCurrent().children = [];
+        this.editor.notifyListeners({ treeChange: true, navChange: true });
     }
 
     setIsPreMoveStoneSound(isPreMoveStoneSound) {
@@ -195,8 +218,21 @@ export class TrainerBoard extends Board {
     phaseChangedListener = (e) => {
         if (e.phase == trainerG.PHASE_TYPE.GAMEPLAY || e.phase == trainerG.PHASE_TYPE.FINISHED) {
             this.editor.setIsTreeJumpAllowed(true);
+            this.setButtonClickAllowed(true);
         } else {
             this.editor.setIsTreeJumpAllowed(false);
+            this.setButtonClickAllowed(false);
         }
+    }
+
+    setButtonClickAllowed(isAllowed) {
+        this.deleteBranchButton.disabled = !isAllowed;
+        this.navStartButton.disabled = !isAllowed;
+        this.navBranchStartButton.disabled = !isAllowed;
+        this.navPreviousButton.disabled = !isAllowed;
+        this.navNextButton.disabled = !isAllowed;
+        this.navBranchEndButton.disabled = !isAllowed;
+        this.navEndButton.disabled = !isAllowed;
+        this.toggleCoordStyleButton.disabled = !isAllowed;
     }
 }

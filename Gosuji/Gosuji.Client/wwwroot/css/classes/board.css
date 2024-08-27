@@ -2,6 +2,18 @@
     position: relative;
 }
 
+button.bsg {
+    color: black;
+}
+
+button.bsg:disabled {
+    color: rgb(107, 107, 107);
+}
+
+button.bsg:disabled svg polygon {
+    fill: rgb(107, 107, 107);
+}
+
 .besogo-container {
     background-color: transparent;
 }

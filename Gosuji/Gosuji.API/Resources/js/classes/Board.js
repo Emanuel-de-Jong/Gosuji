@@ -139,10 +139,6 @@ if (typeof Board === "undefined") {
         pass() {
             this.editor.click(0, 0, false);
         }
-        
-        clearFuture() {
-            this.editor.getCurrent().children = [];
-        }
 
         addMarkup(x, y, markup) {
             this.editor.getCurrent().markup[(x - 1) * 19 + (y - 1)] = markup;

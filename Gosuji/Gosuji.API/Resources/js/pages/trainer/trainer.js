@@ -142,7 +142,7 @@ trainerPage.sgfLoadedListener = async function () {
     await katago.setBoardsize();
     await katago.setHandicap();
 
-    gameplay.start();
+    gameplay.start(false);
 };
 
 export {

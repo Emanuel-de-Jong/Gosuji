@@ -24,6 +24,60 @@ export class History {
         return this.grid[y][x];
     }
 
+    delete(node = trainerG.board.editor.getCurrent()) {
+        this.deleteLoop(node);
+        this.fixWrongLengths();
+    }
+
+    deleteLoop(node) {
+        let x = node.navTreeX;
+        let y = node.navTreeY;
+
+        for (let i = 0; i < node.children.length; i++) {
+            this.delete(node.children[i]);
+        }
+
+        if (!this.grid[y]) return;
+        delete this.grid[y][x];
+
+        let index = this.grid[y].length - 1;
+        while (index >= 0 && this.grid[y][index] === undefined) {
+            index--;
+        }
+        this.grid[y].length = index + 1;
+
+        if (this.grid[y].length == 0) {
+            delete this.grid[y];
+        }
+    }
+
+    fixWrongLengths() {
+        for (let y = 0; y < this.grid.length; y++) {
+            if (!this.grid[y]) continue;
+
+            let index = this.getLengthIndex(this.grid[y]);
+            this.grid[y].length = index + 1;
+
+            if (this.grid[y].length == 0) {
+                delete this.grid[y];
+            }
+        }
+
+        let index = this.getLengthIndex(this.grid);
+        this.grid.length = index + 1;
+    }
+
+    getLengthIndex(arr) {
+        let index = -1;
+        for (let i = arr.length - 1; i >= 0; i--) {
+            if (arr[i] !== undefined) {
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+
     hasY(y) {
         return this.grid[y] != null;
     }

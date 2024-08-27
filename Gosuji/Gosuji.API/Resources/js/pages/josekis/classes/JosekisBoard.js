@@ -43,6 +43,10 @@ export class JosekisBoard extends Board {
 
         this.editor.addListener(this.crossPlacedListener);
     }
+    
+    clearFuture() {
+        this.editor.getCurrent().children = [];
+    }
 
     crossPlacedListener = async (event) => {
         if (event.markupChange && event.mark == 4) {
