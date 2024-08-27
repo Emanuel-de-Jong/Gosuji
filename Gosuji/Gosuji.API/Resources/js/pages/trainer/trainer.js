@@ -78,6 +78,7 @@ trainerPage.init = async function (
     sgfComment.init();
     scoreChart.init();
     await stats.init(serverRatios);
+    // skillChart.init();
     debug.init();
     gameplay.init(serverChosenNotPlayedCoords);
     cornerPlacer.init();
@@ -108,6 +109,7 @@ trainerPage.clear = async function () {
     sgfComment.clear();
     scoreChart.clear();
     await stats.clear();
+    // skillChart.clear();
     debug.clear();
     gameplay.clear();
     cornerPlacer.clear();
@@ -149,6 +151,7 @@ trainerPage.sgfLoadedListener = async function () {
     sgfComment.clear();
     scoreChart.clear();
     await stats.clear();
+    // skillChart.clear();
     gameplay.clear();
 
     await katago.clearBoard();
