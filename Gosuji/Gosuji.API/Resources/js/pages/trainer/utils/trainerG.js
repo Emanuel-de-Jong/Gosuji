@@ -57,6 +57,7 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.result = null;
     trainerG.isPassed = false;
     trainerG.wasPassed = false;
+    trainerG.shouldBeImperfectSuggestion = false;
 
     if (debug.testData == 1) {
         trainerG.suggestionsHistory.add(

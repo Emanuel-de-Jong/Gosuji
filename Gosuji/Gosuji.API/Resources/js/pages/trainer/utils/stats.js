@@ -257,7 +257,7 @@ stats.drawStats = async function (event) {
     if (trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY && (
             !event.treeChange ||
             (gameplay.shouldShowPlayerOptions() && trainerG.color == trainerG.board.getColor()) ||
-            (settings.hideOpponentOptions != settings.HIDE_OPPONENT_OPTIONS.ALWAYS && trainerG.color != trainerG.board.getColor())
+            (gameplay.shouldShowOpponentOptions() && trainerG.color != trainerG.board.getColor())
         )
     ) {
         if (!event.treeChange || trainerG.board.getNodeX() == 0) trainerG.suggestions = trainerG.suggestionsHistory.get();

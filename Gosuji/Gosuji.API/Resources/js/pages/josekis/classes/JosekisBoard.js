@@ -44,18 +44,6 @@ export class JosekisBoard extends Board {
         this.editor.addListener(this.crossPlacedListener);
     }
 
-    clearFuture() {
-        this.editor.getCurrent().children = [];
-    }
-
-    addMarkup(x, y, markup) {
-        this.editor.getCurrent().markup[(x - 1) * 19 + (y - 1)] = markup;
-    }
-
-    redraw() {
-        this.editor.notifyListeners({ markupChange: true });
-    }
-
     crossPlacedListener = async (event) => {
         if (event.markupChange && event.mark == 4) {
             this.removeMarkup(new Coord(event.x, event.y));

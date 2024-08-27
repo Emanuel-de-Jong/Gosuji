@@ -91,6 +91,11 @@ if (typeof Board === "undefined") {
             this.lastMove = this.editor.getCurrent();
         }
 
+
+        redraw() {
+            this.editor.notifyListeners({ markupChange: true });
+        }
+
         setStoneVolume(volume) {
             this.placeStoneAudios.forEach((audio) => audio.volume = volume);
         }
@@ -134,10 +139,27 @@ if (typeof Board === "undefined") {
         pass() {
             this.editor.click(0, 0, false);
         }
+        
+        clearFuture() {
+            this.editor.getCurrent().children = [];
+        }
+
+        addMarkup(x, y, markup) {
+            this.editor.getCurrent().markup[(x - 1) * 19 + (y - 1)] = markup;
+        }
 
         removeMarkup(coord) {
             let markup = this.editor.getCurrent().markup;
             markup[(coord.x - 1) * this.boardsize + (coord.y - 1)] = 0;
+        }
+
+        clearMarkups() {
+            let markup = this.editor.getCurrent().markup;
+            for (let i = 0; i < markup.length; i++) {
+                if (markup[i] && markup[i] != 4) {
+                    markup[i] = 0;
+                }
+            }
         }
 
         goToNode(nodeNumber) {

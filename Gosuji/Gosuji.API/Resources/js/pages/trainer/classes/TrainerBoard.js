@@ -147,12 +147,7 @@ export class TrainerBoard extends Board {
     drawCoords(suggestionList) {
         let suggestions = suggestionList.getFilterByWeaker();
 
-        let markup = this.editor.getCurrent().markup;
-        for (let i = 0; i < markup.length; i++) {
-            if (markup[i] && markup[i] != 4) {
-                markup[i] = 0;
-            }
-        }
+        this.clearMarkups();
 
         this.editor.setTool("label");
         for (let i = 0; i < suggestions.length; i++) {
