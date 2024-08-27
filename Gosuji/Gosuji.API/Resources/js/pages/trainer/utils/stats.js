@@ -1,8 +1,10 @@
 import { CNode } from "../classes/CNode";
 import { History } from "../classes/History";
 import { Ratio } from "../classes/Ratio";
+import { settings } from "./settings";
 import { trainerG } from "./trainerG";
 import { debug } from "../debug";
+import { gameplay } from "../gameplay";
 
 let stats = { id: "stats" };
 
@@ -17,28 +19,35 @@ stats.RATIO_TYPE = {
 stats.RATIO_Y_INDICATOR = -1;
 
 
-stats.init = async function (serverRatios) {
+stats.init = async function (gameLoadInfo) {
     stats.rightPercentElement = document.getElementById("rightPercent");
+    stats.perfectPercentElement = document.getElementById("perfectPercent");
+
     stats.rightStreakElement = document.getElementById("rightStreak");
     stats.rightTopStreakElement = document.getElementById("rightTopStreak");
-
-    stats.perfectPercentElement = document.getElementById("perfectPercent");
     stats.perfectStreakElement = document.getElementById("perfectStreak");
     stats.perfectTopStreakElement = document.getElementById("perfectTopStreak");
 
     stats.resultDivElement = document.getElementById("resultDiv");
     stats.resultElement = document.getElementById("result");
 
-    await stats.clear(serverRatios);
+    await stats.clear(gameLoadInfo);
 };
 
-stats.clear = async function (serverRatios) {
-    stats.ratioHistory = serverRatios ? History.fromServer(serverRatios) : new History();
+stats.clear = async function (gameLoadInfo) {
+    stats.ratioHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.Ratios) : new History();
     stats.ratio = null;
 
     stats.clearRatio();
     await stats.clearSuggestions();
     stats.clearResult();
+
+    stats.rightStreak = gameLoadInfo ? gameLoadInfo.RightStreak : 0;
+    stats.perfectStreak = gameLoadInfo ? gameLoadInfo.PerfectStreak : 0;
+    stats.rightTopStreak = gameLoadInfo ? gameLoadInfo.RightTopStreak : 0;
+    stats.perfectTopStreak = gameLoadInfo ? gameLoadInfo.PerfectTopStreak : 0;
+
+    trainerG.board.editor.addListener(stats.drawStats);
 
     if (debug.testData == 1) {
         stats.ratioHistory.add(stats.RATIO_TYPE.WRONG, 1, 0);
@@ -59,7 +68,7 @@ stats.clear = async function (serverRatios) {
 };
 
 
-stats.updateRatioHistory = function () {
+stats.update = function () {
     let type = stats.RATIO_TYPE.WRONG;
     if (trainerG.isPerfectChoice) {
         type = stats.RATIO_TYPE.PERFECT;
@@ -68,6 +77,8 @@ stats.updateRatioHistory = function () {
     }
 
     stats.ratioHistory.add(type);
+
+    stats.updateStreaks(type);
 };
 
 stats.encodeRatioHistory = function () {
@@ -199,49 +210,22 @@ stats.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER) {
         ratios.push(ratio);
     }
 
-    // if (ratios.length == 0) {
-    //     return;
-    // }
-
     ratios = ratios.reverse();
 
-    let perfect = 0,
-        perfectStreak = 0,
-        perfectTopStreak = 0;
-    let right = 0,
-        rightStreak = 0,
-        rightTopStreak = 0;
+    let perfect = 0;
+    let right = 0;
 
     ratios.forEach((ratio) => {
         if (ratio == stats.RATIO_TYPE.PERFECT || ratio == stats.RATIO_TYPE.RIGHT) {
             right++;
-            rightStreak++;
-            if (rightTopStreak < rightStreak) rightTopStreak = rightStreak;
-        } else {
-            rightStreak = 0;
         }
 
         if (ratio == stats.RATIO_TYPE.PERFECT) {
             perfect++;
-            perfectStreak++;
-            if (perfectTopStreak < perfectStreak) perfectTopStreak = perfectStreak;
-        } else {
-            perfectStreak = 0;
         }
     });
 
-    return new Ratio(
-        moveNumber,
-        ratios.length,
-
-        right,
-        rightStreak,
-        rightTopStreak,
-
-        perfect,
-        perfectStreak,
-        perfectTopStreak
-    );
+    return new Ratio(moveNumber, ratios.length, right, perfect);
 };
 
 stats.setRatio = function () {
@@ -253,22 +237,47 @@ stats.setRatio = function () {
     }
 
     stats.rightPercentElement.textContent = stats.ratio.getRightPercent();
-    stats.rightStreakElement.textContent = stats.ratio.rightStreak;
-    stats.rightTopStreakElement.textContent = stats.ratio.rightTopStreak;
-
     stats.perfectPercentElement.textContent = stats.ratio.getPerfectPercent();
-    stats.perfectStreakElement.textContent = stats.ratio.perfectStreak;
-    stats.perfectTopStreakElement.textContent = stats.ratio.perfectTopStreak;
 };
 
 stats.clearRatio = function () {
     stats.rightPercentElement.textContent = "-";
-    stats.rightStreakElement.textContent = 0;
-    stats.rightTopStreakElement.textContent = 0;
-
     stats.perfectPercentElement.textContent = "-";
+};
+
+stats.updateStreaks = function (type) {
+    if (type == stats.RATIO_TYPE.PERFECT || type == stats.RATIO_TYPE.RIGHT) {
+        stats.rightStreak++;
+        if (stats.rightTopStreak < stats.rightStreak) {
+            stats.rightTopStreak = stats.rightStreak;
+        }
+    } else {
+        stats.rightStreak = 0;
+    }
+
+    if (type == stats.RATIO_TYPE.PERFECT) {
+        stats.perfectStreak++;
+        if (stats.perfectTopStreak < stats.perfectStreak) {
+            stats.perfectTopStreak = stats.perfectStreak;
+        }
+    } else {
+        stats.perfectStreak = 0;
+    }
+};
+
+stats.setStreaks = function () {
+    stats.rightStreakElement.textContent = stats.rightStreak;
+    stats.rightTopStreakElement.textContent = stats.rightTopStreak;
+    stats.perfectStreakElement.textContent = stats.perfectStreak;
+    stats.perfectTopStreakElement.textContent = stats.perfectTopStreak;
+};
+
+stats.clearStreaks = function () {
+    stats.rightStreak = 0;
+    stats.perfectStreak = 0;
+
+    stats.rightStreakElement.textContent = 0;
     stats.perfectStreakElement.textContent = 0;
-    stats.perfectTopStreakElement.textContent = 0;
 };
 
 
@@ -298,6 +307,38 @@ stats.setResult = function (result) {
 stats.clearResult = function () {
     stats.resultElement.textContent = "";
     stats.resultDivElement.hidden = true;
+};
+
+
+stats.drawStats = async function (event) {
+    if (!event.navChange) {
+        return;
+    }
+
+    stats.setRatio();
+    
+    let node = trainerG.board.editor.getCurrent();
+    if (node.parent == null || node.navTreeY == node.parent.navTreeY) {
+        stats.setStreaks();
+    } else {
+        stats.clearStreaks();
+    }
+
+    if (trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY && (
+            !event.treeChange ||
+            (gameplay.shouldShowPlayerOptions() && trainerG.color == trainerG.board.getColor()) ||
+            (settings.showOpponentOptions && trainerG.color != trainerG.board.getColor())
+        )
+    ) {
+        if (!event.treeChange || trainerG.board.getNodeX() == 0) trainerG.suggestions = trainerG.suggestionsHistory.get();
+
+        if (trainerG.suggestions) {
+            await stats.setSuggestions(trainerG.suggestions);
+            trainerG.board.drawCoords(trainerG.suggestions);
+        }
+    } else {
+        await stats.clearSuggestions();
+    }
 };
 
 export { stats };

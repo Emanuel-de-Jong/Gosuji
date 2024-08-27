@@ -8,8 +8,8 @@ export class JosekisBoard extends Board {
         this.besogoOptions.tool = "cross";
     }
 
-    init(boardsize, handicap, sgf, stoneVolume) {
-        super.init(boardsize, handicap, sgf, stoneVolume);
+    init(boardsize, handicap, sgfContent, stoneVolume) {
+        super.init(boardsize, handicap, sgfContent, stoneVolume);
 
         this.addMarkup(16, 4, "A");
         this.addMarkup(17, 4, "B");

@@ -3,24 +3,13 @@ export class Ratio {
     total;
 
     right;
-    rightStreak;
-    rightTopStreak;
-
     perfect;
-    perfectStreak;
-    perfectTopStreak;
 
-    constructor(moveNumber, total, right, rightStreak, rightTopStreak, perfect, perfectStreak, perfectTopStreak) {
+    constructor(moveNumber, total, right, perfect) {
         this.moveNumber = moveNumber;
         this.total = total;
-
         this.right = right;
-        this.rightStreak = rightStreak;
-        this.rightTopStreak = rightTopStreak;
-
         this.perfect = perfect;
-        this.perfectStreak = perfectStreak;
-        this.perfectTopStreak = perfectTopStreak;
     }
 
 

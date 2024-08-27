@@ -36,6 +36,15 @@ namespace Gosuji.Client.Data
         public int PrevNodeY { get; set; }
 
         [Required]
+        public int RightStreak { get; set; }
+        [Required]
+        public int PerfectStreak { get; set; }
+        [Required]
+        public int RightTopStreak { get; set; }
+        [Required]
+        public int PerfectTopStreak { get; set; }
+
+        [Required]
         [RegularExpression("^(9|13|19)$")]
         public int Boardsize { get; set; }
         [Required]

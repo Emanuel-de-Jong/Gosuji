@@ -36,24 +36,24 @@ trainerG.PHASE_TYPE = {
 trainerG.isLoadingServerData = false;
 
 
-trainerG.init = function (trainerRef, serverSuggestions, serverMoveTypes) {
+trainerG.init = function (trainerRef, gameLoadInfo) {
     trainerG.trainerRef = trainerRef;
 
     trainerG.loadAnimation = document.querySelector("#trainerGame .loadAnimation");
     trainerG.phaseChangedEvent = new CEvent();
     trainerG.board = new TrainerBoard();
 
-    trainerG.clear(serverSuggestions, serverMoveTypes);
+    trainerG.clear(gameLoadInfo);
 };
 
-trainerG.clear = function (serverSuggestions, serverMoveTypes) {
+trainerG.clear = function (gameLoadInfo) {
     trainerG.setPhase(trainerG.PHASE_TYPE.NONE);
     trainerG.setColor(null);
     trainerG.suggestions = null;
-    trainerG.suggestionsHistory = serverSuggestions
-        ? History.fromServer(serverSuggestions, MoveSuggestionList)
+    trainerG.suggestionsHistory = gameLoadInfo
+        ? History.fromServer(gameLoadInfo.Suggestions, MoveSuggestionList)
         : new History();
-    trainerG.moveTypeHistory = serverMoveTypes ? History.fromServer(serverMoveTypes) : new History();
+    trainerG.moveTypeHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.MoveTypes) : new History();
     trainerG.result = null;
     trainerG.isPassed = false;
     trainerG.wasPassed = false;

@@ -33,10 +33,10 @@ namespace Gosuji.Client.Services
                 $"{MAP_GROUP}/GetUserGames/{start}/{end}");
         }
 
-        public async Task<APIResponse<Game>> GetGame(long gameId)
+        public async Task<APIResponse<Game>> GetGame(long gameId, bool includeTrainerSettingConfig = false)
         {
-            return await HttpResponseHandler.Get<Game>(http,
-                $"{MAP_GROUP}/GetGame/{gameId}");
+            return await HttpResponseHandler.Post<Game>(http,
+                $"{MAP_GROUP}/GetGame/{gameId}", includeTrainerSettingConfig);
         }
 
         public async Task<APIResponse<TrainerSettingConfig>> GetTrainerSettingConfig(long configId)

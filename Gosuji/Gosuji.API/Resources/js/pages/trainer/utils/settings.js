@@ -58,7 +58,7 @@ settings.HIDE_OPTIONS = {
 };
 
 
-settings.init = function (serverColor) {
+settings.init = function (gameLoadInfo) {
     for (const name of Object.keys(settings.SETTINGS)) {
         settings[name + "Element"] = document.getElementById(name);
     }
@@ -86,11 +86,11 @@ settings.init = function (serverColor) {
         settings.updateSetting(name);
     }
 
-    settings.clear(serverColor);
+    settings.clear(gameLoadInfo);
 };
 
-settings.clear = function (serverColor) {
-    trainerG.setColor(serverColor ? serverColor : settings.colorType);
+settings.clear = function (gameLoadInfo) {
+    trainerG.setColor(gameLoadInfo ? gameLoadInfo.Color : settings.colorType);
 };
 
 

@@ -83,6 +83,8 @@ namespace Gosuji.API.Controllers
                     EndgameStat = g.EndgameStat,
                     Name = g.Name,
                     Result = g.Result,
+                    RightTopStreak = g.RightTopStreak,
+                    PerfectTopStreak = g.PerfectTopStreak,
                     Boardsize = g.Boardsize,
                     Handicap = g.Handicap,
                     Color = g.Color,
@@ -97,11 +99,23 @@ namespace Gosuji.API.Controllers
             return Ok(games);
         }
 
-        [HttpGet("{gameId}")]
-        public async Task<ActionResult<Game>> GetGame(long gameId)
+        [HttpPost("{gameId}")]
+        public async Task<ActionResult<Game>> GetGame(long gameId, bool includeTrainerSettingConfig = false)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Game? game = await dbContext.Games.FindAsync(gameId);
+
+            Game? game = null;
+            if (includeTrainerSettingConfig)
+            {
+                game = await dbContext.Games
+                    .Where(g => g.Id == gameId)
+                    .Include(g => g.TrainerSettingConfig)
+                    .FirstOrDefaultAsync();
+            } else
+            {
+                game = await dbContext.Games.FindAsync(gameId);
+            }
+
             await dbContext.DisposeAsync();
 
             if (game?.UserId != GetUserId())

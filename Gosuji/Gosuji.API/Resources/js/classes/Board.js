@@ -44,7 +44,7 @@ if (typeof Board === "undefined") {
             nowheel: true,
         };
 
-        init(boardsize, handicap, sgf, stoneVolume) {
+        init(boardsize, handicap, sgfContent, stoneVolume) {
             if (this.placeStoneAudios == null) {
                 this.placeStoneAudios = [];
 
@@ -67,8 +67,8 @@ if (typeof Board === "undefined") {
             this.besogoOptions.size = this.boardsize;
 
             delete this.besogoOptions.sgf;
-            if (sgf) {
-                this.besogoOptions.sgf = sgf;
+            if (sgfContent) {
+                this.besogoOptions.sgf = sgfContent;
             } else if (this.handicap != 0) {
                 this.besogoOptions.sgf = "(;" +
                     "SZ[" + this.boardsize + "]" +

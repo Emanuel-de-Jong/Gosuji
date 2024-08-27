@@ -6,21 +6,21 @@ import { trainerG } from "./trainerG";
 let sgf = { id: "sgf" };
 
 
-sgf.init = async function (userName, serverKomi, serverRuleset) {
+sgf.init = async function (userName, gameLoadInfo) {
     sgf.userName = userName;
 
     sgf.sgfLoadingEvent = new CEvent(sgf.sgfLoadingListener);
     sgf.sgfLoadedEvent = new CEvent(sgf.sgfLoadedListener);
 
-    await sgf.clear(serverKomi, serverRuleset);
+    await sgf.clear(gameLoadInfo);
 };
 
-sgf.clear = async function (serverKomi, serverRuleset) {
+sgf.clear = async function (gameLoadInfo) {
     sgf.isSGFLoading = false;
     sgf.isThirdParty = false;
 
-    await sgf.setRuleset(serverKomi != null ? serverKomi : settings.ruleset);
-    await sgf.setKomi(serverRuleset ? serverRuleset : settings.komi);
+    await sgf.setRuleset(gameLoadInfo ? gameLoadInfo.Ruleset : settings.ruleset);
+    await sgf.setKomi(gameLoadInfo ? gameLoadInfo.Komi : settings.komi);
 
     trainerG.board.editor.setGameInfo("Gosuji", "GN");
     trainerG.board.editor.setGameInfo("Gosuji", "SO");
@@ -28,6 +28,8 @@ sgf.clear = async function (serverKomi, serverRuleset) {
 
     sgf.setPlayersMeta();
     sgf.setHandicapMeta();
+
+    trainerG.board.editor.addListener(sgf.boardEditorListener);
 };
 
 

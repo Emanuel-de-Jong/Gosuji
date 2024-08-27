@@ -148,15 +148,8 @@ sgfComment.createCommentRatio = function () {
     let ratio = stats.ratio;
     if (ratio == null) return "";
 
-    return "\nRight" +
-        "\nRatio: " + ratio.getRightPercent() + "%" +
-        "\nStreak: " + ratio.rightStreak +
-        "\nTop streak: " + ratio.rightTopStreak +
-
-        "\n\nPerfect (A)" +
-        "\nRatio: " + ratio.getPerfectPercent() + "%" +
-        "\nStreak: " + ratio.perfectStreak +
-        "\nTop streak: " + ratio.perfectTopStreak;
+    return "\nRight ratio: " +ratio.getRightPercent() + "%" +
+        "\nPerfect(A) ratio: " + ratio.getPerfectPercent() + "%";
 }
 
 sgfComment.createCommentScore = function () {

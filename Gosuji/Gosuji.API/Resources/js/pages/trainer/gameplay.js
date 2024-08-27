@@ -15,19 +15,23 @@ gameplay.OPPONENT_MIN_VISITS_PERC = 10;
 gameplay.OPPONENT_MAX_VISIT_DIFF_PERC = 50;
 
 
-gameplay.init = function (serverChosenNotPlayedCoords) {
-    gameplay.clear(serverChosenNotPlayedCoords);
+gameplay.init = function (gameLoadInfo) {
+    gameplay.clear(gameLoadInfo);
 };
 
-gameplay.clear = function (serverChosenNotPlayedCoords) {
+gameplay.clear = function (gameLoadInfo) {
     gameplay.suggestionsPromise = null;
-    gameplay.chosenNotPlayedCoordHistory = serverChosenNotPlayedCoords
-        ? History.fromServer(serverChosenNotPlayedCoords, Coord)
+    gameplay.chosenNotPlayedCoordHistory = gameLoadInfo
+        ? History.fromServer(gameLoadInfo.ChosenNotPlayedCoords, Coord)
         : new History();
     gameplay.isPlayerControlling = false;
     gameplay.isJumped = false;
     gameplay.playerTurnId = 0;
     gameplay.opponentTurnId = 0;
+
+    trainerG.board.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
+    trainerG.board.editor.addListener(gameplay.detectJump);
+    trainerG.board.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
 
     if (debug.testData == 1) {
         gameplay.chosenNotPlayedCoordHistory.add(new Coord(8, 12), 2, 0);
@@ -105,7 +109,7 @@ gameplay.playerTurn = async function (markupCoord) {
 gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
     let opponentOptions = gameplay.getOpponentOptions();
 
-    stats.updateRatioHistory();
+    stats.update();
 
     if (settings.wrongMoveCorrection || trainerG.isRightChoice) {
         if (!trainerG.isRightChoice) {
@@ -183,36 +187,16 @@ gameplay.opponentTurn = async function () {
     gameplay.givePlayerControl();
 };
 
-gameplay.updateStats = async function (event) {
-    if (event.navChange) {
-        stats.setRatio();
+gameplay.detectJump = async function (event) {
+    if (event.navChange && !event.treeChange) {
+        gameplay.givePlayerControl(false);
 
-        if (trainerG.phase == trainerG.PHASE_TYPE.GAMEPLAY && (
-                !event.treeChange ||
-                (gameplay.shouldShowPlayerOptions() && trainerG.color == trainerG.board.getColor()) ||
-                (settings.showOpponentOptions && trainerG.color != trainerG.board.getColor())
-            )
-        ) {
-            if (!event.treeChange || trainerG.board.getNodeX() == 0) trainerG.suggestions = trainerG.suggestionsHistory.get();
+        scoreChart.refresh();
 
-            if (trainerG.suggestions) {
-                await stats.setSuggestions(trainerG.suggestions);
-                trainerG.board.drawCoords(trainerG.suggestions);
-            }
-        } else {
-            await stats.clearSuggestions();
-        }
-
-        if (!event.treeChange) {
-            gameplay.givePlayerControl(false);
-
-            scoreChart.refresh();
-
-            if (!gameplay.isJumped) {
-                gameplay.isJumped = true;
-                trainerG.isPassed = false;
-                trainerG.board.nextButton.disabled = true;
-            }
+        if (!gameplay.isJumped) {
+            gameplay.isJumped = true;
+            trainerG.isPassed = false;
+            trainerG.board.nextButton.disabled = true;
         }
     }
 };

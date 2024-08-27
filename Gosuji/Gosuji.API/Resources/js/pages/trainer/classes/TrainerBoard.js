@@ -25,7 +25,7 @@ export class TrainerBoard extends Board {
         }
     }
 
-    init(serverBoardsize, serverHandicap, serverSGF, stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
+    init(boardsize, handicap, sgfContent, stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
         if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
             // Disable mouse 3/4 triggering prev/next in browser
             document.addEventListener("mouseup", (e) => {
@@ -38,9 +38,9 @@ export class TrainerBoard extends Board {
             trainerG.phaseChangedEvent.add(this.phaseChangedListener);
         }
 
-        super.init(serverBoardsize ? serverBoardsize : settings.boardsize,
-            serverHandicap != null ? serverHandicap : settings.handicap,
-            serverSGF, stoneVolume);
+        super.init(boardsize ? boardsize : settings.boardsize,
+            handicap != null ? handicap : settings.handicap,
+            sgfContent, stoneVolume);
         
         this.setIsPreMoveStoneSound(isPreMoveStoneSound);
         this.setIsSelfplayStoneSound(isSelfplayStoneSound);
@@ -84,11 +84,6 @@ export class TrainerBoard extends Board {
         document.querySelector("#trainerGame .besogo-whiteInfo")
             .insertAdjacentHTML("afterend", '<div id="komiDisplay">' + settings.komi + '</div>');
         this.komiDisplay = document.getElementById("komiDisplay");
-
-        this.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
-        this.editor.addListener(gameplay.updateStats);
-        this.editor.addListener(sgf.boardEditorListener);
-        this.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
 
         // console.log(besogo);
         // console.log(this.editor);

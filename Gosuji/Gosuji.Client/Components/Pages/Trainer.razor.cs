@@ -122,26 +122,17 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task InitJS()
         {
-            settingConfigService.StoneVolumeChanged += async (int volume) =>
-                await jsRef.InvokeVoidAsync("trainerG.board.setStoneVolume", settingConfigService.SettingConfig.CalcStoneVolume());
-            settingConfigService.IsPreMoveStoneSoundChanged += async (bool isStoneSound) =>
-                await jsRef.InvokeVoidAsync("trainerG.board.setIsPreMoveStoneSound", isStoneSound);
-            settingConfigService.IsSelfplayStoneSoundChanged += async (bool isStoneSound) =>
-                await jsRef.InvokeVoidAsync("trainerG.board.setIsSelfplayStoneSound", isStoneSound);
-
+            GameLoadInfo? gameLoadInfo = null;
             if (GameId != null)
             {
-                game = (await dataService.GetGame(GameId.Value)).Data;
-            }
+                APIResponse<Game> response = await dataService.GetGame(GameId.Value, true);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
+                game = response.Data;
 
-            Dictionary<short, Dictionary<short, ERatio>>? decodedRatios =
-                game != null ? GameDecoder.DecodeRatios(game.Ratios).ToDict() : null;
-            Dictionary<short, Dictionary<short, SuggestionList>>? decodedSuggestions =
-                game != null ? GameDecoder.DecodeSuggestions(game.Suggestions) : null;
-            Dictionary<short, Dictionary<short, EMoveType>>? decodedMoveTypes =
-                game != null ? GameDecoder.DecodeMoveTypes(game.MoveTypes) : null;
-            Dictionary<short, Dictionary<short, Coord>>? decodedChosenNotPlayedCoords =
-                game != null ? GameDecoder.DecodeChosenNotPlayedCoords(game.ChosenNotPlayedCoords) : null;
+                trainerSettingConfig = game.TrainerSettingConfig;
+
+                gameLoadInfo = new(game);
+            }
 
             await jsRef.InvokeVoidAsync("trainerPage.init",
                 trainerRef,
@@ -150,17 +141,14 @@ namespace Gosuji.Client.Components.Pages
                 settingConfigService.SettingConfig.CalcStoneVolume(),
                 settingConfigService.SettingConfig.IsPreMoveStoneSound,
                 settingConfigService.SettingConfig.IsSelfplayStoneSound,
+                gameLoadInfo);
 
-                game?.Boardsize,
-                game?.Handicap,
-                game?.Color,
-                game?.Komi,
-                game?.Ruleset,
-                game?.SGF,
-                decodedRatios,
-                decodedSuggestions,
-                decodedMoveTypes,
-                decodedChosenNotPlayedCoords);
+            settingConfigService.StoneVolumeChanged += async (int volume) =>
+                await jsRef.InvokeVoidAsync("trainerG.board.setStoneVolume", settingConfigService.SettingConfig.CalcStoneVolume());
+            settingConfigService.IsPreMoveStoneSoundChanged += async (bool isStoneSound) =>
+                await jsRef.InvokeVoidAsync("trainerG.board.setIsPreMoveStoneSound", isStoneSound);
+            settingConfigService.IsSelfplayStoneSoundChanged += async (bool isStoneSound) =>
+                await jsRef.InvokeVoidAsync("trainerG.board.setIsSelfplayStoneSound", isStoneSound);
         }
 
         [JSInvokable]

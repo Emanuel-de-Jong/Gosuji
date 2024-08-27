@@ -25,24 +25,12 @@ namespace Gosuji.Client.Data
         [Required]
         [Range(0, 500)]
         public int Right { get; set; }
-        [Required]
-        [Range(0, 500)]
-        public int RightStreak { get; set; }
-        [Required]
-        [Range(0, 500)]
-        public int RightTopStreak { get; set; }
         [NotMapped]
         public int RightPercent => (int)((double)Right / Total * 100);
 
         [Required]
         [Range(0, 500)]
         public int Perfect { get; set; }
-        [Required]
-        [Range(0, 500)]
-        public int PerfectStreak { get; set; }
-        [Required]
-        [Range(0, 500)]
-        public int PerfectTopStreak { get; set; }
         [NotMapped]
         public int PerfectPercent => (int)((double)Perfect / Total * 100);
 
@@ -50,11 +38,7 @@ namespace Gosuji.Client.Data
         {
             return MoveNumber == other.MoveNumber &&
                 Right == other.Right &&
-                RightStreak == other.RightStreak &&
-                RightTopStreak == other.RightTopStreak &&
-                Perfect == other.Perfect &&
-                PerfectStreak == other.PerfectStreak &&
-                PerfectTopStreak == other.PerfectTopStreak;
+                Perfect == other.Perfect;
         }
     }
 }

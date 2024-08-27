@@ -31,39 +31,18 @@ trainerPage.init = async function (
     stoneVolume,
     isPreMoveStoneSound,
     isSelfplayStoneSound,
-
-    serverBoardsize,
-    serverHandicap,
-    serverColor,
-    serverKomi,
-    serverRuleset,
-    serverSGF,
-    serverRatios,
-    serverSuggestions,
-    serverMoveTypes,
-    serverChosenNotPlayedCoords
+    gameLoadInfo
 ) {
-    trainerG.isLoadingServerData = serverSGF != null;
+    trainerG.isLoadingServerData = gameLoadInfo != null;
 
     if (trainerG.isLoadingServerData) {
         debug.testData = 0;
     }
 
-    // console.log(serverBoardsize);
-    // console.log(serverHandicap);
-    // console.log(serverColor);
-    // console.log(serverKomi);
-    // console.log(serverRuleset);
-    // console.log(serverSGF);
-    // console.log(serverRatios);
-    // console.log(serverSuggestions);
-    // console.log(serverMoveTypes);
-    // console.log(serverChosenNotPlayedCoords);
-
-    trainerG.init(trainerRef, serverSuggestions, serverMoveTypes);
+    trainerG.init(trainerRef, gameLoadInfo);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
-    settings.init(serverColor);
-    trainerG.board.init(serverBoardsize, serverHandicap, serverSGF,
+    settings.init(gameLoadInfo);
+    trainerG.board.init(gameLoadInfo.Boardsize, gameLoadInfo.Handicap, gameLoadInfo.SGF,
         stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound);
 
     trainerPage.startButton = document.getElementById("startBtn");
@@ -74,13 +53,13 @@ trainerPage.init = async function (
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
     trainerPage.newGameButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
-    await sgf.init(userName, serverKomi, serverRuleset);
+    await sgf.init(userName, gameLoadInfo);
     sgfComment.init();
     scoreChart.init();
-    await stats.init(serverRatios);
+    await stats.init(gameLoadInfo);
     // skillChart.init();
     debug.init();
-    gameplay.init(serverChosenNotPlayedCoords);
+    gameplay.init(gameLoadInfo);
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
