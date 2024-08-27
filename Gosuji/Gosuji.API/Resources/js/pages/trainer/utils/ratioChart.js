@@ -104,39 +104,38 @@ ratioChart.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER, 
 
     let moveNumber = node.moveNumber;
 
-    let ratios = [];
+    let playerResults = [];
     while (node && (rangeStart == null || node.moveNumber >= rangeStart)) {
         let x = node.navTreeX;
         let y = node.navTreeY;
 
         node = node.parent;
 
-        let ratio = stats.playerResultHistory.get(x, y);
-        if (!ratio) continue;
+        let playerResult = stats.playerResultHistory.get(x, y);
+        if (!playerResult) continue;
 
-        ratios.push(ratio);
+        playerResults.push(playerResult);
     }
 
-    if (ratios.length == 0) {
+    if (playerResults.length == 0) {
         return null;
     }
 
-    ratios = ratios.reverse();
+    playerResults = playerResults.reverse();
 
     let perfect = 0;
     let right = 0;
-
-    ratios.forEach((ratio) => {
-        if (ratio == stats.PLAYER_RESULT_TYPE.PERFECT || ratio == stats.PLAYER_RESULT_TYPE.RIGHT) {
+    playerResults.forEach((playerResult) => {
+        if (playerResult == stats.PLAYER_RESULT_TYPE.PERFECT || playerResult == stats.PLAYER_RESULT_TYPE.RIGHT) {
             right++;
         }
 
-        if (ratio == stats.PLAYER_RESULT_TYPE.PERFECT) {
+        if (playerResult == stats.PLAYER_RESULT_TYPE.PERFECT) {
             perfect++;
         }
     });
 
-    return new Ratio(moveNumber, ratios.length, right, perfect);
+    return new Ratio(moveNumber, playerResults.length, right, perfect);
 };
 
 ratioChart.canvasClickListener = function (click) {
