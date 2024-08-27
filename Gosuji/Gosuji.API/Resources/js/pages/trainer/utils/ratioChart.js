@@ -1,4 +1,5 @@
-import { History } from "../classes/History";
+import { Ratio } from "../classes/Ratio";
+import { stats } from "./stats";
 import { trainerG } from "./trainerG";
 
 let ratioChart = { id: "ratioChart" };
@@ -26,7 +27,7 @@ ratioChart.PLUGINS = {
         labels: {
             generateLabels: (chart) => {
                 return chart.data.datasets.map((dataset, index) => ({
-                    text: dataset.label + (dataset.data.length ? ": " + dataset.data.slice(-1) : ""),
+                    text: dataset.label + (dataset.data.length ? ": " + dataset.data.slice(-1) + "%" : ""),
                     fillStyle: dataset.backgroundColor,
                     strokeStyle: dataset.borderColor,
                     hidden: !chart.isDatasetVisible(index),
@@ -82,7 +83,6 @@ ratioChart.init = function () {
 
 ratioChart.clear = function () {
     ratioChart.clearChart();
-    ratioChart.history = new History();
 };
 
 
@@ -91,6 +91,52 @@ ratioChart.clearChart = function () {
     ratioChart.rights.length = 0;
     ratioChart.perfects.length = 0;
     ratioChart.chart.update();
+};
+
+ratioChart.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER, node = trainerG.board.editor.getCurrent()) {
+    if (rangeStart != null) {
+        node = trainerG.board.editor.getRoot();
+        while (node.children.length != 0 && node.moveNumber < rangeEnd) {
+            if (node.children[0].moveNumber > rangeEnd) break;
+            node = node.children[0];
+        }
+    }
+
+    let moveNumber = node.moveNumber;
+
+    let ratios = [];
+    while (node && (rangeStart == null || node.moveNumber >= rangeStart)) {
+        let x = node.navTreeX;
+        let y = node.navTreeY;
+
+        node = node.parent;
+
+        let ratio = stats.playerResultHistory.get(x, y);
+        if (!ratio) continue;
+
+        ratios.push(ratio);
+    }
+
+    if (ratios.length == 0) {
+        return null;
+    }
+
+    ratios = ratios.reverse();
+
+    let perfect = 0;
+    let right = 0;
+
+    ratios.forEach((ratio) => {
+        if (ratio == stats.PLAYER_RESULT_TYPE.PERFECT || ratio == stats.PLAYER_RESULT_TYPE.RIGHT) {
+            right++;
+        }
+
+        if (ratio == stats.PLAYER_RESULT_TYPE.PERFECT) {
+            perfect++;
+        }
+    });
+
+    return new Ratio(moveNumber, ratios.length, right, perfect);
 };
 
 ratioChart.canvasClickListener = function (click) {
@@ -108,6 +154,11 @@ ratioChart.update = function () {
     let moveNumber = trainerG.board.getMoveNumber();
     if (ratioChart.labels.includes(moveNumber)) return;
 
+    let ratio = ratioChart.getRatio();
+    if (ratio == null) {
+        return;
+    }
+
     let index;
     for (index = 0; index < ratioChart.labels.length; index++) {
         if (ratioChart.labels[index] > moveNumber) {
@@ -117,41 +168,40 @@ ratioChart.update = function () {
 
     ratioChart.labels.splice(index, 0, moveNumber);
 
-    let point = suggestion.score.copy();
-    ratioChart.history.add(point, moveNumber);
-
-    let winrate = point.formatWinrate();
-    ratioChart.rights.splice(index, 0, winrate);
-
-    let score = point.formatScoreLead();
-    ratioChart.perfects.splice(index, 0, score);
+    ratioChart.rights.splice(index, 0, ratio.getRightPercent());
+    ratioChart.perfects.splice(index, 0, ratio.getPerfectPercent());
 
     ratioChart.chart.update();
 };
 
 ratioChart.refresh = function () {
-    let points = [];
+    let ratios = [];
     let node = trainerG.board.editor.getCurrent();
     do {
         let x = node.navTreeX;
         let y = node.navTreeY;
 
+        if (trainerG.moveTypeHistory.get(x, y) !== trainerG.MOVE_TYPE.PLAYER) {
+            continue;
+        }
+
+        let ratio = ratioChart.getRatio(null, null, node);
+        
         node = node.parent;
 
-        let point = ratioChart.history.get(x, y);
-        if (!point) continue;
+        if (!ratio) continue;
 
-        point.index = x;
-        points.push(point);
+        ratio.index = x;
+        ratios.push(ratio);
     } while (node);
 
-    points = points.reverse();
+    ratios = ratios.reverse();
     let i;
-    for (i = 0; i < points.length; i++) {
-        let point = points[i];
-        ratioChart.labels[i] = point.index;
-        ratioChart.rights[i] = point.formatWinrate();
-        ratioChart.perfects[i] = point.formatScoreLead();
+    for (i = 0; i < ratios.length; i++) {
+        let ratio = ratios[i];
+        ratioChart.labels[i] = ratio.index;
+        ratioChart.rights[i] = ratio.getRightPercent();
+        ratioChart.perfects[i] = ratio.getPerfectPercent();
     }
 
     ratioChart.labels.length = i;

@@ -20,9 +20,6 @@ stats.PLAYER_RESULT_Y_INDICATOR = -1;
 
 
 stats.init = async function (gameLoadInfo) {
-    stats.rightPercentElement = document.getElementById("rightPercent");
-    stats.perfectPercentElement = document.getElementById("perfectPercent");
-
     stats.rightStreakElement = document.getElementById("rightStreak");
     stats.rightTopStreakElement = document.getElementById("rightTopStreak");
     stats.perfectStreakElement = document.getElementById("perfectStreak");
@@ -36,9 +33,7 @@ stats.init = async function (gameLoadInfo) {
 
 stats.clear = async function (gameLoadInfo) {
     stats.playerResultHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.playerResults) : new History();
-    stats.ratio = null;
 
-    stats.clearRatio();
     await stats.clearSuggestions();
     stats.clearResult();
 
@@ -183,68 +178,6 @@ stats.getMostPlayerResultsBranch = function (node = trainerG.board.editor.getRoo
     return childPlayerResultCounts[0];
 };
 
-stats.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER) {
-    let node;
-    if (rangeStart == null) {
-        node = trainerG.board.editor.getCurrent();
-    } else {
-        node = trainerG.board.editor.getRoot();
-        while (node.children.length != 0 && node.moveNumber < rangeEnd) {
-            if (node.children[0].moveNumber > rangeEnd) break;
-            node = node.children[0];
-        }
-    }
-
-    let moveNumber = node.moveNumber;
-
-    let ratios = [];
-    while (node && (rangeStart == null || node.moveNumber >= rangeStart)) {
-        let x = node.navTreeX;
-        let y = node.navTreeY;
-
-        node = node.parent;
-
-        let ratio = stats.playerResultHistory.get(x, y);
-        if (!ratio) continue;
-
-        ratios.push(ratio);
-    }
-
-    ratios = ratios.reverse();
-
-    let perfect = 0;
-    let right = 0;
-
-    ratios.forEach((ratio) => {
-        if (ratio == stats.PLAYER_RESULT_TYPE.PERFECT || ratio == stats.PLAYER_RESULT_TYPE.RIGHT) {
-            right++;
-        }
-
-        if (ratio == stats.PLAYER_RESULT_TYPE.PERFECT) {
-            perfect++;
-        }
-    });
-
-    return new Ratio(moveNumber, ratios.length, right, perfect);
-};
-
-stats.setRatio = function () {
-    stats.ratio = stats.getRatio();
-
-    if (stats.ratio == null) {
-        stats.clearRatio();
-        return;
-    }
-
-    stats.rightPercentElement.textContent = stats.ratio.getRightPercent();
-    stats.perfectPercentElement.textContent = stats.ratio.getPerfectPercent();
-};
-
-stats.clearRatio = function () {
-    stats.rightPercentElement.textContent = "-";
-    stats.perfectPercentElement.textContent = "-";
-};
-
 stats.updateStreaks = function (type) {
     if (type == stats.PLAYER_RESULT_TYPE.PERFECT || type == stats.PLAYER_RESULT_TYPE.RIGHT) {
         stats.rightStreak++;
@@ -314,8 +247,6 @@ stats.drawStats = async function (event) {
     if (!event.navChange) {
         return;
     }
-
-    stats.setRatio();
     
     let node = trainerG.board.editor.getCurrent();
     if (node.parent == null || node.navTreeY == node.parent.navTreeY) {

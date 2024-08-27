@@ -1,3 +1,4 @@
+import { ratioChart } from "./ratioChart";
 import { settings } from "./settings";
 import { sgf } from "./sgf";
 import { stats } from "./stats";
@@ -37,10 +38,10 @@ db.saveTrainerSettingConfig = async function () {
 };
 
 db.saveGameStats = async function () {
-    let gameRatio = stats.getRatio(0);
-    let openingRatio = stats.getRatio(0, db.OPENING_RATIO_MOVENUMBER);
-    let midgameRatio = stats.getRatio(db.OPENING_RATIO_MOVENUMBER + 1, db.MIDGAME_RATIO_MOVENUMBER);
-    let endgameRatio = stats.getRatio(db.MIDGAME_RATIO_MOVENUMBER + 1);
+    let gameRatio = ratioChart.getRatio(0);
+    let openingRatio = ratioChart.getRatio(0, db.OPENING_RATIO_MOVENUMBER);
+    let midgameRatio = ratioChart.getRatio(db.OPENING_RATIO_MOVENUMBER + 1, db.MIDGAME_RATIO_MOVENUMBER);
+    let endgameRatio = ratioChart.getRatio(db.MIDGAME_RATIO_MOVENUMBER + 1);
 
     return trainerG.trainerRef
         .invokeMethodAsync("SaveGameStats", gameRatio, openingRatio, midgameRatio, endgameRatio)

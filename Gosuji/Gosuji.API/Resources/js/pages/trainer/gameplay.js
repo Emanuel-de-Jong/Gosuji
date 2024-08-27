@@ -1,4 +1,5 @@
 import { History } from "./classes/History";
+import { ratioChart } from "./utils/ratioChart";
 import { scoreChart } from "./utils/scoreChart";
 import { settings } from "./utils/settings";
 import { sgf } from "./utils/sgf";
@@ -192,6 +193,7 @@ gameplay.detectJump = async function (event) {
         gameplay.givePlayerControl(false);
 
         scoreChart.refresh();
+        ratioChart.refresh();
 
         if (!gameplay.isJumped) {
             gameplay.isJumped = true;

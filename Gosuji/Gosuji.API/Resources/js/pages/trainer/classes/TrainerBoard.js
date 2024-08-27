@@ -1,4 +1,5 @@
 import { katago } from "../utils/katago";
+import { ratioChart } from "../utils/ratioChart";
 import { scoreChart } from "../utils/scoreChart";
 import { settings } from "../utils/settings";
 import { sgfComment } from "../utils/sgfComment";
@@ -94,6 +95,10 @@ export class TrainerBoard extends Board {
         await this.draw(suggestion.coord, tool, true);
         scoreChart.update(suggestion);
         sgfComment.setComment(moveType);
+
+        if (moveType == trainerG.MOVE_TYPE.PLAYER) {
+            ratioChart.update();
+        }
     }
 
     async draw(coord, tool = "auto", sendToServer = true) {

@@ -1,7 +1,7 @@
+import { ratioChart } from "./ratioChart";
 import { scoreChart } from "./scoreChart";
 import { settings } from "./settings";
 import { sgf } from "./sgf";
-import { stats } from "./stats";
 import { trainerG } from "./trainerG";
 
 let sgfComment = { id: "sgfComment" };
@@ -145,11 +145,10 @@ sgfComment.createCommentVisits = function () {
 };
 
 sgfComment.createCommentRatio = function () {
-    let ratio = stats.ratio;
-    if (ratio == null) return "";
+    if (!ratioChart.chart || ratioChart.rights.length == 0) return "";
 
-    return "\nRight ratio: " +ratio.getRightPercent() + "%" +
-        "\nPerfect(A) ratio: " + ratio.getPerfectPercent() + "%";
+    return "\nRight ratio: " + ratioChart.rights[ratioChart.rights.length - 1] + "%" +
+        "\nPerfect(A) ratio: " + ratioChart.perfects[ratioChart.perfects.length - 1] + "%";
 }
 
 sgfComment.createCommentScore = function () {

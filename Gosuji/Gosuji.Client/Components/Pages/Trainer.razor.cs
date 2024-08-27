@@ -282,50 +282,59 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task SaveGameStats(GameStat newGameStat, GameStat newOpeningStat, GameStat newMidgameStat, GameStat newEndgameStat)
+        public async Task SaveGameStats(GameStat? newGameStat, GameStat? newOpeningStat, GameStat? newMidgameStat, GameStat? newEndgameStat)
         {
-            Task[] tasks =
+            List<Task> tasks = [];
+
+            if (newGameStat != null)
             {
-                Task.Run(async () => {
+                tasks.Add(Task.Run(async () => {
                     GameStat? updatedGameStat = await UpdateGameStat(gameStat, newGameStat);
                     if (updatedGameStat != null)
                     {
                         gameStat = updatedGameStat;
                     }
-                }),
-                Task.Run(async () => {
+                }));
+            }
+
+            if (newOpeningStat != null)
+            {
+                tasks.Add(Task.Run(async () => {
                     GameStat? updatedGameStat = await UpdateGameStat(openingStat, newOpeningStat);
                     if (updatedGameStat != null)
                     {
                         openingStat = updatedGameStat;
                     }
-                }),
-                Task.Run(async () => {
+                }));
+            }
+
+            if (newMidgameStat != null)
+            {
+                tasks.Add(Task.Run(async () => {
                     GameStat? updatedGameStat = await UpdateGameStat(midgameStat, newMidgameStat);
                     if (updatedGameStat != null)
                     {
                         midgameStat = updatedGameStat;
                     }
-                }),
-                Task.Run(async () => {
+                }));
+            }
+
+            if (newEndgameStat != null)
+            {
+                tasks.Add(Task.Run(async () => {
                     GameStat? updatedGameStat = await UpdateGameStat(endgameStat, newEndgameStat);
                     if (updatedGameStat != null)
                     {
                         endgameStat = updatedGameStat;
                     }
-                }),
-            };
+                }));
+            }
 
             await Task.WhenAll(tasks);
         }
 
         private async Task<GameStat?> UpdateGameStat(GameStat? gameStat, GameStat newGameStat)
         {
-            if (newGameStat.Total == 0)
-            {
-                return null;
-            }
-
             if (gameStat != null && gameStat.Equal(newGameStat))
             {
                 return null;
