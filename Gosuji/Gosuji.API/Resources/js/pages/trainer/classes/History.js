@@ -34,7 +34,7 @@ export class History {
         let y = node.navTreeY;
 
         for (let i = 0; i < node.children.length; i++) {
-            this.delete(node.children[i]);
+            this.deleteLoop(node.children[i]);
         }
 
         if (!this.grid[y]) return;
@@ -46,7 +46,7 @@ export class History {
         }
         this.grid[y].length = index + 1;
 
-        if (this.grid[y].length == 0) {
+        if (this.grid[y].length === 0) {
             delete this.grid[y];
         }
     }
@@ -58,7 +58,7 @@ export class History {
             let index = this.getLengthIndex(this.grid[y]);
             this.grid[y].length = index + 1;
 
-            if (this.grid[y].length == 0) {
+            if (this.grid[y].length === 0) {
                 delete this.grid[y];
             }
         }

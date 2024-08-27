@@ -4,8 +4,10 @@ import { scoreChart } from "../utils/scoreChart";
 import { settings } from "../utils/settings";
 import { sgfComment } from "../utils/sgfComment";
 import { sgf } from "../utils/sgf";
+import { stats } from "../utils/stats";
 import { trainerG } from "../utils/trainerG";
 import { debug } from "../debug";
+import { gameplay } from "../gameplay";
 
 export class TrainerBoard extends Board {
     constructor() {
@@ -148,9 +150,17 @@ export class TrainerBoard extends Board {
     deleteBranch() {
         if (!confirm("Delete this branch?")) return;
 
+        stats.playerResultHistory.delete();
+        trainerG.suggestionsHistory.delete();
+        trainerG.moveTypeHistory.delete();
+        gameplay.chosenNotPlayedCoordHistory.delete();
+        scoreChart.history.delete();
+
         this.editor.prevNode(1);
         this.editor.getCurrent().children = [];
         this.editor.notifyListeners({ treeChange: true, navChange: true });
+
+        gameplay.start();
     }
 
     setIsPreMoveStoneSound(isPreMoveStoneSound) {

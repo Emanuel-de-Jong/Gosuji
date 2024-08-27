@@ -43,7 +43,20 @@ gameplay.clear = function (gameLoadInfo) {
 
 gameplay.start = function (isSuggestionNeeded = true) {
     trainerG.setPhase(trainerG.PHASE_TYPE.GAMEPLAY);
-    gameplay.givePlayerControl(isSuggestionNeeded);
+
+    if (trainerG.color == trainerG.board.getColor()) {
+        if (!cornerPlacer.shouldForce()) {
+            gameplay.suggestionsPromise = trainerG.analyze(
+                settings.opponentVisits,
+                settings.opponentOptions,
+                gameplay.OPPONENT_MIN_VISITS_PERC,
+                gameplay.OPPONENT_MAX_VISIT_DIFF_PERC
+            );
+        }
+        gameplay.opponentTurn();
+    } else {
+        gameplay.givePlayerControl(isSuggestionNeeded);
+    }
 };
 
 gameplay.givePlayerControl = function (isSuggestionNeeded = true) {
