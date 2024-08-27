@@ -90,7 +90,7 @@ selfplay.toggleSelfplay = async function () {
         await selfplay.startPromise;
 
         if (!trainerG.isPassed && !sgf.isSGFLoading) {
-            gameplay.givePlayerControl();
+            gameplay.start();
         }
     }
 };

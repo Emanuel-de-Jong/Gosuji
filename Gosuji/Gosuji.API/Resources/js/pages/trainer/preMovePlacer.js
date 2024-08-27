@@ -59,7 +59,7 @@ preMovePlacer.start = async function () {
     preMovePlacer.overlay.hidden = true;
 
     if (!trainerG.isPassed && !sgf.isSGFLoading) {
-        gameplay.givePlayerControl();
+        gameplay.start();
     }
 };
 

@@ -114,7 +114,7 @@ trainerPage.start = async function () {
     
     if (trainerG.isLoadingServerData || debug.testData) {
         trainerG.isLoadingServerData = false;
-        gameplay.givePlayerControl(false);
+        gameplay.start(false);
     } else {
         preMovePlacer.start();
     }
@@ -142,7 +142,7 @@ trainerPage.sgfLoadedListener = async function () {
     await katago.setBoardsize();
     await katago.setHandicap();
 
-    gameplay.givePlayerControl();
+    gameplay.start();
 };
 
 export {

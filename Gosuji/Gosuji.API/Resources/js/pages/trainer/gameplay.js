@@ -41,9 +41,12 @@ gameplay.clear = function (gameLoadInfo) {
 };
 
 
-gameplay.givePlayerControl = function (isSuggestionNeeded = true) {
+gameplay.start = function (isSuggestionNeeded = true) {
     trainerG.setPhase(trainerG.PHASE_TYPE.GAMEPLAY);
+    gameplay.givePlayerControl(isSuggestionNeeded);
+};
 
+gameplay.givePlayerControl = function (isSuggestionNeeded = true) {
     trainerG.board.editor.setTool("cross");
     gameplay.isPlayerControlling = true;
     if (isSuggestionNeeded) {
@@ -152,7 +155,7 @@ gameplay.nextButtonClickListener = async function () {
     } else {
         trainerG.board.clearMarkups();
         trainerG.board.redraw();
-        gameplay.givePlayerControl();
+        gameplay.givePlayerControl(false);
     }
 };
 
@@ -199,6 +202,8 @@ gameplay.opponentTurn = async function () {
         
         await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.OPPONENT);
     }
+
+    gameplay.suggestionsPromise = trainerG.analyze();
 
     if (gameplay.shouldShowOpponentOptions()) {
         trainerG.board.nextButton.disabled = false;
