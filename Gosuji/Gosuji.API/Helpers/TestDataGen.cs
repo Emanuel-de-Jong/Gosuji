@@ -1,6 +1,5 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.Client.Data;
-using Gosuji.Client.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

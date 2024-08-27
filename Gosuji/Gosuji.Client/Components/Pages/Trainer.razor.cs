@@ -1,7 +1,5 @@
 ﻿using Gosuji.Client.Data;
-using Gosuji.Client.Helpers.GameDecoder;
 using Gosuji.Client.Helpers.HttpResponseHandler;
-using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
@@ -288,7 +286,8 @@ namespace Gosuji.Client.Components.Pages
 
             if (newGameStat != null)
             {
-                tasks.Add(Task.Run(async () => {
+                tasks.Add(Task.Run(async () =>
+                {
                     GameStat? updatedGameStat = await UpdateGameStat(gameStat, newGameStat);
                     if (updatedGameStat != null)
                     {
@@ -299,7 +298,8 @@ namespace Gosuji.Client.Components.Pages
 
             if (newOpeningStat != null)
             {
-                tasks.Add(Task.Run(async () => {
+                tasks.Add(Task.Run(async () =>
+                {
                     GameStat? updatedGameStat = await UpdateGameStat(openingStat, newOpeningStat);
                     if (updatedGameStat != null)
                     {
@@ -310,7 +310,8 @@ namespace Gosuji.Client.Components.Pages
 
             if (newMidgameStat != null)
             {
-                tasks.Add(Task.Run(async () => {
+                tasks.Add(Task.Run(async () =>
+                {
                     GameStat? updatedGameStat = await UpdateGameStat(midgameStat, newMidgameStat);
                     if (updatedGameStat != null)
                     {
@@ -321,7 +322,8 @@ namespace Gosuji.Client.Components.Pages
 
             if (newEndgameStat != null)
             {
-                tasks.Add(Task.Run(async () => {
+                tasks.Add(Task.Run(async () =>
+                {
                     GameStat? updatedGameStat = await UpdateGameStat(endgameStat, newEndgameStat);
                     if (updatedGameStat != null)
                     {

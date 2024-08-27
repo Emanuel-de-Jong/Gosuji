@@ -1,11 +1,8 @@
-﻿using Gosuji.Client.Data;
-using Gosuji.Client.Helpers.HttpResponseHandler;
+﻿using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
-using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Pages
 {

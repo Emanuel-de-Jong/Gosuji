@@ -6,7 +6,6 @@ import { sgfComment } from "../utils/sgfComment";
 import { sgf } from "../utils/sgf";
 import { trainerG } from "../utils/trainerG";
 import { debug } from "../debug";
-import { gameplay } from "../gameplay";
 
 export class TrainerBoard extends Board {
     constructor() {

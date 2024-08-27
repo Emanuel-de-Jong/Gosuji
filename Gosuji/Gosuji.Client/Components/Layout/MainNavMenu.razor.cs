@@ -2,8 +2,6 @@
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
-using System.Security.Claims;
 
 namespace Gosuji.Client.Components.Layout
 {

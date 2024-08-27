@@ -10,7 +10,7 @@ namespace Gosuji.Client.Services
     public class KataGoService : BaseHubService
     {
         public KataGoService(IConfiguration configuration, UserService userService)
-            :base(configuration, userService, "katagohub")
+            : base(configuration, userService, "katagohub")
         {
         }
 

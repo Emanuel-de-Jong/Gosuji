@@ -8,7 +8,7 @@ namespace Gosuji.Client.Services
     public class JosekisService : BaseHubService
     {
         public JosekisService(IConfiguration configuration, UserService userService)
-            :base(configuration, userService, "josekishub")
+            : base(configuration, userService, "josekishub")
         {
         }
 

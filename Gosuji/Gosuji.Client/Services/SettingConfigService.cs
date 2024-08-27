@@ -1,6 +1,5 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
-using Gosuji.Client.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Globalization;

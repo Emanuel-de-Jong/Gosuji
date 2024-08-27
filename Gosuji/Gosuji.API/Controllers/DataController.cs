@@ -111,7 +111,8 @@ namespace Gosuji.API.Controllers
                     .Where(g => g.Id == gameId)
                     .Include(g => g.TrainerSettingConfig)
                     .FirstOrDefaultAsync();
-            } else
+            }
+            else
             {
                 game = await dbContext.Games.FindAsync(gameId);
             }

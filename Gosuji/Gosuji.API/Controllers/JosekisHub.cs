@@ -6,8 +6,6 @@ using IGOEnchi.GoGameLogic;
 using IGOEnchi.GoGameSgf;
 using IGOEnchi.SmartGameLib;
 using IGOEnchi.SmartGameLib.models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.RateLimiting;
 
 namespace Gosuji.API.Controllers
 {

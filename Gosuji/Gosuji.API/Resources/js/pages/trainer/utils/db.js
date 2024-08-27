@@ -1,5 +1,4 @@
 import { ratioChart } from "./ratioChart";
-import { settings } from "./settings";
 import { sgf } from "./sgf";
 import { stats } from "./stats";
 import { trainerG } from "./trainerG";

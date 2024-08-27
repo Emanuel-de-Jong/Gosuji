@@ -1,6 +1,5 @@
 import { CNode } from "../classes/CNode";
 import { History } from "../classes/History";
-import { Ratio } from "../classes/Ratio";
 import { settings } from "./settings";
 import { trainerG } from "./trainerG";
 import { debug } from "../debug";
