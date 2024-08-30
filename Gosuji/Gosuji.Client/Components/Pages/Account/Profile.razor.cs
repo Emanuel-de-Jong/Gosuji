@@ -30,7 +30,7 @@ namespace Gosuji.Client.Components.Pages.Account
 
         public string? name;
         public List<VMGame>? Games { get; set; }
-        public List<VMGame>? FinishedGames { get; set; }
+        public List<VMGame>? FilteredGames { get; set; }
 
         private IJSObjectReference jsRef;
         private bool isChartsLoaded = false;
@@ -72,7 +72,7 @@ namespace Gosuji.Client.Components.Pages.Account
             Games = Games.OrderByDescending(g => g.ModifyDate).ToList();
 
             //FinishedGames = Games.FindAll(g => g.IsFinished).ToList();
-            FinishedGames = Games.ToList();
+            FilteredGames = Games.ToList();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -96,7 +96,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 await jsRef.InvokeVoidAsync("profilePage.init", GameStat.RIGHT_COLOR.ToCSS(), GameStat.PERFECT_COLOR.ToCSS());
             }
 
-            if (!isChartsLoaded && FinishedGames != null)
+            if (!isChartsLoaded && FilteredGames != null)
             {
                 isChartsLoaded = true;
 
@@ -129,7 +129,7 @@ namespace Gosuji.Client.Components.Pages.Account
         {
             List<int> rightPercents = [];
             List<int> perfectPercents = [];
-            foreach (VMGame game in FinishedGames)
+            foreach (VMGame game in FilteredGames)
             {
                 if (game.GameStat == null || game.GameStat.Total < 5)
                 {
@@ -151,9 +151,9 @@ namespace Gosuji.Client.Components.Pages.Account
             int perfectOpenings = 0, perfectMidgames = 0, perfectEndgames = 0;
             int perfectOpening = 0, perfectMidgame = 0, perfectEndgame = 0;
 
-            for (int i = FinishedGames.Count - 1; i >= 0; i--)
+            for (int i = FilteredGames.Count - 1; i >= 0; i--)
             {
-                VMGame game = FinishedGames[i];
+                VMGame game = FilteredGames[i];
                 if (rightOpenings < 5 && game.OpeningStat != null && game.OpeningStat.Right >= 5)
                 {
                     rightOpenings++;
@@ -204,20 +204,20 @@ namespace Gosuji.Client.Components.Pages.Account
         {
             Dictionary<string, DaysChartDayTypes> days = [];
 
-            if (FinishedGames.Count == 0)
+            if (FilteredGames.Count == 0)
             {
                 await jsRef.InvokeVoidAsync("profilePage.createDaysChart", days);
                 return;
             }
 
-            DateTime firstGameDate = FinishedGames[0].CreateDate.DateTime;
+            DateTime firstGameDate = FilteredGames[0].CreateDate.DateTime;
             for (DateTime day = firstGameDate.Date; day.Date <= DateTime.Now.Date; day = day.AddDays(1))
             {
                 days[day.ToString("dd-MM-yy")] = DaysChartDayTypes.NONE;
             }
 
             int canCatchUpCount = 0;
-            foreach (VMGame game in FinishedGames)
+            foreach (VMGame game in FilteredGames)
             {
                 string date = game.CreateDate.ToString("dd-MM-yy");
                 if (days[date] == DaysChartDayTypes.NONE)
@@ -230,7 +230,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 }
             }
 
-            DateTime lastGameDate = FinishedGames.Last().CreateDate.DateTime;
+            DateTime lastGameDate = FilteredGames.Last().CreateDate.DateTime;
             for (DateTime day = firstGameDate.Date; day.Date <= lastGameDate.Date; day = day.AddDays(1))
             {
                 if (canCatchUpCount == 0)
