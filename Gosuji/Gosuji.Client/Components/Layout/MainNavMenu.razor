@@ -11,11 +11,11 @@
                 </div>
 
                 <div class="flexItem d-flex align-items-center justify-content-start justify-content-md-end flex-wrap">
-                    <div class="px-2">
-                        <NavLink Match="NavLinkMatch.All" href="/" class="link-body-emphasis nav-link">Home</NavLink>
+                    <div>
+                        <NavLink Match="NavLinkMatch.All" href="/" class="link-body-emphasis nav-link px-2">Home</NavLink>
                     </div>
-                    <div class="dropdown px-2">
-                        <NavLink href="learn" class="link-body-emphasis nav-link" data-bs-toggle="dropdown" aria-expanded="false">Learn</NavLink>
+                    <div class="dropdown" id="navMenuLearnDropdown">
+                        <NavLink href="learn" class="link-body-emphasis nav-link px-2">Learn</NavLink>
                         <ul class="dropdown-menu text-small px-2">
                             <li>
                                 <NavLink href="learn/trainer" class="link-body-emphasis nav-link">Trainer</NavLink>
@@ -25,34 +25,34 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="px-2">
-                        <NavLink href="subscriptions" class="link-body-emphasis nav-link">Subscriptions</NavLink>
+                    <div>
+                        <NavLink href="subscriptions" class="link-body-emphasis nav-link px-2">Subscriptions</NavLink>
                     </div>
-                    <div class="px-2">
-                        <NavLink href="contact" class="link-body-emphasis nav-link">Contact</NavLink>
+                    <div>
+                        <NavLink href="contact" class="link-body-emphasis nav-link px-2">Contact</NavLink>
                     </div>
 
                     <AuthorizeView>
                         <Authorized>
-                            <div class="px-2">
-                                <NavLink href="profile" class="link-body-emphasis nav-link">Profile</NavLink>
+                            <div>
+                                <NavLink href="profile" class="link-body-emphasis nav-link px-2">Profile</NavLink>
                             </div>
-                            <div class="px-2">
-                                <NavLink href="logout" class="link-body-emphasis nav-link">Logout</NavLink>
+                            <div>
+                                <NavLink href="logout" class="link-body-emphasis nav-link px-2">Logout</NavLink>
                             </div>
                         </Authorized>
                         <NotAuthorized>
-                            <div class="px-2">
-                                <NavLink href="register" class="link-body-emphasis nav-link">Register</NavLink>
+                            <div>
+                                <NavLink href="register" class="link-body-emphasis nav-link px-2">Register</NavLink>
                             </div>
-                            <div class="px-2">
-                                <NavLink href="login" class="link-body-emphasis nav-link">Login</NavLink>
+                            <div>
+                                <NavLink href="login" class="link-body-emphasis nav-link px-2">Login</NavLink>
                             </div>
                         </NotAuthorized>
                     </AuthorizeView>
 
-                    <div class="languageSelect dropdown px-2">
-                        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="languageSelect dropdown">
+                        <a href="#" class="text-decoration-none px-2" data-bs-toggle="dropdown" aria-expanded="false">
                             <img id="currentLanguage" src="@($"{BASE_LANGUAGE_SRC}{CultureInfo.CurrentCulture.TwoLetterISOLanguageName}.svg")" />
                         </a>
                         <ul class="dropdown-menu text-small px-2">
@@ -65,8 +65,8 @@
                         </ul>
                     </div>
 
-                    <div class="dropdown px-2">
-                        <a href="#" class="link-body-emphasis text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="dropdown">
+                        <a href="#" class="link-body-emphasis text-decoration-none px-2" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa-solid fa-gear"></i>
                         </a>
                         <ul class="dropdown-menu text-small px-2">

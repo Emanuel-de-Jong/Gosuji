@@ -3,6 +3,17 @@
     flex-basis: 0;
 }
 
+
+.dropdown-menu {
+    margin-top: 0;
+}
+
+
+#navMenuLearnDropdown:hover .dropdown-menu {
+    display: block;
+}
+
+
 .languageSelect img {
     width: 25px;
     max-width: 25px;
