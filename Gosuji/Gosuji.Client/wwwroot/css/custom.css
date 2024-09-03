@@ -38,6 +38,7 @@
 
 #mainNavMenu .active {
     font-weight: 600;
+    text-decoration: underline;
 }
 
 

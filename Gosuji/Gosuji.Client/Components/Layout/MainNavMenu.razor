@@ -14,8 +14,16 @@
                     <div class="px-2">
                         <NavLink Match="NavLinkMatch.All" href="/" class="link-body-emphasis nav-link">Home</NavLink>
                     </div>
-                    <div class="px-2">
-                        <NavLink href="learn" class="link-body-emphasis nav-link">Learn</NavLink>
+                    <div class="dropdown px-2">
+                        <NavLink href="learn" class="link-body-emphasis nav-link" data-bs-toggle="dropdown" aria-expanded="false">Learn</NavLink>
+                        <ul class="dropdown-menu text-small px-2">
+                            <li>
+                                <NavLink href="learn/trainer" class="link-body-emphasis nav-link">Trainer</NavLink>
+                            </li>
+                            <li>
+                                <NavLink href="learn/josekis" class="link-body-emphasis nav-link">Josekipedia</NavLink>
+                            </li>
+                        </ul>
                     </div>
                     <div class="px-2">
                         <NavLink href="subscriptions" class="link-body-emphasis nav-link">Subscriptions</NavLink>
