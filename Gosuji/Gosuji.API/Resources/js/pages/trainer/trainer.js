@@ -108,7 +108,7 @@ trainerPage.start = async function () {
     trainerG.board.startOverlay.hidden = true;
     trainerPage.restartButton.disabled = false;
 
-    settings.disableNonMidGameSettings();
+    settings.togglePreGameSettings();
 
     await katago.start();
 

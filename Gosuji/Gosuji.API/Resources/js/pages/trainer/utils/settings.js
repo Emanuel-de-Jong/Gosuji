@@ -50,6 +50,24 @@ settings.SETTINGS = {
     selfplayVisits: utils.TYPE.INT,
 };
 
+settings.PRE_GAME_SETTINGS = [
+    "boardsize",
+    "handicap",
+    "preMovesSwitch",
+    "preMoves",
+    "colorType",
+    "komiChangeStyle",
+    "komi",
+    "ruleset",
+    "forceOpponentCorners",
+    "cornerSwitch44", "cornerSwitch34", "cornerSwitch33", "cornerSwitch45", "cornerSwitch35",
+    "cornerChance44", "cornerChance34", "cornerChance33", "cornerChance45", "cornerChance35",
+    "preVisits",
+    "preOptions",
+    "preOptionPercSwitch",
+    "preOptionPerc",
+];
+
 settings.HIDE_OPTIONS = {
     NEVER: "NEVER",
     PERFECT: "PERFECT",
@@ -99,7 +117,7 @@ settings.clear = function (gameLoadInfo) {
     trainerG.setColor(gameLoadInfo ? gameLoadInfo.color : settings.colorType);
 
     if (gameLoadInfo) {
-        settings.disableNonMidGameSettings();
+        settings.togglePreGameSettings();
     }
 };
 
@@ -131,24 +149,8 @@ settings.inputAndSelectInputListener = function (event) {
     }
 };
 
-settings.disableNonMidGameSettings = function () {
-    [
-        "boardsize",
-        "handicap",
-        "preMovesSwitch",
-        "preMoves",
-        "colorType",
-        "komiChangeStyle",
-        "komi",
-        "ruleset",
-        "forceOpponentCorners",
-        "cornerSwitch44", "cornerSwitch34", "cornerSwitch33", "cornerSwitch45", "cornerSwitch35",
-        "cornerChance44", "cornerChance34", "cornerChance33", "cornerChance45", "cornerChance35",
-        "preVisits",
-        "preOptions",
-        "preOptionPercSwitch",
-        "preOptionPerc",
-    ].forEach((name) => settings[name + "Element"].disabled = true);
+settings.togglePreGameSettings = function (enable = false) {
+    settings.PRE_GAME_SETTINGS.forEach((name) => settings[name + "Element"].disabled = !enable);
 };
 
 settings.validateInput = function (input) {
