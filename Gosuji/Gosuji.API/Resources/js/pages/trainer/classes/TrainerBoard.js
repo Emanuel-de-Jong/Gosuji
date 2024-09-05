@@ -1,3 +1,4 @@
+import { Move } from "./Move";
 import { katago } from "../utils/katago";
 import { ratioChart } from "../utils/ratioChart";
 import { scoreChart } from "../utils/scoreChart";
@@ -222,10 +223,7 @@ export class TrainerBoard extends Board {
         let moves = [];
         let node = this.editor.getCurrent();
         while (node.moveNumber != 0) {
-            moves.push({
-                color: node.move.color,
-                coord: new Coord(node.move.x, node.move.y),
-            });
+            moves.push(new Move(node.move.color, new Coord(node.move.x, node.move.y)));
 
             node = node.parent;
         }

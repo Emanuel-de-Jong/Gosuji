@@ -1,3 +1,4 @@
+import { Move } from "../classes/Move";
 import { MoveSuggestionList } from "../classes/MoveSuggestionList";
 import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { settings } from "./settings";
@@ -128,7 +129,7 @@ katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor(
     await katago.start();
     
     return katago.sendRequest(katago.serviceRef
-        .invokeMethodAsync("AnalyzeMove", g.colorNumToName(color), katago.coordNumToName(coord))
+        .invokeMethodAsync("AnalyzeMove", new Move(color, coord))
         .then((kataGoSuggestion) => {
             return MoveSuggestion.fromKataGo(kataGoSuggestion);
         })
@@ -150,7 +151,7 @@ katago.analyze = async function (
     await katago.start();
     
     return katago.sendRequest(katago.serviceRef
-        .invokeMethodAsync("Analyze", g.colorNumToName(color), maxVisits, minVisitsPerc, maxVisitDiffPerc)
+        .invokeMethodAsync("Analyze", color, maxVisits, minVisitsPerc, maxVisitDiffPerc)
         .then((kataGoSuggestions) => {
             let suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
             suggestions.filterByPass();
@@ -167,7 +168,7 @@ katago.play = async function (coord, color = trainerG.board.getColor()) {
     await katago.start();
     
     return katago.sendRequest(katago.serviceRef
-        .invokeMethodAsync("Play", g.colorNumToName(color), katago.coordNumToName(coord))
+        .invokeMethodAsync("Play", new Move(color, coord))
         .then((response) => {
             return response;
         })
@@ -181,16 +182,8 @@ katago.playRange = async function () {
     if (moves.length == 0) return;
 
     let serverMoves = {
-        moves: [],
+        moves: moves,
     };
-
-    for (let i = 0; i < moves.length; i++) {
-        let move = moves[i];
-        serverMoves.moves.push({
-            color: g.colorNumToName(move.color),
-            coord: katago.coordNumToName(move.coord),
-        });
-    }
 
     await katago.start();
     
@@ -222,68 +215,6 @@ katago.sendRequest = async function (request) {
     let response = await request;
     trainerG.hideLoadAnimation();
     return response;
-};
-
-katago.coordNumToName = function (numCoord) {
-    if (numCoord.x == 0) return "pass";
-
-    let xConvert = {
-        1: "A",
-        2: "B",
-        3: "C",
-        4: "D",
-        5: "E",
-        6: "F",
-        7: "G",
-        8: "H",
-        9: "J",
-        10: "K",
-        11: "L",
-        12: "M",
-        13: "N",
-        14: "O",
-        15: "P",
-        16: "Q",
-        17: "R",
-        18: "S",
-        19: "T",
-    };
-
-    let x = xConvert[numCoord.x];
-    let y = trainerG.board.boardsize + 1 - numCoord.y;
-    return "" + x + y;
-};
-
-katago.coordNameToNum = function (nameCoord) {
-    if (nameCoord == "pass") return new Coord(0, 0);
-
-    let xConvert = {
-        A: 1,
-        B: 2,
-        C: 3,
-        D: 4,
-        E: 5,
-        F: 6,
-        G: 7,
-        H: 8,
-        J: 9,
-        K: 10,
-        L: 11,
-        M: 12,
-        N: 13,
-        O: 14,
-        P: 15,
-        Q: 16,
-        R: 17,
-        S: 18,
-        T: 19,
-    };
-
-    let nums = nameCoord.substring(1).split(" ");
-
-    let x = xConvert[nameCoord[0]];
-    let y = trainerG.board.boardsize + 1 - parseInt(nums[0]);
-    return new Coord(x, y);
 };
 
 export { katago };

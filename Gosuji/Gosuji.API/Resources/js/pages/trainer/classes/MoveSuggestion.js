@@ -30,7 +30,7 @@ export class MoveSuggestion {
 
     static fromKataGo(kataGoSuggestion) {
         return new MoveSuggestion(
-            katago.coordNameToNum(kataGoSuggestion.move.coord),
+            Coord.fromServer(kataGoSuggestion.move.coord),
             kataGoSuggestion.visits,
             kataGoSuggestion.winrate,
             kataGoSuggestion.scoreLead

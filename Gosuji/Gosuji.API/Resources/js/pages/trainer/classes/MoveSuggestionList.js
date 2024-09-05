@@ -140,10 +140,8 @@ export class MoveSuggestionList {
 
 
     static fromKataGo(kataGoSuggestions) {
-        let nameCoords = [];
         let suggestions = [];
         kataGoSuggestions.forEach((kataGoSuggestion) => {
-            nameCoords.push(kataGoSuggestion.move.coord);
             suggestions.push(MoveSuggestion.fromKataGo(kataGoSuggestion));
         });
 
