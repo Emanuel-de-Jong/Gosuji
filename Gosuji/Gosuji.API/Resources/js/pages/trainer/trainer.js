@@ -108,6 +108,8 @@ trainerPage.start = async function () {
     trainerG.board.startOverlay.hidden = true;
     trainerPage.restartButton.disabled = false;
 
+    settings.disableNonMidGameSettings();
+
     await katago.start();
 
     sgfComment.setComment(trainerG.MOVE_TYPE.INIT);

@@ -97,6 +97,10 @@ settings.init = function (gameLoadInfo) {
 
 settings.clear = function (gameLoadInfo) {
     trainerG.setColor(gameLoadInfo ? gameLoadInfo.color : settings.colorType);
+
+    if (gameLoadInfo) {
+        settings.disableNonMidGameSettings();
+    }
 };
 
 
@@ -125,6 +129,26 @@ settings.inputAndSelectInputListener = function (event) {
     if (settings.validateInput(element)) {
         settings.updateSetting(element.id);
     }
+};
+
+settings.disableNonMidGameSettings = function () {
+    [
+        "boardsize",
+        "handicap",
+        "preMovesSwitch",
+        "preMoves",
+        "colorType",
+        "komiChangeStyle",
+        "komi",
+        "ruleset",
+        "forceOpponentCorners",
+        "cornerSwitch44", "cornerSwitch34", "cornerSwitch33", "cornerSwitch45", "cornerSwitch35",
+        "cornerChance44", "cornerChance34", "cornerChance33", "cornerChance45", "cornerChance35",
+        "preVisits",
+        "preOptions",
+        "preOptionPercSwitch",
+        "preOptionPerc",
+    ].forEach((name) => settings[name + "Element"].disabled = true);
 };
 
 settings.validateInput = function (input) {
