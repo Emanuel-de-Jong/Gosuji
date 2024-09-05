@@ -65,7 +65,7 @@ db.saveGame = async function () {
                 PerfectTopStreak: stats.perfectTopStreak,
                 Boardsize: trainerG.board.boardsize,
                 Handicap: trainerG.board.handicap,
-                Color: trainerG.color,
+                Color: trainerG.getGameColor(),
                 Ruleset: sgf.ruleset,
                 Komi: sgf.komi,
                 SGF: besogo.composeSgf(trainerG.board.editor),

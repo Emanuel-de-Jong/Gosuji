@@ -147,6 +147,26 @@ export class TrainerBoard extends Board {
         }
     }
 
+    findNode(coord, node=this.editor.getRoot()) {
+        if (node.navTreeX == coord.x && node.navTreeY == coord.y) {
+            return node;
+        }
+
+        let result;
+        for (let i = 0; i < node.children.length; i++) {
+            const child = node.children[i];
+            if (child.navTreeX <= coord.x && child.navTreeY <= coord.y) {
+                result = this.findNode(coord, child);
+
+                if (result != null) {
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
     deleteBranch = () => {
         if (!confirm("Delete this branch?")) return;
 

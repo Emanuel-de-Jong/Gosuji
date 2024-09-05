@@ -82,6 +82,22 @@ export class History {
         return this.grid[y] != null;
     }
 
+    getHighestX() {
+        let longestCoord;
+        for (let y = 0; y < this.grid.length; y++) {
+            if (this.grid[y] == undefined) {
+                continue;
+            }
+
+            const x = this.grid[y].length - 1;
+            if (!longestCoord || x > longestCoord.x) {
+                longestCoord = new Coord(x, y);
+            }
+        }
+
+        return longestCoord;
+    }
+
     count(data) {
         let count = 0;
         const y = trainerG.board.getNodeY();
