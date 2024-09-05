@@ -227,17 +227,20 @@ gameplay.opponentTurn = async function () {
 };
 
 gameplay.detectJump = async function (event) {
-    if (event.navChange && !event.treeChange) {
-        gameplay.givePlayerControl(false);
-
-        scoreChart.refresh();
-        ratioChart.refresh();
-
+    if (event.navChange &&
+        !event.treeChange &&
+        trainerG.board.editor.getCurrent().moveNumber != trainerG.board.lastMove.moveNumber + 1
+    ) {
         if (!gameplay.isJumped) {
             gameplay.isJumped = true;
             trainerG.isPassed = false;
             trainerG.board.nextButton.disabled = true;
         }
+
+        gameplay.givePlayerControl(false);
+
+        scoreChart.refresh();
+        ratioChart.refresh();
     }
 };
 

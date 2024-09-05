@@ -190,15 +190,12 @@ export class TrainerBoard extends Board {
 
         this.clearMarkups();
 
-        this.editor.setTool("label");
         for (let i = 0; i < suggestions.length; i++) {
             let coord = suggestions[i].coord;
-
-            this.editor.setLabel(suggestions[i].grade);
-            this.editor.click(coord.x, coord.y, false, false);
+            this.editor.addMarkupToCurrent(coord.x, coord.y, suggestions[i].grade);
         }
 
-        this.editor.setTool("navOnly");
+        this.redraw();
     }
 
     getMoves() {

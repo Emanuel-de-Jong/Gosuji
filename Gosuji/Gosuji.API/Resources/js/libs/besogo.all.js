@@ -1651,6 +1651,7 @@ if (typeof besogo === "undefined") {
             loadRoot: loadRoot, // Loads new game state
             notifyListeners: notifyListeners,
             setIsTreeJumpAllowed: setIsTreeJumpAllowed,
+            addMarkupToCurrent: addMarkupToCurrent,
         };
 
         function setIsTreeJumpAllowed(value) {
@@ -2104,6 +2105,10 @@ if (typeof besogo === "undefined") {
                 }
                 notifyListeners({ markupChange: true, x: i, y: j, mark: mark }); // Notify markup change
             }
+        }
+
+        function addMarkupToCurrent(i, j, mark) {
+            return current.addMarkup(i, j, mark)
         }
 
         // Adds a listener (by call back func) that will be notified on game/editor state changes
