@@ -1,5 +1,6 @@
 ﻿using Gosuji.API.Services;
 using Gosuji.Client.Helpers.HttpResponseHandler;
+using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
@@ -71,13 +72,12 @@ namespace Gosuji.API.Controllers
             return Ok;
         }
 
-        public async Task<HubResponse> AnalyzeMove([RegularExpression(@"(B|W)")] string color,
-            [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
+        public async Task<HubResponse> AnalyzeMove(Move move)
         {
-            return OkData((await pool.Get(GetUserId())).AnalyzeMove(color, coord));
+            return OkData((await pool.Get(GetUserId())).AnalyzeMove(move));
         }
 
-        public async Task<HubResponse> Analyze([RegularExpression(@"(B|W)")] string color,
+        public async Task<HubResponse> Analyze(int color,
             [Required, Range(2, 100_000)] int maxVisits,
             [Required, Range(0, 100)] double minVisitsPerc,
             [Required, Range(0, 100)] double maxVisitDiffPerc)
@@ -85,10 +85,9 @@ namespace Gosuji.API.Controllers
             return OkData((await pool.Get(GetUserId())).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
         }
 
-        public async Task<HubResponse> Play([RegularExpression(@"(B|W)")] string color,
-            [RegularExpression(@"([A-H]|[J-T])(1[0-9]|[1-9])")] string coord)
+        public async Task<HubResponse> Play(Move move)
         {
-            (await pool.Get(GetUserId())).Play(color, coord);
+            (await pool.Get(GetUserId())).Play(move);
             return Ok;
         }
 

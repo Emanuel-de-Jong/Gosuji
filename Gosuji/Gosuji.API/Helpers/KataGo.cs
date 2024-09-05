@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using System.Diagnostics;
 using System.Text;
@@ -16,6 +17,7 @@ namespace Gosuji.API.Helpers
         public StreamWriter writer;
 
         private bool stopped = false;
+        private int boardsize = 19;
 
         private int lastMaxVisits;
 
@@ -83,6 +85,7 @@ namespace Gosuji.API.Helpers
 
         public void SetBoardsize(int boardsize)
         {
+            this.boardsize = boardsize;
             Write("boardsize " + boardsize);
             ClearReader();
         }
@@ -105,7 +108,7 @@ namespace Gosuji.API.Helpers
             ClearReader();
         }
 
-        public MoveSuggestion AnalyzeMove(string color, string coord)
+        public MoveSuggestion AnalyzeMove(Move move)
         {
             int maxVisits = 100;
             if (lastMaxVisits != maxVisits)
@@ -115,7 +118,8 @@ namespace Gosuji.API.Helpers
                 ClearReader();
             }
 
-            Write("kata-genmove_analyze " + color + " allow " + color + " " + coord + " 1");
+            KataGoMove kataGoMove = move.ToKataGo(boardsize);
+            Write("kata-genmove_analyze " + kataGoMove.Color + " allow " + kataGoMove.Color + " " + kataGoMove.Coord + " 1");
             TotalVisits += maxVisits;
 
             Read(); // Ignore '= '
@@ -126,7 +130,7 @@ namespace Gosuji.API.Helpers
             ClearReader();
 
             MoveSuggestion suggestion = new();
-            suggestion.SetMove(color, coord);
+            suggestion.SetMove(move);
             for (int i = 0; i < analysis.Length; i++)
             {
                 string element = analysis[i];
@@ -147,7 +151,7 @@ namespace Gosuji.API.Helpers
             return suggestion;
         }
 
-        public List<MoveSuggestion> Analyze(string color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public List<MoveSuggestion> Analyze(int color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
             if (lastMaxVisits != maxVisits)
             {
@@ -156,7 +160,7 @@ namespace Gosuji.API.Helpers
                 ClearReader();
             }
 
-            Write("kata-genmove_analyze " + color);
+            Write("kata-genmove_analyze " + Move.ColorToKataGo(color));
             TotalVisits += maxVisits;
 
             Read(); // Ignore '= '
@@ -173,7 +177,8 @@ namespace Gosuji.API.Helpers
                 string element = analysis[i];
                 if (element == "move")
                 {
-                    suggestion?.SetMove(color, analysis[i + 1]);
+                    Move move = new(color, Move.CoordFromKataGo(analysis[i + 1], boardsize));
+                    suggestion?.SetMove(move);
                 }
                 else if (element == "visits")
                 {
@@ -214,7 +219,7 @@ namespace Gosuji.API.Helpers
             foreach (MoveSuggestion moveSuggestion in suggestions)
             {
                 if (filteredSuggestions.Count > 0 &&
-                        filteredSuggestions[^1].move.coord != "pass" &&
+                        !filteredSuggestions[^1].move.IsPass &&
                         (moveSuggestion.visits < minVisits ||
                         lastSuggestionVisits - moveSuggestion.visits > maxVisitDiff))
                 {
@@ -230,9 +235,9 @@ namespace Gosuji.API.Helpers
             return filteredSuggestions;
         }
 
-        public void Play(string color, string coord)
+        public void Play(Move move)
         {
-            Write("play " + color + " " + coord);
+            Write("play " + move.ColorToKataGo() + " " + move.CoordToKataGo(boardsize));
             ClearReader();
         }
 
@@ -240,7 +245,7 @@ namespace Gosuji.API.Helpers
         {
             foreach (Move move in moves.moves)
             {
-                Play(move.color, move.coord);
+                Play(move);
             }
         }
 

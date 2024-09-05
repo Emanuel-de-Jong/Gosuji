@@ -6,15 +6,5 @@ namespace Gosuji.Client.Models.KataGo
     {
         [Required]
         public Move[] moves { get; set; } = Array.Empty<Move>();
-
-        public override string ToString()
-        {
-            string output = "";
-            foreach (Move move in moves)
-            {
-                output += move.ToString() + ", ";
-            }
-            return output;
-        }
     }
 }

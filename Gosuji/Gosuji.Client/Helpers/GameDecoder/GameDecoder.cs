@@ -132,7 +132,7 @@ namespace Gosuji.Client.Helpers.GameDecoder
 
             Suggestion suggestion = new()
             {
-                Coord = new Coord() { X = coordX, Y = coordY },
+                Coord = new Coord(coordX, coordY),
                 Visits = visits,
                 Score = new Score() { Winrate = winrate, ScoreLead = scoreLead },
             };
@@ -166,7 +166,7 @@ namespace Gosuji.Client.Helpers.GameDecoder
                     int coordX = bytes[i++];
                     int coordY = bytes[i++];
 
-                    return (new Coord() { X = coordX, Y = coordY }, i);
+                    return (new Coord(coordX, coordY), i);
                 });
             }
             catch (Exception e)

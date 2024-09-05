@@ -9,25 +9,25 @@
 
         public MoveSuggestion() { }
 
-        public MoveSuggestion(string color, string coord, string visits, string winrate, string scoreLead)
+        public MoveSuggestion(Move move, string visits, string winrate, string scoreLead)
         {
-            SetMove(color, coord);
+            SetMove(move);
             SetVisits(visits);
             SetWinrate(winrate);
             SetScoreLead(scoreLead);
         }
 
-        public MoveSuggestion(string color, string coord, int visits, int winrate, int scoreLead)
+        public MoveSuggestion(Move move, int visits, int winrate, int scoreLead)
         {
-            SetMove(color, coord);
+            SetMove(move);
             this.visits = visits;
             this.winrate = winrate;
             this.scoreLead = scoreLead;
         }
 
-        public void SetMove(string color, string coord)
+        public void SetMove(Move move)
         {
-            move = new Move(color, coord);
+            this.move = move;
         }
 
         public void SetVisits(string visits)
@@ -38,7 +38,7 @@
         public void SetWinrate(string winrate)
         {
             this.winrate = (int)(float.Parse(winrate) * 100_000_000);
-            if (move.color == "W")
+            if (!move.IsBlack)
             {
                 this.winrate = 100_000_000 - this.winrate;
             }
@@ -47,7 +47,7 @@
         public void SetScoreLead(string scoreLead)
         {
             this.scoreLead = (int)(float.Parse(scoreLead) * 1_000_000);
-            if (move.color == "W")
+            if (!move.IsBlack)
             {
                 this.scoreLead *= -1;
             }
