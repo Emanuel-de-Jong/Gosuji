@@ -53,7 +53,7 @@ export class JosekisBoard extends Board {
             this.removeMarkup(new Coord(event.x, event.y));
             this.editor.notifyListeners({ stoneChange: true });
 
-            await josekisPage.josekisRef.invokeMethodAsync("Next", event.x - 1, event.y - 1);
+            await josekisPage.josekisRef.invokeMethodAsync("Next", event.x, event.y);
         }
     }
 }

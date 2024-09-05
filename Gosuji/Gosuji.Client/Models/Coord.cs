@@ -10,5 +10,15 @@
             X = x;
             Y = y;
         }
+
+        public bool Equals(Coord coordToCompare)
+        {
+            if (coordToCompare == null)
+            {
+                return false;
+            }
+
+            return X == coordToCompare.X && Y == coordToCompare.Y;
+        }
     }
 }

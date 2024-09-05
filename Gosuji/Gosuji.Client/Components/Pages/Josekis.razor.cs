@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Helpers.HttpResponseHandler;
+using Gosuji.Client.Models;
 using Gosuji.Client.Models.Josekis;
 using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components;
@@ -70,8 +71,8 @@ namespace Gosuji.Client.Components.Pages
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             JosekisNode node = response.Data;
 
-            await jsRef.InvokeVoidAsync($"{EDITOR}.setTool", node.IsBlack ? "playB" : "playW");
-            await jsRef.InvokeVoidAsync($"{EDITOR}.click", node.X + 1, node.Y + 1, false, false);
+            await jsRef.InvokeVoidAsync($"{EDITOR}.setTool", node.Move.IsBlack ? "playB" : "playW");
+            await jsRef.InvokeVoidAsync($"{EDITOR}.click", node.Move.Coord.X, node.Move.Coord.Y, false, false);
             await jsRef.InvokeVoidAsync($"{BOARD}.playPlaceStoneAudio");
 
             await AddMarkups(node);
@@ -161,7 +162,8 @@ namespace Gosuji.Client.Components.Pages
         {
             if (!await Start()) return;
 
-            APIResponse response = await josekisService.ToChild(sessionId, new JosekisNode(20, 20));
+            JosekisNode node = new(new Move(Move.PASS_COORD));
+            APIResponse response = await josekisService.ToChild(sessionId, node);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             
             await Play();
@@ -211,7 +213,7 @@ namespace Gosuji.Client.Components.Pages
         {
             if (!await Start()) return;
 
-            APIResponse<bool> response = await josekisService.ToChild(sessionId, new JosekisNode(x, y));
+            APIResponse<bool> response = await josekisService.ToChild(sessionId, new JosekisNode(new Move(x, y)));
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             if (!response.Data)

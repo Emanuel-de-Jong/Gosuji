@@ -1,6 +1,6 @@
-﻿using Gosuji.API.Services;
+﻿using Gosuji.API.Models;
+using Gosuji.API.Services;
 using Gosuji.Client.Helpers.HttpResponseHandler;
-using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel.DataAnnotations;
@@ -72,7 +72,7 @@ namespace Gosuji.API.Controllers
             return Ok;
         }
 
-        public async Task<HubResponse> AnalyzeMove(Move move)
+        public async Task<HubResponse> AnalyzeMove(ServerMove move)
         {
             return OkData((await pool.Get(GetUserId())).AnalyzeMove(move));
         }
@@ -85,7 +85,7 @@ namespace Gosuji.API.Controllers
             return OkData((await pool.Get(GetUserId())).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
         }
 
-        public async Task<HubResponse> Play(Move move)
+        public async Task<HubResponse> Play(ServerMove move)
         {
             (await pool.Get(GetUserId())).Play(move);
             return Ok;

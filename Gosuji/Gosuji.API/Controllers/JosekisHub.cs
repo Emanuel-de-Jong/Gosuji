@@ -1,4 +1,5 @@
 ﻿using Gosuji.API.Helpers;
+using Gosuji.API.Models;
 using Gosuji.API.Services;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Josekis;
@@ -119,11 +120,12 @@ namespace Gosuji.API.Controllers
                 return BadRequest(SESSION_UNKNOWN_ERR);
             }
 
+            Stone stone = ServerMove.ToIGOEnchi(childToGo.Move);
             foreach (GoNode? childNode in josekisGoNodes[sessionId].ChildNodes)
             {
                 if (childNode is GoMoveNode childMove)
                 {
-                    if (childToGo.X == childMove.Stone.X && childToGo.Y == childMove.Stone.Y)
+                    if (stone.X == childMove.Stone.X && stone.Y == childMove.Stone.Y)
                     {
                         josekisGoNodes[sessionId] = childMove;
                         return OkData(true);
