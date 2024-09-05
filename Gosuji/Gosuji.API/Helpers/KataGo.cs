@@ -1,5 +1,4 @@
-﻿using Gosuji.API.Models;
-using Gosuji.Client.Data;
+﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using System.Diagnostics;
@@ -109,7 +108,7 @@ namespace Gosuji.API.Helpers
             ClearReader();
         }
 
-        public MoveSuggestion AnalyzeMove(ServerMove move)
+        public MoveSuggestion AnalyzeMove(Move move)
         {
             int maxVisits = 100;
             if (lastMaxVisits != maxVisits)
@@ -161,7 +160,7 @@ namespace Gosuji.API.Helpers
                 ClearReader();
             }
 
-            Write("kata-genmove_analyze " + ServerMove.ColorToKataGo(color));
+            Write("kata-genmove_analyze " + Move.ColorToKataGo(color));
             TotalVisits += maxVisits;
 
             Read(); // Ignore '= '
@@ -178,7 +177,7 @@ namespace Gosuji.API.Helpers
                 string element = analysis[i];
                 if (element == "move")
                 {
-                    Move move = new(color, ServerMove.CoordFromKataGo(analysis[i + 1], boardsize));
+                    Move move = new(color, Move.CoordFromKataGo(analysis[i + 1], boardsize));
                     suggestion?.SetMove(move);
                 }
                 else if (element == "visits")
@@ -236,7 +235,7 @@ namespace Gosuji.API.Helpers
             return filteredSuggestions;
         }
 
-        public void Play(ServerMove move)
+        public void Play(Move move)
         {
             Write("play " + move.ColorToKataGo() + " " + move.CoordToKataGo(boardsize));
             ClearReader();
@@ -244,7 +243,7 @@ namespace Gosuji.API.Helpers
 
         public void PlayRange(Moves moves)
         {
-            foreach (ServerMove move in moves.moves)
+            foreach (Move move in moves.moves)
             {
                 Play(move);
             }
