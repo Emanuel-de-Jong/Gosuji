@@ -1,5 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
+using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -94,17 +95,17 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<MoveSuggestion?> AnalyzeMove(string color, string coord)
+        public async Task<MoveSuggestion?> AnalyzeMove(Move move)
         {
             string uri = "AnalyzeMove";
             APIResponse<MoveSuggestion> response = await HubResponseHandler.TryCatch<MoveSuggestion>(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                color, coord));
+                move));
             return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
 
         [JSInvokable]
-        public async Task<List<MoveSuggestion>?> Analyze(string color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public async Task<List<MoveSuggestion>?> Analyze(int color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
             string uri = "Analyze";
             APIResponse<List<MoveSuggestion>> response = await HubResponseHandler.TryCatch<List<MoveSuggestion>>(uri,
@@ -114,12 +115,12 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<bool> Play(string color, string coord)
+        public async Task<bool> Play(Move move)
         {
             string uri = "Play";
             APIResponse response = await HubResponseHandler.TryCatch(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                color, coord));
+                move));
             return !G.StatusMessage.HandleAPIResponse(response);
         }
 
