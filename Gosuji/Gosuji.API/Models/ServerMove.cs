@@ -89,13 +89,38 @@ namespace Gosuji.API.Models
 
         public static KataGoMove ToKataGo(Move move, int boardsize)
         {
-            return new(ColorToKataGo(move.Color.Value), CoordToKataGo(move.Coord, boardsize));
+            KataGoMove kataGoMove = new();
+
+            if (move.Color != null)
+            {
+                kataGoMove.Color = ColorToKataGo(move.Color.Value);
+            }
+
+            if (move.Coord != null)
+            {
+                kataGoMove.Coord = CoordToKataGo(move.Coord, boardsize);
+            }
+
+            return kataGoMove;
         }
 
         public static Stone ToIGOEnchi(Move move)
         {
-            Coord igoEnchiCoord = CoordToIGOEnchi(move.Coord);
-            return new(igoEnchiCoord.X, igoEnchiCoord.Y, ColorToIGOEnchi(move.Color.Value));
+            Stone stone = new();
+
+            if (move.Color != null)
+            {
+                stone.IsBlack = ColorToIGOEnchi(move.Color.Value);
+            }
+
+            if (move.Coord != null)
+            {
+                Coord igoEnchiCoord = CoordToIGOEnchi(move.Coord);
+                stone.X = igoEnchiCoord.X;
+                stone.Y = igoEnchiCoord.Y;
+            }
+
+            return stone;
         }
 
 
@@ -142,13 +167,9 @@ namespace Gosuji.API.Models
 
     public class KataGoMove
     {
-        public string Color { get; set; }
-        public string Coord { get; set; }
+        public string? Color { get; set; }
+        public string? Coord { get; set; }
 
-        public KataGoMove(string color, string coord)
-        {
-            Color = color;
-            Coord = coord;
-        }
+        public KataGoMove() { }
     }
 }
