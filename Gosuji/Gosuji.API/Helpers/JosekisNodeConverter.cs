@@ -1,5 +1,4 @@
 ﻿using Gosuji.Client.Models.Josekis;
-using Gosuji.API.Models;
 using IGOEnchi.GoGameLogic;
 
 namespace Gosuji.API.Helpers
@@ -13,7 +12,7 @@ namespace Gosuji.API.Helpers
 
         public static JosekisNode Convert(GoMoveNode node)
         {
-            return new JosekisNode(ServerMove.FromIGOEnchi(node.Stone), node.Comment,
+            return new JosekisNode(MoveHelper.FromIGOEnchi(node.Stone), node.Comment,
                 ToJosekisLabels(node.Markup.Labels), ToJosekisMarks(node.Markup.Marks));
         }
 

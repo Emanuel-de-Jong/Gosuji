@@ -1,9 +1,9 @@
 ﻿using Gosuji.Client.Models;
 using IGOEnchi.GoGameLogic;
 
-namespace Gosuji.API.Models
+namespace Gosuji.API.Helpers
 {
-    public class ServerMove
+    public class MoveHelper
     {
         public static Stone ToIGOEnchi(Move move)
         {
