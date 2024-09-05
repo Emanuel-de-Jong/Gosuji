@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-
-namespace Gosuji.Client.Models
+﻿namespace Gosuji.Client.Models
 {
     public class Move
     {
@@ -9,8 +7,10 @@ namespace Gosuji.Client.Models
         public int? Color { get; set; }
         public Coord? Coord { get; set; }
 
+        public int? X => Coord?.X;
+        public int? Y => Coord?.Y;
         public bool IsBlack => Color == -1;
-        public bool IsPass => Coord.X == 0 && Coord.Y == 0;
+        public bool IsPass => Coord.Equals(PASS_COORD);
 
 
         public Move() { }
@@ -21,9 +21,7 @@ namespace Gosuji.Client.Models
         }
 
         public Move(int x, int y)
-        {
-            Coord = new Coord(x, y);
-        }
+            :this(new(x, y)) { }
 
         public Move(int color, Coord coord)
             : this(coord)
@@ -32,7 +30,7 @@ namespace Gosuji.Client.Models
         }
 
         public Move(int color, int x, int y)
-            :this(x, y)
+            : this(x, y)
         {
             Color = color;
         }

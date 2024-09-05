@@ -72,7 +72,7 @@ namespace Gosuji.Client.Components.Pages
             JosekisNode node = response.Data;
 
             await jsRef.InvokeVoidAsync($"{EDITOR}.setTool", node.Move.IsBlack ? "playB" : "playW");
-            await jsRef.InvokeVoidAsync($"{EDITOR}.click", node.Move.Coord.X, node.Move.Coord.Y, false, false);
+            await jsRef.InvokeVoidAsync($"{EDITOR}.click", node.Move.X, node.Move.Y, false, false);
             await jsRef.InvokeVoidAsync($"{BOARD}.playPlaceStoneAudio");
 
             await AddMarkups(node);
