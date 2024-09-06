@@ -85,4 +85,7 @@ db.saveGame = async function () {
         });
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.db) window.trainer.db = db;
+
 export { db };

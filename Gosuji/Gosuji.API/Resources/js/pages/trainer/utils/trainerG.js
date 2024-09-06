@@ -217,4 +217,7 @@ trainerG.getResultStr = function () {
     return g.COLOR_NAME_TYPE.W + "+" + trainerG.result.formatScoreLead(true);
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.trainerG) window.trainer.trainerG = trainerG;
+
 export { trainerG };

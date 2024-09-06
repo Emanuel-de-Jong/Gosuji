@@ -274,4 +274,7 @@ scoreChart.reverse = function () {
     }
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.scoreChart) window.trainer.scoreChart = scoreChart;
+
 export { scoreChart };

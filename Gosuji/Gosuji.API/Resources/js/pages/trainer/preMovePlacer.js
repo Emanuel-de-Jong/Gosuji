@@ -104,4 +104,7 @@ preMovePlacer.play = async function (isForced = false) {
     await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.PRE);
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.preMovePlacer) window.trainer.preMovePlacer = preMovePlacer;
+
 export { preMovePlacer };

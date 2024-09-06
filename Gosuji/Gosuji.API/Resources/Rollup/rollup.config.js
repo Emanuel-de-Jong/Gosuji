@@ -2,14 +2,18 @@ import terser from '@rollup/plugin-terser';
 
 const DEBUG = true;
 
+const PAGES = [
+    'trainer',
+    'josekis',
+    'profile',
+];
+
 const BASE_INPUT_PATH = "../js/";
 const BASE_OUTPUT_PATH_CLIENT = "../../../Gosuji.Client/wwwroot/js/";
 const BASE_OUTPUT_PATH_CMS = "../../../Gosuji.CMS/wwwroot/js/";
 
 let plugins = [];
-if (DEBUG) {
-    
-} else {
+if (!DEBUG) {
     plugins.push(terser({
         compress: {
             unused: false,          // Prevents removal of unused variables and functions
@@ -30,13 +34,13 @@ const createPageBundle = (filePath, fileName = filePath) => ({
 
 const createGlobalBundle = (
     outputPath=BASE_OUTPUT_PATH_CLIENT,
-    outputName='bundle.js',
+    outputName='bundle',
     filePath='',
-    fileName='custom.js') =>
+    fileName='custom') =>
 ({
-    input: BASE_INPUT_PATH + filePath + fileName,
+    input: BASE_INPUT_PATH + filePath + fileName + '.js',
     output: {
-        file: outputPath + outputName,
+        file: outputPath + outputName + '.js',
         format: 'iife',
         sourcemap: true
     },
@@ -50,12 +54,19 @@ let config = [
     createGlobalBundle(BASE_OUTPUT_PATH_CMS),
 
     // Besogo minify
-    createGlobalBundle(BASE_OUTPUT_PATH_CLIENT + 'libs/', 'besogo.all.js', 'libs/', 'besogo.all.js'),
-
-    // Page bundles
-    createPageBundle('trainer'),
-    createPageBundle('josekis'),
-    createPageBundle('profile'),
+    createGlobalBundle(BASE_OUTPUT_PATH_CLIENT + 'libs/', 'besogo.all', 'libs/', 'besogo.all'),
 ];
+
+// Page bundles
+if (!DEBUG) {
+    PAGES.forEach(page => {
+        config.push(createPageBundle(page));
+    });
+} else {
+    PAGES.forEach(page => {
+        const path = 'pages/' + page + '/';
+        config.push(createGlobalBundle(BASE_OUTPUT_PATH_CLIENT + path, undefined, path, page));
+    });
+}
 
 export default config;

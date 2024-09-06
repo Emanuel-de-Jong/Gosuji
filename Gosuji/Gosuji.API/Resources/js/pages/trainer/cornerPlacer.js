@@ -119,4 +119,7 @@ cornerPlacer.chooseCornerOption = function (cornerOptions) {
     return coord;
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.cornerPlacer) window.trainer.cornerPlacer = cornerPlacer;
+
 export { cornerPlacer };

@@ -1,4 +1,4 @@
-export class Ratio {
+class Ratio {
     moveNumber;
     total;
 
@@ -25,3 +25,8 @@ export class Ratio {
         return Math.round((count / this.total) * 100);
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.Ratio) window.trainer.Ratio = Ratio;
+
+export { Ratio };

@@ -211,4 +211,7 @@ ratioChart.refresh = function () {
     ratioChart.chart.update();
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.ratioChart) window.trainer.ratioChart = ratioChart;
+
 export { ratioChart };

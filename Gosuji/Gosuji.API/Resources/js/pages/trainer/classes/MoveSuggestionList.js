@@ -3,7 +3,7 @@ import { settings } from "../utils/settings";
 import { trainerG } from "../utils/trainerG";
 import { gameplay } from "../gameplay";
 
-export class MoveSuggestionList {
+class MoveSuggestionList {
     static ENCODE_ANALYZE_MOVE_INDICATOR = -2;
 
     suggestions = [];
@@ -162,3 +162,8 @@ export class MoveSuggestionList {
         return suggestionList;
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.MoveSuggestionList) window.trainer.MoveSuggestionList = MoveSuggestionList;
+
+export { MoveSuggestionList };

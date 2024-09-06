@@ -1,6 +1,6 @@
 import { History } from "./History";
 
-export class CNode {
+class CNode {
     y;
     x;
 
@@ -33,3 +33,8 @@ export class CNode {
         return newNode;
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.CNode) window.trainer.CNode = CNode;
+
+export { CNode };

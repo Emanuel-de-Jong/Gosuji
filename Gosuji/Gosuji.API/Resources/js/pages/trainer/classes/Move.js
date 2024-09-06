@@ -1,4 +1,4 @@
-export class Move {
+class Move {
     color;
     coord;
 
@@ -7,3 +7,8 @@ export class Move {
         this.coord = coord;
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.Move) window.trainer.Move = Move;
+
+export { Move };

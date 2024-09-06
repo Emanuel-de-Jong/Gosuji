@@ -1,6 +1,6 @@
 import { Score } from "./Score";
 
-export class MoveSuggestion {
+class MoveSuggestion {
     coord;
     visits;
     score;
@@ -45,3 +45,8 @@ export class MoveSuggestion {
         );
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.MoveSuggestion) window.trainer.MoveSuggestion = MoveSuggestion;
+
+export { MoveSuggestion };

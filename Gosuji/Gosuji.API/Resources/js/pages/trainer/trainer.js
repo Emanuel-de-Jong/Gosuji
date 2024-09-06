@@ -146,6 +146,9 @@ trainerPage.sgfLoadedListener = async function () {
     gameplay.start(false);
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.trainerPage) window.trainer.trainerPage = trainerPage;
+
 export {
     // CNode,
     // History,

@@ -1,6 +1,6 @@
 import { trainerG } from "../utils/trainerG";
 
-export class HistoryNode {
+class HistoryNode {
     data;
     parent;
     children = [];
@@ -20,3 +20,8 @@ export class HistoryNode {
         this.children.push(new HistoryNode(this, data, x));
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.HistoryNode) window.trainer.HistoryNode = HistoryNode;
+
+export { HistoryNode };

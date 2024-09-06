@@ -1,7 +1,7 @@
 import { HistoryNode } from "./HistoryNode";
 import { trainerG } from "../utils/trainerG";
 
-export class History {
+class History {
     static ENCODE_Y_INDICATOR = -1;
 
     grid = [];
@@ -180,3 +180,8 @@ export class History {
         return history;
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.History) window.trainer.History = History;
+
+export { History };

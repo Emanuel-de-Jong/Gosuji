@@ -256,4 +256,7 @@ gameplay.shouldShowOpponentOptions = function () {
         settings.hideOpponentOptions == settings.HIDE_OPPONENT_OPTIONS.PERFECT && !trainerG.isPerfectChoice);
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.gameplay) window.trainer.gameplay = gameplay;
+
 export { gameplay };

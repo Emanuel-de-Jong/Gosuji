@@ -1,4 +1,4 @@
-export class Score {
+class Score {
     winrate;
     scoreLead;
 
@@ -47,3 +47,8 @@ export class Score {
         return new Score(serverScore.winrate, serverScore.scoreLead);
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.Score) window.trainer.Score = Score;
+
+export { Score };

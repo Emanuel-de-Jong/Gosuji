@@ -271,4 +271,7 @@ stats.drawStats = async function (event) {
     }
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.stats) window.trainer.stats = stats;
+
 export { stats };

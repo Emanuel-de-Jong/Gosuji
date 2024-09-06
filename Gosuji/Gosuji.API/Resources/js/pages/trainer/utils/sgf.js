@@ -126,4 +126,7 @@ sgf.setResultMeta = function (result) {
     trainerG.board.editor.setGameInfo(result, "RE");
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.sgf) window.trainer.sgf = sgf;
+
 export { sgf };

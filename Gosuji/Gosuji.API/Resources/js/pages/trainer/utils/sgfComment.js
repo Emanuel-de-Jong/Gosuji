@@ -170,4 +170,7 @@ sgfComment.createCommentKataGo = function () {
         "\nModel: " + trainerG.kataGoVersion.model;
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.sgfComment) window.trainer.sgfComment = sgfComment;
+
 export { sgfComment };

@@ -95,4 +95,7 @@ selfplay.toggleSelfplay = async function () {
     }
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.selfplay) window.trainer.selfplay = selfplay;
+
 export { selfplay };

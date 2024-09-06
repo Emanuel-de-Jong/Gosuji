@@ -137,4 +137,7 @@ katago.sendRequest = async function (uri, ...args) {
     return result;
 };
 
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.katago) window.trainer.katago = katago;
+
 export { katago };

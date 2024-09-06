@@ -10,7 +10,7 @@ import { trainerG } from "../utils/trainerG";
 import { debug } from "../debug";
 import { gameplay } from "../gameplay";
 
-export class TrainerBoard extends Board {
+class TrainerBoard extends Board {
     constructor() {
         super();
 
@@ -274,3 +274,8 @@ export class TrainerBoard extends Board {
         this.toggleCoordStyleButton.disabled = !isAllowed;
     }
 }
+
+if (!window.trainer) window.trainer = {};
+if (!window.trainer.TrainerBoard) window.trainer.TrainerBoard = TrainerBoard;
+
+export { TrainerBoard };
