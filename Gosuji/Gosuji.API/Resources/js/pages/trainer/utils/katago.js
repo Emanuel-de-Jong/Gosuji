@@ -138,6 +138,6 @@ katago.sendRequest = async function (uri, ...args) {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.katago) window.trainer.katago = katago;
+if (g.DEBUG && !window.trainer.katago) window.trainer.katago = katago;
 
 export { katago };

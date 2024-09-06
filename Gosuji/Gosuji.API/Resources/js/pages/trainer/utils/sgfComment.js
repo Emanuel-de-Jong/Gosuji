@@ -171,6 +171,6 @@ sgfComment.createCommentKataGo = function () {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.sgfComment) window.trainer.sgfComment = sgfComment;
+if (g.DEBUG && !window.trainer.sgfComment) window.trainer.sgfComment = sgfComment;
 
 export { sgfComment };

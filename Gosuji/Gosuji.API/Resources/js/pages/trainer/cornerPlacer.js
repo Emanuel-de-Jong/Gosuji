@@ -120,6 +120,6 @@ cornerPlacer.chooseCornerOption = function (cornerOptions) {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.cornerPlacer) window.trainer.cornerPlacer = cornerPlacer;
+if (g.DEBUG && !window.trainer.cornerPlacer) window.trainer.cornerPlacer = cornerPlacer;
 
 export { cornerPlacer };

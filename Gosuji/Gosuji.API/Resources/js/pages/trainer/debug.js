@@ -93,6 +93,6 @@ debug.logAllFuncCalls = function () {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.debug) window.trainer.debug = debug;
+if (g.DEBUG && !window.trainer.debug) window.trainer.debug = debug;
 
 export { debug };

@@ -212,6 +212,6 @@ ratioChart.refresh = function () {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.ratioChart) window.trainer.ratioChart = ratioChart;
+if (g.DEBUG && !window.trainer.ratioChart) window.trainer.ratioChart = ratioChart;
 
 export { ratioChart };

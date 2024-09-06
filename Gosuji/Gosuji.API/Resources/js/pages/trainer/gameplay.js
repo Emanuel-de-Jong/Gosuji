@@ -257,6 +257,6 @@ gameplay.shouldShowOpponentOptions = function () {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.gameplay) window.trainer.gameplay = gameplay;
+if (g.DEBUG && !window.trainer.gameplay) window.trainer.gameplay = gameplay;
 
 export { gameplay };

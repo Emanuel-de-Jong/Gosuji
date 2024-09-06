@@ -49,6 +49,6 @@ class Score {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.Score) window.trainer.Score = Score;
+if (g.DEBUG && !window.trainer.Score) window.trainer.Score = Score;
 
 export { Score };

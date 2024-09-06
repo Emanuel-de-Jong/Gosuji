@@ -47,6 +47,6 @@ class MoveSuggestion {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.MoveSuggestion) window.trainer.MoveSuggestion = MoveSuggestion;
+if (g.DEBUG && !window.trainer.MoveSuggestion) window.trainer.MoveSuggestion = MoveSuggestion;
 
 export { MoveSuggestion };

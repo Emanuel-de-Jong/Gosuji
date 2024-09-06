@@ -9,6 +9,6 @@ class Move {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.Move) window.trainer.Move = Move;
+if (g.DEBUG && !window.trainer.Move) window.trainer.Move = Move;
 
 export { Move };

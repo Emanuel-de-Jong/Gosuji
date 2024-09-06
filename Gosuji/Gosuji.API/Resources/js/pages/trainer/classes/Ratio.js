@@ -27,6 +27,6 @@ class Ratio {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.Ratio) window.trainer.Ratio = Ratio;
+if (g.DEBUG && !window.trainer.Ratio) window.trainer.Ratio = Ratio;
 
 export { Ratio };

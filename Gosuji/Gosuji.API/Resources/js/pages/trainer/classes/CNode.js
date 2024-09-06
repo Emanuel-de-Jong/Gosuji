@@ -35,6 +35,6 @@ class CNode {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.CNode) window.trainer.CNode = CNode;
+if (g.DEBUG && !window.trainer.CNode) window.trainer.CNode = CNode;
 
 export { CNode };

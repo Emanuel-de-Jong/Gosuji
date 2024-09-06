@@ -218,6 +218,6 @@ trainerG.getResultStr = function () {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.trainerG) window.trainer.trainerG = trainerG;
+if (g.DEBUG && !window.trainer.trainerG) window.trainer.trainerG = trainerG;
 
 export { trainerG };

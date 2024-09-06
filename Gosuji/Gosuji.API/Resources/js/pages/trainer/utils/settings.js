@@ -228,6 +228,6 @@ settings.setKomi = function () {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.settings) window.trainer.settings = settings;
+if (g.DEBUG && !window.trainer.settings) window.trainer.settings = settings;
 
 export { settings };

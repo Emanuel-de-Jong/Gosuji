@@ -182,6 +182,6 @@ class History {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.History) window.trainer.History = History;
+if (g.DEBUG && !window.trainer.History) window.trainer.History = History;
 
 export { History };

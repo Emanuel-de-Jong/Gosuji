@@ -4,6 +4,7 @@ if (typeof g === "undefined") {
     g = { id: "g" };
 
     g.VERSION = "0.3";
+    g.DEBUG = true;
     g.LOG = false;
 
     g.COLOR_TYPE = {

@@ -276,6 +276,6 @@ class TrainerBoard extends Board {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.TrainerBoard) window.trainer.TrainerBoard = TrainerBoard;
+if (g.DEBUG && !window.trainer.TrainerBoard) window.trainer.TrainerBoard = TrainerBoard;
 
 export { TrainerBoard };

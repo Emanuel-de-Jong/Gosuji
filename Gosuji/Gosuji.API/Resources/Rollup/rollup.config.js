@@ -58,15 +58,8 @@ let config = [
 ];
 
 // Page bundles
-if (!DEBUG) {
-    PAGES.forEach(page => {
-        config.push(createPageBundle(page));
-    });
-} else {
-    PAGES.forEach(page => {
-        const path = 'pages/' + page + '/';
-        config.push(createGlobalBundle(BASE_OUTPUT_PATH_CLIENT + path, undefined, path, page));
-    });
-}
+PAGES.forEach(page => {
+    config.push(createPageBundle(page));
+});
 
 export default config;

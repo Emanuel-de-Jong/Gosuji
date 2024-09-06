@@ -127,6 +127,6 @@ sgf.setResultMeta = function (result) {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.sgf) window.trainer.sgf = sgf;
+if (g.DEBUG && !window.trainer.sgf) window.trainer.sgf = sgf;
 
 export { sgf };

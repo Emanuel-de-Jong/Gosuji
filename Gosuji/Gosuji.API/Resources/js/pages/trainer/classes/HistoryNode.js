@@ -22,6 +22,6 @@ class HistoryNode {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.HistoryNode) window.trainer.HistoryNode = HistoryNode;
+if (g.DEBUG && !window.trainer.HistoryNode) window.trainer.HistoryNode = HistoryNode;
 
 export { HistoryNode };

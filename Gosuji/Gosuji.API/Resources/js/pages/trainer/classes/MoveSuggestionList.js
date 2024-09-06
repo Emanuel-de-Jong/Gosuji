@@ -164,6 +164,6 @@ class MoveSuggestionList {
 }
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.MoveSuggestionList) window.trainer.MoveSuggestionList = MoveSuggestionList;
+if (g.DEBUG && !window.trainer.MoveSuggestionList) window.trainer.MoveSuggestionList = MoveSuggestionList;
 
 export { MoveSuggestionList };

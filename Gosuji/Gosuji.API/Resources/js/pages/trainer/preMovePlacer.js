@@ -105,6 +105,6 @@ preMovePlacer.play = async function (isForced = false) {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.preMovePlacer) window.trainer.preMovePlacer = preMovePlacer;
+if (g.DEBUG && !window.trainer.preMovePlacer) window.trainer.preMovePlacer = preMovePlacer;
 
 export { preMovePlacer };

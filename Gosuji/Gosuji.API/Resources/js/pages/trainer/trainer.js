@@ -147,7 +147,7 @@ trainerPage.sgfLoadedListener = async function () {
 };
 
 if (!window.trainer) window.trainer = {};
-if (!window.trainer.trainerPage) window.trainer.trainerPage = trainerPage;
+if (g.DEBUG && !window.trainer.trainerPage) window.trainer.trainerPage = trainerPage;
 
 export {
     // CNode,
