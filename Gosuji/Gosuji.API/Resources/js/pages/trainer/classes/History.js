@@ -1,14 +1,14 @@
+import { HistoryNode } from "./HistoryNode";
 import { trainerG } from "../utils/trainerG";
 
 export class History {
     static ENCODE_Y_INDICATOR = -1;
 
-    grid;
+    grid = [];
     dataType;
 
 
     constructor() {
-        this.grid = [];
     }
 
 

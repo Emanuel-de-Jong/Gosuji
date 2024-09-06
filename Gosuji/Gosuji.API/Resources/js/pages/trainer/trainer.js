@@ -1,4 +1,5 @@
 import { CNode } from "./classes/CNode";
+import { HistoryNode } from "./classes/HistoryNode";
 import { History } from "./classes/History";
 import { MoveSuggestionList } from "./classes/MoveSuggestionList";
 import { MoveSuggestion } from "./classes/MoveSuggestion";
