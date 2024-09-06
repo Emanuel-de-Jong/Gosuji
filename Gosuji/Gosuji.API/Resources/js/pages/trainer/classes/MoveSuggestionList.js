@@ -62,9 +62,11 @@ class MoveSuggestionList {
 
     filterByPass() {
         let filteredSuggestions = [];
-        this.suggestions.forEach((suggestion) => {
-            if (!suggestion.isPass()) filteredSuggestions.push(suggestion);
-        });
+        for (const suggestion of this.suggestions) {
+            if (!suggestion.isPass()) {
+                filteredSuggestions.push(suggestion);
+            }
+        }
 
         let firstSuggestion = this.suggestions[0];
         this.suggestions = filteredSuggestions;
@@ -101,9 +103,9 @@ class MoveSuggestionList {
     }
 
     find(coord) {
-        for (let i = 0; i < this.suggestions.length; i++) {
-            if (this.suggestions[i].coord.compare(coord)) {
-                return this.suggestions[i];
+        for (const suggestion of this.suggestions) {
+            if (suggestion.coord.compare(coord)) {
+                return suggestion;
             }
         }
     }
@@ -118,8 +120,8 @@ class MoveSuggestionList {
 
         encoded = byteUtils.numToBytes(this.suggestions.length, 2, encoded);
 
-        for (let i = 0; i < this.suggestions.length; i++) {
-            encoded = encoded.concat(this.suggestions[i].encode());
+        for (const suggestion of this.suggestions) {
+            encoded = encoded.concat(suggestion.encode());
         }
 
         return encoded;
@@ -141,9 +143,9 @@ class MoveSuggestionList {
 
     static fromKataGo(kataGoSuggestions) {
         let suggestions = [];
-        kataGoSuggestions.forEach((kataGoSuggestion) => {
+        for (const kataGoSuggestion of kataGoSuggestions) {
             suggestions.push(MoveSuggestion.fromKataGo(kataGoSuggestion));
-        });
+        }
 
         return new MoveSuggestionList(suggestions);
     }

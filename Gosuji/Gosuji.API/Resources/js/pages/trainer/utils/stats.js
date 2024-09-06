@@ -149,8 +149,7 @@ stats.decodePlayerResultHistory = function (encoded) {
 };
 
 stats.printDecodedPlayerResultHistory = function (node) {
-    for (let i = 0; i < node.children.length; i++) {
-        let childNode = node.children[i];
+    for (const childNode of node.children) {
         // console.log(childNode.y + ", " + childNode.x + ": " + childNode.value);
         stats.printDecodedPlayerResultHistory(childNode);
     }
@@ -167,8 +166,8 @@ stats.getMostPlayerResultsBranch = function (node = trainerG.board.editor.getRoo
     }
 
     let childPlayerResultCounts = [];
-    for (let i = 0; i < node.children.length; i++) {
-        childPlayerResultCounts.push(stats.getMostPlayerResultsBranch(node.children[i], playerResultCount));
+    for (const child of node.children) {
+        childPlayerResultCounts.push(stats.getMostPlayerResultsBranch(child, playerResultCount));
     }
 
     childPlayerResultCounts.sort((a, b) => {

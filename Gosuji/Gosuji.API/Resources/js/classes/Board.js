@@ -101,7 +101,9 @@ if (typeof Board === "undefined") {
         }
 
         setStoneVolume(volume) {
-            this.placeStoneAudios.forEach((audio) => audio.volume = volume);
+            for (const audio of this.placeStoneAudios) {
+                audio.volume = volume;
+            }
         }
 
         playPlaceStoneAudio() {
@@ -193,7 +195,9 @@ if (typeof Board === "undefined") {
         }
 
         removeGhostStones() {
-            document.querySelectorAll(".besogo-board .ghostStone").forEach(gs => gs.remove());
+            for (const gs of document.querySelectorAll(".besogo-board .ghostStone")) {
+                gs.remove();
+            }
         }
 
         getMoveNumber() {

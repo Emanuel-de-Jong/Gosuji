@@ -32,8 +32,8 @@ class History {
         let x = node.navTreeX;
         let y = node.navTreeY;
 
-        for (let i = 0; i < node.children.length; i++) {
-            this.deleteLoop(node.children[i]);
+        for (const child of node.children) {
+            this.deleteLoop(child);
         }
 
         if (!this.grid[y]) return;

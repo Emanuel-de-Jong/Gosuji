@@ -125,7 +125,7 @@ ratioChart.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER, 
 
     let perfect = 0;
     let right = 0;
-    playerResults.forEach((playerResult) => {
+    for (const playerResult of playerResults) {
         if (playerResult == stats.PLAYER_RESULT_TYPE.PERFECT || playerResult == stats.PLAYER_RESULT_TYPE.RIGHT) {
             right++;
         }
@@ -133,7 +133,7 @@ ratioChart.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER, 
         if (playerResult == stats.PLAYER_RESULT_TYPE.PERFECT) {
             perfect++;
         }
-    });
+    }
 
     return new Ratio(moveNumber, playerResults.length, right, perfect);
 };

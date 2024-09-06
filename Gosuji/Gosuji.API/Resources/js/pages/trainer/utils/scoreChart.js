@@ -160,8 +160,8 @@ scoreChart.clearChart = function () {
 };
 
 scoreChart.fillHistoryWithSuggestionHistory = function (node = trainerG.board.editor.getRoot()) {
-    for (let i = 0; i < node.children.length; i++) {
-        scoreChart.fillHistoryWithSuggestionHistory(node.children[i]);
+    for (const child of node.children) {
+        scoreChart.fillHistoryWithSuggestionHistory(child);
     }
 
     if (!node.move) return;

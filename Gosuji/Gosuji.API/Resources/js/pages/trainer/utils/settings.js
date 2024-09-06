@@ -83,8 +83,8 @@ settings.HIDE_OPPONENT_OPTIONS = {
 
 
 settings.init = function (gameLoadInfo) {
-    for (const name of Object.keys(settings.SETTINGS)) {
-        settings[name + "Element"] = document.getElementById(name);
+    for (const key in settings.SETTINGS) {
+        settings[key + "Element"] = document.getElementById(key);
     }
 
     utils.addEventListeners(
@@ -97,17 +97,17 @@ settings.init = function (gameLoadInfo) {
     settings.rulesetElement.addEventListener("input", settings.setKomi);
     settings.boardsizeElement.addEventListener("input", settings.setKomi);
 
-    utils.querySelectorAlls(["#settingsAccordion input", "#settingsAccordion select"]).forEach((input) => {
+    for (const input of utils.querySelectorAlls(["#settingsAccordion input", "#settingsAccordion select"])) {
         if (input.type != "checkbox") {
             input.required = true;
         }
         if (utils.getSiblingByClass(input, "form-invalid-message") == null) {
             input.insertAdjacentHTML("afterend", '<div class="form-invalid-message"></div>');
         }
-    });
+    }
 
-    for (const name of Object.keys(settings.SETTINGS)) {
-        settings.updateSetting(name);
+    for (const key in settings.SETTINGS) {
+        settings.updateSetting(key);
     }
 
     settings.clear(gameLoadInfo);
@@ -150,7 +150,9 @@ settings.inputAndSelectInputListener = function (event) {
 };
 
 settings.togglePreGameSettings = function (enable = false) {
-    settings.PRE_GAME_SETTINGS.forEach((name) => settings[name + "Element"].disabled = !enable);
+    for (const name of settings.PRE_GAME_SETTINGS) {
+        settings[name + "Element"].disabled = !enable;
+    }
 };
 
 settings.validateInput = function (input) {

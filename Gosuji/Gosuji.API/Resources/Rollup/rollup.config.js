@@ -58,8 +58,8 @@ let config = [
 ];
 
 // Page bundles
-PAGES.forEach(page => {
+for (const page of PAGES) {
     config.push(createPageBundle(page));
-});
+}
 
 export default config;

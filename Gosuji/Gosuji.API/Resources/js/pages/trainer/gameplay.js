@@ -198,11 +198,11 @@ gameplay.opponentTurn = async function () {
 
         if (trainerG.shouldBeImperfectSuggestion) {
             let imperfectSuggestions = [];
-            trainerG.suggestions.suggestions.forEach((s) => {
+            for (const s of trainerG.suggestions.suggestions) {
                 if (s.grade != "A") {
                     imperfectSuggestions.push(s);
                 }
-            });
+            }
 
             if (imperfectSuggestions.length != 0) {
                 suggestion = imperfectSuggestions[utils.randomInt(imperfectSuggestions.length)];

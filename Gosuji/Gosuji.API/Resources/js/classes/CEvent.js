@@ -19,8 +19,8 @@ if (typeof CEvent === "undefined") {
         }
 
         dispatch(event) {
-            for (let i = 0; i < this.listeners.length; i++) {
-                this.listeners[i](event);
+            for (const listener of this.listeners) {
+                listener(event);
             }
         }
     }

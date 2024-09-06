@@ -63,10 +63,9 @@ cornerPlacer.getEmptyCorner = function () {
     let corners = utils.shuffleArray(cornerPlacer.CORNERS[settings.boardsize]);
 
     let stoneFound = false;
-    for (let i = 0; i < 4; i++) {
-        let cornerOptions = corners[i];
-        for (let option in cornerOptions) {
-            if (trainerG.board.findStone(cornerOptions[option])) {
+    for (const cornerOptions of corners) {
+        for (const option of Object.values(cornerOptions)) {
+            if (trainerG.board.findStone(option)) {
                 stoneFound = true;
                 break;
             }

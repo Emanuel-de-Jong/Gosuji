@@ -159,8 +159,8 @@ class TrainerBoard extends Board {
         }
 
         let result;
-        for (let i = 0; i < node.children.length; i++) {
-            const child = node.children[i];
+        
+        for (const child of node.children) {
             if (child.navTreeX <= coord.x && child.navTreeY <= coord.y) {
                 result = this.findNode(coord, child);
 
@@ -188,8 +188,12 @@ class TrainerBoard extends Board {
             node.parent.removeChild(node);
         } else {
             let children = [];
-            node.children.forEach(child => children.push(child));
-            children.forEach(child => node.removeChild(child));
+            for (const child of node.children) {
+                children.push(child);
+            }
+            for (const child of children) {
+                node.removeChild(child);
+            }
         }
 
         this.editor.notifyListeners({ treeChange: true, navChange: true });
@@ -216,9 +220,9 @@ class TrainerBoard extends Board {
 
         this.clearMarkups();
 
-        for (let i = 0; i < suggestions.length; i++) {
-            let coord = suggestions[i].coord;
-            this.editor.addMarkupToCurrent(coord.x, coord.y, suggestions[i].grade);
+        for (const suggestion of suggestions) {
+            let coord = suggestion.coord;
+            this.editor.addMarkupToCurrent(coord.x, coord.y, suggestion.grade);
         }
 
         this.redraw();

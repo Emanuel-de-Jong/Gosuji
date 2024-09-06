@@ -162,12 +162,11 @@ profilePage.createGameStageBarChart = function (right, perfect) {
 profilePage.createDaysChart = function (days) {
     profilePage.daysChartElement = document.getElementById("daysChart");
 
-    for (const date in days) {
+    for (const [date, dayType] of Object.entries(days)) {
         let dayElement = document.createElement("div");
         dayElement.classList.add("day");
         dayElement.setAttribute("title", date);
 
-        let dayType = days[date];
         if (dayType != profilePage.DAYS_CHART_DAY_TYPES.NONE) {
             let color =
                 dayType == profilePage.DAYS_CHART_DAY_TYPES.CAUGHT_UP

@@ -50,8 +50,7 @@ if (typeof utils === "undefined") {
         let name = cname + "=";
         let decodedCookie = decodeURIComponent(document.cookie);
         let ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
+        for (let c of ca) {
             while (c.charAt(0) == ' ') {
                 c = c.substring(1);
             }
@@ -100,11 +99,11 @@ if (typeof utils === "undefined") {
 
     utils.deepCopyObject = function (obj) {
         let clone = Array.isArray(obj) ? [] : {};
-        for (let key in obj) {
-            if (typeof obj[key] === "object" && obj[key] !== null) {
-                clone[key] = utils.deepCopyObject(obj[key]);
+        for (const [key, val] of Object.entries(obj)) {
+            if (typeof val === "object" && val !== null) {
+                clone[key] = utils.deepCopyObject(val);
             } else {
-                clone[key] = obj[key];
+                clone[key] = val;
             }
         }
         return clone;
@@ -185,24 +184,30 @@ if (typeof utils === "undefined") {
 
 
     utils.addEventsListener = function (element, events, fn) {
-        events.forEach((event) => element.addEventListener(event, fn));
+        for (const event of events) {
+            element.addEventListener(event, fn);
+        }
     };
 
     utils.addEventListeners = function (elements, event, fn) {
-        elements.forEach((element) => element.addEventListener(event, fn));
+        for (const element of elements) {
+            element.addEventListener(event, fn);
+        }
     };
 
     utils.addEventsListeners = function (elements, events, fn) {
-        events.forEach((event) => {
-            elements.forEach((element) => {
+        for (const event of events) {
+            for (const element of elements) {
                 element.addEventListener(event, fn);
-            });
-        });
+            }
+        }
     };
 
     utils.querySelectorAlls = function (selectors) {
         let elementArrays = [];
-        selectors.forEach((selector) => elementArrays.push(Array.from(document.querySelectorAll(selector))));
+        for (const selector of selectors) {
+            elementArrays.push(Array.from(document.querySelectorAll(selector)));
+        }
         return elementArrays.flat();
     };
 
