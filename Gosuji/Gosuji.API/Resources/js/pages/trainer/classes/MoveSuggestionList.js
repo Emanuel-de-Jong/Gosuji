@@ -73,7 +73,7 @@ class MoveSuggestionList {
     }
 
     getFilterByWeaker() {
-        let move = trainerG.board.editor.getCurrent().move;
+        let move = nodeUtils.get().move;
         if (!move) return this.suggestions;
 
         let playedCoord = new Coord(move.x, move.y);

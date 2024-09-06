@@ -1,5 +1,4 @@
 import { CNode } from "./classes/CNode";
-import { HistoryNode } from "./classes/HistoryNode";
 import { History } from "./classes/History";
 import { MoveSuggestionList } from "./classes/MoveSuggestionList";
 import { MoveSuggestion } from "./classes/MoveSuggestion";
@@ -9,6 +8,7 @@ import { TrainerBoard } from "./classes/TrainerBoard";
 
 import { db } from "./utils/db";
 import { katago } from "./utils/katago";
+import { nodeUtils } from "./utils/nodeUtils";
 import { scoreChart } from "./utils/scoreChart";
 import { ratioChart } from "./utils/ratioChart";
 import { settings } from "./utils/settings";
@@ -160,6 +160,7 @@ export {
 
     db,
     // katago,
+    // nodeUtils,
     // scoreChart,
     // ratioChart,
     // settings,

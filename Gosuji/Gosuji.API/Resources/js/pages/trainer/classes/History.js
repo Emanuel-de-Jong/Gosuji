@@ -1,4 +1,4 @@
-import { HistoryNode } from "./HistoryNode";
+import { nodeUtils } from "../utils/nodeUtils";
 import { trainerG } from "../utils/trainerG";
 
 class History {
@@ -24,7 +24,7 @@ class History {
         return this.grid[y][x];
     }
 
-    delete(node = trainerG.board.editor.getCurrent()) {
+    delete(node = nodeUtils.get()) {
         this.deleteLoop(node);
         this.fixWrongLengths();
     }

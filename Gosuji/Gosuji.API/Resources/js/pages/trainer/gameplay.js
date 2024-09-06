@@ -229,7 +229,7 @@ gameplay.opponentTurn = async function () {
 gameplay.detectJump = async function (event) {
     if (event.navChange &&
         !event.treeChange &&
-        trainerG.board.editor.getCurrent().moveNumber != trainerG.board.lastMove.moveNumber + 1
+        nodeUtils.get().moveNumber != trainerG.board.lastMove.moveNumber + 1
     ) {
         if (!gameplay.isJumped) {
             gameplay.isJumped = true;
