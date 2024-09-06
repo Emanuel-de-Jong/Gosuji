@@ -2,7 +2,6 @@
 
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject SettingConfigService settingConfigService
-@inject IJSRuntime js
 
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(App).Assembly">
@@ -56,8 +55,6 @@
         if (!isRendered)
         {
             isRendered = true;
-
-            G.IsJsDebug = await js.InvokeAsync<bool>("g.getIsDebug");
 
             await settingConfigService.Init();
         }

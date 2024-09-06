@@ -1,6 +1,6 @@
 import { josekisPage } from "../josekis"
 
-export class JosekisBoard extends Board {
+class JosekisBoard extends Board {
     constructor() {
         super();
 
@@ -57,3 +57,8 @@ export class JosekisBoard extends Board {
         }
     }
 }
+
+if (!window.josekis) window.josekis = {};
+if (g.DEBUG && !window.josekis.JosekisBoard) window.josekis.JosekisBoard = JosekisBoard;
+
+export { JosekisBoard };

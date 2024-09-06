@@ -180,4 +180,7 @@ profilePage.createDaysChart = function (days) {
     }
 };
 
+if (!window.profile) window.profile = {};
+if (g.DEBUG && !window.profile.profilePage) window.profile.profilePage = profilePage;
+
 export { profilePage };
