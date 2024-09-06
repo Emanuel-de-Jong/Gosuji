@@ -26,6 +26,8 @@ if (typeof g === "undefined") {
     };
 
 
+    g.getIsDebug = () => g.DEBUG;
+
     g.colorNumToName = function (num) {
         return num == g.COLOR_TYPE.W ? g.COLOR_NAME_TYPE.W : g.COLOR_NAME_TYPE.B;
     };

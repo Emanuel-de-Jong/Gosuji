@@ -15,6 +15,8 @@ namespace Gosuji.Client
                 LogLevel.None;
 #endif
 
+        public static bool IsJsDebug = false;
+
         public static CStatusMessage? StatusMessage = null;
 
         public const string ReturnUriName = "ReturnUri";
