@@ -131,23 +131,7 @@ scoreChart.clear = function () {
     scoreChart.history = new History();
 
     if (trainerG.isLoadingServerData) {
-        scoreChart.fillHistoryWithSuggestionHistory();
-    }
-
-    if (debug.testData == 1) {
-        scoreChart.history.add(new Score(5_0_1_00000, 0), 1, 0);
-        scoreChart.history.add(new Score(5_0_2_00000, 0), 2, 0);
-        scoreChart.history.add(new Score(5_0_3_00000, 0), 3, 0);
-        scoreChart.history.add(new Score(5_0_4_00000, 0), 4, 0);
-        scoreChart.history.add(new Score(5_0_5_00000, 0), 5, 0);
-
-        scoreChart.history.add(new Score(5_1_1_00000, 0), 1, 1);
-        scoreChart.history.add(new Score(5_1_3_00000, 0), 3, 1);
-        scoreChart.history.add(new Score(5_1_4_00000, 0), 4, 1);
-        scoreChart.history.add(new Score(5_1_5_00000, 0), 5, 1);
-
-        scoreChart.history.add(new Score(5_2_5_00000, 0), 5, 2);
-        scoreChart.history.add(new Score(5_2_6_00000, 0), 6, 2);
+        scoreChart.fillHistoryWithSuggestionsHistory();
     }
 };
 
@@ -159,14 +143,14 @@ scoreChart.clearChart = function () {
     scoreChart.chart.update();
 };
 
-scoreChart.fillHistoryWithSuggestionHistory = function (node = trainerG.board.editor.getRoot()) {
+scoreChart.fillHistoryWithSuggestionsHistory = function (node = trainerG.board.editor.getRoot()) {
     for (const child of node.children) {
-        scoreChart.fillHistoryWithSuggestionHistory(child);
+        scoreChart.fillHistoryWithSuggestionsHistory(child);
     }
 
     if (!node.move) return;
 
-    let suggestionList = trainerG.suggestionsHistory.get(node.navTreeX, node.navTreeY);
+    let suggestionList = trainerG.suggestionsHistory.get(node);
     if (!suggestionList) return;
 
     let suggestion = suggestionList.find(new Coord(node.move.x, node.move.y));
@@ -174,7 +158,7 @@ scoreChart.fillHistoryWithSuggestionHistory = function (node = trainerG.board.ed
         suggestion = suggestionList.analyzeMoveSuggestion;
     }
 
-    scoreChart.history.add(suggestion.score, node.navTreeX, node.navTreeY);
+    scoreChart.history.add(suggestion.score, node);
 };
 
 scoreChart.canvasClickListener = function (click) {
@@ -211,7 +195,7 @@ scoreChart.update = function (suggestion) {
     stats.playerResultHistory.add(type);
 
     let point = suggestion.score.copy();
-    scoreChart.history.add(point, moveNumber);
+    scoreChart.history.addWithCoord(point, moveNumber);
 
     let winrate = point.formatWinrate();
     scoreChart.winrates.splice(index, 0, winrate);
@@ -226,15 +210,13 @@ scoreChart.refresh = function () {
     let points = [];
     let node = trainerG.board.get();
     do {
-        let x = node.navTreeX;
-        let y = node.navTreeY;
-
+        const currentNode = node;
         node = node.parent;
 
-        let point = scoreChart.history.get(x, y);
+        let point = scoreChart.history.get(currentNode);
         if (!point) continue;
 
-        point.index = x;
+        point.index = currentNode.navTreeX;
         points.push(point);
     } while (node);
 
@@ -269,7 +251,7 @@ scoreChart.reverse = function () {
 
     scoreChart.chart.update();
 
-    for (const point of scoreChart.history.iterateData()) {
+    for (const point of scoreChart.history.iterate()) {
         point.reverse();
     }
 };

@@ -176,12 +176,6 @@ class TrainerBoard extends Board {
     deleteBranch = () => {
         if (!confirm("Delete this branch?")) return;
 
-        stats.playerResultHistory.delete();
-        trainerG.suggestionsHistory.delete();
-        trainerG.moveTypeHistory.delete();
-        gameplay.chosenNotPlayedCoordHistory.delete();
-        scoreChart.history.delete();
-
         let node = this.get();
         if (node.parent) {
             this.editor.prevNode(1);
@@ -195,6 +189,12 @@ class TrainerBoard extends Board {
                 node.removeChild(child);
             }
         }
+
+        stats.playerResultHistory.refreshNodes();
+        trainerG.suggestionsHistory.refreshNodes();
+        trainerG.moveTypeHistory.refreshNodes();
+        gameplay.chosenNotPlayedCoordHistory.refreshNodes();
+        scoreChart.history.refreshNodes();
 
         this.editor.notifyListeners({ treeChange: true, navChange: true });
 

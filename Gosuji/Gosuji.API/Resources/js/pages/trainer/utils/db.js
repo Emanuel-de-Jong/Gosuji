@@ -69,10 +69,10 @@ db.saveGame = async function () {
                 Ruleset: sgf.ruleset,
                 Komi: sgf.komi,
                 SGF: besogo.composeSgf(trainerG.board.editor),
-                PlayerResults: new Uint8Array(stats.encodePlayerResultHistoryLoop()),
-                Suggestions: new Uint8Array(trainerG.suggestionsHistory.encode()),
-                MoveTypes: new Uint8Array(trainerG.moveTypeHistory.encode()),
-                ChosenNotPlayedCoords: new Uint8Array(gameplay.chosenNotPlayedCoordHistory.encode()),
+                // PlayerResults: new Uint8Array(stats.encodePlayerResultHistoryLoop()),
+                // Suggestions: new Uint8Array(trainerG.suggestionsHistory.encode()),
+                // MoveTypes: new Uint8Array(trainerG.moveTypeHistory.encode()),
+                // ChosenNotPlayedCoords: new Uint8Array(gameplay.chosenNotPlayedCoordHistory.encode()),
                 IsFinished: trainerG.result != null,
                 IsThirdPartySGF: sgf.isThirdParty
             }

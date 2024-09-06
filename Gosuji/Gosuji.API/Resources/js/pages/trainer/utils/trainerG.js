@@ -58,44 +58,6 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.result = null;
     trainerG.isPassed = false;
     trainerG.shouldBeImperfectSuggestion = false;
-
-    if (debug.testData == 1) {
-        trainerG.suggestionsHistory.add(
-            new MoveSuggestionList(
-                [
-                    new MoveSuggestion(new Coord(16, 4), 700, 50_000_000, 800_000),
-                    new MoveSuggestion(new Coord(17, 4), 500, 49_000_000, -200_000),
-                ],
-                new MoveSuggestion(new Coord(12, 12), 250, 20_000_000, -6_000_000)
-            ).addGrades(),
-            1,
-            0
-        );
-        trainerG.suggestionsHistory.add(
-            new MoveSuggestionList([
-                new MoveSuggestion(new Coord(16, 3), 600, 51_000_000, 1_200_000),
-                new MoveSuggestion(new Coord(17, 4), 600, 51_000_000, 1_200_000),
-            ]).addGrades(),
-            3,
-            0
-        );
-    }
-
-    if (debug.testData == 1) {
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PLAYER, 1, 0);
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.OPPONENT, 2, 0);
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PLAYER, 3, 0);
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.OPPONENT, 4, 0);
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PLAYER, 5, 0);
-
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PLAYER, 1, 1);
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PLAYER, 3, 1);
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.OPPONENT, 4, 1);
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PLAYER, 5, 1);
-
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PLAYER, 5, 2);
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.OPPONENT, 6, 2);
-    }
 };
 
 trainerG.getMoveTypeHighestXBoardNode = function () {
@@ -117,7 +79,7 @@ trainerG.getGameColor = function () {
 
     let moveType;
     while (node) {
-        const tempMoveType = trainerG.moveTypeHistory.get(node.navTreeX, node.navTreeY);
+        const tempMoveType = trainerG.moveTypeHistory.get(node);
         if (tempMoveType != null && tempMoveType == trainerG.MOVE_TYPE.PLAYER) {
             moveType = tempMoveType;
             break;

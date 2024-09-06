@@ -1,4 +1,3 @@
-import { CNode } from "../classes/CNode";
 import { History } from "../classes/History";
 import { settings } from "./settings";
 import { trainerG } from "./trainerG";
@@ -9,7 +8,6 @@ let stats = { id: "stats" };
 
 
 stats.PLAYER_RESULT_TYPE = {
-    NONE: 0,
     WRONG: 1,
     RIGHT: 2,
     PERFECT: 3,
@@ -42,23 +40,6 @@ stats.clear = async function (gameLoadInfo) {
     stats.perfectTopStreak = gameLoadInfo ? gameLoadInfo.perfectTopStreak : 0;
 
     trainerG.board.editor.addListener(stats.drawStats);
-
-    if (debug.testData == 1) {
-        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.WRONG, 1, 0);
-        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.RIGHT, 3, 0);
-        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.PERFECT, 5, 0);
-
-        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.RIGHT, 1, 1);
-        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.PERFECT, 3, 1);
-        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.WRONG, 5, 1);
-        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.WRONG, 7, 1);
-
-        stats.playerResultHistory.add(stats.PLAYER_RESULT_TYPE.RIGHT, 5, 2);
-    } else if (debug.testData == 2) {
-        for (let i = utils.randomInt(61, 1); i < utils.randomInt(241, 80); i += 2) {
-            stats.playerResultHistory.add(utils.randomInt(4, 1), i, 0);
-        }
-    }
 };
 
 
@@ -96,12 +77,12 @@ stats.encodePlayerResultHistoryLoop = function (node = trainerG.board.editor.get
     for (let i = 0; i < node.children.length; i++) {
         let childNode = node.children[i];
 
-        if (!stats.playerResultHistory.hasY(childNode.navTreeY)) continue;
+        if (!stats.playerResultHistory.has(childNode)) continue;
 
         if (i > 0) {
             let parentNode = node;
             while (parentNode.parent != null) {
-                if (stats.playerResultHistory.get(parentNode.navTreeX, parentNode.navTreeY)) {
+                if (stats.playerResultHistory.has(parentNode)) {
                     break;
                 }
 
@@ -114,8 +95,8 @@ stats.encodePlayerResultHistoryLoop = function (node = trainerG.board.editor.get
             encoded = byteUtils.numToBytes(parentNode.navTreeX, 2, encoded);
         }
 
-        let val = stats.playerResultHistory.get(childNode.navTreeX, childNode.navTreeY);
-        if (val) {
+        let val = stats.playerResultHistory.get(childNode);
+        if (val != null) {
             encoded = byteUtils.numToBytes(childNode.navTreeX, 2, encoded);
             encoded = byteUtils.numToBytes(val, 1, encoded);
             // console.log(childNode.navTreeY + ", " + childNode.navTreeX + ": " + val);
@@ -127,26 +108,26 @@ stats.encodePlayerResultHistoryLoop = function (node = trainerG.board.editor.get
     return encoded;
 };
 
-stats.decodePlayerResultHistory = function (encoded) {
-    let rootNode = new CNode();
+// stats.decodePlayerResultHistory = function (encoded) {
+//     let rootNode = new CNode();
 
-    let i = 0;
-    let y = 0;
-    let node = rootNode;
-    while (i < encoded.length) {
-        let x = encoded[i];
-        if (x == stats.PLAYER_RESULT_Y_INDICATOR) {
-            y = encoded[i + 1];
-            node = rootNode.nodes.get(encoded[i + 3], encoded[i + 2]);
-            i += 4;
-        } else {
-            node = node.add(encoded[i + 1], x, y);
-            i += 2;
-        }
-    }
+//     let i = 0;
+//     let y = 0;
+//     let node = rootNode;
+//     while (i < encoded.length) {
+//         let x = encoded[i];
+//         if (x == stats.PLAYER_RESULT_Y_INDICATOR) {
+//             y = encoded[i + 1];
+//             node = rootNode.nodes.get(encoded[i + 3], encoded[i + 2]);
+//             i += 4;
+//         } else {
+//             node = node.add(encoded[i + 1], x, y);
+//             i += 2;
+//         }
+//     }
 
-    stats.printDecodedPlayerResultHistory(rootNode);
-};
+//     stats.printDecodedPlayerResultHistory(rootNode);
+// };
 
 stats.printDecodedPlayerResultHistory = function (node) {
     for (const childNode of node.children) {
@@ -156,7 +137,7 @@ stats.printDecodedPlayerResultHistory = function (node) {
 };
 
 stats.getMostPlayerResultsBranch = function (node = trainerG.board.editor.getRoot(), playerResultCount = 0) {
-    if (stats.playerResultHistory.get(node.navTreeX, node.navTreeY)) playerResultCount++;
+    if (stats.playerResultHistory.has(node)) playerResultCount++;
 
     if (node.children.length == 0) {
         return {

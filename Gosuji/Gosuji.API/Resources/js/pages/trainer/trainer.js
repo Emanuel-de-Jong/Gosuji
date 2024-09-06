@@ -1,4 +1,3 @@
-import { CNode } from "./classes/CNode";
 import { History } from "./classes/History";
 import { MoveSuggestionList } from "./classes/MoveSuggestionList";
 import { MoveSuggestion } from "./classes/MoveSuggestion";
@@ -149,7 +148,6 @@ if (!window.trainer) window.trainer = {};
 if (g.DEBUG && !window.trainer.trainerPage) window.trainer.trainerPage = trainerPage;
 
 export {
-    // CNode,
     // History,
     // MoveSuggestion,
     // MoveSuggestionList,

@@ -33,11 +33,6 @@ gameplay.clear = function (gameLoadInfo) {
     trainerG.board.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
     trainerG.board.editor.addListener(gameplay.detectJump);
     trainerG.board.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
-
-    if (debug.testData == 1) {
-        gameplay.chosenNotPlayedCoordHistory.add(new Coord(8, 12), 2, 0);
-        gameplay.chosenNotPlayedCoordHistory.add(new Coord(17, 17), 4, 1);
-    }
 };
 
 
@@ -128,11 +123,11 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
     stats.update();
 
     if (settings.wrongMoveCorrection || trainerG.isRightChoice) {
-        if (!trainerG.isRightChoice) {
-            gameplay.chosenNotPlayedCoordHistory.add(markupCoord, trainerG.board.getNodeX() + 1);
-        }
-
         await trainerG.board.play(suggestionToPlay, trainerG.MOVE_TYPE.PLAYER);
+
+        if (!trainerG.isRightChoice) {
+            gameplay.chosenNotPlayedCoordHistory.add(markupCoord);
+        }
         
         selfplay.enableButton();
 

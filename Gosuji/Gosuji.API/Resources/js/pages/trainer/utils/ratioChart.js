@@ -106,12 +106,9 @@ ratioChart.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER, 
 
     let playerResults = [];
     while (node && (rangeStart == null || node.moveNumber >= rangeStart)) {
-        let x = node.navTreeX;
-        let y = node.navTreeY;
-
         node = node.parent;
 
-        let playerResult = stats.playerResultHistory.get(x, y);
+        let playerResult = stats.playerResultHistory.get(node);
         if (!playerResult) continue;
 
         playerResults.push(playerResult);
@@ -180,10 +177,7 @@ ratioChart.refresh = function () {
         const currentNode = node;
         node = node.parent;
 
-        const x = currentNode.navTreeX;
-        const y = currentNode.navTreeY;
-
-        if (trainerG.moveTypeHistory.get(x, y) !== trainerG.MOVE_TYPE.PLAYER) {
+        if (trainerG.moveTypeHistory.get(currentNode) !== trainerG.MOVE_TYPE.PLAYER) {
             continue;
         }
 
@@ -191,7 +185,7 @@ ratioChart.refresh = function () {
 
         if (!ratio) continue;
 
-        ratio.index = x;
+        ratio.index = currentNode.navTreeX;
         ratios.push(ratio);
     } while (node);
 

@@ -157,6 +157,15 @@ if (typeof utils === "undefined") {
         return Math.floor(Math.random() * (max - min)) + min;
     };
 
+    utils.randomString = function (length = 10) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            result += chars[utils.randomInt(chars.length)];
+        }
+        return result;
+    };
+
 
     utils.randomColor = function () {
         return [utils.randomInt(256), utils.randomInt(256), utils.randomInt(256), utils.randomInt(10) / 10.0];
