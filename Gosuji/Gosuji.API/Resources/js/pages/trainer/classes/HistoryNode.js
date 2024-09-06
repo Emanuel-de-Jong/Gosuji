@@ -1,23 +1,28 @@
 import { trainerG } from "../utils/trainerG";
 
 class HistoryNode {
-    data;
     parent;
     children = [];
-    x;
 
-    constructor(parent, data, x) {
+    data;
+    boardNode;
+
+    constructor(parent, data, boardNode) {
         this.parent = parent;
         this.data = data;
-        this.x = x;
+        this.boardNode = boardNode;
     }
 
-    add(data, x) {
-        if (x == null) {
-            x = this.x + 1;
-        }
+    add(data, boardNode) {
+        this.children.push(new HistoryNode(this, data, boardNode));
+    }
 
-        this.children.push(new HistoryNode(this, data, x));
+    x() {
+        return this.boardNode.navTreeX;
+    }
+
+    y() {
+        return this.boardNode.navTreeY;
     }
 }
 
