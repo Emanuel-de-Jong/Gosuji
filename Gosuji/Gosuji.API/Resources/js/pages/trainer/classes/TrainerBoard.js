@@ -148,6 +148,11 @@ export class TrainerBoard extends Board {
         }
     }
 
+    pass() {
+        super.pass();
+        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PASS);
+    }
+
     findNode(coord, node=this.editor.getRoot()) {
         if (node.navTreeX == coord.x && node.navTreeY == coord.y) {
             return node;

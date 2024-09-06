@@ -19,6 +19,7 @@ trainerG.MOVE_TYPE = {
     SELFPLAY: 4,
     PLAYER: 5,
     OPPONENT: 6,
+    PASS: 6,
 };
 
 trainerG.PHASE_TYPE = {
@@ -56,7 +57,6 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.moveTypeHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.moveTypes) : new History();
     trainerG.result = null;
     trainerG.isPassed = false;
-    trainerG.wasPassed = false;
     trainerG.shouldBeImperfectSuggestion = false;
 
     if (debug.testData == 1) {
@@ -98,16 +98,19 @@ trainerG.clear = function (gameLoadInfo) {
     }
 };
 
+trainerG.getMoveTypeHighestXBoardNode = function () {
+    let moveTypeCoord = trainerG.moveTypeHistory.getHighestX();
+    if (moveTypeCoord == null) {
+        return null;
+    }
+
+    return trainerG.board.findNode(moveTypeCoord);
+};
 
 trainerG.getGameColor = function () {
     let color = trainerG.color;
 
-    let moveTypeCoord = trainerG.moveTypeHistory.getHighestX();
-    if (moveTypeCoord == null) {
-        return color;
-    }
-
-    let node = trainerG.board.findNode(moveTypeCoord);
+    let node = trainerG.getMoveTypeHighestXBoardNode();
     if (node == null) {
         return color;
     }
@@ -181,17 +184,26 @@ trainerG.pass = async function (suggestion) {
     if (!suggestion) return;
 
     trainerG.isPassed = true;
-    trainerG.wasPassed = true;
     gameplay.takePlayerControl();
     trainerG.board.nextButton.disabled = true;
+
+    trainerG.board.pass();
+
+    // Only count result of longest branch
+    const highestNode = trainerG.getMoveTypeHighestXBoardNode();
+    const currentNode = trainerG.board.editor.getCurrent();
+    if (highestNode != null && (
+        highestNode.navTreeX != currentNode.navTreeX ||
+        highestNode.navTreeY != currentNode.navTreeY)
+    ) {
+        return;
+    }
 
     trainerG.result = suggestion.score.copy();
 
     let resultStr = trainerG.getResultStr();
     stats.setResult(resultStr);
     sgf.setResultMeta(resultStr);
-
-    trainerG.board.pass();
 
     trainerG.board.finishedOverlay.hidden = false;
 

@@ -73,7 +73,7 @@ db.saveGame = async function () {
                 Suggestions: new Uint8Array(trainerG.suggestionsHistory.encode()),
                 MoveTypes: new Uint8Array(trainerG.moveTypeHistory.encode()),
                 ChosenNotPlayedCoords: new Uint8Array(gameplay.chosenNotPlayedCoordHistory.encode()),
-                IsFinished: trainerG.wasPassed,
+                IsFinished: trainerG.result != null,
                 IsThirdPartySGF: sgf.isThirdParty
             }
         )
