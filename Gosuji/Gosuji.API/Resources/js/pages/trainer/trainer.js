@@ -8,7 +8,6 @@ import { TrainerBoard } from "./classes/TrainerBoard";
 
 import { db } from "./utils/db";
 import { katago } from "./utils/katago";
-import { nodeUtils } from "./utils/nodeUtils";
 import { scoreChart } from "./utils/scoreChart";
 import { ratioChart } from "./utils/ratioChart";
 import { settings } from "./utils/settings";
@@ -160,7 +159,6 @@ export {
 
     db,
     // katago,
-    // nodeUtils,
     // scoreChart,
     // ratioChart,
     // settings,

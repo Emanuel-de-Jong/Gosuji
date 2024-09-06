@@ -45,7 +45,7 @@ class JosekisBoard extends Board {
     }
     
     clearFuture() {
-        this.editor.getCurrent().children = [];
+        this.get().children = [];
     }
 
     crossPlacedListener = async (event) => {

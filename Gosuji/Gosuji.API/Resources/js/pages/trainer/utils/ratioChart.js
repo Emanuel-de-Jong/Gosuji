@@ -93,7 +93,7 @@ ratioChart.clearChart = function () {
     ratioChart.chart.update();
 };
 
-ratioChart.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER, node = nodeUtils.get()) {
+ratioChart.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER, node = trainerG.board.get()) {
     if (rangeStart != null) {
         node = trainerG.board.editor.getRoot();
         while (node.children.length != 0 && node.moveNumber < rangeEnd) {
@@ -175,7 +175,7 @@ ratioChart.update = function () {
 
 ratioChart.refresh = function () {
     let ratios = [];
-    let node = nodeUtils.get();
+    let node = trainerG.board.get();
     do {
         const currentNode = node;
         node = node.parent;

@@ -247,7 +247,7 @@ stats.drawStats = async function (event) {
         return;
     }
     
-    let node = nodeUtils.get();
+    let node = trainerG.board.get();
     if (node.parent == null || node.navTreeY == node.parent.navTreeY) {
         stats.setStreaks();
     } else {

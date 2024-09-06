@@ -191,7 +191,7 @@ trainerG.pass = async function (suggestion) {
 
     // Only count result of longest branch
     const highestNode = trainerG.getMoveTypeHighestXBoardNode();
-    const currentNode = nodeUtils.get();
+    const currentNode = trainerG.board.get();
     if (highestNode != null && (
         highestNode.navTreeX != currentNode.navTreeX ||
         highestNode.navTreeY != currentNode.navTreeY)

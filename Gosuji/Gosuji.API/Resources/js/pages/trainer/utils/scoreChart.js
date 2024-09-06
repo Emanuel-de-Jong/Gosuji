@@ -224,7 +224,7 @@ scoreChart.update = function (suggestion) {
 
 scoreChart.refresh = function () {
     let points = [];
-    let node = nodeUtils.get();
+    let node = trainerG.board.get();
     do {
         let x = node.navTreeX;
         let y = node.navTreeY;

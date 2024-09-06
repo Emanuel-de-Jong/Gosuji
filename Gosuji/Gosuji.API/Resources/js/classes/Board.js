@@ -88,9 +88,13 @@ if (typeof Board === "undefined") {
 
             this.editor = this.element.besogoEditor;
 
-            this.lastMove = this.editor.getCurrent();
+            this.lastMove = this.get();
         }
 
+
+        get() {
+            return this.editor.getCurrent();
+        }
 
         redraw() {
             this.editor.notifyListeners({ markupChange: true });
@@ -111,7 +115,7 @@ if (typeof Board === "undefined") {
         }
 
         getColor() {
-            let currentMove = this.editor.getCurrent();
+            let currentMove = this.get();
             if (currentMove.move) {
                 return currentMove.move.color;
             }
@@ -124,7 +128,7 @@ if (typeof Board === "undefined") {
         }
 
         getNextColor() {
-            let currentMove = this.editor.getCurrent();
+            let currentMove = this.get();
             if (currentMove.children && currentMove.children.length > 0) {
                 return currentMove.children[0].move.color;
             }
@@ -133,7 +137,7 @@ if (typeof Board === "undefined") {
         }
 
         findStone(coord) {
-            return this.editor.getCurrent().getStone(coord.x, coord.y);
+            return this.get().getStone(coord.x, coord.y);
         }
 
         pass() {
@@ -141,16 +145,16 @@ if (typeof Board === "undefined") {
         }
 
         addMarkup(x, y, markup) {
-            this.editor.getCurrent().markup[(x - 1) * 19 + (y - 1)] = markup;
+            this.get().markup[(x - 1) * 19 + (y - 1)] = markup;
         }
 
         removeMarkup(coord) {
-            let markup = this.editor.getCurrent().markup;
+            let markup = this.get().markup;
             markup[(coord.x - 1) * this.boardsize + (coord.y - 1)] = 0;
         }
 
         clearMarkups() {
-            let markup = this.editor.getCurrent().markup;
+            let markup = this.get().markup;
             for (let i = 0; i < markup.length; i++) {
                 if (markup[i] && markup[i] != 4) {
                     markup[i] = 0;
@@ -193,15 +197,15 @@ if (typeof Board === "undefined") {
         }
 
         getMoveNumber() {
-            return this.editor.getCurrent().moveNumber;
+            return this.get().moveNumber;
         }
 
         getNodeX() {
-            return this.editor.getCurrent().navTreeX;
+            return this.get().navTreeX;
         }
 
         getNodeY() {
-            return this.editor.getCurrent().navTreeY;
+            return this.get().navTreeY;
         }
 
         getNodeCoord() {

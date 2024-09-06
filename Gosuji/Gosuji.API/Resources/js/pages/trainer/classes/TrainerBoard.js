@@ -105,7 +105,7 @@ class TrainerBoard extends Board {
 
         // console.log(besogo);
         // console.log(this.editor);
-        // console.log(this.editor.getCurrent());
+        // console.log(this.get());
     }
 
     async play(suggestion, moveType = trainerG.MOVE_TYPE.NONE, tool = "auto") {
@@ -132,7 +132,7 @@ class TrainerBoard extends Board {
                 this.playPlaceStoneAudio();
             }
 
-            this.lastMove = this.editor.getCurrent();
+            this.lastMove = this.get();
 
             trainerG.suggestionsHistory.add(trainerG.suggestions);
 
@@ -182,7 +182,7 @@ class TrainerBoard extends Board {
         gameplay.chosenNotPlayedCoordHistory.delete();
         scoreChart.history.delete();
 
-        let node = this.editor.getCurrent();
+        let node = this.get();
         if (node.parent) {
             this.editor.prevNode(1);
             node.parent.removeChild(node);
@@ -226,7 +226,7 @@ class TrainerBoard extends Board {
 
     getMoves() {
         let moves = [];
-        let node = this.editor.getCurrent();
+        let node = this.get();
         while (node.moveNumber != 0) {
             moves.push(new Move(node.move.color, new Coord(node.move.x, node.move.y)));
 
