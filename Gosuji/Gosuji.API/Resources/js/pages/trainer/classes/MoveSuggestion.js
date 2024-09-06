@@ -1,5 +1,4 @@
 import { Score } from "./Score";
-import { katago } from "../utils/katago";
 
 export class MoveSuggestion {
     coord;

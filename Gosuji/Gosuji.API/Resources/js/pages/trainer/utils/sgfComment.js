@@ -12,7 +12,7 @@ sgfComment.init = function () {
 };
 
 sgfComment.clear = function () {
-    sgfComment.setComment(trainerG.MOVE_TYPE.INIT);
+    
 };
 
 
@@ -42,8 +42,6 @@ sgfComment.setComment = function (moveType) {
     }
 
     trainerG.board.editor.setComment(comment);
-
-    trainerG.moveTypeHistory.add(moveType);
 };
 
 sgfComment.createInitComment = function () {

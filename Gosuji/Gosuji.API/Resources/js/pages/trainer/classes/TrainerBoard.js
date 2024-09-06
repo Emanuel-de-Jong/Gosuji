@@ -111,7 +111,7 @@ export class TrainerBoard extends Board {
     async play(suggestion, moveType = trainerG.MOVE_TYPE.NONE, tool = "auto") {
         await this.draw(suggestion.coord, tool, true);
         scoreChart.update(suggestion);
-        sgfComment.setComment(moveType);
+        trainerG.moveTypeHistory.add(moveType);
 
         if (moveType == trainerG.MOVE_TYPE.PLAYER) {
             ratioChart.update();

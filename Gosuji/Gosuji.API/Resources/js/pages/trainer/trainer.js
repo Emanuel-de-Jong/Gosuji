@@ -111,8 +111,6 @@ trainerPage.start = async function () {
     settings.togglePreGameSettings();
 
     await katago.start();
-
-    sgfComment.setComment(trainerG.MOVE_TYPE.INIT);
     
     if (trainerG.isLoadingServerData || debug.testData) {
         trainerG.isLoadingServerData = false;
