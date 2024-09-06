@@ -182,7 +182,7 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task SetSuggestions(MoveSuggestion[]? suggestions)
         {
-            if (this.suggestions == null && suggestions != null)
+            if (this.suggestions != null || (this.suggestions == null && suggestions != null))
             {
                 this.suggestions = suggestions;
                 StateHasChanged();

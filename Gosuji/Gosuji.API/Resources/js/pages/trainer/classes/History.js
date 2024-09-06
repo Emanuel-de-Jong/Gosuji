@@ -19,7 +19,7 @@ class History {
     }
 
     get(node=trainerG.board.get()) {
-        if (!node.hasOwnProperty(this.nodeKey)) {
+        if (node == null) {
             return null;
         }
 
