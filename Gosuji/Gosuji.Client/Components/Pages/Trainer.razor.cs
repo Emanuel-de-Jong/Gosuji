@@ -46,7 +46,7 @@ namespace Gosuji.Client.Components.Pages
         private UserState? userState;
         private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
-        private KataGoVisits kataGoVisits;
+        private KataGoVisits? kataGoVisits;
 
         private Game? game;
         private GameStat? gameStat;
@@ -67,14 +67,6 @@ namespace Gosuji.Client.Components.Pages
 
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
 
-            kataGoVisits = new()
-            {
-                PreVisits = 200,
-                SelfplayVisits = 200,
-                SuggestionVisits = 200,
-                OpponentVisits = 200,
-            };
-
             trainerRef = DotNetObjectReference.Create(this);
             kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
 
@@ -91,6 +83,14 @@ namespace Gosuji.Client.Components.Pages
             APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataService.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
+
+            kataGoVisits = new()
+            {
+                SuggestionVisits = trainerSettingConfig.SuggestionVisits != null ? trainerSettingConfig.SuggestionVisits.Value : 200,
+                OpponentVisits = trainerSettingConfig.OpponentVisits != null ? trainerSettingConfig.OpponentVisits.Value : 200,
+                PreVisits = trainerSettingConfig.PreVisits != null ? trainerSettingConfig.PreVisits.Value : 200,
+                SelfplayVisits = trainerSettingConfig.SelfplayVisits != null ? trainerSettingConfig.SelfplayVisits.Value : 200,
+            };
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -109,7 +109,7 @@ namespace Gosuji.Client.Components.Pages
                 Console.WriteLine($"Error loading library: {ex.Message}");
             }
 
-            if (trainerSettingConfig != null && !isJSInitialized)
+            if (kataGoVisits != null && !isJSInitialized)
             {
                 isJSInitialized = true;
 
@@ -402,6 +402,46 @@ namespace Gosuji.Client.Components.Pages
             G.StatusMessage.SetMessage("Game saved.");
         }
 
+        public async Task SetSuggestionVisits(ChangeEventArgs e)
+        {
+            if(!int.TryParse(e.Value?.ToString(), out int visits))
+            {
+               return;
+            }
+            kataGoVisits.SuggestionVisits = visits;
+            trainerSettingConfig.SuggestionVisits = visits;
+        }
+
+        public async Task SetOpponentVisits(ChangeEventArgs e)
+        {
+            if (!int.TryParse(e.Value?.ToString(), out int visits))
+            {
+                return;
+            }
+            kataGoVisits.OpponentVisits = visits;
+            trainerSettingConfig.OpponentVisits = visits;
+        }
+
+        public async Task SetPreVisits(ChangeEventArgs e)
+        {
+            if (!int.TryParse(e.Value?.ToString(), out int visits))
+            {
+                return;
+            }
+            kataGoVisits.PreVisits = visits;
+            trainerSettingConfig.PreVisits = visits;
+        }
+
+        public async Task SetSelfplayVisits(ChangeEventArgs e)
+        {
+            if (!int.TryParse(e.Value?.ToString(), out int visits))
+            {
+                return;
+            }
+            kataGoVisits.SelfplayVisits = visits;
+            trainerSettingConfig.SelfplayVisits = visits;
+        }
+
         public async ValueTask DisposeAsync()
         {
             trainerRef?.Dispose();
@@ -417,9 +457,9 @@ namespace Gosuji.Client.Components.Pages
 
     public class KataGoVisits
     {
-        public int PreVisits { get; set; }
-        public int SelfplayVisits { get; set; }
         public int SuggestionVisits { get; set; }
         public int OpponentVisits { get; set; }
+        public int PreVisits { get; set; }
+        public int SelfplayVisits { get; set; }
     }
 }

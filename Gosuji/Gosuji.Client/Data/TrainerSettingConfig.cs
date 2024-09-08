@@ -11,6 +11,15 @@ namespace Gosuji.Client.Data
         [MaxLength(150)]
         public string? Hash { get; set; }
 
+        [Range(2, 25_000)]
+        public int? SuggestionVisits { get; set; }
+        [Range(2, 25_000)]
+        public int? OpponentVisits { get; set; }
+        [Range(2, 25_000)]
+        public int? PreVisits { get; set; }
+        [Range(2, 25_000)]
+        public int? SelfplayVisits { get; set; }
+
         [Required]
         [RegularExpression("^(9|13|19)$")]
         public int Boardsize { get; set; }
@@ -103,6 +112,11 @@ namespace Gosuji.Client.Data
         public static string GenerateHash(TrainerSettingConfig config)
         {
             StringBuilder builder = new();
+
+            builder.Append(config.SuggestionVisits);
+            builder.Append(config.OpponentVisits);
+            builder.Append(config.PreVisits);
+            builder.Append(config.SelfplayVisits);
 
             builder.Append(config.Boardsize);
             builder.Append(config.Handicap);
