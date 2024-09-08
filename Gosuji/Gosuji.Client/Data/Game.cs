@@ -4,7 +4,8 @@ namespace Gosuji.Client.Data
 {
     public class Game : DbModel
     {
-        [Key] public long Id { get; set; }
+        [StringLength(12)]
+        [Key] public string Id { get; set; }
 
         [StringLength(36)]
         public string? UserId { get; set; }
@@ -70,5 +71,10 @@ namespace Gosuji.Client.Data
         public bool IsFinished { get; set; }
         public bool IsThirdPartySGF { get; set; }
         public bool IsDeleted { get; set; }
+
+        public void GenerateId()
+        {
+            Id = Guid.NewGuid().ToString().Replace("-", "")[..12];
+        }
     }
 }

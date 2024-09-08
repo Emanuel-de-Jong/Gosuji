@@ -107,7 +107,7 @@ namespace Gosuji.Client.Components.Pages.Account
             }
         }
 
-        public async Task DownloadSGF(long gameId)
+        public async Task DownloadSGF(string gameId)
         {
             APIResponse<Game> response = await dataService.GetGame(gameId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;

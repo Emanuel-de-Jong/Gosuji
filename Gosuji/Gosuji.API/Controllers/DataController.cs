@@ -67,7 +67,7 @@ namespace Gosuji.API.Controllers
             List<VMGame> games = await dbContext.Games
                 .Where(g => g.UserId == GetUserId())
                 .Where(g => g.IsDeleted == false)
-                .OrderByDescending(g => g.Id)
+                .OrderByDescending(g => g.TrainerSettingConfigId)
                 .Skip(start - 1)
                 .Take(end - start + 1)
                 .Include(g => g.GameStat)
@@ -100,7 +100,7 @@ namespace Gosuji.API.Controllers
         }
 
         [HttpPost("{gameId}")]
-        public async Task<ActionResult<Game>> GetGame(long gameId, bool includeTrainerSettingConfig = false)
+        public async Task<ActionResult<Game>> GetGame(string gameId, bool includeTrainerSettingConfig = false)
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
@@ -202,9 +202,9 @@ namespace Gosuji.API.Controllers
 
         [HttpPost]
         [EnableRateLimiting("rl1")]
-        public async Task<ActionResult<long>> PostGame(Game game)
+        public async Task<ActionResult<string>> PostGame(Game game)
         {
-            game.Id = 0;
+            game.GenerateId();
             game.UserId = GetUserId();
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();

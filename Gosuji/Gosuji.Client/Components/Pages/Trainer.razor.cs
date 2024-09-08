@@ -15,7 +15,7 @@ namespace Gosuji.Client.Components.Pages
     public partial class Trainer : CustomPage, IAsyncDisposable
     {
         [Parameter]
-        public long? GameId { get; set; }
+        public string? GameId { get; set; }
 
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
@@ -123,7 +123,7 @@ namespace Gosuji.Client.Components.Pages
             GameLoadInfo? gameLoadInfo = null;
             if (GameId != null)
             {
-                APIResponse<Game> response = await dataService.GetGame(GameId.Value, true);
+                APIResponse<Game> response = await dataService.GetGame(GameId, true);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
                 game = response.Data;
 
@@ -384,9 +384,9 @@ namespace Gosuji.Client.Components.Pages
 
             if (game == null)
             {
-                APIResponse<long> response = await dataService.PostGame(newGame);
+                APIResponse<string> response = await dataService.PostGame(newGame);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
-                long newGameId = response.Data;
+                string newGameId = response.Data;
 
                 newGame.Id = newGameId;
             }

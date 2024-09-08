@@ -4,7 +4,7 @@ namespace Gosuji.Client.ViewModels
 {
     public class VMGame
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
         public GameStat? GameStat { get; set; }
         public GameStat? OpeningStat { get; set; }
         public GameStat? MidgameStat { get; set; }
