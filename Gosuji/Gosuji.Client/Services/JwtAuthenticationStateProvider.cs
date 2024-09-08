@@ -7,14 +7,14 @@ namespace Gosuji.Client.Services
 {
     public class JwtAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private UserService userService;
+        private UserAPI userAPI;
         private AuthenticationState? state;
         private readonly AuthenticationState anonymousState;
         public string? Token { get; set; }
 
-        public JwtAuthenticationStateProvider(UserService userService)
+        public JwtAuthenticationStateProvider(UserAPI userAPI)
         {
-            this.userService = userService;
+            this.userAPI = userAPI;
             anonymousState = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
 
@@ -32,7 +32,7 @@ namespace Gosuji.Client.Services
                 return state;
             }
 
-            Token = await userService.GetToken();
+            Token = await userAPI.GetToken();
             if (Token == null)
             {
                 state = anonymousState;
@@ -40,7 +40,7 @@ namespace Gosuji.Client.Services
             }
 
             state = CreateAuthenticationState();
-            await userService.CheckAuthorized();
+            await userAPI.CheckAuthorized();
 
             return state;
         }

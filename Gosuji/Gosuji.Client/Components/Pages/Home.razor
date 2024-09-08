@@ -8,7 +8,7 @@
 @inherits CustomPage
 
 @inject AuthenticationStateProvider authenticationStateProvider
-@inject DataService dataService
+@inject DataAPI dataAPI
 @inject NavigationManager navigationManager
 @inject IStringLocalizer<General> tl
 
@@ -58,7 +58,7 @@
         // navigationManager.NavigateTo("settings");
         // return;
 
-        changelogs = await dataService.GetChangelogs();
+        changelogs = await dataAPI.GetChangelogs();
         if (changelogs != null)
         {
             changelogs = changelogs.OrderByDescending(c => c.Date).ToArray();

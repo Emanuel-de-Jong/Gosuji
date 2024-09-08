@@ -10,7 +10,7 @@ namespace Gosuji.Client.Components.Layout
         private static readonly string BASE_LANGUAGE_SRC = "resources/imgs/flags/";
 
         [Inject]
-        private DataService dataService { get; set; }
+        private DataAPI dataAPI { get; set; }
         [Inject]
         private SettingConfigService settingConfigService { get; set; }
 
@@ -19,7 +19,7 @@ namespace Gosuji.Client.Components.Layout
 
         protected override async Task OnInitializedAsync()
         {
-            APIResponse<Dictionary<string, Language>> languagesResponse = await dataService.GetLanguages();
+            APIResponse<Dictionary<string, Language>> languagesResponse = await dataAPI.GetLanguages();
             if (G.StatusMessage.HandleAPIResponse(languagesResponse)) return;
             languages = languagesResponse.Data;
         }

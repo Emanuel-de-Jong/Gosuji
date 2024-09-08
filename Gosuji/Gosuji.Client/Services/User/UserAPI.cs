@@ -3,14 +3,14 @@ using System.Globalization;
 
 namespace Gosuji.Client.Services.User
 {
-    public class UserService
+    public class UserAPI
     {
         private static string MAP_GROUP = "/api/User";
 
         public HttpClient? HTTP { get; set; }
         public JwtAuthenticationStateProvider? AuthenticationStateProvider { get; set; }
 
-        //public UserService()
+        //public UserAPI()
         //{
         //    G.Log();
         //}

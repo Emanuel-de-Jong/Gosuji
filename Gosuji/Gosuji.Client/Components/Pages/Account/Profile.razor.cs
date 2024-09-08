@@ -26,7 +26,7 @@ namespace Gosuji.Client.Components.Pages.Account
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
-        private DataService dataService { get; set; }
+        private DataAPI dataAPI { get; set; }
 
         public string? name;
         public List<VMGame>? Games { get; set; }
@@ -53,7 +53,7 @@ namespace Gosuji.Client.Components.Pages.Account
             List<VMGame>? tempGames;
             do
             {
-                APIResponse<List<VMGame>> response = await dataService.GetUserGames(rangeStart, rangeStart + rangeStep - 1);
+                APIResponse<List<VMGame>> response = await dataAPI.GetUserGames(rangeStart, rangeStart + rangeStep - 1);
                 if (!response.IsSuccess)
                 {
                     G.StatusMessage.HandleAPIResponse(response);
@@ -109,7 +109,7 @@ namespace Gosuji.Client.Components.Pages.Account
 
         public async Task DownloadSGF(string gameId)
         {
-            APIResponse<Game> response = await dataService.GetGame(gameId);
+            APIResponse<Game> response = await dataAPI.GetGame(gameId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             Game? fullGame = response.Data;
 

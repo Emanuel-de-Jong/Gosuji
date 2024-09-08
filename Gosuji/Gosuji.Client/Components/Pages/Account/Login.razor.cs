@@ -21,7 +21,7 @@ namespace Gosuji.Client.Components.Pages.Account
         [Inject]
         private IStringLocalizer<General> tl { get; set; }
         [Inject]
-        private UserService userService { get; set; }
+        private UserAPI userAPI { get; set; }
         [Inject]
         private NavigationManager navigationManager { get; set; }
 
@@ -40,7 +40,7 @@ namespace Gosuji.Client.Components.Pages.Account
 
         public async Task LoginUser()
         {
-            APIResponse apiResponse = await userService.Login(input);
+            APIResponse apiResponse = await userAPI.Login(input);
             if (!statusMessage.HandleAPIResponse(apiResponse))
             {
                 navigationManager.NavigateTo(string.IsNullOrEmpty(ReturnUri) ? "/" : ReturnUri, true);

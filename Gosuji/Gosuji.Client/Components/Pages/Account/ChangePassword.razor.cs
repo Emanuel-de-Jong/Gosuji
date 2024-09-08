@@ -13,7 +13,7 @@ namespace Gosuji.Client.Components.Pages.Account
         private InputModel input { get; set; } = new();
 
         [Inject]
-        private UserService userService { get; set; }
+        private UserAPI userAPI { get; set; }
 
         private CStatusMessage statusMessage;
 
@@ -24,7 +24,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 NewPassword = input.NewPassword
             };
 
-            APIResponse response = await userService.ChangePassword(vmChangePassword);
+            APIResponse response = await userAPI.ChangePassword(vmChangePassword);
             if (response.IsSuccess)
             {
                 statusMessage.SetMessage("Your password has been updated. You can now log in with the new password.");

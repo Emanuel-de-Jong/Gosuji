@@ -26,7 +26,7 @@ let trainerPage = { id: "trainerPage" };
 
 trainerPage.init = async function (
     trainerRef,
-    trainerServiceRef,
+    trainerConnectionRef,
     userName,
     stoneVolume,
     isPreMoveStoneSound,
@@ -67,7 +67,7 @@ trainerPage.init = async function (
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
-    await katago.init(trainerServiceRef);
+    await katago.init(trainerConnectionRef);
     db.init();
 
     // console.log(stats.playerResultHistory);

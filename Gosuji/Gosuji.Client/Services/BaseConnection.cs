@@ -6,17 +6,17 @@ using System.Net;
 
 namespace Gosuji.Client.Services
 {
-    public abstract class BaseHubService
+    public abstract class BaseConnection
     {
         public HubConnection HubConnection { get; private set; }
         public bool IsConnected => HubConnection.State == HubConnectionState.Connected;
 
-        public BaseHubService(IConfiguration configuration, UserService userService, string uri)
+        public BaseConnection(IConfiguration configuration, UserAPI userAPI, string uri)
         {
             HubConnection = new HubConnectionBuilder()
                 .WithUrl($"{configuration["BackendUrl"]}/{uri}", options =>
                 {
-                    options.AccessTokenProvider = async () => await userService.GetToken();
+                    options.AccessTokenProvider = async () => await userAPI.GetToken();
                     options.Transports = HttpTransportType.WebSockets;
                 })
                 .WithAutomaticReconnect()

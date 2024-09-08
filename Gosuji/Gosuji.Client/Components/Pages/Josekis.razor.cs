@@ -15,9 +15,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
-        private JosekisService josekisService { get; set; }
-        [Inject]
-        private DataService dataService { get; set; }
+        private JosekisConnection josekisConnection { get; set; }
         [Inject]
         private SettingConfigService settingConfigService { get; set; }
 
@@ -50,15 +48,15 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task<bool> Start()
         {
-            if (josekisService.IsConnected)
+            if (josekisConnection.IsConnected)
             {
                 return true;
             }
 
-            APIResponse startResponse = await josekisService.Start();
+            APIResponse startResponse = await josekisConnection.Start();
             if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
 
-            APIResponse<int> response = await josekisService.StartSession();
+            APIResponse<int> response = await josekisConnection.StartSession();
             if (G.StatusMessage.HandleAPIResponse(response)) return false;
             sessionId = response.Data;
 
@@ -67,7 +65,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task Play()
         {
-            APIResponse<JosekisNode> response = await josekisService.Current(sessionId);
+            APIResponse<JosekisNode> response = await josekisConnection.Current(sessionId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             JosekisNode node = response.Data;
 
@@ -82,7 +80,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddMarkups()
         {
-            APIResponse<JosekisNode> response = await josekisService.Current(sessionId);
+            APIResponse<JosekisNode> response = await josekisConnection.Current(sessionId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             await AddMarkups(response.Data);
@@ -163,7 +161,7 @@ namespace Gosuji.Client.Components.Pages
             if (!await Start()) return;
 
             JosekisNode node = new(new Move(Move.PASS_COORD));
-            APIResponse response = await josekisService.ToChild(sessionId, node);
+            APIResponse response = await josekisConnection.ToChild(sessionId, node);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             
             await Play();
@@ -174,7 +172,7 @@ namespace Gosuji.Client.Components.Pages
         {
             if (!await Start()) return;
 
-            APIResponse response = await josekisService.ToParent(sessionId);
+            APIResponse response = await josekisConnection.ToParent(sessionId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             
             await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
@@ -186,7 +184,7 @@ namespace Gosuji.Client.Components.Pages
         {
             if (!await Start()) return;
 
-            APIResponse<int> response = await josekisService.ToLastBranch(sessionId);
+            APIResponse<int> response = await josekisConnection.ToLastBranch(sessionId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             int returnCount = response.Data;
 
@@ -201,7 +199,7 @@ namespace Gosuji.Client.Components.Pages
         {
             if (!await Start()) return;
 
-            APIResponse response = await josekisService.ToFirst(sessionId);
+            APIResponse response = await josekisConnection.ToFirst(sessionId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             await jsRef.InvokeVoidAsync($"{BOARD}.clearFuture");
@@ -213,7 +211,7 @@ namespace Gosuji.Client.Components.Pages
         {
             if (!await Start()) return;
 
-            APIResponse<bool> response = await josekisService.ToChild(sessionId, new JosekisNode(new Move(x, y)));
+            APIResponse<bool> response = await josekisConnection.ToChild(sessionId, new JosekisNode(new Move(x, y)));
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             if (!response.Data)
@@ -228,10 +226,10 @@ namespace Gosuji.Client.Components.Pages
         {
             josekisRef?.Dispose();
 
-            if (josekisService.IsConnected)
+            if (josekisConnection.IsConnected)
             {
-                await josekisService.StopSession(sessionId);
-                await josekisService.Stop();
+                await josekisConnection.StopSession(sessionId);
+                await josekisConnection.Stop();
             }
         }
     }

@@ -22,11 +22,11 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private NavigationManager navigationManager { get; set; }
         [Inject]
-        private TrainerService trainerService { get; set; }
+        private TrainerConnection trainerConnection { get; set; }
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
-        private DataService dataService { get; set; }
+        private DataAPI dataAPI { get; set; }
         [Inject]
         private SettingConfigService settingConfigService { get; set; }
         [Inject]
@@ -40,7 +40,7 @@ namespace Gosuji.Client.Components.Pages
         private string? userName;
 
         private DotNetObjectReference<Trainer>? trainerRef;
-        private DotNetObjectReference<TrainerService>? trainerServiceRef;
+        private DotNetObjectReference<TrainerConnection>? trainerConnectionRef;
 
         private Dictionary<long, Preset>? presets;
         private UserState? userState;
@@ -68,19 +68,19 @@ namespace Gosuji.Client.Components.Pages
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
 
             trainerRef = DotNetObjectReference.Create(this);
-            trainerServiceRef = DotNetObjectReference.Create(trainerService);
+            trainerConnectionRef = DotNetObjectReference.Create(trainerConnection);
 
-            APIResponse<Dictionary<long, Preset>> presetsResponse = await dataService.GetPresets();
+            APIResponse<Dictionary<long, Preset>> presetsResponse = await dataAPI.GetPresets();
             if (G.StatusMessage.HandleAPIResponse(presetsResponse)) return;
             presets = presetsResponse.Data;
 
-            APIResponse<UserState> userStateResponse = await dataService.GetUserState();
+            APIResponse<UserState> userStateResponse = await dataAPI.GetUserState();
             if (G.StatusMessage.HandleAPIResponse(userStateResponse)) return;
             userState = userStateResponse.Data;
 
             currentPreset = presets[userState.LastPresetId];
 
-            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataService.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
+            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
 
@@ -123,7 +123,7 @@ namespace Gosuji.Client.Components.Pages
             GameLoadInfo? gameLoadInfo = null;
             if (GameId != null)
             {
-                APIResponse<Game> response = await dataService.GetGame(GameId, true);
+                APIResponse<Game> response = await dataAPI.GetGame(GameId, true);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
                 game = response.Data;
 
@@ -134,7 +134,7 @@ namespace Gosuji.Client.Components.Pages
 
             await jsRef.InvokeVoidAsync("trainerPage.init",
                 trainerRef,
-                trainerServiceRef,
+                trainerConnectionRef,
                 userName,
                 settingConfigService.SettingConfig.CalcStoneVolume(),
                 settingConfigService.SettingConfig.IsPreMoveStoneSound,
@@ -152,15 +152,15 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task<bool> Start()
         {
-            if (trainerService.IsConnected)
+            if (trainerConnection.IsConnected)
             {
                 return true;
             }
 
-            APIResponse startResponse = await trainerService.Start();
+            APIResponse startResponse = await trainerConnection.Start();
             if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
 
-            APIResponse<bool> userHasInstanceResponse = await trainerService.UserHasInstance();
+            APIResponse<bool> userHasInstanceResponse = await trainerConnection.UserHasInstance();
             if (G.StatusMessage.HandleAPIResponse(userHasInstanceResponse)) return false;
             bool userHasInstance = userHasInstanceResponse.Data;
 
@@ -170,7 +170,7 @@ namespace Gosuji.Client.Components.Pages
                 return false;
             }
 
-            APIResponse<KataGoVersion> getVersionResponse = await trainerService.GetVersion();
+            APIResponse<KataGoVersion> getVersionResponse = await trainerConnection.GetVersion();
             if (G.StatusMessage.HandleAPIResponse(getVersionResponse)) return false;
             kataGoVersion = getVersionResponse.Data;
 
@@ -197,19 +197,19 @@ namespace Gosuji.Client.Components.Pages
         private async Task SelectPreset(long presetId)
         {
             Preset lastPreset = presets[presetId];
-            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
+            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
 
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;
-            APIResponse response = await dataService.PutUserState(userState);
+            APIResponse response = await dataAPI.PutUserState(userState);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
         }
 
         private async Task SavePreset()
         {
-            APIResponse<long> trainerSettingConfigResponse = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            APIResponse<long> trainerSettingConfigResponse = await dataAPI.PostTrainerSettingConfig(trainerSettingConfig);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             long? trainerSettingConfigId = trainerSettingConfigResponse.Data;
 
@@ -217,7 +217,7 @@ namespace Gosuji.Client.Components.Pages
             {
                 currentPreset.TrainerSettingConfigId = trainerSettingConfigId.Value;
 
-                APIResponse response = await dataService.PutPreset(currentPreset);
+                APIResponse response = await dataAPI.PutPreset(currentPreset);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
         }
@@ -229,7 +229,7 @@ namespace Gosuji.Client.Components.Pages
 
             presets.Remove(oldSelectedPresetId);
 
-            APIResponse response = await dataService.DeletePreset(oldSelectedPresetId);
+            APIResponse response = await dataAPI.DeletePreset(oldSelectedPresetId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
         }
 
@@ -243,7 +243,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddPreset()
         {
-            APIResponse<long> trainerSettingConfigResponse = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            APIResponse<long> trainerSettingConfigResponse = await dataAPI.PostTrainerSettingConfig(trainerSettingConfig);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             long trainerSettingConfigId = trainerSettingConfigResponse.Data;
 
@@ -253,7 +253,7 @@ namespace Gosuji.Client.Components.Pages
                 TrainerSettingConfigId = trainerSettingConfigId
             };
 
-            APIResponse<long> presetResponse = await dataService.PostPreset(newPreset);
+            APIResponse<long> presetResponse = await dataAPI.PostPreset(newPreset);
             if (G.StatusMessage.HandleAPIResponse(presetResponse)) return;
             long newPresetId = presetResponse.Data;
 
@@ -263,7 +263,7 @@ namespace Gosuji.Client.Components.Pages
             userState.LastPresetId = newPreset.Id;
             currentPreset = newPreset;
 
-            APIResponse response = await dataService.PutUserState(userState);
+            APIResponse response = await dataAPI.PutUserState(userState);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             addPresetModel = new();
@@ -312,12 +312,12 @@ namespace Gosuji.Client.Components.Pages
         public async ValueTask DisposeAsync()
         {
             trainerRef?.Dispose();
-            trainerServiceRef?.Dispose();
+            trainerConnectionRef?.Dispose();
 
-            if (trainerService.IsConnected)
+            if (trainerConnection.IsConnected)
             {
-                await trainerService.Return();
-                await trainerService.Stop();
+                await trainerConnection.Return();
+                await trainerConnection.Stop();
             }
         }
     }

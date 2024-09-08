@@ -3,6 +3,7 @@ using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.AspNetCore.Authorization;
+using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.API.Controllers
@@ -10,6 +11,8 @@ namespace Gosuji.API.Controllers
     [Authorize]
     public class TrainerHub : CustomHubBase
     {
+        private static ConcurrentDictionary<string, TrainerInstance> trainerServices = new();
+
         private SanitizeService sanitizeService;
         private KataGoPoolService pool;
 
@@ -17,6 +20,16 @@ namespace Gosuji.API.Controllers
         {
             sanitizeService = _sanitizeService;
             pool = kataGoPoolService;
+        }
+
+        public override Task OnConnectedAsync()
+        {
+            var connectionId = Context.ConnectionId;
+
+            var service = new TrainerInstance(connectionId);
+            trainerServices.TryAdd(connectionId, service);
+
+            return base.OnConnectedAsync();
         }
 
         public async Task<HubResponse> GetVersion()

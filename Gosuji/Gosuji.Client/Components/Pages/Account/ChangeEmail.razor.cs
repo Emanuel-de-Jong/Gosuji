@@ -19,7 +19,7 @@ namespace Gosuji.Client.Components.Pages.Account
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
-        private UserService userService { get; set; }
+        private UserAPI userAPI { get; set; }
 
         private CStatusMessage statusMessage;
         private bool? isLoggedIn;
@@ -61,7 +61,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 };
             }
 
-            APIResponse response = await userService.ChangeEmail(vmChangeEmail);
+            APIResponse response = await userAPI.ChangeEmail(vmChangeEmail);
             if (response.IsSuccess)
             {
                 statusMessage.SetMessage("A confirmation email has been sent to your new email. Please use the link in the email to confirm the change.");

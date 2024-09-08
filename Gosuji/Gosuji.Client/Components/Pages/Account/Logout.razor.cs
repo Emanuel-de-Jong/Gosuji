@@ -6,13 +6,13 @@ namespace Gosuji.Client.Components.Pages.Account
     public partial class Logout : CustomPage
     {
         [Inject]
-        private UserService userService { get; set; }
+        private UserAPI userAPI { get; set; }
         [Inject]
         private NavigationManager navigationManager { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
-            await userService.Logout();
+            await userAPI.Logout();
             navigationManager.NavigateTo("/");
         }
     }
