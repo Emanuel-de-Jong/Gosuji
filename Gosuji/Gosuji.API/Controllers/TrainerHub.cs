@@ -11,7 +11,7 @@ namespace Gosuji.API.Controllers
     [Authorize]
     public class TrainerHub : CustomHubBase
     {
-        private static ConcurrentDictionary<string, TrainerInstance> trainerServices = new();
+        private static ConcurrentDictionary<string, TrainerService> trainerServices = new();
 
         private SanitizeService sanitizeService;
         private KataGoPoolService pool;
@@ -24,12 +24,24 @@ namespace Gosuji.API.Controllers
 
         public override Task OnConnectedAsync()
         {
-            var connectionId = Context.ConnectionId;
+            string connectionId = Context.ConnectionId;
 
-            var service = new TrainerInstance(connectionId);
+            TrainerService service = new(connectionId);
             trainerServices.TryAdd(connectionId, service);
 
             return base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            string connectionId = Context.ConnectionId;
+
+            if (trainerServices.TryRemove(connectionId, out TrainerService service))
+            {
+                await service.DisposeAsync();
+            }
+
+            await base.OnDisconnectedAsync(exception);
         }
 
         public async Task<HubResponse> GetVersion()
