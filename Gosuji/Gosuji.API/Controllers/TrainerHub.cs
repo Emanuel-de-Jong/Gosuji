@@ -8,12 +8,12 @@ using System.ComponentModel.DataAnnotations;
 namespace Gosuji.API.Controllers
 {
     [Authorize]
-    public class KataGoHub : CustomHubBase
+    public class TrainerHub : CustomHubBase
     {
         private SanitizeService sanitizeService;
         private KataGoPoolService pool;
 
-        public KataGoHub(SanitizeService _sanitizeService, KataGoPoolService kataGoPoolService)
+        public TrainerHub(SanitizeService _sanitizeService, KataGoPoolService kataGoPoolService)
         {
             sanitizeService = _sanitizeService;
             pool = kataGoPoolService;

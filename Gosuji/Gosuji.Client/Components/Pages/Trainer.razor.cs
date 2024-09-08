@@ -22,7 +22,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private NavigationManager navigationManager { get; set; }
         [Inject]
-        private KataGoService kataGoService { get; set; }
+        private TrainerService trainerService { get; set; }
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
@@ -40,7 +40,7 @@ namespace Gosuji.Client.Components.Pages
         private string? userName;
 
         private DotNetObjectReference<Trainer>? trainerRef;
-        private DotNetObjectReference<KataGoService>? kataGoServiceRef;
+        private DotNetObjectReference<TrainerService>? trainerServiceRef;
 
         private Dictionary<long, Preset>? presets;
         private UserState? userState;
@@ -68,7 +68,7 @@ namespace Gosuji.Client.Components.Pages
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
 
             trainerRef = DotNetObjectReference.Create(this);
-            kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
+            trainerServiceRef = DotNetObjectReference.Create(trainerService);
 
             APIResponse<Dictionary<long, Preset>> presetsResponse = await dataService.GetPresets();
             if (G.StatusMessage.HandleAPIResponse(presetsResponse)) return;
@@ -134,7 +134,7 @@ namespace Gosuji.Client.Components.Pages
 
             await jsRef.InvokeVoidAsync("trainerPage.init",
                 trainerRef,
-                kataGoServiceRef,
+                trainerServiceRef,
                 userName,
                 settingConfigService.SettingConfig.CalcStoneVolume(),
                 settingConfigService.SettingConfig.IsPreMoveStoneSound,
@@ -152,15 +152,15 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task<bool> Start()
         {
-            if (kataGoService.IsConnected)
+            if (trainerService.IsConnected)
             {
                 return true;
             }
 
-            APIResponse startResponse = await kataGoService.Start();
+            APIResponse startResponse = await trainerService.Start();
             if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
 
-            APIResponse<bool> userHasInstanceResponse = await kataGoService.UserHasInstance();
+            APIResponse<bool> userHasInstanceResponse = await trainerService.UserHasInstance();
             if (G.StatusMessage.HandleAPIResponse(userHasInstanceResponse)) return false;
             bool userHasInstance = userHasInstanceResponse.Data;
 
@@ -170,7 +170,7 @@ namespace Gosuji.Client.Components.Pages
                 return false;
             }
 
-            APIResponse<KataGoVersion> getVersionResponse = await kataGoService.GetVersion();
+            APIResponse<KataGoVersion> getVersionResponse = await trainerService.GetVersion();
             if (G.StatusMessage.HandleAPIResponse(getVersionResponse)) return false;
             kataGoVersion = getVersionResponse.Data;
 
@@ -312,12 +312,12 @@ namespace Gosuji.Client.Components.Pages
         public async ValueTask DisposeAsync()
         {
             trainerRef?.Dispose();
-            kataGoServiceRef?.Dispose();
+            trainerServiceRef?.Dispose();
 
-            if (kataGoService.IsConnected)
+            if (trainerService.IsConnected)
             {
-                await kataGoService.Return();
-                await kataGoService.Stop();
+                await trainerService.Return();
+                await trainerService.Stop();
             }
         }
     }

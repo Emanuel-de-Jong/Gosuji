@@ -8,10 +8,10 @@ using Microsoft.JSInterop;
 
 namespace Gosuji.Client.Services
 {
-    public class KataGoService : BaseHubService
+    public class TrainerService : BaseHubService
     {
-        public KataGoService(IConfiguration configuration, UserService userService)
-            : base(configuration, userService, "katagohub")
+        public TrainerService(IConfiguration configuration, UserService userService)
+            : base(configuration, userService, "trainerhub")
         {
         }
 

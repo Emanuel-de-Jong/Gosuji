@@ -40,7 +40,7 @@ namespace Gosuji.Client
             builder.Services.AddLocalization();
 
             builder.Services.AddSingleton<DataService>();
-            builder.Services.AddSingleton<KataGoService>();
+            builder.Services.AddSingleton<TrainerService>();
             builder.Services.AddSingleton<JosekisService>();
             builder.Services.AddSingleton<TestService>();
             builder.Services.AddSingleton<SettingConfigService>();
