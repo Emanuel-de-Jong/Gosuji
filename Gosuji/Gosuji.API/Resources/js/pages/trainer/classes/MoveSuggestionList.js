@@ -16,9 +16,15 @@ class MoveSuggestionList {
         this.suggestions = suggestions ? suggestions : [];
         this.analyzeMoveSuggestion = analyzeMoveSuggestion;
 
-        if (suggestions && this.suggestions.length != 0 && this.suggestions[0].isPass()) {
-            this.isPass = true;
-            this.passSuggestion = this.suggestions[0];
+        if (this.suggestions.length != 0) {
+            const highestScoreLead = this.suggestions[0].score.formatScoreLead();
+            for (const suggestion of suggestions) {
+                if (suggestion.isPass() && suggestion.score.formatScoreLead() == highestScoreLead) {
+                    this.isPass = true;
+                    this.passSuggestion = suggestion;
+                    break;
+                }
+            }
         }
     }
 

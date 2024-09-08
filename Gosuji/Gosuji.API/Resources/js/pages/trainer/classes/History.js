@@ -47,13 +47,13 @@ class History {
     }
 
     getHighestX() {
-        let longestCoord;
+        let highestXNode;
         for (const node of this.nodes) {
-            if (!longestCoord || node.navTreeX > longestCoord.x) {
-                longestCoord = new Coord(node.navTreeX, node.navTreeY);
+            if (!highestXNode || node.navTreeX > highestXNode.navTreeX) {
+                highestXNode = node;
             }
         }
-        return longestCoord;
+        return highestXNode;
     }
 
     count(data) {

@@ -60,19 +60,10 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.shouldBeImperfectSuggestion = false;
 };
 
-trainerG.getMoveTypeHighestXBoardNode = function () {
-    let moveTypeCoord = trainerG.moveTypeHistory.getHighestX();
-    if (moveTypeCoord == null) {
-        return null;
-    }
-
-    return trainerG.board.findNode(moveTypeCoord);
-};
-
 trainerG.getGameColor = function () {
     let color = trainerG.color;
 
-    let node = trainerG.getMoveTypeHighestXBoardNode();
+    let node = trainerG.moveTypeHistory.getHighestX();
     if (node == null) {
         return color;
     }
@@ -152,7 +143,7 @@ trainerG.pass = async function (suggestion) {
     trainerG.board.pass();
 
     // Only count result of longest branch
-    const highestNode = trainerG.getMoveTypeHighestXBoardNode();
+    const highestNode = trainerG.moveTypeHistory.getHighestX();
     const currentNode = trainerG.board.get();
     if (highestNode != null && (
         highestNode.navTreeX != currentNode.navTreeX ||
