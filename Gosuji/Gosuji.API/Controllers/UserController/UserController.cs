@@ -206,6 +206,8 @@ namespace Gosuji.API.Controllers.UserController
         }
 
         [HttpPost]
+        // TODO: Only callable when email token used
+        // TODO: Auto login on success
         public async Task<ActionResult> ChangePassword([FromBody] VMChangePassword model)
         {
             return Ok();
@@ -375,6 +377,7 @@ namespace Gosuji.API.Controllers.UserController
 
         [HttpPost]
         [Authorize]
+        // TODO: Send confirm email
         public async Task<ActionResult> DeletePersonalData(VMDeletePersonalData model)
         {
             User? user = await GetUser(userManager);
