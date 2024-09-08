@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Gosuji.API.Services
 {
-    public class KataGoPoolService : IDisposable
+    public class KataGoPool : IDisposable
     {
         private const int MIN_INSTANCES = 1;
         private const int MAX_INSTANCES = 8;
@@ -23,7 +23,7 @@ namespace Gosuji.API.Services
         private KataGo? tempInstance;
         // TEMP END
 
-        public KataGoPoolService(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
+        public KataGoPool(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
         {
             dbContextFactory = _dbContextFactory;
 

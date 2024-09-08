@@ -134,7 +134,7 @@ namespace Gosuji.API
             });
 
             builder.Services.AddSingleton<SanitizeService>();
-            builder.Services.AddSingleton<KataGoPoolService>();
+            builder.Services.AddSingleton<KataGoPool>();
 
             WebApplication app = builder.Build();
 

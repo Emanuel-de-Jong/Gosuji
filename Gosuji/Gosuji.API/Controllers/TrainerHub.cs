@@ -1,8 +1,11 @@
-﻿using Gosuji.API.Services;
+﻿using Gosuji.API.Data;
+using Gosuji.API.Services;
+using Gosuji.API.Services.TrainerService;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
 
@@ -12,21 +15,27 @@ namespace Gosuji.API.Controllers
     public class TrainerHub : CustomHubBase
     {
         private static ConcurrentDictionary<string, TrainerService> trainerServices = new();
+        private static IDbContextFactory<ApplicationDbContext>? dbContextFactory;
 
         private SanitizeService sanitizeService;
-        private KataGoPoolService pool;
+        private KataGoPool pool;
 
-        public TrainerHub(SanitizeService _sanitizeService, KataGoPoolService kataGoPoolService)
+        public TrainerHub(SanitizeService sanitizeService, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
-            sanitizeService = _sanitizeService;
-            pool = kataGoPoolService;
+            this.sanitizeService = sanitizeService;
+            pool = kataGoPool;
+
+            if (TrainerHub.dbContextFactory == null)
+            {
+                TrainerHub.dbContextFactory = dbContextFactory;
+            }
         }
 
         public override Task OnConnectedAsync()
         {
             string connectionId = Context.ConnectionId;
 
-            TrainerService service = new(connectionId);
+            TrainerService service = new(connectionId, pool, dbContextFactory);
             trainerServices.TryAdd(connectionId, service);
 
             return base.OnConnectedAsync();
