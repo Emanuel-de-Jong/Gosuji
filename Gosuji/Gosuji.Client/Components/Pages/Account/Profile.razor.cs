@@ -113,11 +113,11 @@ namespace Gosuji.Client.Components.Pages.Account
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             Game? fullGame = response.Data;
 
-            await js.InvokeVoidAsync("utils.downloadFile",
-                fullGame.Name,
-                "sgf",
-                Encoding.UTF8.GetBytes(fullGame.SGF),
-                "text/plain;charset=UTF-8");
+            //await js.InvokeVoidAsync("utils.downloadFile",
+            //    fullGame.Name,
+            //    "sgf",
+            //    Encoding.UTF8.GetBytes(fullGame.SGF),
+            //    "text/plain;charset=UTF-8");
         }
 
         private async Task CreateGameTable()

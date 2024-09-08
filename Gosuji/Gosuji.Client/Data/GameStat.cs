@@ -13,10 +13,8 @@ namespace Gosuji.Client.Data
         [Key] public long Id { get; set; }
         [Required]
         [Range(0, 500)]
-        public int MoveNumber { get; set; }
-
-        public int? Winrate { get; set; }
-        public int? Score { get; set; }
+        public int From { get; set; }
+        public int To { get; set; }
 
         [Required]
         [Range(0, 500)]
@@ -36,7 +34,8 @@ namespace Gosuji.Client.Data
 
         public bool Equal(GameStat other)
         {
-            return MoveNumber == other.MoveNumber &&
+            return From == other.From &&
+                To == other.To &&
                 Right == other.Right &&
                 Perfect == other.Perfect;
         }

@@ -16,7 +16,6 @@ namespace Gosuji.Client.ViewModels
         public int Boardsize { get; set; }
         public int Handicap { get; set; }
         public int Color { get; set; }
-        public bool IsFinished { get; set; }
         public bool IsThirdPartySGF { get; set; }
         public DateTimeOffset CreateDate { get; set; }
         public DateTimeOffset ModifyDate { get; set; }
