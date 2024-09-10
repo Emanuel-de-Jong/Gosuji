@@ -12,6 +12,7 @@ namespace Gosuji.API.Services.TrainerService
 
         public Game? Game { get; set; }
         public TrainerSettingConfig? SettingConfig { get; set; }
+        public MoveTree MoveTree { get; set; } = new();
 
         public TrainerService(string connectionId, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {

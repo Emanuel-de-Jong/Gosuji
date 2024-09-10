@@ -4,8 +4,16 @@
     {
         public List<MoveSuggestion> Suggestions { get; set; } = [];
         public MoveSuggestion? AnalyzeMoveSuggestion { get; set; }
+        public int Visits { get; set; }
         public int? PlayIndex { get; set; }
         public bool IsPass { get; set; } = false;
+
+        public MoveSuggestionList() { }
+
+        public MoveSuggestionList(int visits)
+        {
+            Visits = visits;
+        }
 
         public void Add(MoveSuggestion suggestion)
         {

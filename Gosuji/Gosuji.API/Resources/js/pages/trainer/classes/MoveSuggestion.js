@@ -5,13 +5,15 @@ class MoveSuggestion {
     visits;
     score;
     grade;
+    continuation;
 
 
-    constructor(coord, visits, winrate, scoreLead, grade) {
+    constructor(coord, visits, winrate, scoreLead, grade, continuation) {
         this.coord = coord;
         this.visits = visits;
         this.score = new Score(winrate, scoreLead);
         this.grade = grade;
+        this.continuation = continuation;
     }
 
 
@@ -34,7 +36,8 @@ class MoveSuggestion {
             kataGoSuggestion.visits,
             kataGoSuggestion.score.winrate,
             kataGoSuggestion.score.scoreLead,
-            kataGoSuggestion.grade
+            kataGoSuggestion.grade,
+            kataGoSuggestion.continuation
         );
     }
 

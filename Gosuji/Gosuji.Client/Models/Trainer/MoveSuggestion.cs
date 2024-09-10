@@ -6,7 +6,7 @@
         public int Visits { get; set; }
         public Score Score { get; set; }
         public string? Grade { get; set; }
-        public List<Coord>? Continuation { get; set; }
+        public List<Coord> Continuation { get; set; } = [];
         public bool IsPass => Move.IsPass(Coord);
 
         public MoveSuggestion() { }

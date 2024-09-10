@@ -8,6 +8,7 @@ class MoveSuggestionList {
 
     suggestions = [];
     analyzeMoveSuggestion;
+    visits;
     playIndex;
     isPass = false;
 
@@ -26,7 +27,7 @@ class MoveSuggestionList {
         if (!this.isPass) {
             return;
         }
-        
+
         return this.suggestions[this.playIndex]
     }
 
@@ -127,6 +128,7 @@ class MoveSuggestionList {
 
     static fromKataGo(kataGoSuggestions) {
         let suggestions = new MoveSuggestionList();
+        suggestions.visits = kataGoSuggestions.visits;
         suggestions.playIndex = kataGoSuggestions.playIndex;
         suggestions.isPass = kataGoSuggestions.isPass;
 

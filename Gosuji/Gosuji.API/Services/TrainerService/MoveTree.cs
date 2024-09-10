@@ -7,6 +7,7 @@ namespace Gosuji.API.Services.TrainerService
         public MoveNode? RootNode { get; set; }
         public List<MoveNode> AllNodes { get; set; } = [];
         public MoveNode? CurrentNode { get; set; }
+        public MoveNode? MainBranch { get; set; }
 
         public MoveNode Add(Move move)
         {

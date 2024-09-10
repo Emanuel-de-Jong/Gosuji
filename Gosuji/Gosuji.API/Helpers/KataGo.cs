@@ -108,6 +108,51 @@ namespace Gosuji.API.Helpers
             ClearReader();
         }
 
+        public List<MoveSuggestion> ParseAnalysis(string[] analysis, EMoveColor color)
+        {
+            List<MoveSuggestion> suggestions = [];
+            MoveSuggestion? suggestion = null;
+            for (int i = 0; i < analysis.Length; i++)
+            {
+                string element = analysis[i];
+                if (element == "move")
+                {
+                    suggestion.Coord ??= Move.CoordFromKataGo(analysis[i + 1], boardsize);
+                }
+                else if (element == "visits")
+                {
+                    suggestion?.SetVisits(analysis[i + 1]);
+                }
+                else if (element == "winrate")
+                {
+                    suggestion?.SetWinrate(analysis[i + 1], color);
+                }
+                else if (element == "scoreLead")
+                {
+                    suggestion?.SetScoreLead(analysis[i + 1], color);
+                }
+                else if (element == "pv")
+                {
+                    while (analysis.Length - 1 >= i + 1 && analysis[i + 1] != "info")
+                    {
+                        suggestion?.Continuation.Add(Move.CoordFromKataGo(analysis[i + 1], boardsize));
+                        i++;
+                    }
+                }
+
+                if (element == "info" || i == analysis.Length - 1)
+                {
+                    if (suggestion != null)
+                    {
+                        suggestions.Add(suggestion);
+                    }
+                    suggestion = new MoveSuggestion();
+                }
+            }
+
+            return suggestions;
+        }
+
         public MoveSuggestion AnalyzeMove(Move move)
         {
             int maxVisits = 100;
@@ -129,25 +174,7 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            MoveSuggestion suggestion = new(move);
-            for (int i = 0; i < analysis.Length; i++)
-            {
-                string element = analysis[i];
-                if (element == "visits")
-                {
-                    suggestion?.SetVisits(analysis[i + 1]);
-                }
-                else if (element == "winrate")
-                {
-                    suggestion?.SetWinrate(analysis[i + 1], move.Color.Value);
-                }
-                else if (element == "scoreLead")
-                {
-                    suggestion?.SetScoreLead(analysis[i + 1], move.Color.Value);
-                }
-            }
-
-            return suggestion;
+            return ParseAnalysis(analysis, move.Color.Value).FirstOrDefault();
         }
 
         public MoveSuggestionList Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
@@ -169,64 +196,34 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            List<MoveSuggestion> suggestions = new();
-            MoveSuggestion? suggestion = null;
-            for (int i = 0; i < analysis.Length; i++)
-            {
-                string element = analysis[i];
-                if (element == "move")
-                {
-                    suggestion.Coord ??= Move.CoordFromKataGo(analysis[i + 1], boardsize);
-                }
-                else if (element == "visits")
-                {
-                    suggestion?.SetVisits(analysis[i + 1]);
-                }
-                else if (element == "winrate")
-                {
-                    suggestion?.SetWinrate(analysis[i + 1], color);
-                }
-                else if (element == "scoreLead")
-                {
-                    suggestion?.SetScoreLead(analysis[i + 1], color);
-                }
-
-                if (element == "info" || i == analysis.Length - 1)
-                {
-                    if (suggestion != null)
-                    {
-                        suggestions.Add(suggestion);
-                    }
-                    suggestion = new MoveSuggestion();
-                }
-            }
+            List<MoveSuggestion> suggestions = ParseAnalysis(analysis, color);
 
             int highestVisits = 0;
-            foreach (MoveSuggestion moveSuggestion in suggestions)
+            foreach (MoveSuggestion suggestion in suggestions)
             {
-                if (highestVisits < moveSuggestion.Visits)
+                if (highestVisits < suggestion.Visits)
                 {
-                    highestVisits = moveSuggestion.Visits;
+                    highestVisits = suggestion.Visits;
                 }
             }
             int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(maxVisits, highestVisits));
             int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * maxVisits);
 
-            MoveSuggestionList filteredSuggestions = new();
+            MoveSuggestionList filteredSuggestions = new(maxVisits);
             int lastSuggestionVisits = int.MaxValue;
-            foreach (MoveSuggestion moveSuggestion in suggestions)
+            foreach (MoveSuggestion suggestion in suggestions)
             {
                 if (filteredSuggestions.Suggestions.Count > 0 &&
                         !Move.IsPass(filteredSuggestions.Suggestions.Last().Coord) &&
-                        (moveSuggestion.Visits < minVisits ||
-                        lastSuggestionVisits - moveSuggestion.Visits > maxVisitDiff))
+                        (suggestion.Visits < minVisits ||
+                        lastSuggestionVisits - suggestion.Visits > maxVisitDiff))
                 {
                     break;
                 }
-                filteredSuggestions.Add(moveSuggestion);
-                if (lastSuggestionVisits > moveSuggestion.Visits)
+                filteredSuggestions.Add(suggestion);
+                if (lastSuggestionVisits > suggestion.Visits)
                 {
-                    lastSuggestionVisits = moveSuggestion.Visits;
+                    lastSuggestionVisits = suggestion.Visits;
                 }
             }
 
