@@ -62,7 +62,7 @@ namespace Gosuji.API.Controllers
 
         public async Task<HubResponse> UserHasInstance()
         {
-            return OkData(trainerServices[Context.ConnectionId].UserHasInstance());
+            return OkData(await trainerServices[Context.ConnectionId].UserHasInstance());
         }
 
         public async Task<HubResponse> ClearBoard()
