@@ -31,7 +31,7 @@ namespace Gosuji.API.Controllers
         {
             string connectionId = Context.ConnectionId;
 
-            TrainerService service = new(connectionId, pool, dbContextFactory);
+            TrainerService service = new(GetUserId(), pool, dbContextFactory);
             trainerServices.TryAdd(connectionId, service);
 
             return base.OnConnectedAsync();
@@ -51,60 +51,60 @@ namespace Gosuji.API.Controllers
 
         public async Task<HubResponse> GetVersion()
         {
-            return OkData(await pool.GetVersion());
+            return OkData(await trainerServices[Context.ConnectionId].GetVersion());
         }
 
         public async Task<HubResponse> Return()
         {
-            await pool.Return(GetUserId());
+            await trainerServices[Context.ConnectionId].Return();
             return Ok;
         }
 
         public async Task<HubResponse> UserHasInstance()
         {
-            return OkData(pool.UserHasInstance(GetUserId()));
+            return OkData(trainerServices[Context.ConnectionId].UserHasInstance());
         }
 
         public async Task<HubResponse> ClearBoard()
         {
-            (await pool.Get(GetUserId())).ClearBoard();
+            await trainerServices[Context.ConnectionId].ClearBoard();
             return Ok;
         }
 
         public async Task<HubResponse> Restart()
         {
-            await (await pool.Get(GetUserId())).Restart();
+            await trainerServices[Context.ConnectionId].Restart();
             return Ok;
         }
 
         public async Task<HubResponse> SetBoardsize([RegularExpression("^(9|13|19)$")] int boardsize)
         {
-            (await pool.Get(GetUserId())).SetBoardsize(boardsize);
+            await trainerServices[Context.ConnectionId].SetBoardsize(boardsize);
             return Ok;
         }
 
         public async Task<HubResponse> SetRuleset(string ruleset)
         {
             ruleset = sanitizeService.Sanitize(ruleset);
-            (await pool.Get(GetUserId())).SetRuleset(ruleset);
+            await trainerServices[Context.ConnectionId].SetRuleset(ruleset);
             return Ok;
         }
 
         public async Task<HubResponse> SetKomi([Range(-150, 150)] double komi)
         {
-            (await pool.Get(GetUserId())).SetKomi(komi);
+            await trainerServices[Context.ConnectionId].SetKomi(komi);
             return Ok;
         }
 
         public async Task<HubResponse> SetHandicap([Range(0, 9)] int handicap)
         {
-            (await pool.Get(GetUserId())).SetHandicap(handicap);
+            await trainerServices[Context.ConnectionId].SetHandicap(handicap);
             return Ok;
         }
 
         public async Task<HubResponse> AnalyzeMove(Move move)
         {
-            return OkData((await pool.Get(GetUserId())).AnalyzeMove(move));
+            return OkData(trainerServices[Context.ConnectionId].AnalyzeMove(move));
         }
 
         public async Task<HubResponse> Analyze(EMoveColor color,
@@ -112,18 +112,18 @@ namespace Gosuji.API.Controllers
             [Required, Range(0, 100)] double minVisitsPerc,
             [Required, Range(0, 100)] double maxVisitDiffPerc)
         {
-            return OkData((await pool.Get(GetUserId())).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
+            return OkData(trainerServices[Context.ConnectionId].Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
         }
 
         public async Task<HubResponse> Play(Move move)
         {
-            (await pool.Get(GetUserId())).Play(move);
+            await trainerServices[Context.ConnectionId].Play(move);
             return Ok;
         }
 
         public async Task<HubResponse> PlayRange(Move[] moves)
         {
-            (await pool.Get(GetUserId())).PlayRange(moves);
+            await trainerServices[Context.ConnectionId].PlayRange(moves);
             return Ok;
         }
     }
