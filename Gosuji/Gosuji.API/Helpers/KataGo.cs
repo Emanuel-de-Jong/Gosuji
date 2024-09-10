@@ -1,7 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 

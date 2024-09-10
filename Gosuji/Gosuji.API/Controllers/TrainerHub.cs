@@ -24,10 +24,7 @@ namespace Gosuji.API.Controllers
             this.sanitizeService = sanitizeService;
             pool = kataGoPool;
 
-            if (TrainerHub.dbContextFactory == null)
-            {
-                TrainerHub.dbContextFactory = dbContextFactory;
-            }
+            TrainerHub.dbContextFactory ??= dbContextFactory;
         }
 
         public override Task OnConnectedAsync()

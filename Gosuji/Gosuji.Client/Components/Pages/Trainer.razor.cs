@@ -271,9 +271,9 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task SetSuggestionVisits(ChangeEventArgs e)
         {
-            if(!int.TryParse(e.Value?.ToString(), out int visits))
+            if (!int.TryParse(e.Value?.ToString(), out int visits))
             {
-               return;
+                return;
             }
             kataGoVisits.SuggestionVisits = visits;
             trainerSettingConfig.SuggestionVisits = visits;

@@ -29,7 +29,7 @@
         }
 
         public Move(int x, int y)
-            :this(new(x, y)) { }
+            : this(new(x, y)) { }
 
         public Move(EMoveColor color, Coord coord)
             : this(coord)
@@ -82,7 +82,7 @@
 
         public static bool ColorToIGOEnchi(EMoveColor color)
         {
-            return color == EMoveColor.BLACK ? true : false;
+            return color == EMoveColor.BLACK;
         }
 
         public static string CoordToKataGo(Coord coord, int boardsize)
@@ -140,7 +140,7 @@
                 return PASS_COORD;
             }
 
-            return new(COORD_FROM_KATAGO_X[kataGoCoord[0]], boardsize + 1 - int.Parse(kataGoCoord.Substring(1)));
+            return new(COORD_FROM_KATAGO_X[kataGoCoord[0]], boardsize + 1 - int.Parse(kataGoCoord[1..]));
         }
 
         public static Coord CoordFromIGOEnchi(int x, int y)

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Gosuji.Client.Models.Trainer
+﻿namespace Gosuji.Client.Models.Trainer
 {
     public class MoveSuggestionList
     {
