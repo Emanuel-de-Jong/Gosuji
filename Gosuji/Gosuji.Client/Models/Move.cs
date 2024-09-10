@@ -1,6 +1,6 @@
 ﻿namespace Gosuji.Client.Models
 {
-    public class Move
+    public class Move : IEquatable<Move>
     {
         private static Dictionary<char, int> COORD_FROM_KATAGO_X = new()
         {
@@ -152,6 +152,22 @@
         public static Move FromKataGo(string kataGoColor, string kataGoCoord, int boardsize)
         {
             return new(ColorFromKataGo(kataGoCoord), CoordFromKataGo(kataGoColor, boardsize));
+        }
+
+        public bool Equals(Move other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return Color == other.Color &&
+                Coord != null && Coord.Equals(other.Coord);
         }
     }
 
