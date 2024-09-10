@@ -1,7 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
-using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -126,7 +125,7 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<bool> PlayRange(Moves moves)
+        public async Task<bool> PlayRange(Move[] moves)
         {
             string uri = "PlayRange";
             APIResponse response = await HubResponseHandler.TryCatch(uri,

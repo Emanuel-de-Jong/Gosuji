@@ -110,11 +110,7 @@ katago.playRange = async function () {
     let moves = trainerG.board.getMoves();
     if (moves.length == 0) return;
 
-    let serverMoves = {
-        moves: moves,
-    };
-
-    return await katago.sendRequest("PlayRange", serverMoves);
+    return await katago.sendRequest("PlayRange", moves);
 };
 
 katago.sgf = async function () {

@@ -3,7 +3,6 @@ using Gosuji.API.Services;
 using Gosuji.API.Services.TrainerService;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
-using Gosuji.Client.Models.KataGo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
@@ -125,7 +124,7 @@ namespace Gosuji.API.Controllers
             return Ok;
         }
 
-        public async Task<HubResponse> PlayRange(Moves moves)
+        public async Task<HubResponse> PlayRange(Move[] moves)
         {
             (await pool.Get(GetUserId())).PlayRange(moves);
             return Ok;

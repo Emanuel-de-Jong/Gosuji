@@ -1,6 +1,5 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models;
-using Gosuji.Client.Models.KataGo;
 using Gosuji.Client.Models.Trainer;
 using System.Diagnostics;
 using System.Text;
@@ -240,9 +239,9 @@ namespace Gosuji.API.Helpers
             ClearReader();
         }
 
-        public void PlayRange(Moves moves)
+        public void PlayRange(Move[] moves)
         {
-            foreach (Move move in moves.moves)
+            foreach (Move move in moves)
             {
                 Play(move);
             }
