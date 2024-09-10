@@ -6,6 +6,8 @@
         public int Visits { get; set; }
         public Score Score { get; set; }
         public string? Grade { get; set; }
+        public List<Coord>? Continuation { get; set; }
+        public bool IsPass => Move.IsPass(Coord);
 
         public MoveSuggestion() { }
 
@@ -37,10 +39,10 @@
         {
             Score ??= new Score();
 
-            Score.Winrate = (int)(float.Parse(winrate) * 100_000_000);
+            Score.Winrate = double.Parse(winrate);
             if (color == EMoveColor.WHITE)
             {
-                Score.Winrate = 100_000_000 - Score.Winrate;
+                Score.Winrate = Score.GetReverseWinrate();
             }
         }
 
@@ -48,10 +50,10 @@
         {
             Score ??= new Score();
 
-            Score.ScoreLead = (int)(float.Parse(scoreLead) * 1_000_000);
+            Score.ScoreLead = double.Parse(scoreLead);
             if (color == EMoveColor.WHITE)
             {
-                Score.ScoreLead *= -1;
+                Score.ScoreLead = Score.GetReverseScoreLead();
             }
         }
     }

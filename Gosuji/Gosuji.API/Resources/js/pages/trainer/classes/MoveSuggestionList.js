@@ -8,48 +8,26 @@ class MoveSuggestionList {
 
     suggestions = [];
     analyzeMoveSuggestion;
-    passSuggestion;
+    playIndex;
     isPass = false;
 
 
     constructor(suggestions, analyzeMoveSuggestion) {
         this.suggestions = suggestions ? suggestions : [];
         this.analyzeMoveSuggestion = analyzeMoveSuggestion;
-
-        if (this.suggestions.length != 0) {
-            const highestScoreLead = this.suggestions[0].score.formatScoreLead();
-            for (const suggestion of suggestions) {
-                if (suggestion.isPass() && suggestion.score.formatScoreLead() == highestScoreLead) {
-                    this.isPass = true;
-                    this.passSuggestion = suggestion;
-                    break;
-                }
-            }
-        }
     }
 
 
     add(suggestion) {
         this.suggestions.push(suggestion);
-
-        if (this.suggestions.length == 1 && this.suggestions[0].isPass()) {
-            this.isPass = true;
-            this.passSuggestion = this.suggestions[0];
-        }
     }
 
-    addGrades() {
-        let gradeIndex = 0;
-        for (let i = 0; i < this.suggestions.length; i++) {
-            let suggestion = this.suggestions[i];
-            if (suggestion.isPass()) continue;
-
-            if (i != 0 && suggestion.visits != this.suggestions[i - 1].visits) {
-                gradeIndex++;
-            }
-            suggestion.grade = String.fromCharCode(gradeIndex + 65);
+    getPass() {
+        if (!this.isPass) {
+            return;
         }
-        return this;
+        
+        return this.suggestions[this.playIndex]
     }
 
     filterByMoveOptions(moveOptions) {
@@ -148,26 +126,27 @@ class MoveSuggestionList {
 
 
     static fromKataGo(kataGoSuggestions) {
-        let suggestions = [];
-        for (const kataGoSuggestion of kataGoSuggestions) {
-            suggestions.push(MoveSuggestion.fromKataGo(kataGoSuggestion));
+        let suggestions = new MoveSuggestionList();
+        suggestions.playIndex = kataGoSuggestions.playIndex;
+        suggestions.isPass = kataGoSuggestions.isPass;
+
+        for (const kataGoSuggestion of kataGoSuggestions.suggestions) {
+            suggestions.add(MoveSuggestion.fromKataGo(kataGoSuggestion));
         }
 
-        return new MoveSuggestionList(suggestions);
+        return suggestions;
     }
 
     static fromServer(serverSuggestions) {
-        let suggestionList = new MoveSuggestionList(null, serverSuggestions.analyzeMoveSuggestion);
+        let suggestions = new MoveSuggestionList(serverSuggestions.analyzeMoveSuggestion);
+        suggestions.playIndex = serverSuggestions.playIndex;
+        suggestions.isPass = serverSuggestions.isPass;
 
-        for (let i = 0; i < serverSuggestions.suggestions.length; i++) {
-            if (!serverSuggestions.suggestions[i]) continue;
-
-            suggestionList.add(MoveSuggestion.fromServer(serverSuggestions.suggestions[i]));
+        for (const serverSuggestion of serverSuggestions.suggestions) {
+            suggestions.add(MoveSuggestion.fromKataGo(serverSuggestion));
         }
 
-        suggestionList.addGrades();
-
-        return suggestionList;
+        return suggestions;
     }
 }
 

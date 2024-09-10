@@ -79,7 +79,7 @@ namespace Gosuji.Client.Helpers.GameDecoder
             }
         }
 
-        public static Dictionary<short, Dictionary<short, SuggestionList>> DecodeSuggestions(byte[] bytes)
+        public static Dictionary<short, Dictionary<short, MoveSuggestionList>> DecodeSuggestions(byte[] bytes)
         {
             try
             {
@@ -88,7 +88,7 @@ namespace Gosuji.Client.Helpers.GameDecoder
                     int suggestionLength = GetInt16(bytes, i);
                     i += 2;
 
-                    SuggestionList suggestionList = new();
+                    MoveSuggestionList suggestionList = new();
 
                     (MoveSuggestion, int) data;
                     if (suggestionLength == SuggestionsEncodeAnalyzeMoveIndicator)

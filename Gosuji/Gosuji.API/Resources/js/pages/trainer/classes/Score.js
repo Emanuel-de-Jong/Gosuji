@@ -10,11 +10,11 @@ class Score {
 
 
     formatWinrate(shouldReverse = false) {
-        return ((shouldReverse ? this.getReverseWinrate() : this.winrate) / 1_000_000.0).toFixed(2);
+        return (shouldReverse ? this.getReverseWinrate() : this.winrate).toFixed(2);
     }
 
     formatScoreLead(shouldReverse = false) {
-        return ((shouldReverse ? this.getReverseScoreLead() : this.scoreLead) / 1_000_000.0).toFixed(1);
+        return (shouldReverse ? this.getReverseScoreLead() : this.scoreLead).toFixed(1);
     }
 
     reverse() {
@@ -24,7 +24,7 @@ class Score {
     }
 
     getReverseWinrate() {
-        return 100_000_000 - this.winrate;
+        return 1 - this.winrate;
     }
 
     getReverseScoreLead() {

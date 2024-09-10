@@ -1,6 +1,7 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 
@@ -150,7 +151,7 @@ namespace Gosuji.API.Helpers
             return suggestion;
         }
 
-        public List<MoveSuggestion> Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public MoveSuggestionList Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
             if (lastMaxVisits != maxVisits)
             {
@@ -169,7 +170,7 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            List<MoveSuggestion> suggestions = [];
+            List<MoveSuggestion> suggestions = new();
             MoveSuggestion? suggestion = null;
             for (int i = 0; i < analysis.Length; i++)
             {
@@ -212,12 +213,12 @@ namespace Gosuji.API.Helpers
             int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(maxVisits, highestVisits));
             int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * maxVisits);
 
-            List<MoveSuggestion> filteredSuggestions = [];
+            MoveSuggestionList filteredSuggestions = new();
             int lastSuggestionVisits = int.MaxValue;
             foreach (MoveSuggestion moveSuggestion in suggestions)
             {
-                if (filteredSuggestions.Count > 0 &&
-                        !Move.IsPass(filteredSuggestions[^1].Coord) &&
+                if (filteredSuggestions.Suggestions.Count > 0 &&
+                        !Move.IsPass(filteredSuggestions.Suggestions.Last().Coord) &&
                         (moveSuggestion.Visits < minVisits ||
                         lastSuggestionVisits - moveSuggestion.Visits > maxVisitDiff))
                 {
@@ -229,6 +230,9 @@ namespace Gosuji.API.Helpers
                     lastSuggestionVisits = moveSuggestion.Visits;
                 }
             }
+
+            filteredSuggestions.AddGrades();
+            filteredSuggestions.CheckPass();
 
             return filteredSuggestions;
         }

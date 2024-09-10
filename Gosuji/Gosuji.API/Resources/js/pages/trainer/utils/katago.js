@@ -98,7 +98,6 @@ katago.analyze = async function (
     let suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
     suggestions.filterByPass();
     suggestions.filterByMoveOptions(moveOptions);
-    suggestions.addGrades();
     return suggestions;
 };
 

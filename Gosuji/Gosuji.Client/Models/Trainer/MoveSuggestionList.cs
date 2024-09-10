@@ -1,10 +1,79 @@
-﻿namespace Gosuji.Client.Models.Trainer
+﻿using System.Collections;
+
+namespace Gosuji.Client.Models.Trainer
 {
-    public class MoveSuggestionList
+    public class MoveSuggestionList : IEnumerable<MoveSuggestion>
     {
-        public MoveSuggestion[] Suggestions { get; set; }
+        public List<MoveSuggestion> Suggestions { get; set; } = [];
         public MoveSuggestion? AnalyzeMoveSuggestion { get; set; }
-        public MoveSuggestion? PassSuggestion { get; set; }
-        public bool IsPass { get; set; }
+        public int? PlayIndex { get; set; }
+        public bool IsPass { get; set; } = false;
+
+        public MoveSuggestion this[int index]
+        {
+            get => Suggestions[index];
+            set => Suggestions[index] = value;
+        }
+
+        public IEnumerator<MoveSuggestion> GetEnumerator()
+        {
+            foreach (MoveSuggestion suggestion in Suggestions)
+            {
+                yield return suggestion;
+            }
+        }
+
+        public MoveSuggestionList() { }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Add(MoveSuggestion suggestion)
+        {
+            Suggestions.Add(suggestion);
+        }
+
+        public bool CheckPass()
+        {
+            if (Suggestions.Count == 0)
+            {
+                return IsPass;
+            }
+
+            double highestScoreLead = Math.Round(Suggestions[0].Score.ScoreLead, 2);
+            for (int i = 1; i < Suggestions.Count; i++)
+            {
+                if (Suggestions[i].IsPass && Math.Round(Suggestions[i].Score.ScoreLead, 2) == highestScoreLead)
+                {
+                    IsPass = true;
+                    PlayIndex = i;
+                    break;
+                }
+            }
+
+            return IsPass;
+        }
+
+        public void AddGrades()
+        {
+            int gradeIndex = 0;
+            for (int i = 0; i < Suggestions.Count; i++)
+            {
+                MoveSuggestion suggestion = Suggestions[i];
+                if (suggestion.IsPass)
+                {
+                    continue;
+                }
+
+                if (i != 0 && suggestion.Visits != Suggestions[i - 1].Visits)
+                {
+                    gradeIndex++;
+                }
+
+                suggestion.Grade = (gradeIndex + 65).ToString();
+            }
+        }
     }
 }
