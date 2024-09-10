@@ -104,7 +104,7 @@ namespace Gosuji.API.Controllers
 
         public async Task<HubResponse> AnalyzeMove(Move move)
         {
-            return OkData(trainerServices[Context.ConnectionId].AnalyzeMove(move));
+            return OkData(await trainerServices[Context.ConnectionId].AnalyzeMove(move));
         }
 
         public async Task<HubResponse> Analyze(EMoveColor color,
@@ -112,7 +112,7 @@ namespace Gosuji.API.Controllers
             [Required, Range(0, 100)] double minVisitsPerc,
             [Required, Range(0, 100)] double maxVisitDiffPerc)
         {
-            return OkData(trainerServices[Context.ConnectionId].Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
+            return OkData(await trainerServices[Context.ConnectionId].Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
         }
 
         public async Task<HubResponse> Play(Move move)
