@@ -9,6 +9,10 @@ class History {
     }
 
     add(data, node=trainerG.board.get()) {
+        if (data == null) {
+            return;
+        }
+        
         node[this.nodeKey] = data;
         this.nodes.add(node);
     }

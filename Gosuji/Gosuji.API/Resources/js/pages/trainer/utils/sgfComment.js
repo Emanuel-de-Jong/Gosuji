@@ -17,7 +17,7 @@ sgfComment.clear = function () {
 
 
 sgfComment.setComment = function (moveType) {
-    if (moveType == trainerG.MOVE_TYPE.NONE) return;
+    if (moveType == null) return;
 
     let comment;
     switch (moveType) {
