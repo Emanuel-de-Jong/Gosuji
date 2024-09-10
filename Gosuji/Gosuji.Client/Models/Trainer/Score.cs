@@ -5,6 +5,14 @@
         public int Winrate { get; set; }
         public int ScoreLead { get; set; }
 
+        public Score() { }
+
+        public Score(int winrate, int scoreLead)
+        {
+            Winrate = winrate;
+            ScoreLead = scoreLead;
+        }
+
         public string FormatWinrate(bool shouldReverse = false)
         {
             return ((shouldReverse ? GetReverseWinrate() : Winrate) / 1_000_000.0).ToString("F2");

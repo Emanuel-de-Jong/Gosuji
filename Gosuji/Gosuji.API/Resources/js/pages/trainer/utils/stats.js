@@ -8,9 +8,9 @@ let stats = { id: "stats" };
 
 
 stats.PLAYER_RESULT_TYPE = {
-    WRONG: 1,
-    RIGHT: 2,
-    PERFECT: 3,
+    WRONG: 0,
+    RIGHT: 1,
+    PERFECT: 2,
 };
 
 stats.PLAYER_RESULT_Y_INDICATOR = -1;

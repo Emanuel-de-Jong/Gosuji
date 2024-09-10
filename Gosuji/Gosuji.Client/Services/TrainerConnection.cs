@@ -2,6 +2,7 @@
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
+using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
@@ -105,7 +106,7 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<List<MoveSuggestion>?> Analyze(int color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public async Task<List<MoveSuggestion>?> Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
             string uri = "Analyze";
             APIResponse<List<MoveSuggestion>> response = await HubResponseHandler.TryCatch<List<MoveSuggestion>>(uri,

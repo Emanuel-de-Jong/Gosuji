@@ -111,7 +111,7 @@ namespace Gosuji.API.Controllers
             return OkData((await pool.Get(GetUserId())).AnalyzeMove(move));
         }
 
-        public async Task<HubResponse> Analyze(int color,
+        public async Task<HubResponse> Analyze(EMoveColor color,
             [Required, Range(2, 100_000)] int maxVisits,
             [Required, Range(0, 100)] double minVisitsPerc,
             [Required, Range(0, 100)] double maxVisitDiffPerc)

@@ -2,12 +2,12 @@
 {
     public enum EMoveType
     {
-        INIT,
-        FORCED_CORNER,
-        PRE,
-        SELFPLAY,
-        PLAYER,
-        OPPONENT,
-        PASS,
+        INIT=0,
+        FORCED_CORNER=1,
+        PRE=2,
+        SELFPLAY=3,
+        PLAYER=4,
+        OPPONENT=5,
+        PASS=6,
     }
 }

@@ -29,10 +29,10 @@ class MoveSuggestion {
 
     static fromKataGo(kataGoSuggestion) {
         return new MoveSuggestion(
-            Coord.fromServer(kataGoSuggestion.move.coord),
+            Coord.fromServer(kataGoSuggestion.coord),
             kataGoSuggestion.visits,
-            kataGoSuggestion.winrate,
-            kataGoSuggestion.scoreLead
+            kataGoSuggestion.score.winrate,
+            kataGoSuggestion.score.scoreLead
         );
     }
 

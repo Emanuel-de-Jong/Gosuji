@@ -13,13 +13,12 @@
 
         public static Coord PASS_COORD = new(0, 0);
 
-        public int? Color { get; set; }
+        public EMoveColor? Color { get; set; }
         public Coord? Coord { get; set; }
 
         public int? X => Coord?.X;
         public int? Y => Coord?.Y;
-        public bool IsBlack => Color == -1;
-        public bool IsPass => Coord.Equals(PASS_COORD);
+        public bool IsBlack => Color == EMoveColor.BLACK;
 
 
         public Move() { }
@@ -32,13 +31,13 @@
         public Move(int x, int y)
             :this(new(x, y)) { }
 
-        public Move(int color, Coord coord)
+        public Move(EMoveColor color, Coord coord)
             : this(coord)
         {
             Color = color;
         }
 
-        public Move(int color, int x, int y)
+        public Move(EMoveColor color, int x, int y)
             : this(x, y)
         {
             Color = color;
@@ -70,15 +69,20 @@
             return ToKataGo(this, boardsize);
         }
 
-
-        public static string ColorToKataGo(int color)
+        public bool IsPass()
         {
-            return color == -1 ? "B" : "W";
+            return IsPass(Coord);
         }
 
-        public static bool ColorToIGOEnchi(int color)
+
+        public static string ColorToKataGo(EMoveColor color)
         {
-            return color == -1 ? true : false;
+            return color == EMoveColor.BLACK ? "B" : "W";
+        }
+
+        public static bool ColorToIGOEnchi(EMoveColor color)
+        {
+            return color == EMoveColor.BLACK ? true : false;
         }
 
         public static string CoordToKataGo(Coord coord, int boardsize)
@@ -119,14 +123,14 @@
         }
 
 
-        public static int ColorFromKataGo(string kataGoColor)
+        public static EMoveColor ColorFromKataGo(string kataGoColor)
         {
-            return kataGoColor == "B" ? -1 : 1;
+            return kataGoColor == "B" ? EMoveColor.BLACK : EMoveColor.WHITE;
         }
 
-        public static int ColorFromIGOEnchi(bool isBlack)
+        public static EMoveColor ColorFromIGOEnchi(bool isBlack)
         {
-            return isBlack ? -1 : 1;
+            return isBlack ? EMoveColor.BLACK : EMoveColor.WHITE;
         }
 
         public static Coord CoordFromKataGo(string kataGoCoord, int boardsize)
@@ -154,6 +158,16 @@
             return new(ColorFromKataGo(kataGoCoord), CoordFromKataGo(kataGoColor, boardsize));
         }
 
+        public static bool IsPass(Coord? coord)
+        {
+            if (coord == null)
+            {
+                return false;
+            }
+
+            return coord.Equals(PASS_COORD);
+        }
+
         public bool Equals(Move other)
         {
             if (other == null)
@@ -177,5 +191,11 @@
         public string? Coord { get; set; }
 
         public KataGoMove() { }
+    }
+
+    public enum EMoveColor
+    {
+        BLACK = -1,
+        WHITE = 1,
     }
 }

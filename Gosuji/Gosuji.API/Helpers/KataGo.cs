@@ -1,6 +1,7 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.KataGo;
+using Gosuji.Client.Models.Trainer;
 using System.Diagnostics;
 using System.Text;
 
@@ -129,8 +130,7 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            MoveSuggestion suggestion = new();
-            suggestion.SetMove(move);
+            MoveSuggestion suggestion = new(move);
             for (int i = 0; i < analysis.Length; i++)
             {
                 string element = analysis[i];
@@ -140,18 +140,18 @@ namespace Gosuji.API.Helpers
                 }
                 else if (element == "winrate")
                 {
-                    suggestion?.SetWinrate(analysis[i + 1]);
+                    suggestion?.SetWinrate(analysis[i + 1], move.Color.Value);
                 }
                 else if (element == "scoreLead")
                 {
-                    suggestion?.SetScoreLead(analysis[i + 1]);
+                    suggestion?.SetScoreLead(analysis[i + 1], move.Color.Value);
                 }
             }
 
             return suggestion;
         }
 
-        public List<MoveSuggestion> Analyze(int color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public List<MoveSuggestion> Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
             if (lastMaxVisits != maxVisits)
             {
@@ -177,8 +177,7 @@ namespace Gosuji.API.Helpers
                 string element = analysis[i];
                 if (element == "move")
                 {
-                    Move move = new(color, Move.CoordFromKataGo(analysis[i + 1], boardsize));
-                    suggestion?.SetMove(move);
+                    suggestion.Coord ??= Move.CoordFromKataGo(analysis[i + 1], boardsize);
                 }
                 else if (element == "visits")
                 {
@@ -186,11 +185,11 @@ namespace Gosuji.API.Helpers
                 }
                 else if (element == "winrate")
                 {
-                    suggestion?.SetWinrate(analysis[i + 1]);
+                    suggestion?.SetWinrate(analysis[i + 1], color);
                 }
                 else if (element == "scoreLead")
                 {
-                    suggestion?.SetScoreLead(analysis[i + 1]);
+                    suggestion?.SetScoreLead(analysis[i + 1], color);
                 }
 
                 if (element == "info" || i == analysis.Length - 1)
@@ -206,9 +205,9 @@ namespace Gosuji.API.Helpers
             int highestVisits = 0;
             foreach (MoveSuggestion moveSuggestion in suggestions)
             {
-                if (highestVisits < moveSuggestion.visits)
+                if (highestVisits < moveSuggestion.Visits)
                 {
-                    highestVisits = moveSuggestion.visits;
+                    highestVisits = moveSuggestion.Visits;
                 }
             }
             int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(maxVisits, highestVisits));
@@ -219,16 +218,16 @@ namespace Gosuji.API.Helpers
             foreach (MoveSuggestion moveSuggestion in suggestions)
             {
                 if (filteredSuggestions.Count > 0 &&
-                        !filteredSuggestions[^1].move.IsPass &&
-                        (moveSuggestion.visits < minVisits ||
-                        lastSuggestionVisits - moveSuggestion.visits > maxVisitDiff))
+                        !Move.IsPass(filteredSuggestions[^1].Coord) &&
+                        (moveSuggestion.Visits < minVisits ||
+                        lastSuggestionVisits - moveSuggestion.Visits > maxVisitDiff))
                 {
                     break;
                 }
                 filteredSuggestions.Add(moveSuggestion);
-                if (lastSuggestionVisits > moveSuggestion.visits)
+                if (lastSuggestionVisits > moveSuggestion.Visits)
                 {
-                    lastSuggestionVisits = moveSuggestion.visits;
+                    lastSuggestionVisits = moveSuggestion.Visits;
                 }
             }
 
