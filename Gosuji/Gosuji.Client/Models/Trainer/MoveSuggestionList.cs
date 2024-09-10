@@ -2,33 +2,12 @@
 
 namespace Gosuji.Client.Models.Trainer
 {
-    public class MoveSuggestionList : IEnumerable<MoveSuggestion>
+    public class MoveSuggestionList
     {
         public List<MoveSuggestion> Suggestions { get; set; } = [];
         public MoveSuggestion? AnalyzeMoveSuggestion { get; set; }
         public int? PlayIndex { get; set; }
         public bool IsPass { get; set; } = false;
-
-        public MoveSuggestion this[int index]
-        {
-            get => Suggestions[index];
-            set => Suggestions[index] = value;
-        }
-
-        public IEnumerator<MoveSuggestion> GetEnumerator()
-        {
-            foreach (MoveSuggestion suggestion in Suggestions)
-            {
-                yield return suggestion;
-            }
-        }
-
-        public MoveSuggestionList() { }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
 
         public void Add(MoveSuggestion suggestion)
         {
@@ -72,7 +51,7 @@ namespace Gosuji.Client.Models.Trainer
                     gradeIndex++;
                 }
 
-                suggestion.Grade = (gradeIndex + 65).ToString();
+                suggestion.Grade = ((char)(gradeIndex + 65)).ToString();
             }
         }
     }

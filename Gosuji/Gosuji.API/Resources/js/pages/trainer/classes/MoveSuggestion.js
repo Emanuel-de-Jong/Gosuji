@@ -7,10 +7,11 @@ class MoveSuggestion {
     grade;
 
 
-    constructor(coord, visits, winrate, scoreLead) {
+    constructor(coord, visits, winrate, scoreLead, grade) {
         this.coord = coord;
         this.visits = visits;
         this.score = new Score(winrate, scoreLead);
+        this.grade = grade;
     }
 
 
@@ -32,7 +33,8 @@ class MoveSuggestion {
             Coord.fromServer(kataGoSuggestion.coord),
             kataGoSuggestion.visits,
             kataGoSuggestion.score.winrate,
-            kataGoSuggestion.score.scoreLead
+            kataGoSuggestion.score.scoreLead,
+            kataGoSuggestion.grade
         );
     }
 
@@ -41,7 +43,8 @@ class MoveSuggestion {
             Coord.fromServer(serverSuggestion.coord),
             serverSuggestion.visits,
             serverSuggestion.score.winrate,
-            serverSuggestion.score.scoreLead
+            serverSuggestion.score.scoreLead,
+            serverSuggestion.grade
         );
     }
 }
