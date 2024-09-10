@@ -1,5 +1,4 @@
 ﻿using Gosuji.Client.Data;
-using Gosuji.Client.Helpers.GameDecoder;
 
 namespace Gosuji.Client.Models.Trainer
 {

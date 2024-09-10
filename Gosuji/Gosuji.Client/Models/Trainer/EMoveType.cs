@@ -1,4 +1,4 @@
-﻿namespace Gosuji.API.Services.TrainerService
+﻿namespace Gosuji.Client.Models.Trainer
 {
     public enum EMoveType
     {
