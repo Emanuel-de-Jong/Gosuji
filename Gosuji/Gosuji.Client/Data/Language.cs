@@ -3,6 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
 {
+    public enum ELanguage
+    {
+        en,
+        zh,
+        ko,
+        ja
+    }
+
     public class Language : DbModel
     {
         [MaxLength(15)]

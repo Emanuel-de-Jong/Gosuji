@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Services;
+﻿using Gosuji.Client.Data;
+using Gosuji.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.JSInterop;
 using System.Globalization;
@@ -7,29 +8,35 @@ namespace Gosuji.Client.Helpers
 {
     public class LocalizeClient
     {
-        public static string[] SUPPORTED_LANGUAGES = { "en", "zh", "ko", "ja" };
-
         public static async Task Setup(WebAssemblyHost host)
         {
-            CultureInfo culture = CultureInfo.CurrentCulture; // Just so it's not null. CurrentCulture is never used.
+            ELanguage lang = ELanguage.en;
 
             IJSRuntime js = host.Services.GetRequiredService<IJSRuntime>();
             string? localLang = await js.InvokeAsync<string>("utils.getLocal", SettingConfigService.LANGUAGE_ID_STORAGE_NAME);
             if (localLang != null)
             {
-                culture = CultureInfo.GetCultureInfo(localLang);
+                Enum.TryParse(localLang, out lang);
             }
             else
             {
                 string? navigatorLang = await js.InvokeAsync<string>("eval", "navigator.language");
-                culture = navigatorLang != null ? CultureInfo.GetCultureInfo(navigatorLang) : CultureInfo.GetCultureInfo(SUPPORTED_LANGUAGES[0]);
+                if (!string.IsNullOrWhiteSpace(navigatorLang))
+                {
+                    CultureInfo tempCulture = CultureInfo.GetCultureInfo(navigatorLang);
+
+                    foreach (ELanguage supportedLang in Enum.GetValues(typeof(ELanguage)))
+                    {
+                        if (tempCulture.TwoLetterISOLanguageName.Contains(supportedLang.ToString()))
+                        {
+                            lang = supportedLang;
+                            break;
+                        }
+                    }
+                }
             }
 
-            if (!SUPPORTED_LANGUAGES.Contains(culture.TwoLetterISOLanguageName))
-            {
-                culture = CultureInfo.GetCultureInfo(SUPPORTED_LANGUAGES[0]);
-            }
-
+            CultureInfo culture = CultureInfo.GetCultureInfo(lang.ToString());
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
         }

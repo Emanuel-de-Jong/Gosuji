@@ -46,6 +46,8 @@ namespace Gosuji.Client.Components.Pages
         private UserState? userState;
         private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
+        private string? ruleset;
+        private double? komi;
         private KataGoVisits? kataGoVisits;
 
         private Game? game;
@@ -83,6 +85,22 @@ namespace Gosuji.Client.Components.Pages
             APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
+
+            ruleset = trainerSettingConfig.Ruleset;
+            if (ruleset == null)
+            {
+                if (settingConfigService.SettingConfig.LanguageId == ELanguage.zh.ToString() ||
+                    settingConfigService.SettingConfig.LanguageId == ELanguage.ko.ToString())
+                {
+                    ruleset = "Chinese";
+                }
+                else
+                {
+                    ruleset = "Japanese";
+                }
+            }
+
+            komi = trainerSettingConfig.GetKomi(ruleset);
 
             kataGoVisits = new()
             {
@@ -267,6 +285,29 @@ namespace Gosuji.Client.Components.Pages
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             addPresetModel = new();
+        }
+
+        [JSInvokable]
+        public async Task<double> GetKomi()
+        {
+            return trainerSettingConfig.GetKomi(ruleset);
+        }
+
+        public async Task SetKomi(ChangeEventArgs e)
+        {
+            if (!double.TryParse(e.Value?.ToString(), out double newKomi))
+            {
+                return;
+            }
+            komi = newKomi;
+            trainerSettingConfig.Komi = newKomi;
+        }
+
+        public async Task SetRuleset(ChangeEventArgs e)
+        {
+            string newRuleset = e.Value?.ToString();
+            ruleset = newRuleset;
+            trainerSettingConfig.Ruleset = newRuleset;
         }
 
         public async Task SetSuggestionVisits(ChangeEventArgs e)

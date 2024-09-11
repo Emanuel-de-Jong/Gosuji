@@ -57,7 +57,7 @@ sgfComment.createInitComment = function () {
         "\nWrong move correction: " + settings.wrongMoveCorrection +
 
         "\n\nGame" +
-        "\nKomi change style: " + settings.komiChangeStyle +
+        "\nCustom komi: " + settings.customKomi +
         "\nKomi: " + sgf.komi +
         "\nRuleset: " + sgf.ruleset +
 

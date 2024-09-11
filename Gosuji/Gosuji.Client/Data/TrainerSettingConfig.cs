@@ -37,15 +37,10 @@ namespace Gosuji.Client.Data
         [Required]
         public bool WrongMoveCorrection { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string KomiChangeStyle { get; set; }
-        [Required]
         [Range(-150, 150)]
-        public double Komi { get; set; }
-        [Required]
+        public double? Komi { get; set; }
         [MaxLength(100)]
-        public string Ruleset { get; set; }
+        public string? Ruleset { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -103,6 +98,31 @@ namespace Gosuji.Client.Data
         [Range(1.5, 4)]
         public double SelfplayPlaySpeed { get; set; }
 
+        public double GetKomi(string? ruleset)
+        {
+            if (Komi != null)
+            {
+                return Komi.Value;
+            }
+
+            if (Handicap != 0)
+            {
+               return 0.5;
+            }
+
+            if (ruleset == null)
+            {
+                ruleset = Ruleset;
+            }
+
+            if (ruleset != null && ruleset.ToLower().Contains("chin"))
+            {
+                return 7.5;
+            }
+
+            return 6.5;
+        }
+
         public TrainerSettingConfig SetHash()
         {
             Hash = GenerateHash(this);
@@ -126,7 +146,6 @@ namespace Gosuji.Client.Data
             builder.Append(config.WrongMoveCorrection);
 
             builder.Append(config.Ruleset);
-            builder.Append(config.KomiChangeStyle);
             builder.Append(config.Komi);
 
             builder.Append(config.PreOptions);

@@ -3,6 +3,7 @@ using System;
 using Gosuji.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Gosuji.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240911072229_RulesetNullable")]
+    partial class RulesetNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
@@ -717,8 +720,13 @@ namespace Gosuji.API.Migrations
                     b.Property<bool>("HideWeakerOptions")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("Komi")
+                    b.Property<double>("Komi")
                         .HasColumnType("REAL");
+
+                    b.Property<string>("KomiChangeStyle")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
 
                     b.Property<double>("MaxVisitDiffPerc")
                         .HasColumnType("REAL");
@@ -766,6 +774,7 @@ namespace Gosuji.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Ruleset")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 

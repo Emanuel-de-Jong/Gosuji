@@ -68,19 +68,19 @@ namespace Gosuji.API.Helpers
             ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
             dbContext.Languages.AddRange([
                 new() {
-                    Id = "en",
+                    Id = ELanguage.en.ToString(),
                     Name = "English",
                 },
                 new() {
-                    Id = "zh",
+                    Id = ELanguage.zh.ToString(),
                     Name = "汉语",
                 },
                 new() {
-                    Id = "ko",
+                    Id = ELanguage.ko.ToString(),
                     Name = "한국어",
                 },
                 new() {
-                    Id = "ja",
+                    Id = ELanguage.ja.ToString(),
                     Name = "日本語",
                 },
             ]);
@@ -99,10 +99,6 @@ namespace Gosuji.API.Helpers
                 HideOptions = EHideOptions.PERFECT,
                 ColorType = 0,
                 WrongMoveCorrection = true,
-
-                KomiChangeStyle = "Automatic",
-                Komi = 6.5,
-                Ruleset = "Japanese",
 
                 ForceOpponentCorners = "Both",
                 CornerSwitch44 = true,
@@ -210,21 +206,21 @@ namespace Gosuji.API.Helpers
             dbContext.SettingConfigs.AddRange([
                 new() {
                     Id = userIds[0],
-                    LanguageId = "en",
+                    LanguageId = ELanguage.en.ToString(),
                     Theme = EThemeType.DARK,
                     MasterVolume = 100,
                     IsGetChangelogEmail = true,
                 },
                 new() {
                     Id = userIds[1],
-                    LanguageId = "en",
+                    LanguageId = ELanguage.en.ToString(),
                     Theme = EThemeType.DARK,
                     MasterVolume = 80,
                     IsGetChangelogEmail = false,
                 },
                 new() {
                     Id = userIds[2],
-                    LanguageId = "zh",
+                    LanguageId = ELanguage.zh.ToString(),
                     Theme = EThemeType.LIGHT,
                     MasterVolume = 100,
                     IsGetChangelogEmail = true,

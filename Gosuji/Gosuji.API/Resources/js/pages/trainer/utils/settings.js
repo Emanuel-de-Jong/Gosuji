@@ -14,7 +14,7 @@ settings.SETTINGS = {
     opponentVisits: utils.TYPE.INT,
     wrongMoveCorrection: utils.TYPE.BOOL,
 
-    komiChangeStyle: utils.TYPE.STRING,
+    customKomi: utils.TYPE.BOOL,
     komi: utils.TYPE.FLOAT,
     ruleset: utils.TYPE.STRING,
 
@@ -56,7 +56,7 @@ settings.PRE_GAME_SETTINGS = [
     "preMovesSwitch",
     "preMoves",
     "colorType",
-    "komiChangeStyle",
+    "customKomi",
     "komi",
     "ruleset",
     "forceOpponentCorners",
@@ -92,7 +92,7 @@ settings.init = function (gameLoadInfo) {
         "input",
         settings.inputAndSelectInputListener
     );
-    settings.komiChangeStyleElement.addEventListener("input", settings.komiChangeStyleElementInputListener);
+    settings.customKomiElement.addEventListener("input", settings.toggleCustomKomi);
     settings.handicapElement.addEventListener("input", settings.setKomi);
     settings.rulesetElement.addEventListener("input", settings.setKomi);
     settings.boardsizeElement.addEventListener("input", settings.setKomi);
@@ -179,50 +179,20 @@ settings.hideInvalidMessage = function (input) {
     messageDiv.textContent = "";
 };
 
-settings.komiChangeStyleElementInputListener = function () {
-    if (settings.komiChangeStyle == "Automatic") {
-        settings.komiElement.disabled = true;
-        settings.setKomi();
-    } else {
+settings.toggleCustomKomi = async function () {
+    if (settings.customKomi) {
         settings.komiElement.disabled = false;
+    } else {
+        settings.komiElement.disabled = true;
+        await settings.setKomi();
     }
 };
 
-settings.setKomi = function () {
-    if (settings.komiChangeStyle != "Automatic") return;
+settings.setKomi = async function () {
+    if (settings.customKomi) return;
 
     let oldKomi = settings.komi;
-    let komi;
-
-    if (settings.handicap != 0) {
-        komi = 0.5;
-    } else {
-        if (settings.ruleset == "Japanese") {
-            switch (settings.boardsize) {
-                case 19:
-                    komi = 6.5;
-                    break;
-                case 13:
-                    komi = 6.5;
-                    break;
-                case 9:
-                    komi = 6.5;
-                    break;
-            }
-        } else if (settings.ruleset == "Chinese") {
-            switch (settings.boardsize) {
-                case 19:
-                    komi = 7.5;
-                    break;
-                case 13:
-                    komi = 6.5;
-                    break;
-                case 9:
-                    komi = 6.5;
-                    break;
-            }
-        }
-    }
+    let komi = await trainerG.trainerRef.invokeMethodAsync("GetKomi");
 
     if (komi != oldKomi) {
         settings.setSetting("komi", komi);
