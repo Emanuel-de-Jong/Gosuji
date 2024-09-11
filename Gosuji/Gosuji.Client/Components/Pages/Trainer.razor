@@ -172,7 +172,7 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text">Custom</span>
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="customKomi" checked="@(trainerSettingConfig.Komi != null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="customKomi" checked="@(trainerSettingConfig.Komi != null ? "true" : "false")">
                                                                 </div>
                                                                 <input type="number" class="form-control" id="komi" step="0.5" min="-150" max="150" value="@komi" @onchange=SetKomi disabled>
                                                                 <div class="form-invalid-message"></div>
