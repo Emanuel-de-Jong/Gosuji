@@ -158,8 +158,8 @@
                                                         <div class="col-12">
                                                             <label for="ruleset" class="form-label">Ruleset</label>
                                                             <select class="form-select" id="ruleset" @onchange=SetRuleset>
-                                                                <option value="Japanese" selected=@(ruleset.ToLower().Contains("jap") ? "true" : "false")>Japanese</option>
-                                                                <option value="Chinese" selected=@(ruleset.ToLower().Contains("chin") ? "true" : "false")>Chinese</option>
+                                                                <option value="Japanese" selected=@(ruleset.ToLower().Contains("jap") ? "true" : null)>Japanese</option>
+                                                                <option value="Chinese" selected=@(ruleset.ToLower().Contains("chin") ? "true" : null)>Chinese</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -172,9 +172,10 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text">Custom</span>
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="customKomi" checked="@(trainerSettingConfig.Komi != null ? "true" : "false")">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="customKomi" checked="@(trainerSettingConfig.Komi != null ? "true" : null)">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="komi" step="0.5" min="-150" max="150" value="@komi" @onchange=SetKomi disabled>
+                                                                <input type="number" class="form-control" id="komi" step="0.5" min="-150" max="150" value="@komi"
+                                                                    @onchange=SetKomi disabled="@(trainerSettingConfig.Komi == null ? "true" : null)">
                                                                 <div class="form-invalid-message"></div>
                                                             </div>
                                                         </div>

@@ -86,29 +86,7 @@ namespace Gosuji.Client.Components.Pages
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
 
-            ruleset = trainerSettingConfig.Ruleset;
-            if (ruleset == null)
-            {
-                if (settingConfigService.SettingConfig.LanguageId == ELanguage.zh.ToString() ||
-                    settingConfigService.SettingConfig.LanguageId == ELanguage.ko.ToString())
-                {
-                    ruleset = "Chinese";
-                }
-                else
-                {
-                    ruleset = "Japanese";
-                }
-            }
-
-            komi = trainerSettingConfig.GetKomi(ruleset);
-
-            kataGoVisits = new()
-            {
-                SuggestionVisits = trainerSettingConfig.SuggestionVisits != null ? trainerSettingConfig.SuggestionVisits.Value : 200,
-                OpponentVisits = trainerSettingConfig.OpponentVisits != null ? trainerSettingConfig.OpponentVisits.Value : 200,
-                PreVisits = trainerSettingConfig.PreVisits != null ? trainerSettingConfig.PreVisits.Value : 200,
-                SelfplayVisits = trainerSettingConfig.SelfplayVisits != null ? trainerSettingConfig.SelfplayVisits.Value : 200,
-            };
+            SetNullableSettings();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -167,6 +145,33 @@ namespace Gosuji.Client.Components.Pages
                 await jsRef.InvokeVoidAsync("trainerG.board.setIsSelfplayStoneSound", isStoneSound);
         }
 
+        private void SetNullableSettings()
+        {
+            ruleset = trainerSettingConfig.Ruleset;
+            if (ruleset == null)
+            {
+                if (settingConfigService.SettingConfig.LanguageId == ELanguage.zh.ToString() ||
+                    settingConfigService.SettingConfig.LanguageId == ELanguage.ko.ToString())
+                {
+                    ruleset = "Chinese";
+                }
+                else
+                {
+                    ruleset = "Japanese";
+                }
+            }
+
+            komi = trainerSettingConfig.GetKomi(ruleset);
+
+            kataGoVisits = new()
+            {
+                SuggestionVisits = trainerSettingConfig.SuggestionVisits != null ? trainerSettingConfig.SuggestionVisits.Value : 200,
+                OpponentVisits = trainerSettingConfig.OpponentVisits != null ? trainerSettingConfig.OpponentVisits.Value : 200,
+                PreVisits = trainerSettingConfig.PreVisits != null ? trainerSettingConfig.PreVisits.Value : 200,
+                SelfplayVisits = trainerSettingConfig.SelfplayVisits != null ? trainerSettingConfig.SelfplayVisits.Value : 200,
+            };
+        }
+
         [JSInvokable]
         public async Task<bool> Start()
         {
@@ -218,6 +223,8 @@ namespace Gosuji.Client.Components.Pages
             APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
+
+            SetNullableSettings();
 
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;

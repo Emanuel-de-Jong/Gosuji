@@ -105,9 +105,14 @@ namespace Gosuji.Client.Data
                 return Komi.Value;
             }
 
+            return GetDefaultKomi(ruleset);
+        }
+
+        public double GetDefaultKomi(string? ruleset)
+        {
             if (Handicap != 0)
             {
-               return 0.5;
+                return 0.5;
             }
 
             if (ruleset == null)
