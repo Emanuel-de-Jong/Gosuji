@@ -295,9 +295,9 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task<double> GetKomi()
+        public async Task<double> GetDefaultKomi(string ruleset)
         {
-            return trainerSettingConfig.GetKomi(ruleset);
+            return trainerSettingConfig.GetDefaultKomi(ruleset);
         }
 
         public async Task SetKomi(ChangeEventArgs e)

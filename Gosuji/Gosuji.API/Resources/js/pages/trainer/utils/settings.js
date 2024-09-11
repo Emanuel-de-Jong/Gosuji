@@ -192,7 +192,7 @@ settings.setKomi = async function () {
     if (settings.customKomi) return;
 
     let oldKomi = settings.komi;
-    let komi = await trainerG.trainerRef.invokeMethodAsync("GetKomi");
+    let komi = await trainerG.trainerRef.invokeMethodAsync("GetDefaultKomi", settings.ruleset);
 
     if (komi != oldKomi) {
         settings.setSetting("komi", komi);
