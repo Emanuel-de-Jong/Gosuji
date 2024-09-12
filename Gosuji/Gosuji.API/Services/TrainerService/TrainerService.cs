@@ -68,15 +68,9 @@ namespace Gosuji.API.Services.TrainerService
             (await GetKataGo()).PlayRange(moves);
 
             MoveTree.CurrentNode = MoveTree.RootNode;
-
-            if (moves.Length == 0)
+            foreach (Move move in moves)
             {
-                return;
-            }
-
-            foreach (Move move in moves[1..])
-            {
-                MoveTree.Play(move);
+                MoveTree.Add(move);
             }
         }
 

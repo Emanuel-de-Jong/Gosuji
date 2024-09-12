@@ -11,6 +11,21 @@ namespace Gosuji.API.Services.TrainerService
 
         public MoveNode Add(Move move)
         {
+            if (CurrentNode != null && CurrentNode.Move.Equals(move))
+            {
+                return CurrentNode;
+            }
+
+            if (CurrentNode != null && CurrentNode.Children.Count > 0)
+            {
+                MoveNode? childNode = CurrentNode.Children.Find(c => c.Move.Equals(move));
+                if (childNode != null)
+                {
+                    CurrentNode = childNode;
+                    return childNode;
+                }
+            }
+
             MoveNode newNode;
             if (RootNode == null)
             {
@@ -45,25 +60,6 @@ namespace Gosuji.API.Services.TrainerService
             if (CurrentNode == null || CurrentNode.Equals(node))
             {
                 CurrentNode = node.Parent;
-            }
-        }
-
-        public void Play(Move move)
-        {
-            if (CurrentNode == null)
-            {
-                Add(move);
-                return;
-            }
-
-            MoveNode? child = CurrentNode.Children.Find(c => c.Move.Equals(move));
-            if (child != null)
-            {
-                CurrentNode = child;
-            }
-            else
-            {
-                Add(move);
             }
         }
     }
