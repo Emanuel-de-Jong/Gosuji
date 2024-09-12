@@ -41,8 +41,8 @@ katago.start = async function () {
     await katago.restart();
     await katago.setBoardsize();
     await katago.setRuleset();
-    await katago.setKomi();
     await katago.setHandicap();
+    await katago.setKomi();
 };
 
 katago.clearBoard = async function () {

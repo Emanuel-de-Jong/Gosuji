@@ -13,8 +13,10 @@ namespace Gosuji.API.Services.TrainerService
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
         public string UserId { get; set; }
 
-        public Game? Game { get; set; }
-        public TrainerSettingConfig? SettingConfig { get; set; }
+        public Game Game { get; set; }
+        public TrainerSettingConfig? TrainerSettingConfig { get; set; }
+        public NullableTrainerSettings? NullableTrainerSettings { get; set; }
+        public KataGo? KataGo { get; set; }
         public MoveTree MoveTree { get; set; } = new();
 
         public TrainerService(string userId, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
@@ -22,8 +24,20 @@ namespace Gosuji.API.Services.TrainerService
             UserId = userId;
             pool = kataGoPool;
             this.dbContextFactory = dbContextFactory;
-
             Game = new();
+
+            kataGoPool.InstanceReturning += PoolInstanceReturning;
+        }
+
+        private async void PoolInstanceReturning(string userId)
+        {
+            if (userId != UserId)
+            {
+                return;
+            }
+
+            KataGo = null;
+            KataGo = await pool.Get(UserId);
         }
 
         public async Task Return()
@@ -36,63 +50,80 @@ namespace Gosuji.API.Services.TrainerService
             return pool.UserHasInstance(UserId);
         }
 
-        public async Task Init()
+        public async Task Init(TrainerSettingConfig trainerSettingConfig, NullableTrainerSettings nullableTrainerSettings,
+            bool isThirdPartySGF)
         {
+            TrainerSettingConfig = trainerSettingConfig;
+            NullableTrainerSettings = nullableTrainerSettings;
+            Game.IsThirdPartySGF = isThirdPartySGF;
+
+            KataGo = await pool.Get(UserId);
+
+            await KataGo.Restart();
+            KataGo.SetBoardsize(trainerSettingConfig.Boardsize);
+            KataGo.SetRuleset(nullableTrainerSettings.Ruleset);
+            KataGo.SetHandicap(trainerSettingConfig.Handicap);
+            KataGo.SetKomi(nullableTrainerSettings.Komi);
         }
 
         public async Task ClearBoard()
         {
-            (await KataGo()).ClearBoard();
+            KataGo.ClearBoard();
         }
 
         public async Task Restart()
         {
-            await (await KataGo()).Restart();
+            await KataGo.Restart();
         }
 
         public async Task SetBoardsize(int boardsize)
         {
-            (await KataGo()).SetBoardsize(boardsize);
+            KataGo.SetBoardsize(boardsize);
         }
 
         public async Task SetRuleset(string ruleset)
         {
-            (await KataGo()).SetRuleset(ruleset);
+            KataGo.SetRuleset(ruleset);
         }
 
         public async Task SetKomi(double komi)
         {
-            (await KataGo()).SetKomi(komi);
+            KataGo.SetKomi(komi);
         }
 
         public async Task SetHandicap(int handicap)
         {
-            (await KataGo()).SetHandicap(handicap);
+            KataGo.SetHandicap(handicap);
         }
 
         public async Task<MoveSuggestion> AnalyzeMove(Move move)
         {
-            return (await KataGo()).AnalyzeMove(move);
+            return KataGo.AnalyzeMove(move);
         }
 
         public async Task<MoveSuggestionList> Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
-            return (await KataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+            return KataGo.Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
         }
 
         public async Task Play(Move move)
         {
-            (await KataGo()).Play(move);
+            KataGo.Play(move);
         }
 
         public async Task PlayRange(Move[] moves)
         {
-            (await KataGo()).PlayRange(moves);
+            KataGo.PlayRange(moves);
         }
 
-        private async Task<KataGo> KataGo()
+        private async Task<KataGo> GetKataGo()
         {
-            return await pool.Get(UserId);
+            if (KataGo == null)
+            {
+                KataGo = await pool.Get(UserId);
+            }
+
+            return KataGo;
         }
 
         public async ValueTask DisposeAsync()

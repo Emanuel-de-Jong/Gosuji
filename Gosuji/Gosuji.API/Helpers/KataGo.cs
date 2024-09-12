@@ -17,7 +17,7 @@ namespace Gosuji.API.Helpers
         public StreamWriter writer;
 
         private bool stopped = false;
-        private int boardsize = 19;
+        private int? boardsize;
 
         private int lastMaxVisits;
 
@@ -85,6 +85,11 @@ namespace Gosuji.API.Helpers
 
         public void SetBoardsize(int boardsize)
         {
+            if (this.boardsize == null && boardsize == 19 || this.boardsize == boardsize)
+            {
+                return;
+            }
+
             this.boardsize = boardsize;
             Write("boardsize " + boardsize);
             ClearReader();

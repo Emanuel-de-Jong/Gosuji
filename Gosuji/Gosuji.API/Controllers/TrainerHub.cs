@@ -4,6 +4,7 @@ using Gosuji.API.Services.TrainerService;
 using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
+using Gosuji.Client.Models.Trainer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
@@ -61,9 +62,10 @@ namespace Gosuji.API.Controllers
             return OkData(await trainerServices[Context.ConnectionId].UserHasInstance());
         }
 
-        public async Task<HubResponse> Init(TrainerSettingConfig trainerSettingConfig)
+        public async Task<HubResponse> Init(TrainerSettingConfig trainerSettingConfig, NullableTrainerSettings nullableTrainerSettings,
+            bool isThirdPartySGF = false)
         {
-            await trainerServices[Context.ConnectionId].Init();
+            await trainerServices[Context.ConnectionId].Init(trainerSettingConfig, nullableTrainerSettings, isThirdPartySGF);
             return Ok;
         }
 

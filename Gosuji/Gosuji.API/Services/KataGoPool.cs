@@ -2,11 +2,14 @@
 using Gosuji.API.Helpers;
 using Gosuji.Client.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Gosuji.API.Services
 {
     public class KataGoPool : IDisposable
     {
+        public event Action<string> InstanceReturning;
+
         private const int MIN_INSTANCES = 1;
         private const int MAX_INSTANCES = 8;
 
@@ -158,6 +161,8 @@ namespace Gosuji.API.Services
 
         private async Task CashIn(string userId)
         {
+            InstanceReturning?.Invoke(userId);
+
             UserMoveCount? moveCount = await MoveCountHelper.Get(dbContextFactory, userId);
             moveCount.KataGoVisits += instances[userId].TotalVisits;
 
