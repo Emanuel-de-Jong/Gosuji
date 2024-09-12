@@ -37,6 +37,11 @@ katago.initTrainerConnection = async function () {
     return await katago.sendPageRequest("InitTrainerConnection");
 };
 
+katago.syncBoard = async function () {
+    let moves = trainerG.board.getMoves();
+    return await katago.sendRequest("SyncBoard", moves);
+};
+
 katago.clearBoard = async function () {
     return await katago.sendRequest("ClearBoard");
 };

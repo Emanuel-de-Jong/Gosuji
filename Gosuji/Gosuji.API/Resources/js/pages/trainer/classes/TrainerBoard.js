@@ -209,12 +209,6 @@ class TrainerBoard extends Board {
         this.isSelfplayStoneSound = isSelfplayStoneSound;
     }
 
-    async syncWithServer() {
-        await katago.clearBoard();
-        await katago.setHandicap();
-        await katago.playRange();
-    }
-
     drawCoords(suggestionList) {
         let suggestions = suggestionList.getFilterByWeaker();
 

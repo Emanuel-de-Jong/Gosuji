@@ -69,6 +69,12 @@ namespace Gosuji.API.Controllers
             return Ok;
         }
 
+        public async Task<HubResponse> SyncBoard(Move[] moves)
+        {
+            await trainerServices[Context.ConnectionId].SyncBoard(moves);
+            return Ok;
+        }
+
         public async Task<HubResponse> ClearBoard()
         {
             await trainerServices[Context.ConnectionId].ClearBoard();

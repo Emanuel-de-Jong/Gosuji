@@ -59,6 +59,13 @@ namespace Gosuji.API.Services.TrainerService
             await StartKataGo();
         }
 
+        public async Task SyncBoard(Move[] moves)
+        {
+            (await GetKataGo()).ClearBoard();
+            (await GetKataGo()).SetHandicap(TrainerSettingConfig.Handicap);
+            (await GetKataGo()).PlayRange(moves);
+        }
+
         public async Task ClearBoard()
         {
             (await GetKataGo()).ClearBoard();
@@ -131,6 +138,7 @@ namespace Gosuji.API.Services.TrainerService
             {
                 KataGo = await pool.Get(UserId);
                 await StartKataGo();
+                // TODO: Play till the current move
             }
 
             return KataGo;
