@@ -19,25 +19,15 @@ namespace Gosuji.API.Services.TrainerService
         public KataGo? KataGo { get; set; }
         public MoveTree MoveTree { get; set; } = new();
 
+        private bool isAnalyzing = false;
+
         public TrainerService(string userId, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
             UserId = userId;
             pool = kataGoPool;
             this.dbContextFactory = dbContextFactory;
+
             Game = new();
-
-            kataGoPool.InstanceReturning += PoolInstanceReturning;
-        }
-
-        private async void PoolInstanceReturning(string userId)
-        {
-            if (userId != UserId)
-            {
-                return;
-            }
-
-            KataGo = null;
-            KataGo = await pool.Get(UserId);
         }
 
         public async Task Return()
@@ -57,68 +47,82 @@ namespace Gosuji.API.Services.TrainerService
             NullableTrainerSettings = nullableTrainerSettings;
             Game.IsThirdPartySGF = isThirdPartySGF;
 
-            KataGo = await pool.Get(UserId);
-
-            await KataGo.Restart();
-            KataGo.SetBoardsize(trainerSettingConfig.Boardsize);
-            KataGo.SetRuleset(nullableTrainerSettings.Ruleset);
-            KataGo.SetHandicap(trainerSettingConfig.Handicap);
-            KataGo.SetKomi(nullableTrainerSettings.Komi);
+            await (await GetKataGo()).Restart();
+            (await GetKataGo()).SetBoardsize(trainerSettingConfig.Boardsize);
+            (await GetKataGo()).SetRuleset(nullableTrainerSettings.Ruleset);
+            (await GetKataGo()).SetHandicap(trainerSettingConfig.Handicap);
+            (await GetKataGo()).SetKomi(nullableTrainerSettings.Komi);
         }
 
         public async Task ClearBoard()
         {
-            KataGo.ClearBoard();
+            (await GetKataGo()).ClearBoard();
         }
 
         public async Task Restart()
         {
-            await KataGo.Restart();
+            await (await GetKataGo()).Restart();
         }
 
         public async Task SetBoardsize(int boardsize)
         {
-            KataGo.SetBoardsize(boardsize);
+            (await GetKataGo()).SetBoardsize(boardsize);
         }
 
         public async Task SetRuleset(string ruleset)
         {
-            KataGo.SetRuleset(ruleset);
+            (await GetKataGo()).SetRuleset(ruleset);
         }
 
         public async Task SetKomi(double komi)
         {
-            KataGo.SetKomi(komi);
+            (await GetKataGo()).SetKomi(komi);
         }
 
         public async Task SetHandicap(int handicap)
         {
-            KataGo.SetHandicap(handicap);
+            (await GetKataGo()).SetHandicap(handicap);
         }
 
         public async Task<MoveSuggestion> AnalyzeMove(Move move)
         {
-            return KataGo.AnalyzeMove(move);
+            if (isAnalyzing)
+            {
+                return null;
+            }
+
+            isAnalyzing = true;
+            MoveSuggestion suggestion = (await GetKataGo()).AnalyzeMove(move);
+            isAnalyzing = false;
+            return suggestion;
         }
 
         public async Task<MoveSuggestionList> Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
         {
-            return KataGo.Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+            if (isAnalyzing)
+            {
+                return null;
+            }
+
+            isAnalyzing = true;
+            MoveSuggestionList suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+            isAnalyzing = false;
+            return suggestions;
         }
 
         public async Task Play(Move move)
         {
-            KataGo.Play(move);
+            (await GetKataGo()).Play(move);
         }
 
         public async Task PlayRange(Move[] moves)
         {
-            KataGo.PlayRange(moves);
+            (await GetKataGo()).PlayRange(moves);
         }
 
         private async Task<KataGo> GetKataGo()
         {
-            if (KataGo == null)
+            if (KataGo == null || KataGo.IsPaused)
             {
                 KataGo = await pool.Get(UserId);
             }

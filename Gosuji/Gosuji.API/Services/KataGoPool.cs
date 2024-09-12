@@ -8,8 +8,6 @@ namespace Gosuji.API.Services
 {
     public class KataGoPool : IDisposable
     {
-        public event Action<string> InstanceReturning;
-
         private const int MIN_INSTANCES = 1;
         private const int MAX_INSTANCES = 8;
 
@@ -71,17 +69,20 @@ namespace Gosuji.API.Services
 
         private async Task CashInTimerElapsed()
         {
-            foreach (KeyValuePair<string, KataGo> pair in new Dictionary<string, KataGo>(instances))
+            foreach (string userId in new Dictionary<string, KataGo>(instances).Keys)
             {
-                if ((DateTimeOffset.UtcNow - pair.Value.LastStartTime).Hours <= 6)
+                KataGo instance = instances[userId];
+                if ((DateTimeOffset.UtcNow - instance.LastStartTime).Hours <= 6)
                 {
                     continue;
                 }
 
-                await CashIn(pair.Key);
+                instances.Remove(userId);
+                instance.IsPaused = true;
 
-                pair.Value.Stop();
-                instances.Remove(pair.Key);
+                await CashIn(userId);
+
+                instance.Stop();
             }
         }
 
@@ -121,14 +122,18 @@ namespace Gosuji.API.Services
                 return;
             }
 
+            KataGo instance = instances[userId];
+            instances.Remove(userId);
+            instance.IsPaused = true;
+
             await CashIn(userId);
 
-            KataGo instance = instances[userId];
             await instance.Restart();
             instance.TotalVisits = 0;
 
+            instance.IsPaused = false;
+
             freeInstances.Push(instance);
-            instances.Remove(userId);
 
             ManageFreeInstances();
         }
@@ -161,8 +166,6 @@ namespace Gosuji.API.Services
 
         private async Task CashIn(string userId)
         {
-            InstanceReturning?.Invoke(userId);
-
             UserMoveCount? moveCount = await MoveCountHelper.Get(dbContextFactory, userId);
             moveCount.KataGoVisits += instances[userId].TotalVisits;
 
