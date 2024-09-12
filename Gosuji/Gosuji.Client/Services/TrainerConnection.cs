@@ -29,6 +29,15 @@ namespace Gosuji.Client.Services
                 HubConnection.InvokeAsync<HubResponse>(uri));
         }
 
+        public async Task<APIResponse> Init(TrainerSettingConfig trainerSettingConfig, NullableTrainerSettings nullableTrainerSettings,
+            bool isThirdPartySGF = false)
+        {
+            string uri = "Init";
+            return await HubResponseHandler.TryCatch(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri,
+                trainerSettingConfig, nullableTrainerSettings, isThirdPartySGF));
+        }
+
         [JSInvokable]
         public async Task<bool> ClearBoard()
         {

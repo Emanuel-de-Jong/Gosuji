@@ -136,10 +136,7 @@ trainerPage.sgfLoadedListener = async function () {
     await stats.clear();
     ratioChart.clear();
     gameplay.clear();
-
-    await katago.clearBoard();
-    await katago.setBoardsize();
-    await katago.setHandicap();
+    await katago.clear();
 
     gameplay.start(false);
 };

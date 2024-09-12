@@ -63,7 +63,7 @@ namespace Gosuji.API.Controllers
         }
 
         public async Task<HubResponse> Init(TrainerSettingConfig trainerSettingConfig, NullableTrainerSettings nullableTrainerSettings,
-            bool isThirdPartySGF = false)
+            bool isThirdPartySGF)
         {
             await trainerServices[Context.ConnectionId].Init(trainerSettingConfig, nullableTrainerSettings, isThirdPartySGF);
             return Ok;

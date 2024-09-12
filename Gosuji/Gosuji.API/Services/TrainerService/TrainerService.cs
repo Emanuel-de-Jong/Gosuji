@@ -30,6 +30,15 @@ namespace Gosuji.API.Services.TrainerService
             Game = new();
         }
 
+        private async Task StartKataGo()
+        {
+            await (await GetKataGo()).Restart();
+            (await GetKataGo()).SetBoardsize(TrainerSettingConfig.Boardsize);
+            (await GetKataGo()).SetRuleset(NullableTrainerSettings.Ruleset);
+            (await GetKataGo()).SetHandicap(TrainerSettingConfig.Handicap);
+            (await GetKataGo()).SetKomi(NullableTrainerSettings.Komi);
+        }
+
         public async Task Return()
         {
             await pool.Return(UserId);
@@ -47,11 +56,7 @@ namespace Gosuji.API.Services.TrainerService
             NullableTrainerSettings = nullableTrainerSettings;
             Game.IsThirdPartySGF = isThirdPartySGF;
 
-            await (await GetKataGo()).Restart();
-            (await GetKataGo()).SetBoardsize(trainerSettingConfig.Boardsize);
-            (await GetKataGo()).SetRuleset(nullableTrainerSettings.Ruleset);
-            (await GetKataGo()).SetHandicap(trainerSettingConfig.Handicap);
-            (await GetKataGo()).SetKomi(nullableTrainerSettings.Komi);
+            await StartKataGo();
         }
 
         public async Task ClearBoard()
@@ -125,6 +130,7 @@ namespace Gosuji.API.Services.TrainerService
             if (KataGo == null || KataGo.IsPaused)
             {
                 KataGo = await pool.Get(UserId);
+                await StartKataGo();
             }
 
             return KataGo;

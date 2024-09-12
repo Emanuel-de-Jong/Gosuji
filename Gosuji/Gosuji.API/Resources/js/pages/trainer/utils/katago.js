@@ -25,24 +25,16 @@ katago.start = async function () {
     }
     katago.isStarted = true;
 
-    let startResult = await trainerG.trainerRef
-        .invokeMethodAsync("Start")
-        .then((response) => {
-            return response;
-        })
-        .catch((error) => {
-            return error;
-        });
-    
-    if (startResult == false) {
+    let invokeResult = await katago.sendPageRequest("Start");
+    if (!invokeResult) {
         return;
     }
 
-    await katago.restart();
-    await katago.setBoardsize();
-    await katago.setRuleset();
-    await katago.setHandicap();
-    await katago.setKomi();
+    await katago.initTrainerConnection();
+};
+
+katago.initTrainerConnection = async function () {
+    return await katago.sendPageRequest("InitTrainerConnection");
 };
 
 katago.clearBoard = async function () {
@@ -124,6 +116,20 @@ katago.sendRequest = async function (uri, ...args) {
     let result;
     try {
         result = await katago.serviceRef.invokeMethodAsync(uri, ...args);
+    } catch (error) {
+        console.error(error);
+    }
+
+    trainerG.hideLoadAnimation();
+    return result;
+};
+
+katago.sendPageRequest = async function (uri, ...args) {
+    trainerG.showLoadAnimation();
+
+    let result;
+    try {
+        result = await trainerG.trainerRef.invokeMethodAsync(uri, ...args);
     } catch (error) {
         console.error(error);
     }
