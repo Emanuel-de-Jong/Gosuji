@@ -84,17 +84,6 @@ katago.play = async function (coord, color = trainerG.board.getColor()) {
     return await katago.sendRequest("Play", new Move(color, coord));
 };
 
-katago.playRange = async function () {
-    let moves = trainerG.board.getMoves();
-    if (moves.length == 0) return;
-
-    return await katago.sendRequest("PlayRange", moves);
-};
-
-katago.sgf = async function () {
-    return await katago.sendRequest("SGF", false);
-};
-
 katago.sendRequest = async function (uri, ...args) {
     trainerG.showLoadAnimation();
 

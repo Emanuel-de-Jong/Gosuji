@@ -107,11 +107,6 @@ namespace Gosuji.API.Services.TrainerService
             (await GetKataGo()).Play(move);
         }
 
-        public async Task PlayRange(Move[] moves)
-        {
-            (await GetKataGo()).PlayRange(moves);
-        }
-
         private async Task<KataGo> GetKataGo()
         {
             if (KataGo == null || KataGo.IsPaused)

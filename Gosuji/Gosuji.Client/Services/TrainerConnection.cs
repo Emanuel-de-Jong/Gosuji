@@ -97,15 +97,5 @@ namespace Gosuji.Client.Services
                 move));
             return !G.StatusMessage.HandleAPIResponse(response);
         }
-
-        [JSInvokable]
-        public async Task<bool> PlayRange(Move[] moves)
-        {
-            string uri = "PlayRange";
-            APIResponse response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri,
-                moves));
-            return !G.StatusMessage.HandleAPIResponse(response);
-        }
     }
 }

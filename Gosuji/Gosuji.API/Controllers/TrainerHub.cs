@@ -106,11 +106,5 @@ namespace Gosuji.API.Controllers
             await trainerServices[Context.ConnectionId].Play(move);
             return Ok;
         }
-
-        public async Task<HubResponse> PlayRange(Move[] moves)
-        {
-            await trainerServices[Context.ConnectionId].PlayRange(moves);
-            return Ok;
-        }
     }
 }
