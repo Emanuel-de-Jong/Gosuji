@@ -1,9 +1,11 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.API.Helpers;
 using Gosuji.Client.Data;
+using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Gosuji.API.Services.TrainerService
 {
@@ -64,6 +66,18 @@ namespace Gosuji.API.Services.TrainerService
             (await GetKataGo()).ClearBoard();
             (await GetKataGo()).SetHandicap(TrainerSettingConfig.Handicap);
             (await GetKataGo()).PlayRange(moves);
+
+            MoveTree.CurrentNode = MoveTree.RootNode;
+
+            if (moves.Length == 0)
+            {
+                return;
+            }
+
+            foreach (Move move in moves[1..])
+            {
+                MoveTree.Play(move);
+            }
         }
 
         public async Task SetRuleset(string ruleset)
@@ -82,9 +96,11 @@ namespace Gosuji.API.Services.TrainerService
             {
                 return null;
             }
-
             isAnalyzing = true;
+
             MoveSuggestion suggestion = (await GetKataGo()).AnalyzeMove(move);
+            MoveTree.CurrentNode.Suggestions.AnalyzeMoveSuggestion = suggestion;
+
             isAnalyzing = false;
             return suggestion;
         }
@@ -95,15 +111,18 @@ namespace Gosuji.API.Services.TrainerService
             {
                 return null;
             }
-
             isAnalyzing = true;
+
             MoveSuggestionList suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+            MoveTree.CurrentNode.Suggestions = suggestions;
+
             isAnalyzing = false;
             return suggestions;
         }
 
         public async Task Play(Move move)
         {
+            MoveTree.Add(move);
             (await GetKataGo()).Play(move);
         }
 

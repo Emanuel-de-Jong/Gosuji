@@ -47,5 +47,24 @@ namespace Gosuji.API.Services.TrainerService
                 CurrentNode = node.Parent;
             }
         }
+
+        public void Play(Move move)
+        {
+            if (CurrentNode == null)
+            {
+                Add(move);
+                return;
+            }
+
+            MoveNode? child = CurrentNode.Children.Find(c => c.Move.Equals(move));
+            if (child != null)
+            {
+                CurrentNode = child;
+            }
+            else
+            {
+                Add(move);
+            }
+        }
     }
 }
