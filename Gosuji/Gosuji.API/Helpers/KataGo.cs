@@ -18,7 +18,8 @@ namespace Gosuji.API.Helpers
         public StreamWriter writer;
 
         private bool isStopped = false;
-        private int? boardsize;
+        private int boardsize = 19;
+        private int handicap = 0;
 
         private int lastMaxVisits;
 
@@ -86,7 +87,7 @@ namespace Gosuji.API.Helpers
 
         public void SetBoardsize(int boardsize)
         {
-            if (this.boardsize == null && boardsize == 19 || this.boardsize == boardsize)
+            if (this.boardsize == boardsize)
             {
                 return;
             }
@@ -110,6 +111,12 @@ namespace Gosuji.API.Helpers
 
         public void SetHandicap(int handicap)
         {
+            if (this.handicap == handicap)
+            {
+                return;
+            }
+
+            this.handicap = handicap;
             Write("fixed_handicap " + handicap);
             ClearReader();
         }
@@ -123,7 +130,7 @@ namespace Gosuji.API.Helpers
                 string element = analysis[i];
                 if (element == "move")
                 {
-                    suggestion.Coord ??= Move.CoordFromKataGo(analysis[i + 1], boardsize.Value);
+                    suggestion.Coord ??= Move.CoordFromKataGo(analysis[i + 1], boardsize);
                 }
                 else if (element == "visits")
                 {
@@ -141,7 +148,7 @@ namespace Gosuji.API.Helpers
                 {
                     while (analysis.Length - 1 >= i + 1 && analysis[i + 1] != "info")
                     {
-                        suggestion?.Continuation.Add(Move.CoordFromKataGo(analysis[i + 1], boardsize.Value));
+                        suggestion?.Continuation.Add(Move.CoordFromKataGo(analysis[i + 1], boardsize));
                         i++;
                     }
                 }
@@ -169,7 +176,7 @@ namespace Gosuji.API.Helpers
                 ClearReader();
             }
 
-            KataGoMove kataGoMove = move.ToKataGo(boardsize.Value);
+            KataGoMove kataGoMove = move.ToKataGo(boardsize);
             Write("kata-genmove_analyze " + kataGoMove.Color + " allow " + kataGoMove.Color + " " + kataGoMove.Coord + " 1");
             TotalVisits += maxVisits;
 
@@ -241,7 +248,7 @@ namespace Gosuji.API.Helpers
 
         public void Play(Move move)
         {
-            Write("play " + move.ColorToKataGo() + " " + move.CoordToKataGo(boardsize.Value));
+            Write("play " + move.ColorToKataGo() + " " + move.CoordToKataGo(boardsize));
             ClearReader();
         }
 
