@@ -66,21 +66,6 @@ namespace Gosuji.API.Services.TrainerService
             (await GetKataGo()).PlayRange(moves);
         }
 
-        public async Task ClearBoard()
-        {
-            (await GetKataGo()).ClearBoard();
-        }
-
-        public async Task Restart()
-        {
-            await (await GetKataGo()).Restart();
-        }
-
-        public async Task SetBoardsize(int boardsize)
-        {
-            (await GetKataGo()).SetBoardsize(boardsize);
-        }
-
         public async Task SetRuleset(string ruleset)
         {
             (await GetKataGo()).SetRuleset(ruleset);
@@ -89,11 +74,6 @@ namespace Gosuji.API.Services.TrainerService
         public async Task SetKomi(double komi)
         {
             (await GetKataGo()).SetKomi(komi);
-        }
-
-        public async Task SetHandicap(int handicap)
-        {
-            (await GetKataGo()).SetHandicap(handicap);
         }
 
         public async Task<MoveSuggestion> AnalyzeMove(Move move)

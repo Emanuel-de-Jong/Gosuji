@@ -49,34 +49,6 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<bool> ClearBoard()
-        {
-            string uri = "ClearBoard";
-            APIResponse response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri));
-            return !G.StatusMessage.HandleAPIResponse(response);
-        }
-
-        [JSInvokable]
-        public async Task<bool> Restart()
-        {
-            string uri = "Restart";
-            APIResponse response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri));
-            return !G.StatusMessage.HandleAPIResponse(response);
-        }
-
-        [JSInvokable]
-        public async Task<bool> SetBoardsize(int boardsize)
-        {
-            string uri = "SetBoardsize";
-            APIResponse response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri,
-                boardsize));
-            return !G.StatusMessage.HandleAPIResponse(response);
-        }
-
-        [JSInvokable]
         public async Task<bool> SetRuleset(string ruleset)
         {
             string uri = "SetRuleset";
@@ -93,16 +65,6 @@ namespace Gosuji.Client.Services
             APIResponse response = await HubResponseHandler.TryCatch(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
                 komi));
-            return !G.StatusMessage.HandleAPIResponse(response);
-        }
-
-        [JSInvokable]
-        public async Task<bool> SetHandicap(int handicap)
-        {
-            string uri = "SetHandicap";
-            APIResponse response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri,
-                handicap));
             return !G.StatusMessage.HandleAPIResponse(response);
         }
 

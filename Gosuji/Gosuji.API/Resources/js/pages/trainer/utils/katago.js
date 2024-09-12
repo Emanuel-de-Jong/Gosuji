@@ -42,30 +42,12 @@ katago.syncBoard = async function () {
     return await katago.sendRequest("SyncBoard", moves);
 };
 
-katago.clearBoard = async function () {
-    return await katago.sendRequest("ClearBoard");
-};
-
-katago.restart = async function () {
-    return await katago.sendRequest("Restart");
-};
-
-katago.setBoardsize = async function () {
-    return await katago.sendRequest("SetBoardsize", trainerG.board.boardsize);
-};
-
 katago.setRuleset = async function () {
     return await katago.sendRequest("SetRuleset", sgf.ruleset);
 };
 
 katago.setKomi = async function () {
     return await katago.sendRequest("SetKomi", sgf.komi);
-};
-
-katago.setHandicap = async function () {
-    if (!trainerG.board.handicap) return;
-
-    return await katago.sendRequest("SetHandicap", trainerG.board.handicap);
 };
 
 katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {

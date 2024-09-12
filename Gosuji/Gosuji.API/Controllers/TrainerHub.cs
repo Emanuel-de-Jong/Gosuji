@@ -75,24 +75,6 @@ namespace Gosuji.API.Controllers
             return Ok;
         }
 
-        public async Task<HubResponse> ClearBoard()
-        {
-            await trainerServices[Context.ConnectionId].ClearBoard();
-            return Ok;
-        }
-
-        public async Task<HubResponse> Restart()
-        {
-            await trainerServices[Context.ConnectionId].Restart();
-            return Ok;
-        }
-
-        public async Task<HubResponse> SetBoardsize([RegularExpression("^(9|13|19)$")] int boardsize)
-        {
-            await trainerServices[Context.ConnectionId].SetBoardsize(boardsize);
-            return Ok;
-        }
-
         public async Task<HubResponse> SetRuleset(string ruleset)
         {
             ruleset = sanitizeService.Sanitize(ruleset);
@@ -103,12 +85,6 @@ namespace Gosuji.API.Controllers
         public async Task<HubResponse> SetKomi([Range(-150, 150)] double komi)
         {
             await trainerServices[Context.ConnectionId].SetKomi(komi);
-            return Ok;
-        }
-
-        public async Task<HubResponse> SetHandicap([Range(0, 9)] int handicap)
-        {
-            await trainerServices[Context.ConnectionId].SetHandicap(handicap);
             return Ok;
         }
 
