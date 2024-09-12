@@ -93,6 +93,8 @@ namespace Gosuji.API.Services.TrainerService
             isAnalyzing = true;
 
             MoveSuggestion suggestion = (await GetKataGo()).AnalyzeMove(move);
+
+            MoveTree.CurrentNode.Suggestions ??= new MoveSuggestionList();
             MoveTree.CurrentNode.Suggestions.AnalyzeMoveSuggestion = suggestion;
 
             isAnalyzing = false;

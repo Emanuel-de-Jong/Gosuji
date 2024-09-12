@@ -4,19 +4,20 @@ namespace Gosuji.API.Services.TrainerService
 {
     public class MoveTree
     {
-        public MoveNode? RootNode { get; set; }
+        public MoveNode RootNode { get; set; } = new MoveNode(new Move(-1, -1));
         public List<MoveNode> AllNodes { get; set; } = [];
-        public MoveNode? CurrentNode { get; set; }
+        public MoveNode CurrentNode { get; set; }
         public MoveNode? MainBranch { get; set; }
+
+        public MoveTree()
+        {
+            AllNodes.Add(RootNode);
+            CurrentNode = RootNode;
+        }
 
         public MoveNode Add(Move move)
         {
-            if (CurrentNode != null && CurrentNode.Move.Equals(move))
-            {
-                return CurrentNode;
-            }
-
-            if (CurrentNode != null && CurrentNode.Children.Count > 0)
+            if (CurrentNode.Children.Count > 0)
             {
                 MoveNode? childNode = CurrentNode.Children.Find(c => c.Move.Equals(move));
                 if (childNode != null)
@@ -26,17 +27,7 @@ namespace Gosuji.API.Services.TrainerService
                 }
             }
 
-            MoveNode newNode;
-            if (RootNode == null)
-            {
-                newNode = new MoveNode(move);
-                RootNode = newNode;
-            }
-            else
-            {
-                CurrentNode ??= RootNode;
-                newNode = CurrentNode.Add(move);
-            }
+            MoveNode newNode = CurrentNode.Add(move);
 
             CurrentNode = newNode;
             AllNodes.Add(newNode);
@@ -46,18 +37,14 @@ namespace Gosuji.API.Services.TrainerService
 
         public void Remove(MoveNode node)
         {
-            if (node.Parent == null)
-            {
-                RootNode = null;
-                CurrentNode = null;
-                AllNodes.Clear();
-                return;
-            }
-
             node.IterateChildren(true).ToList().ForEach(c => AllNodes.Remove(c));
             node.Parent.Children.Remove(node);
 
-            if (CurrentNode == null || CurrentNode.Equals(node))
+            if (CurrentNode?.Parent == null)
+            {
+                   CurrentNode = RootNode;
+            }
+            else if (CurrentNode.Equals(node))
             {
                 CurrentNode = node.Parent;
             }
