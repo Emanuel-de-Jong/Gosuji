@@ -1,6 +1,7 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.API.Services;
 using Gosuji.API.Services.TrainerService;
+using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -49,11 +50,6 @@ namespace Gosuji.API.Controllers
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task<HubResponse> GetVersion()
-        {
-            return OkData(await trainerServices[Context.ConnectionId].GetVersion());
-        }
-
         public async Task<HubResponse> Return()
         {
             await trainerServices[Context.ConnectionId].Return();
@@ -63,6 +59,12 @@ namespace Gosuji.API.Controllers
         public async Task<HubResponse> UserHasInstance()
         {
             return OkData(await trainerServices[Context.ConnectionId].UserHasInstance());
+        }
+
+        public async Task<HubResponse> Init(TrainerSettingConfig trainerSettingConfig)
+        {
+            await trainerServices[Context.ConnectionId].Init();
+            return Ok;
         }
 
         public async Task<HubResponse> ClearBoard()

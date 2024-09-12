@@ -35,6 +35,7 @@ namespace Gosuji.Client.Components.Pages
         [SupplyParameterFromForm]
         private PresetModel addPresetModel { get; set; } = new();
 
+        private bool isInitialized = false;
         private bool isJSInitialized = false;
         private IJSObjectReference jsRef;
         private string? userName;
@@ -46,16 +47,13 @@ namespace Gosuji.Client.Components.Pages
         private UserState? userState;
         private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
-        private string? ruleset;
-        private double? komi;
-        private KataGoVisits? kataGoVisits;
+        private NullableTrainerSettings? nullableTrainerSettings;
 
         private Game? game;
         private GameStat? gameStat;
         private GameStat? openingStat;
         private GameStat? midgameStat;
         private GameStat? endgameStat;
-        private KataGoVersion? kataGoVersion;
 
         private MoveSuggestion[]? suggestions;
 
@@ -86,7 +84,9 @@ namespace Gosuji.Client.Components.Pages
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
 
-            SetNullableSettings();
+            nullableTrainerSettings = new(trainerSettingConfig, settingConfigService.SettingConfig.LanguageId);
+
+            isInitialized = true;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -105,7 +105,7 @@ namespace Gosuji.Client.Components.Pages
                 Console.WriteLine($"Error loading library: {ex.Message}");
             }
 
-            if (kataGoVisits != null && !isJSInitialized)
+            if (isInitialized && !isJSInitialized)
             {
                 isJSInitialized = true;
 
@@ -145,33 +145,6 @@ namespace Gosuji.Client.Components.Pages
                 await jsRef.InvokeVoidAsync("trainerG.board.setIsSelfplayStoneSound", isStoneSound);
         }
 
-        private void SetNullableSettings()
-        {
-            ruleset = trainerSettingConfig.Ruleset;
-            if (ruleset == null)
-            {
-                if (settingConfigService.SettingConfig.LanguageId == ELanguage.zh.ToString() ||
-                    settingConfigService.SettingConfig.LanguageId == ELanguage.ko.ToString())
-                {
-                    ruleset = "Chinese";
-                }
-                else
-                {
-                    ruleset = "Japanese";
-                }
-            }
-
-            komi = trainerSettingConfig.GetKomi(ruleset);
-
-            kataGoVisits = new()
-            {
-                SuggestionVisits = trainerSettingConfig.SuggestionVisits != null ? trainerSettingConfig.SuggestionVisits.Value : 200,
-                OpponentVisits = trainerSettingConfig.OpponentVisits != null ? trainerSettingConfig.OpponentVisits.Value : 200,
-                PreVisits = trainerSettingConfig.PreVisits != null ? trainerSettingConfig.PreVisits.Value : 200,
-                SelfplayVisits = trainerSettingConfig.SelfplayVisits != null ? trainerSettingConfig.SelfplayVisits.Value : 200,
-            };
-        }
-
         [JSInvokable]
         public async Task<bool> Start()
         {
@@ -192,12 +165,6 @@ namespace Gosuji.Client.Components.Pages
                 G.StatusMessage.SetMessage("You already use this page somewhere else!", false);
                 return false;
             }
-
-            APIResponse<KataGoVersion> getVersionResponse = await trainerConnection.GetVersion();
-            if (G.StatusMessage.HandleAPIResponse(getVersionResponse)) return false;
-            kataGoVersion = getVersionResponse.Data;
-
-            await jsRef.InvokeVoidAsync("trainerG.setKataGoVersion", kataGoVersion);
 
             return true;
         }
@@ -224,7 +191,7 @@ namespace Gosuji.Client.Components.Pages
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
 
-            SetNullableSettings();
+            nullableTrainerSettings.Init(trainerSettingConfig, settingConfigService.SettingConfig.LanguageId);
 
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;
@@ -300,63 +267,6 @@ namespace Gosuji.Client.Components.Pages
             return trainerSettingConfig.GetDefaultKomi(ruleset);
         }
 
-        public async Task SetKomi(ChangeEventArgs e)
-        {
-            if (!double.TryParse(e.Value?.ToString(), out double newKomi))
-            {
-                return;
-            }
-            komi = newKomi;
-            trainerSettingConfig.Komi = newKomi;
-        }
-
-        public async Task SetRuleset(ChangeEventArgs e)
-        {
-            string newRuleset = e.Value?.ToString();
-            ruleset = newRuleset;
-            trainerSettingConfig.Ruleset = newRuleset;
-        }
-
-        public async Task SetSuggestionVisits(ChangeEventArgs e)
-        {
-            if (!int.TryParse(e.Value?.ToString(), out int visits))
-            {
-                return;
-            }
-            kataGoVisits.SuggestionVisits = visits;
-            trainerSettingConfig.SuggestionVisits = visits;
-        }
-
-        public async Task SetOpponentVisits(ChangeEventArgs e)
-        {
-            if (!int.TryParse(e.Value?.ToString(), out int visits))
-            {
-                return;
-            }
-            kataGoVisits.OpponentVisits = visits;
-            trainerSettingConfig.OpponentVisits = visits;
-        }
-
-        public async Task SetPreVisits(ChangeEventArgs e)
-        {
-            if (!int.TryParse(e.Value?.ToString(), out int visits))
-            {
-                return;
-            }
-            kataGoVisits.PreVisits = visits;
-            trainerSettingConfig.PreVisits = visits;
-        }
-
-        public async Task SetSelfplayVisits(ChangeEventArgs e)
-        {
-            if (!int.TryParse(e.Value?.ToString(), out int visits))
-            {
-                return;
-            }
-            kataGoVisits.SelfplayVisits = visits;
-            trainerSettingConfig.SelfplayVisits = visits;
-        }
-
         public async ValueTask DisposeAsync()
         {
             trainerRef?.Dispose();
@@ -368,13 +278,5 @@ namespace Gosuji.Client.Components.Pages
                 await trainerConnection.Stop();
             }
         }
-    }
-
-    public class KataGoVisits
-    {
-        public int SuggestionVisits { get; set; }
-        public int OpponentVisits { get; set; }
-        public int PreVisits { get; set; }
-        public int SelfplayVisits { get; set; }
     }
 }

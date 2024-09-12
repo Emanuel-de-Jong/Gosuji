@@ -12,7 +12,7 @@
     <div id="trainerPage">
         <div class="flex-container">
             <div class="flex-item">
-                @if (kataGoVisits != null)
+                @if (isInitialized)
                 {
                     <div id="trainerSettings" class="collapse show">
                         <div id="presetSettings">
@@ -121,11 +121,13 @@
                                                     <div class="row">
                                                         <div class="col-6">
                                                             <label for="suggestionVisits" class="form-label">Suggestion strength</label>
-                                                            <input type="number" class="form-control" id="suggestionVisits" min="2" max="25000" value="@kataGoVisits.SuggestionVisits" @onchange=SetSuggestionVisits>
+                                                            <input type="number" class="form-control" id="suggestionVisits" min="2" max="25000"
+                                                                value="@nullableTrainerSettings.SuggestionVisits" @onchange=nullableTrainerSettings.SetSuggestionVisits>
                                                         </div>
                                                         <div class="col-6">
                                                             <label for="opponentVisits" class="form-label">Opponent strength</label>
-                                                            <input type="number" class="form-control" id="opponentVisits" min="2" max="25000" value="@kataGoVisits.OpponentVisits" @onchange=SetOpponentVisits>
+                                                            <input type="number" class="form-control" id="opponentVisits" min="2" max="25000"
+                                                                value="@nullableTrainerSettings.OpponentVisits" @onchange=nullableTrainerSettings.SetOpponentVisits>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -157,9 +159,9 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="ruleset" class="form-label">Ruleset</label>
-                                                            <select class="form-select" id="ruleset" @onchange=SetRuleset>
-                                                                <option value="Japanese" selected=@(ruleset.ToLower().Contains("jap") ? "true" : null)>Japanese</option>
-                                                                <option value="Chinese" selected=@(ruleset.ToLower().Contains("chin") ? "true" : null)>Chinese</option>
+                                                            <select class="form-select" id="ruleset" @onchange=nullableTrainerSettings.SetRuleset>
+                                                                <option value="Japanese" selected=@(nullableTrainerSettings.Ruleset.ToLower().Contains("jap") ? "true" : null)>Japanese</option>
+                                                                <option value="Chinese" selected=@(nullableTrainerSettings.Ruleset.ToLower().Contains("chin") ? "true" : null)>Chinese</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -174,8 +176,8 @@
                                                                 <div class="input-group-text">
                                                                     <input class="form-check-input mt-0" type="checkbox" id="customKomi" checked="@(trainerSettingConfig.Komi != null ? "true" : null)">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="komi" step="0.5" min="-150" max="150" value="@komi"
-                                                                    @onchange=SetKomi disabled="@(trainerSettingConfig.Komi == null ? "true" : null)">
+                                                                <input type="number" class="form-control" id="komi" step="0.5" min="-150" max="150" value="@nullableTrainerSettings.Komi"
+                                                                       @onchange=nullableTrainerSettings.SetKomi disabled="@(trainerSettingConfig.Komi == null ? "true" : null)">
                                                                 <div class="form-invalid-message"></div>
                                                             </div>
                                                         </div>
@@ -253,7 +255,8 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="preVisits" class="form-label">Pre move strength</label>
-                                                            <input type="number" class="form-control" id="preVisits" min="2" max="25000" value="@kataGoVisits.PreVisits" @onchange=SetPreVisits>
+                                                            <input type="number" class="form-control" id="preVisits" min="2" max="25000"
+                                                                value="@nullableTrainerSettings.PreVisits" @onchange=nullableTrainerSettings.SetPreVisits>
                                                         </div>
                                                     </div>
                                                     <div class="row">
@@ -411,7 +414,8 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="selfplayVisits" class="form-label">Selfplay strength</label>
-                                                            <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000" value="@kataGoVisits.SelfplayVisits" @onchange=SetSelfplayVisits>
+                                                            <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000"
+                                                                value="@nullableTrainerSettings.SelfplayVisits" @onchange=nullableTrainerSettings.SetSelfplayVisits>
                                                         </div>
                                                     </div>
                                                 </div>

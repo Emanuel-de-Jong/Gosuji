@@ -103,10 +103,6 @@ trainerG.setColor = function (color = trainerG.board.getNextColor()) {
     }
 };
 
-trainerG.setKataGoVersion = function (kataGoVersion) {
-    trainerG.kataGoVersion = kataGoVersion;
-};
-
 
 trainerG.showLoadAnimation = function() {
     trainerG.loadAnimation.hidden = false;

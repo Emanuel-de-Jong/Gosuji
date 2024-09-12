@@ -26,21 +26,6 @@ namespace Gosuji.API.Services.TrainerService
             Game = new();
         }
 
-        private async Task<KataGo> KataGo()
-        {
-            return await pool.Get(UserId);
-        }
-
-        public async Task Save()
-        {
-
-        }
-
-        public async Task<KataGoVersion> GetVersion()
-        {
-            return await pool.GetVersion();
-        }
-
         public async Task Return()
         {
             await pool.Return(UserId);
@@ -49,6 +34,10 @@ namespace Gosuji.API.Services.TrainerService
         public async Task<bool> UserHasInstance()
         {
             return pool.UserHasInstance(UserId);
+        }
+
+        public async Task Init()
+        {
         }
 
         public async Task ClearBoard()
@@ -101,9 +90,14 @@ namespace Gosuji.API.Services.TrainerService
             (await KataGo()).PlayRange(moves);
         }
 
+        private async Task<KataGo> KataGo()
+        {
+            return await pool.Get(UserId);
+        }
+
         public async ValueTask DisposeAsync()
         {
-            await Save();
+            //await Save();
         }
     }
 }

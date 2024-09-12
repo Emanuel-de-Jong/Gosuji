@@ -15,13 +15,6 @@ namespace Gosuji.Client.Services
         {
         }
 
-        public async Task<APIResponse<KataGoVersion>> GetVersion()
-        {
-            string uri = "GetVersion";
-            return await HubResponseHandler.TryCatch<KataGoVersion>(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri));
-        }
-
         public async Task<APIResponse> Return()
         {
             string uri = "Return";
