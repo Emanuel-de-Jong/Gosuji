@@ -51,12 +51,6 @@ namespace Gosuji.API.Controllers
             await base.OnDisconnectedAsync(exception);
         }
 
-        public async Task<HubResponse> Return()
-        {
-            await trainerServices[Context.ConnectionId].Return();
-            return Ok;
-        }
-
         public async Task<HubResponse> UserHasInstance()
         {
             return OkData(await trainerServices[Context.ConnectionId].UserHasInstance());

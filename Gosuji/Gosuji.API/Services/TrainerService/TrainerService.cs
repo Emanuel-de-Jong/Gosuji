@@ -41,11 +41,6 @@ namespace Gosuji.API.Services.TrainerService
             (await GetKataGo()).SetKomi(NullableTrainerSettings.Komi);
         }
 
-        public async Task Return()
-        {
-            await pool.Return(UserId);
-        }
-
         public async Task<bool> UserHasInstance()
         {
             return pool.UserHasInstance(UserId);
@@ -127,6 +122,7 @@ namespace Gosuji.API.Services.TrainerService
         public async ValueTask DisposeAsync()
         {
             //await Save();
+            await pool.Return(UserId);
         }
     }
 }

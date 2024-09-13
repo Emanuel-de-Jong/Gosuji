@@ -288,7 +288,6 @@ namespace Gosuji.Client.Components.Pages
 
             if (trainerConnection.IsConnected)
             {
-                await trainerConnection.Return();
                 await trainerConnection.Stop();
             }
         }

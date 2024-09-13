@@ -15,13 +15,6 @@ namespace Gosuji.Client.Services
         {
         }
 
-        public async Task<APIResponse> Return()
-        {
-            string uri = "Return";
-            return await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri));
-        }
-
         public async Task<APIResponse<bool>> UserHasInstance()
         {
             string uri = "UserHasInstance";

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Gosuji.API.Services
 {
-    public class KataGoPool : IDisposable
+    public class KataGoPool : IAsyncDisposable
     {
         private const int MIN_INSTANCES = 1;
         private const int MAX_INSTANCES = 8;
@@ -129,7 +129,6 @@ namespace Gosuji.API.Services
             await CashIn(userId);
 
             await instance.Restart();
-            instance.TotalVisits = 0;
 
             instance.IsPaused = false;
 
@@ -164,25 +163,37 @@ namespace Gosuji.API.Services
             }
         }
 
-        private async Task CashIn(string userId)
+        public async Task CashIn(string userId)
         {
+            if (!instances.ContainsKey(userId))
+            {
+                return;
+            }
+
+            KataGo instance = instances[userId];
+
             UserMoveCount? moveCount = await MoveCountHelper.Get(dbContextFactory, userId);
-            moveCount.KataGoVisits += instances[userId].TotalVisits;
+            moveCount.KataGoVisits += instance.TotalVisits;
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
             dbContext.Update(moveCount);
             await dbContext.SaveChangesAsync();
 
+            instance.TotalVisits = 0;
+
             await dbContext.DisposeAsync();
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
+            List<Task> tasks = [];
             foreach (string userId in instances.Keys)
             {
-                CashIn(userId).Wait();
+                tasks.Add(CashIn(userId));
             }
+
+            await Task.WhenAll(tasks);
         }
     }
 }
