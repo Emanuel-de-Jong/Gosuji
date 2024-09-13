@@ -23,6 +23,12 @@ if (typeof CEvent === "undefined") {
                 listener(event);
             }
         }
+
+        async dispatchAsync(event) {
+            for (const listener of this.listeners) {
+                await listener(event);
+            }
+        }
     }
 
     window.CEvent = CEvent;

@@ -49,26 +49,6 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<bool> SetRuleset(string ruleset)
-        {
-            string uri = "SetRuleset";
-            APIResponse response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri,
-                ruleset));
-            return !G.StatusMessage.HandleAPIResponse(response);
-        }
-
-        [JSInvokable]
-        public async Task<bool> SetKomi(double komi)
-        {
-            string uri = "SetKomi";
-            APIResponse response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri,
-                komi));
-            return !G.StatusMessage.HandleAPIResponse(response);
-        }
-
-        [JSInvokable]
         public async Task<MoveSuggestion?> AnalyzeMove(Move move)
         {
             string uri = "AnalyzeMove";

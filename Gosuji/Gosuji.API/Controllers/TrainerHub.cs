@@ -75,19 +75,6 @@ namespace Gosuji.API.Controllers
             return Ok;
         }
 
-        public async Task<HubResponse> SetRuleset(string ruleset)
-        {
-            ruleset = sanitizeService.Sanitize(ruleset);
-            await trainerServices[Context.ConnectionId].SetRuleset(ruleset);
-            return Ok;
-        }
-
-        public async Task<HubResponse> SetKomi([Range(-150, 150)] double komi)
-        {
-            await trainerServices[Context.ConnectionId].SetKomi(komi);
-            return Ok;
-        }
-
         public async Task<HubResponse> AnalyzeMove(Move move)
         {
             return OkData(await trainerServices[Context.ConnectionId].AnalyzeMove(move));

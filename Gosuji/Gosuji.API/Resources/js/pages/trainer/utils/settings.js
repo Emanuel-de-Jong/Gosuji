@@ -190,7 +190,7 @@ settings.toggleCustomKomi = async function () {
 };
 
 settings.setRuleset = async function () {
-    await sgf.setRuleset(settings.ruleset);
+    sgf.setRuleset(settings.ruleset);
     await settings.setKomi();
 };
 
@@ -202,7 +202,7 @@ settings.setKomi = async function () {
 
     if (komi != oldKomi) {
         settings.setSetting("komi", komi);
-        await sgf.setKomi(komi);
+        sgf.setKomi(komi);
     }
 };
 

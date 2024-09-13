@@ -74,16 +74,6 @@ namespace Gosuji.API.Services.TrainerService
             }
         }
 
-        public async Task SetRuleset(string ruleset)
-        {
-            (await GetKataGo()).SetRuleset(ruleset);
-        }
-
-        public async Task SetKomi(double komi)
-        {
-            (await GetKataGo()).SetKomi(komi);
-        }
-
         public async Task<MoveSuggestion> AnalyzeMove(Move move)
         {
             if (isAnalyzing)

@@ -19,8 +19,8 @@ sgf.clear = async function (gameLoadInfo) {
     sgf.isSGFLoading = false;
     sgf.isThirdParty = false;
 
-    await sgf.setRuleset(gameLoadInfo ? gameLoadInfo.ruleset : settings.ruleset);
-    await sgf.setKomi(gameLoadInfo ? gameLoadInfo.komi : settings.komi);
+    sgf.setRuleset(gameLoadInfo ? gameLoadInfo.ruleset : settings.ruleset);
+    sgf.setKomi(gameLoadInfo ? gameLoadInfo.komi : settings.komi);
 
     trainerG.board.editor.setGameInfo("Gosuji", "GN");
     trainerG.board.editor.setGameInfo("Gosuji", "SO");
@@ -33,12 +33,12 @@ sgf.clear = async function (gameLoadInfo) {
 };
 
 
-sgf.boardEditorListener = function (event) {
+sgf.boardEditorListener = async function (event) {
     if (event.sgfEvent) {
         if (!event.sgfLoaded) {
-            sgf.sgfLoadingEvent.dispatch();
+            await sgf.sgfLoadingEvent.dispatchAsync();
         } else {
-            sgf.sgfLoadedEvent.dispatch();
+            await sgf.sgfLoadedEvent.dispatchAsync();
         }
     }
 };
@@ -47,7 +47,7 @@ sgf.sgfLoadingListener = function () {
     sgf.isSGFLoading = true;
 };
 
-sgf.sgfLoadedListener = async function () {
+sgf.sgfLoadedListener = function () {
     sgf.isThirdParty = true;
 
     let gameInfo = trainerG.board.editor.getGameInfo();
@@ -70,25 +70,25 @@ sgf.sgfLoadedListener = async function () {
         if (gameInfo.RU) {
             let ruleset = gameInfo.RU.toLowerCase();
             if (ruleset.includes("japan")) {
-                await sgf.setRuleset("Japanese");
+                sgf.setRuleset("Japanese");
             } else if (ruleset.includes("chin") || ruleset.includes("korea")) {
-                await sgf.setRuleset("Chinese");
+                sgf.setRuleset("Chinese");
             }
         }
 
-        await sgf.setKomi(parseFloat(gameInfo.KM));
+        sgf.setKomi(parseFloat(gameInfo.KM));
     }
 
     sgf.isSGFLoading = false;
 };
 
 
-sgf.setRuleset = async function (ruleset) {
+sgf.setRuleset = function (ruleset) {
     sgf.ruleset = ruleset;
     document.getElementById("rulesetDisplay").textContent = ruleset;
 };
 
-sgf.setKomi = async function (komi) {
+sgf.setKomi = function (komi) {
     sgf.komi = komi;
     trainerG.board.komiDisplay.textContent = komi;
 };

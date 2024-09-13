@@ -42,14 +42,6 @@ katago.syncBoard = async function () {
     return await katago.sendRequest("SyncBoard", moves);
 };
 
-katago.setRuleset = async function () {
-    return await katago.sendRequest("SetRuleset", sgf.ruleset);
-};
-
-katago.setKomi = async function () {
-    return await katago.sendRequest("SetKomi", sgf.komi);
-};
-
 katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
     let kataGoSuggestion = await katago.sendRequest("AnalyzeMove", new Move(color, coord));
     if (kataGoSuggestion == null) {
