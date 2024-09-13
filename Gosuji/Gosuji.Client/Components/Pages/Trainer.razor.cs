@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Resources.Translations;
@@ -170,9 +171,13 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task<bool> InitTrainerConnection()
+        public async Task<bool> InitTrainerConnection(string ruleset, double komi)
         {
-            APIResponse response = await trainerConnection.Init(trainerSettingConfig, nullableTrainerSettings);
+            NullableTrainerSettings ntsWithGameValues = ReflectionHelper.DeepClone(nullableTrainerSettings);
+            ntsWithGameValues.Ruleset = ruleset;
+            ntsWithGameValues.Komi = komi;
+
+            APIResponse response = await trainerConnection.Init(trainerSettingConfig, ntsWithGameValues);
             if (G.StatusMessage.HandleAPIResponse(response)) return false;
 
             return true;

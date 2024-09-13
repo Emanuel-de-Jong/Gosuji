@@ -1,3 +1,4 @@
+import { sgf } from "./sgf";
 import { trainerG } from "./trainerG";
 
 let settings = { id: "settings" };
@@ -94,7 +95,7 @@ settings.init = function (gameLoadInfo) {
     );
     settings.customKomiElement.addEventListener("input", settings.toggleCustomKomi);
     settings.handicapElement.addEventListener("input", settings.setKomi);
-    settings.rulesetElement.addEventListener("input", settings.setKomi);
+    settings.rulesetElement.addEventListener("input", settings.setRuleset);
     settings.boardsizeElement.addEventListener("input", settings.setKomi);
 
     for (const input of utils.querySelectorAlls(["#settingsAccordion input", "#settingsAccordion select"])) {
@@ -188,6 +189,11 @@ settings.toggleCustomKomi = async function () {
     }
 };
 
+settings.setRuleset = async function () {
+    await sgf.setRuleset(settings.ruleset);
+    await settings.setKomi();
+};
+
 settings.setKomi = async function () {
     if (settings.customKomi) return;
 
@@ -196,6 +202,7 @@ settings.setKomi = async function () {
 
     if (komi != oldKomi) {
         settings.setSetting("komi", komi);
+        await sgf.setKomi(komi);
     }
 };
 

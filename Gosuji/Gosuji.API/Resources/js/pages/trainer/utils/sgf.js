@@ -85,23 +85,12 @@ sgf.sgfLoadedListener = async function () {
 
 sgf.setRuleset = async function (ruleset) {
     sgf.ruleset = ruleset;
-    sgf.setRulesetMeta();
-    if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
-        trainerG.phase != trainerG.PHASE_TYPE.INIT &&
-        trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
-        await katago.setRuleset();
-    }
+    document.getElementById("rulesetDisplay").textContent = ruleset;
 };
 
 sgf.setKomi = async function (komi) {
     sgf.komi = komi;
-    sgf.setKomiMeta();
     trainerG.board.komiDisplay.textContent = komi;
-    if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
-        trainerG.phase != trainerG.PHASE_TYPE.INIT &&
-        trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
-        await katago.setKomi();
-    }
 };
 
 

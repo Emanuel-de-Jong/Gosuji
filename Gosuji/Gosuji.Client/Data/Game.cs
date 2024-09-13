@@ -31,6 +31,9 @@ namespace Gosuji.Client.Data
         public bool ShouldIgnoreStats { get; set; }
         public bool IsThirdPartySGF { get; set; }
 
+        public string Ruleset { get; set; }
+        public double Komi { get; set; }
+
         public int LastNodeX { get; set; }
         public int LastNodeY { get; set; }
         public int RightStreak { get; set; }

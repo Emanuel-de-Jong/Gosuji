@@ -99,6 +99,10 @@
         margin-bottom: 35px;
     }
 
+    #trainerStats #rulesetDisplay {
+        margin-top: 10px;
+    }
+
     #trainerStats #title {
         font-size: 1.5rem;
         font-weight: 800;
