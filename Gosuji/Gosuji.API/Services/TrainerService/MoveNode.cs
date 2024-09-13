@@ -7,7 +7,7 @@ namespace Gosuji.API.Services.TrainerService
     {
         public MoveNode? Parent { get; set; }
         public List<MoveNode> Children { get; set; } = [];
-        public int Depth => Parent?.Depth + 1 ?? 0;
+        public int Depth { get; set; }
 
         public Move Move { get; set; }
         public EMoveType? MoveType { get; set; }
@@ -18,6 +18,7 @@ namespace Gosuji.API.Services.TrainerService
         {
             Move = move;
             Parent = parent;
+            Depth = parent?.Depth + 1 ?? 0;
         }
 
         public MoveNode Add(Move move)

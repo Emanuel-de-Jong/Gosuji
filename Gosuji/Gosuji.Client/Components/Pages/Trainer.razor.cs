@@ -171,13 +171,13 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task<bool> InitTrainerConnection(string ruleset, double komi)
+        public async Task<bool> InitTrainerConnection(string ruleset, double komi, bool isThirdParty)
         {
             NullableTrainerSettings ntsWithGameValues = ReflectionHelper.DeepClone(nullableTrainerSettings);
             ntsWithGameValues.Ruleset = ruleset;
             ntsWithGameValues.Komi = komi;
 
-            APIResponse response = await trainerConnection.Init(trainerSettingConfig, ntsWithGameValues);
+            APIResponse response = await trainerConnection.Init(trainerSettingConfig, ntsWithGameValues, isThirdParty);
             if (G.StatusMessage.HandleAPIResponse(response)) return false;
 
             return true;

@@ -34,7 +34,7 @@ katago.start = async function () {
 };
 
 katago.initTrainerConnection = async function () {
-    return await katago.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi);
+    return await katago.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty);
 };
 
 katago.syncBoard = async function () {

@@ -23,7 +23,7 @@ namespace Gosuji.Client.Services
         }
 
         public async Task<APIResponse> Init(TrainerSettingConfig trainerSettingConfig, NullableTrainerSettings nullableTrainerSettings,
-            bool isThirdPartySGF = false)
+            bool isThirdPartySGF)
         {
             string uri = "Init";
             return await HubResponseHandler.TryCatch(uri,
