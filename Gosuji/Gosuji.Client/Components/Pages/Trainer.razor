@@ -2,6 +2,7 @@
 
 @using Gosuji.Client.Components.Shared
 @using Gosuji.Client.Data
+@using Gosuji.Client.Models
 @using Gosuji.Client.Models.Trainer
 
 @inherits CustomPage
@@ -112,9 +113,9 @@
                                                         <div class="col-12">
                                                             <label for="colorType" class="form-label">Color</label>
                                                             <select class="form-select" id="colorType" value="@((int)trainerSettingConfig.ColorType)">
-                                                                @foreach (EMoveType moveType in Enum.GetValues(typeof(EMoveType)))
+                                                                @foreach (EMoveColor moveColor in Enum.GetValues(typeof(EMoveColor)))
                                                                 {
-                                                                    <option value="@((int)moveType)">@tl[$"TrainerSettingConfig_EMoveType_{moveType}"]</option>
+                                                                    <option value="@((int)moveColor)">@tl[$"TrainerSettingConfig_EMoveColor_{moveColor}"]</option>
                                                                 }
                                                             </select>
                                                         </div>

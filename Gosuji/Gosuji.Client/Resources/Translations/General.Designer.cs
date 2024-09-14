@@ -153,27 +153,27 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string TrainerSettingConfig_EMoveType_BLACK {
+        public static string TrainerSettingConfig_EMoveColor_BLACK {
             get {
-                return ResourceManager.GetString("TrainerSettingConfig_EMoveType_BLACK", resourceCulture);
+                return ResourceManager.GetString("TrainerSettingConfig_EMoveColor_BLACK", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string TrainerSettingConfig_EMoveType_RANDOM {
+        public static string TrainerSettingConfig_EMoveColor_RANDOM {
             get {
-                return ResourceManager.GetString("TrainerSettingConfig_EMoveType_RANDOM", resourceCulture);
+                return ResourceManager.GetString("TrainerSettingConfig_EMoveColor_RANDOM", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
-        public static string TrainerSettingConfig_EMoveType_WHITE {
+        public static string TrainerSettingConfig_EMoveColor_WHITE {
             get {
-                return ResourceManager.GetString("TrainerSettingConfig_EMoveType_WHITE", resourceCulture);
+                return ResourceManager.GetString("TrainerSettingConfig_EMoveColor_WHITE", resourceCulture);
             }
         }
     }

@@ -147,13 +147,13 @@
   <data name="TrainerSettingConfig_EHideOptions_RIGHT" xml:space="preserve">
     <value />
   </data>
-  <data name="TrainerSettingConfig_EMoveType_BLACK" xml:space="preserve">
+  <data name="TrainerSettingConfig_EMoveColor_BLACK" xml:space="preserve">
     <value />
   </data>
-  <data name="TrainerSettingConfig_EMoveType_RANDOM" xml:space="preserve">
+  <data name="TrainerSettingConfig_EMoveColor_RANDOM" xml:space="preserve">
     <value />
   </data>
-  <data name="TrainerSettingConfig_EMoveType_WHITE" xml:space="preserve">
+  <data name="TrainerSettingConfig_EMoveColor_WHITE" xml:space="preserve">
     <value />
   </data>
 </root>

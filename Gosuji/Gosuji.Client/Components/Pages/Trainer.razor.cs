@@ -173,6 +173,7 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task<bool> InitTrainerConnection(string ruleset, double komi, bool isThirdParty)
         {
+            // Cloning removes TrainerSettingConfig reference
             NullableTrainerSettings ntsWithGameValues = ReflectionHelper.DeepClone(nullableTrainerSettings);
             ntsWithGameValues.Ruleset = ruleset;
             ntsWithGameValues.Komi = komi;
