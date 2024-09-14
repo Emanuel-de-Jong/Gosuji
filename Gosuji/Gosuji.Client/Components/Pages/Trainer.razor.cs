@@ -185,7 +185,7 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task UpdateTrainerSettingConfigTrainerConnection(string propertyName, string value)
+        public async Task UpdateTrainerSettingConfig(string propertyName, string value)
         {
             ReflectionHelper.SetProperty(nullableTrainerSettings, propertyName, value);
 
@@ -196,8 +196,11 @@ namespace Gosuji.Client.Components.Pages
                 return;
             }
 
-            APIResponse response = await trainerConnection.UpdateTrainerSettingConfig(trainerSettingConfig);
-            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            if (trainerConnection.IsConnected)
+            {
+                APIResponse response = await trainerConnection.UpdateTrainerSettingConfig(trainerSettingConfig);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
+            }
         }
 
         [JSInvokable]

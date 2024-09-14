@@ -38,7 +38,7 @@ kataGo.initTrainerConnection = async function () {
 };
 
 kataGo.updateTrainerSettingConfig = async function (propertyName, value) {
-    return await kataGo.sendPageRequest("UpdateTrainerSettingConfigTrainerConnection", propertyName, value);
+    return await kataGo.sendPageRequest("UpdateTrainerSettingConfig", propertyName, value);
 };
 
 kataGo.syncBoard = async function () {

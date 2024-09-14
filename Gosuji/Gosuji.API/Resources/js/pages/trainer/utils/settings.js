@@ -115,9 +115,11 @@ settings.init = async function (gameLoadInfo) {
         }
     }
 
+    settings.isGetInitialSettings = true;
     for (const key in settings.SETTINGS) {
         await settings.updateSetting(key);
     }
+    settings.isGetInitialSettings = false;
 
     settings.clear(gameLoadInfo);
 };
@@ -145,7 +147,7 @@ settings.updateSetting = async function (name) {
 
     settings[name] = value;
 
-    if (kataGo.isStarted && !settings.isSyncingWithCS) {
+    if (!settings.isGetInitialSettings && !settings.isSyncingWithCS) {
         const propertyName = name[0].toUpperCase() + name.slice(1);
         const strValue = type == utils.TYPE.BOOL ? '' + element.checked : element.value;
         await kataGo.updateTrainerSettingConfig(propertyName, strValue);
@@ -180,11 +182,6 @@ settings.syncWithCS = async function (trainerSettingConfig, nullableTrainerSetti
         settings.setSetting(name, value);
     }
     settings.isSyncingWithCS = false;
-
-    if (kataGo.isStarted && !settings.isSyncingWithCS) {
-        // Any setting would be fine. The changes just need to be sent to the API.
-        await kataGo.updateTrainerSettingConfig("WrongMoveCorrection", settings.wrongMoveCorrection);
-    }
 };
 
 settings.togglePreGameSettings = function (enable = false) {
