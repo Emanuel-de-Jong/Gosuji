@@ -146,14 +146,30 @@ settings.updateSetting = async function (name) {
 };
 
 settings.setSetting = function (name, value) {
-    settings[name + "Element"].value = value;
-    settings[name + "Element"].dispatchEvent(new Event("input"));
+    name += "Element";
+    if (!settings.hasOwnProperty(name)) {
+        return;
+    }
+
+    const el = settings[name];
+    el.value = value;
+    el.dispatchEvent(new Event("input"));
 };
 
 settings.inputAndSelectInputListener = async function (event) {
     let element = event.target;
     if (settings.validateInput(element)) {
         await settings.updateSetting(element.id);
+    }
+};
+
+settings.syncWithCS = function (trainerSettingConfig, nullableTrainerSettings) {
+    for (const [name, value] of Object.entries(nullableTrainerSettings)) {
+        trainerSettingConfig[name] = value;
+    }
+
+    for (const [name, value] of Object.entries(trainerSettingConfig)) {
+        settings.setSetting(name, value);
     }
 };
 

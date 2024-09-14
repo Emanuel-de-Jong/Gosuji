@@ -156,7 +156,7 @@ export {
     // kataGo,
     // scoreChart,
     // ratioChart,
-    // settings,
+    settings,
     // sgf,
     // sgfComment,
     // stats,

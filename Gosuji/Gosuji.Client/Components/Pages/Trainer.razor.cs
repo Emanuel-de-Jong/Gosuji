@@ -223,6 +223,8 @@ namespace Gosuji.Client.Components.Pages
 
             nullableTrainerSettings.Init(trainerSettingConfig, settingConfigService.SettingConfig.LanguageId);
 
+            await jsRef.InvokeVoidAsync("settings.syncWithCS", trainerSettingConfig, nullableTrainerSettings);
+
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;
             APIResponse response = await dataAPI.PutUserState(userState);
