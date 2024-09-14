@@ -145,7 +145,7 @@ settings.updateSetting = async function (name) {
 
     settings[name] = value;
 
-    if (kataGo.isStarted) {
+    if (kataGo.isStarted && !settings.isSyncingWithCS) {
         const propertyName = name[0].toUpperCase() + name.slice(1);
         const strValue = type == utils.TYPE.BOOL ? '' + element.checked : element.value;
         await kataGo.updateTrainerSettingConfig(propertyName, strValue);
@@ -170,13 +170,20 @@ settings.inputAndSelectInputListener = async function (event) {
     }
 };
 
-settings.syncWithCS = function (trainerSettingConfig, nullableTrainerSettings) {
+settings.syncWithCS = async function (trainerSettingConfig, nullableTrainerSettings) {
     for (const [name, value] of Object.entries(nullableTrainerSettings)) {
         trainerSettingConfig[name] = value;
     }
     
+    settings.isSyncingWithCS = true;
     for (const [name, value] of Object.entries(trainerSettingConfig)) {
         settings.setSetting(name, value);
+    }
+    settings.isSyncingWithCS = false;
+
+    if (kataGo.isStarted && !settings.isSyncingWithCS) {
+        // Any setting would be fine. The changes just need to be sent to the API.
+        await kataGo.updateTrainerSettingConfig("WrongMoveCorrection", settings.wrongMoveCorrection);
     }
 };
 

@@ -97,10 +97,10 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="hideOptions" class="form-label">Hide options</label>
-                                                            <select class="form-select" id="hideOptions" value="@trainerSettingConfig.HideOptions">
+                                                            <select class="form-select" id="hideOptions" value="@((int)trainerSettingConfig.HideOptions)">
                                                                 @foreach (EHideOptions hideOption in Enum.GetValues(typeof(EHideOptions)))
                                                                 {
-                                                                    <option value="@hideOption">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
+                                                                    <option value="@((int)hideOption)">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
                                                                 }
                                                             </select>
                                                         </div>
@@ -111,10 +111,10 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="colorType" class="form-label">Color</label>
-                                                            <select class="form-select" id="colorType" value="@trainerSettingConfig.ColorType">
+                                                            <select class="form-select" id="colorType" value="@((int)trainerSettingConfig.ColorType)">
                                                                 @foreach (EMoveType moveType in Enum.GetValues(typeof(EMoveType)))
                                                                 {
-                                                                    <option value="@moveType">@tl[$"TrainerSettingConfig_EMoveType_{moveType}"]</option>
+                                                                    <option value="@((int)moveType)">@tl[$"TrainerSettingConfig_EMoveType_{moveType}"]</option>
                                                                 }
                                                             </select>
                                                         </div>
@@ -202,10 +202,10 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="forceOpponentCorners" class="form-label">Force opponent corners</label>
-                                                            <select class="form-select" id="forceOpponentCorners" value="@trainerSettingConfig.ForceOpponentCorners">
+                                                            <select class="form-select" id="forceOpponentCorners" value="@((int)trainerSettingConfig.ForceOpponentCorners)">
                                                                 @foreach (EForceOpponentCorners forceOpponentCorners in Enum.GetValues(typeof(EForceOpponentCorners)))
                                                                 {
-                                                                    <option value="@forceOpponentCorners">@tl[$"TrainerSettingConfig_EForceOpponentCorners_{forceOpponentCorners}"]</option>
+                                                                    <option value="@((int)forceOpponentCorners)">@tl[$"TrainerSettingConfig_EForceOpponentCorners_{forceOpponentCorners}"]</option>
                                                                 }
                                                             </select>
                                                         </div>
@@ -363,10 +363,10 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="hideOpponentOptions" class="form-label">Hide options</label>
-                                                            <select class="form-select" id="hideOpponentOptions" value="@trainerSettingConfig.HideOpponentOptions">
+                                                            <select class="form-select" id="hideOpponentOptions" value="@((int)trainerSettingConfig.HideOpponentOptions)">
                                                                 @foreach (EHideOpponentOptions hideOption in Enum.GetValues(typeof(EHideOpponentOptions)))
                                                                 {
-                                                                    <option value="@hideOption">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
+                                                                    <option value="@((int)hideOption)">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
                                                                 }
                                                             </select>
                                                         </div>

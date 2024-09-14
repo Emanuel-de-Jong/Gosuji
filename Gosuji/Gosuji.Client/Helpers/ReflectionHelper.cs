@@ -50,7 +50,14 @@ namespace Gosuji.Client.Helpers
             }
             else if (underlyingType.IsEnum)
             {
-                convertedValue = Enum.Parse(underlyingType, value);
+                if (int.TryParse(value, out int enumValue))
+                {
+                    convertedValue = Enum.ToObject(underlyingType, enumValue);
+                }
+                else
+                {
+                    convertedValue = Enum.Parse(underlyingType, value);
+                }
             }
             else
             {
