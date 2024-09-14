@@ -23,7 +23,7 @@ namespace Gosuji.Client.Helpers
                 .ToDictionary(p => p.Name));
         }
 
-        public static bool SetProperty<T>(T obj, string name, string value)
+        public static bool SetProperty<T>(T obj, string name, string? value)
         {
             Type type = typeof(T);
 
@@ -33,14 +33,28 @@ namespace Gosuji.Client.Helpers
                 return false;
             }
 
-            object convertedValue;
-            if (property.PropertyType.IsEnum)
+            Type propertyType = property.PropertyType;
+            Type underlyingType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+
+            object? convertedValue;
+            if (value == null)
             {
-                convertedValue = Enum.Parse(property.PropertyType, value);
+                if (Nullable.GetUnderlyingType(propertyType) != null)
+                {
+                    convertedValue = null;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if (underlyingType.IsEnum)
+            {
+                convertedValue = Enum.Parse(underlyingType, value);
             }
             else
             {
-                convertedValue = Convert.ChangeType(value, property.PropertyType);
+                convertedValue = Convert.ChangeType(value, underlyingType);
             }
 
             property.SetValue(obj, convertedValue);
