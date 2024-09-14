@@ -17,8 +17,8 @@ namespace Gosuji.API.Services
         {
             Type type = typeof(T);
 
-            FieldInfo[] fields = ReflectionHelper.FieldCache.GetOrAdd(type, t => t.GetFields(BindingFlags.Public | BindingFlags.Instance));
-            foreach (FieldInfo field in fields)
+            Dictionary<string, FieldInfo> fields = ReflectionHelper.GetFields(type);
+            foreach (FieldInfo field in fields.Values)
             {
                 if (field.FieldType == typeof(string))
                 {
@@ -30,8 +30,8 @@ namespace Gosuji.API.Services
                 }
             }
 
-            PropertyInfo[] properties = ReflectionHelper.PropertyCache.GetOrAdd(type, t => t.GetProperties(BindingFlags.Public | BindingFlags.Instance));
-            foreach (PropertyInfo property in properties)
+            Dictionary<string, PropertyInfo> properties = ReflectionHelper.GetProperties(type);
+            foreach (PropertyInfo property in properties.Values)
             {
                 if (property.CanWrite &&
                     property.PropertyType == typeof(string))

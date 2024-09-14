@@ -184,9 +184,14 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task UpdateTrainerSettingConfigTrainerConnection()
+        public async Task UpdateTrainerSettingConfigTrainerConnection(string propertyName, string value)
         {
-            await InvokeAsync(StateHasChanged);
+            bool isSetSuccess = ReflectionHelper.SetProperty(trainerSettingConfig, propertyName, value);
+            if (!isSetSuccess)
+            {
+                G.StatusMessage.SetMessage($"{propertyName} is not in TrainerSettingConfig.", false);
+                return;
+            }
 
             APIResponse response = await trainerConnection.UpdateTrainerSettingConfig(trainerSettingConfig);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
