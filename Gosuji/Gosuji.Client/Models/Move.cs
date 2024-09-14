@@ -196,6 +196,7 @@
     public enum EMoveColor
     {
         BLACK = -1,
+        RANDOM = 0,
         WHITE = 1,
     }
 }

@@ -123,6 +123,18 @@
   <data name="Login_Title" xml:space="preserve">
     <value />
   </data>
+  <data name="TrainerSettingConfig_EForceOpponentCorners_BOTH" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EForceOpponentCorners_FIRST" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EForceOpponentCorners_NONE" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EForceOpponentCorners_SECOND" xml:space="preserve">
+    <value />
+  </data>
   <data name="TrainerSettingConfig_EHideOptions_ALWAYS" xml:space="preserve">
     <value />
   </data>
@@ -133,6 +145,15 @@
     <value />
   </data>
   <data name="TrainerSettingConfig_EHideOptions_RIGHT" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EMoveType_BLACK" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EMoveType_RANDOM" xml:space="preserve">
+    <value />
+  </data>
+  <data name="TrainerSettingConfig_EMoveType_WHITE" xml:space="preserve">
     <value />
   </data>
 </root>

@@ -1,5 +1,6 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.Client.Data;
+using Gosuji.Client.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -97,10 +98,10 @@ namespace Gosuji.API.Helpers
                 PreMovesSwitch = false,
                 PreMoves = 5,
                 HideOptions = EHideOptions.PERFECT,
-                ColorType = 0,
+                ColorType = EMoveColor.RANDOM,
                 WrongMoveCorrection = true,
 
-                ForceOpponentCorners = "Both",
+                ForceOpponentCorners = EForceOpponentCorners.BOTH,
                 CornerSwitch44 = true,
                 CornerSwitch34 = true,
                 CornerSwitch33 = false,
@@ -266,7 +267,7 @@ namespace Gosuji.API.Helpers
             Random random = new();
             TrainerSettingConfig config = GetTrainerSettingConfigBase();
             config.Handicap = random.Next(10);
-            config.ColorType = random.Next(3) - 1;
+            config.ColorType = (EMoveColor)random.Next(3) - 1;
             config.PreMovesSwitch = random.Next(2) == 0;
             config.PreMoves = random.Next(11);
             config.WrongMoveCorrection = random.Next(2) == 0;

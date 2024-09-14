@@ -81,6 +81,42 @@ namespace Gosuji.Client.Resources.Translations {
         /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
+        public static string TrainerSettingConfig_EForceOpponentCorners_BOTH {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EForceOpponentCorners_BOTH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EForceOpponentCorners_FIRST {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EForceOpponentCorners_FIRST", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EForceOpponentCorners_NONE {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EForceOpponentCorners_NONE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EForceOpponentCorners_SECOND {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EForceOpponentCorners_SECOND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
         public static string TrainerSettingConfig_EHideOptions_ALWAYS {
             get {
                 return ResourceManager.GetString("TrainerSettingConfig_EHideOptions_ALWAYS", resourceCulture);
@@ -111,6 +147,33 @@ namespace Gosuji.Client.Resources.Translations {
         public static string TrainerSettingConfig_EHideOptions_RIGHT {
             get {
                 return ResourceManager.GetString("TrainerSettingConfig_EHideOptions_RIGHT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EMoveType_BLACK {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EMoveType_BLACK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EMoveType_RANDOM {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EMoveType_RANDOM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string TrainerSettingConfig_EMoveType_WHITE {
+            get {
+                return ResourceManager.GetString("TrainerSettingConfig_EMoveType_WHITE", resourceCulture);
             }
         }
     }

@@ -10,7 +10,7 @@ settings.SETTINGS = {
     handicap: utils.TYPE.INT,
     preMovesSwitch: utils.TYPE.BOOL,
     preMoves: utils.TYPE.INT,
-    hideOptions: utils.TYPE.STRING,
+    hideOptions: utils.TYPE.INT,
     colorType: utils.TYPE.INT,
     suggestionVisits: utils.TYPE.INT,
     opponentVisits: utils.TYPE.INT,
@@ -20,7 +20,7 @@ settings.SETTINGS = {
     komi: utils.TYPE.FLOAT,
     ruleset: utils.TYPE.STRING,
 
-    forceOpponentCorners: utils.TYPE.STRING,
+    forceOpponentCorners: utils.TYPE.INT,
     cornerSwitch44: utils.TYPE.BOOL,
     cornerSwitch34: utils.TYPE.BOOL,
     cornerSwitch33: utils.TYPE.BOOL,
@@ -44,7 +44,7 @@ settings.SETTINGS = {
     maxVisitDiffPerc: utils.TYPE.FLOAT,
 
     opponentOptions: utils.TYPE.INT,
-    hideOpponentOptions: utils.TYPE.STRING,
+    hideOpponentOptions: utils.TYPE.INT,
     opponentOptionPercSwitch: utils.TYPE.BOOL,
     opponentOptionPerc: utils.TYPE.FLOAT,
     
@@ -71,16 +71,23 @@ settings.PRE_GAME_SETTINGS = [
 ];
 
 settings.HIDE_OPTIONS = {
-    NEVER: "NEVER",
-    PERFECT: "PERFECT",
-    RIGHT: "RIGHT",
-    ALWAYS: "ALWAYS",
+    NEVER: 0,
+    PERFECT: 1,
+    RIGHT: 2,
+    ALWAYS: 3,
 };
 
 settings.HIDE_OPPONENT_OPTIONS = {
-    NEVER: "NEVER",
-    PERFECT: "PERFECT",
-    ALWAYS: "ALWAYS",
+    NEVER: 0,
+    PERFECT: 1,
+    ALWAYS: 3,
+};
+
+settings.FORCE_OPPONENT_CORNERS = {
+    NONE: 0,
+    FIRST: 1,
+    SECOND: 2,
+    BOTH: 3,
 };
 
 
@@ -167,7 +174,7 @@ settings.syncWithCS = function (trainerSettingConfig, nullableTrainerSettings) {
     for (const [name, value] of Object.entries(nullableTrainerSettings)) {
         trainerSettingConfig[name] = value;
     }
-
+    
     for (const [name, value] of Object.entries(trainerSettingConfig)) {
         settings.setSetting(name, value);
     }

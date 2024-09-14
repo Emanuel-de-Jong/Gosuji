@@ -112,9 +112,10 @@
                                                         <div class="col-12">
                                                             <label for="colorType" class="form-label">Color</label>
                                                             <select class="form-select" id="colorType" value="@trainerSettingConfig.ColorType">
-                                                                <option value="-1">Black</option>
-                                                                <option value="1">White</option>
-                                                                <option value="0">Random</option>
+                                                                @foreach (EMoveType moveType in Enum.GetValues(typeof(EMoveType)))
+                                                                {
+                                                                    <option value="@moveType">@tl[$"TrainerSettingConfig_EMoveType_{moveType}"]</option>
+                                                                }
                                                             </select>
                                                         </div>
                                                     </div>
@@ -202,10 +203,10 @@
                                                         <div class="col-12">
                                                             <label for="forceOpponentCorners" class="form-label">Force opponent corners</label>
                                                             <select class="form-select" id="forceOpponentCorners" value="@trainerSettingConfig.ForceOpponentCorners">
-                                                                <option value="None">None</option>
-                                                                <option value="First">First</option>
-                                                                <option value="Second">Second</option>
-                                                                <option value="Both">Both</option>
+                                                                @foreach (EForceOpponentCorners forceOpponentCorners in Enum.GetValues(typeof(EForceOpponentCorners)))
+                                                                {
+                                                                    <option value="@forceOpponentCorners">@tl[$"TrainerSettingConfig_EForceOpponentCorners_{forceOpponentCorners}"]</option>
+                                                                }
                                                             </select>
                                                         </div>
                                                     </div>

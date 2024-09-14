@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Models;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -33,7 +34,7 @@ namespace Gosuji.Client.Data
         [Required]
         public EHideOptions HideOptions { get; set; }
         [Required]
-        public int ColorType { get; set; }
+        public EMoveColor ColorType { get; set; }
         [Required]
         public bool WrongMoveCorrection { get; set; }
 
@@ -44,7 +45,7 @@ namespace Gosuji.Client.Data
 
         [Required]
         [MaxLength(100)]
-        public string ForceOpponentCorners { get; set; }
+        public EForceOpponentCorners ForceOpponentCorners { get; set; }
         [Required]
         public bool CornerSwitch44 { get; set; }
         [Required]
@@ -202,5 +203,13 @@ namespace Gosuji.Client.Data
         NEVER = 0,
         PERFECT = 1,
         ALWAYS = 3
+    }
+
+    public enum EForceOpponentCorners
+    {
+        NONE = 0,
+        FIRST = 1,
+        SECOND = 2,
+        BOTH = 3
     }
 }
