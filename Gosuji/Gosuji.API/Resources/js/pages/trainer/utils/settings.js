@@ -130,17 +130,18 @@ settings.updateSetting = async function (name) {
     let element = settings[name + "Element"];
 
     let value = type == utils.TYPE.BOOL ? element.checked : element.value;
-    let parsedValue;
     if (type == utils.TYPE.INT) {
-        parsedValue = parseInt(value);
+        value = parseInt(value);
     } else if (type == utils.TYPE.FLOAT) {
-        parsedValue = parseFloat(value);
+        value = parseFloat(value);
     }
 
-    settings[name] = parsedValue;
+    settings[name] = value;
 
     if (kataGo.isStarted) {
-        await kataGo.updateTrainerSettingConfig(name[0].toUpperCase() + name.slice(1), value);
+        const propertyName = name[0].toUpperCase() + name.slice(1);
+        const strValue = type == utils.TYPE.BOOL ? '' + element.checked : element.value;
+        await kataGo.updateTrainerSettingConfig(propertyName, strValue);
     }
 };
 
