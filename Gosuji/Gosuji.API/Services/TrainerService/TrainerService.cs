@@ -56,6 +56,18 @@ namespace Gosuji.API.Services.TrainerService
             await StartKataGo();
         }
 
+        public async Task UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
+        {
+            TrainerSettingConfig = trainerSettingConfig;
+
+            NullableTrainerSettings.Ruleset = trainerSettingConfig.Ruleset ?? NullableTrainerSettings.Ruleset;
+            NullableTrainerSettings.Komi = trainerSettingConfig.Komi ?? NullableTrainerSettings.Komi;
+            NullableTrainerSettings.SuggestionVisits = trainerSettingConfig.SuggestionVisits ?? NullableTrainerSettings.SuggestionVisits;
+            NullableTrainerSettings.OpponentVisits = trainerSettingConfig.OpponentVisits ?? NullableTrainerSettings.OpponentVisits;
+            NullableTrainerSettings.PreVisits = trainerSettingConfig.PreVisits ?? NullableTrainerSettings.PreVisits;
+            NullableTrainerSettings.SelfplayVisits = trainerSettingConfig.SelfplayVisits ?? NullableTrainerSettings.SelfplayVisits;
+        }
+
         public async Task SyncBoard(Move[] moves)
         {
             (await GetKataGo()).ClearBoard();

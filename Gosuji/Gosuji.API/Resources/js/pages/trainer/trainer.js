@@ -41,7 +41,8 @@ trainerPage.init = async function (
 
     trainerG.init(trainerRef, gameLoadInfo);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
-    settings.init(gameLoadInfo);
+    await katago.init(trainerConnectionRef);
+    await settings.init(gameLoadInfo);
     trainerG.board.init(gameLoadInfo ? gameLoadInfo.boardsize : null,
         gameLoadInfo ? gameLoadInfo.handicap : null,
         gameLoadInfo ? gameLoadInfo.sgf : null,
@@ -67,7 +68,6 @@ trainerPage.init = async function (
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
-    await katago.init(trainerConnectionRef);
     db.init();
 
     // console.log(stats.playerResultHistory);

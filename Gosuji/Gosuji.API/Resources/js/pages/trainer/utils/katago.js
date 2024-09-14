@@ -37,6 +37,10 @@ katago.initTrainerConnection = async function () {
     return await katago.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty);
 };
 
+katago.updateTrainerSettingConfig = async function () {
+    return await katago.sendPageRequest("UpdateTrainerSettingConfigTrainerConnection");
+};
+
 katago.syncBoard = async function () {
     let moves = trainerG.board.getMoves();
     return await katago.sendRequest("SyncBoard", moves);
@@ -94,6 +98,8 @@ katago.sendRequest = async function (uri, ...args) {
 
 katago.sendPageRequest = async function (uri, ...args) {
     trainerG.showLoadAnimation();
+
+    await katago.start();
 
     let result;
     try {

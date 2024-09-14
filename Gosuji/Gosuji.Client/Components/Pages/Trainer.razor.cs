@@ -184,6 +184,15 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
+        public async Task UpdateTrainerSettingConfigTrainerConnection()
+        {
+            await InvokeAsync(StateHasChanged);
+
+            APIResponse response = await trainerConnection.UpdateTrainerSettingConfig(trainerSettingConfig);
+            if (G.StatusMessage.HandleAPIResponse(response)) return;
+        }
+
+        [JSInvokable]
         public async Task SetSuggestions(MoveSuggestion[]? suggestions)
         {
             if (this.suggestions != null || (this.suggestions == null && suggestions != null))

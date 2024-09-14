@@ -31,6 +31,14 @@ namespace Gosuji.Client.Services
                 trainerSettingConfig, nullableTrainerSettings, isThirdPartySGF));
         }
 
+        public async Task<APIResponse> UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
+        {
+            string uri = "UpdateTrainerSettingConfig";
+            return await HubResponseHandler.TryCatch(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri,
+                trainerSettingConfig));
+        }
+
         [JSInvokable]
         public async Task<bool> SyncBoard(Move[] moves)
         {

@@ -63,6 +63,12 @@ namespace Gosuji.API.Controllers
             return Ok;
         }
 
+        public async Task<HubResponse> UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
+        {
+            await trainerServices[Context.ConnectionId].UpdateTrainerSettingConfig(trainerSettingConfig);
+            return Ok;
+        }
+
         public async Task<HubResponse> SyncBoard(Move[] moves)
         {
             await trainerServices[Context.ConnectionId].SyncBoard(moves);

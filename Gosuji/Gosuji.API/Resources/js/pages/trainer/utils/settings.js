@@ -1,3 +1,4 @@
+import { katago } from "./katago";
 import { sgf } from "./sgf";
 import { trainerG } from "./trainerG";
 
@@ -83,7 +84,7 @@ settings.HIDE_OPPONENT_OPTIONS = {
 };
 
 
-settings.init = function (gameLoadInfo) {
+settings.init = async function (gameLoadInfo) {
     for (const key in settings.SETTINGS) {
         settings[key + "Element"] = document.getElementById(key);
     }
@@ -108,7 +109,7 @@ settings.init = function (gameLoadInfo) {
     }
 
     for (const key in settings.SETTINGS) {
-        settings.updateSetting(key);
+        await settings.updateSetting(key);
     }
 
     settings.clear(gameLoadInfo);
@@ -123,7 +124,7 @@ settings.clear = function (gameLoadInfo) {
 };
 
 
-settings.updateSetting = function (name) {
+settings.updateSetting = async function (name) {
     let type = settings.SETTINGS[name];
 
     let element = settings[name + "Element"];
@@ -136,6 +137,10 @@ settings.updateSetting = function (name) {
     }
 
     settings[name] = value;
+
+    if (katago.isStarted) {
+        await katago.updateTrainerSettingConfig();
+    }
 };
 
 settings.setSetting = function (name, value) {
@@ -143,10 +148,10 @@ settings.setSetting = function (name, value) {
     settings[name + "Element"].dispatchEvent(new Event("input"));
 };
 
-settings.inputAndSelectInputListener = function (event) {
+settings.inputAndSelectInputListener = async function (event) {
     let element = event.target;
     if (settings.validateInput(element)) {
-        settings.updateSetting(element.id);
+        await settings.updateSetting(element.id);
     }
 };
 
