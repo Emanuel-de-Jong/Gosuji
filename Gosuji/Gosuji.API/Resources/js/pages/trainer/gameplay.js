@@ -8,7 +8,7 @@ import { trainerG } from "./utils/trainerG";
 import { cornerPlacer } from "./cornerPlacer";
 import { selfplay } from "./selfplay";
 import { debug } from "./debug";
-import { katago } from "./utils/katago";
+import { kataGo } from "./utils/kataGo";
 
 let gameplay = { id: "gameplay" };
 
@@ -151,7 +151,7 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
 
 gameplay.handleJumped = async function () {
     if (gameplay.isJumped) {
-        await katago.syncBoard()
+        await kataGo.syncBoard()
         gameplay.suggestionsPromise = trainerG.analyze();
         gameplay.isJumped = false;
     }

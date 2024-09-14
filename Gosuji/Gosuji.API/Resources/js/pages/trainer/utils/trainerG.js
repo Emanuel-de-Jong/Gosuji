@@ -2,7 +2,7 @@ import { History } from "../classes/History";
 import { MoveSuggestionList } from "../classes/MoveSuggestionList";
 import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { TrainerBoard } from "../classes/TrainerBoard";
-import { katago } from "./katago";
+import { kataGo } from "./kataGo";
 import { sgf } from "./sgf";
 import { stats } from "./stats";
 import { debug } from "../debug";
@@ -113,12 +113,12 @@ trainerG.hideLoadAnimation = function() {
 };
 
 trainerG.analyze = async function (maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color) {
-    trainerG.suggestions = await katago.analyze(maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color);
+    trainerG.suggestions = await kataGo.analyze(maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color);
     await trainerG.pass(trainerG.suggestions.getPass());
 };
 
 trainerG.analyzeMove = async function (coord) {
-    let suggestion = await katago.analyzeMove(coord);
+    let suggestion = await kataGo.analyzeMove(coord);
 
     if (!trainerG.suggestions) {
         trainerG.suggestions = new MoveSuggestionList();

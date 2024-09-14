@@ -1,5 +1,5 @@
 import { Move } from "./Move";
-import { katago } from "../utils/katago";
+import { kataGo } from "../utils/kataGo";
 import { ratioChart } from "../utils/ratioChart";
 import { scoreChart } from "../utils/scoreChart";
 import { settings } from "../utils/settings";
@@ -138,11 +138,11 @@ class TrainerBoard extends Board {
 
             if (sendToServer) {
                 if (tool == "auto") {
-                    await katago.play(coord);
+                    await kataGo.play(coord);
                 } else if (tool == "playB") {
-                    await katago.play(coord, g.COLOR_TYPE.B);
+                    await kataGo.play(coord, g.COLOR_TYPE.B);
                 } else if (tool == "playW") {
-                    await katago.play(coord, g.COLOR_TYPE.W);
+                    await kataGo.play(coord, g.COLOR_TYPE.W);
                 }
             }
         }

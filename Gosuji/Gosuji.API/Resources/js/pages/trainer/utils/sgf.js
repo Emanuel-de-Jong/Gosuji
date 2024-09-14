@@ -1,4 +1,4 @@
-import { katago } from "./katago";
+import { kataGo } from "./kataGo";
 import { settings } from "./settings";
 import { stats } from "./stats";
 import { trainerG } from "./trainerG";

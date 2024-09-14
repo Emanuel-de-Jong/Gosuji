@@ -1,4 +1,4 @@
-import { katago } from "./katago";
+import { kataGo } from "./kataGo";
 import { sgf } from "./sgf";
 import { trainerG } from "./trainerG";
 
@@ -138,8 +138,8 @@ settings.updateSetting = async function (name) {
 
     settings[name] = value;
 
-    if (katago.isStarted) {
-        await katago.updateTrainerSettingConfig();
+    if (kataGo.isStarted) {
+        await kataGo.updateTrainerSettingConfig();
     }
 };
 

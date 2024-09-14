@@ -5,49 +5,49 @@ import { settings } from "./settings";
 import { sgf } from "./sgf";
 import { trainerG } from "./trainerG";
 
-let katago = { id: "katago" };
+let kataGo = { id: "kataGo" };
 
 
-katago.init = async function (serviceRef) {
-    katago.serviceRef = serviceRef;
-    katago.isStarted = false;
+kataGo.init = async function (serviceRef) {
+    kataGo.serviceRef = serviceRef;
+    kataGo.isStarted = false;
 };
 
-katago.clear = async function () {
-    katago.isStarted = false;
-    await katago.start();
+kataGo.clear = async function () {
+    kataGo.isStarted = false;
+    await kataGo.start();
 };
 
 
-katago.start = async function () {
-    if (katago.isStarted) {
+kataGo.start = async function () {
+    if (kataGo.isStarted) {
         return;
     }
-    katago.isStarted = true;
+    kataGo.isStarted = true;
 
-    let invokeResult = await katago.sendPageRequest("Start");
+    let invokeResult = await kataGo.sendPageRequest("Start");
     if (!invokeResult) {
         return;
     }
 
-    await katago.initTrainerConnection();
+    await kataGo.initTrainerConnection();
 };
 
-katago.initTrainerConnection = async function () {
-    return await katago.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty);
+kataGo.initTrainerConnection = async function () {
+    return await kataGo.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty);
 };
 
-katago.updateTrainerSettingConfig = async function () {
-    return await katago.sendPageRequest("UpdateTrainerSettingConfigTrainerConnection");
+kataGo.updateTrainerSettingConfig = async function () {
+    return await kataGo.sendPageRequest("UpdateTrainerSettingConfigTrainerConnection");
 };
 
-katago.syncBoard = async function () {
+kataGo.syncBoard = async function () {
     let moves = trainerG.board.getMoves();
-    return await katago.sendRequest("SyncBoard", moves);
+    return await kataGo.sendRequest("SyncBoard", moves);
 };
 
-katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
-    let kataGoSuggestion = await katago.sendRequest("AnalyzeMove", new Move(color, coord));
+kataGo.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
+    let kataGoSuggestion = await kataGo.sendRequest("AnalyzeMove", new Move(color, coord));
     if (kataGoSuggestion == null) {
         return;
     }
@@ -55,7 +55,7 @@ katago.analyzeMove = async function (coord, color = trainerG.board.getNextColor(
     return MoveSuggestion.fromKataGo(kataGoSuggestion);
 };
 
-katago.analyze = async function (
+kataGo.analyze = async function (
     maxVisits = settings.suggestionVisits,
     moveOptions = settings.suggestionOptions,
     minVisitsPerc = settings.minVisitsPerc,
@@ -65,7 +65,7 @@ katago.analyze = async function (
     minVisitsPerc = settings.minVisitsPercSwitch ? minVisitsPerc : 0;
     maxVisitDiffPerc = settings.maxVisitDiffPercSwitch ? maxVisitDiffPerc : 100;
     
-    let kataGoSuggestions = await katago.sendRequest("Analyze", color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+    let kataGoSuggestions = await kataGo.sendRequest("Analyze", color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
     if (kataGoSuggestions == null) {
         return;
     }
@@ -76,18 +76,18 @@ katago.analyze = async function (
     return suggestions;
 };
 
-katago.play = async function (coord, color = trainerG.board.getColor()) {
-    return await katago.sendRequest("Play", new Move(color, coord));
+kataGo.play = async function (coord, color = trainerG.board.getColor()) {
+    return await kataGo.sendRequest("Play", new Move(color, coord));
 };
 
-katago.sendRequest = async function (uri, ...args) {
+kataGo.sendRequest = async function (uri, ...args) {
     trainerG.showLoadAnimation();
 
-    await katago.start();
+    await kataGo.start();
 
     let result;
     try {
-        result = await katago.serviceRef.invokeMethodAsync(uri, ...args);
+        result = await kataGo.serviceRef.invokeMethodAsync(uri, ...args);
     } catch (error) {
         console.error(error);
     }
@@ -96,10 +96,10 @@ katago.sendRequest = async function (uri, ...args) {
     return result;
 };
 
-katago.sendPageRequest = async function (uri, ...args) {
+kataGo.sendPageRequest = async function (uri, ...args) {
     trainerG.showLoadAnimation();
 
-    await katago.start();
+    await kataGo.start();
 
     let result;
     try {
@@ -113,6 +113,6 @@ katago.sendPageRequest = async function (uri, ...args) {
 };
 
 if (!window.trainer) window.trainer = {};
-if (g.DEBUG && !window.trainer.katago) window.trainer.katago = katago;
+if (g.DEBUG && !window.trainer.kataGo) window.trainer.kataGo = kataGo;
 
-export { katago };
+export { kataGo };

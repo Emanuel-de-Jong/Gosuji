@@ -6,7 +6,7 @@ import { Score } from "./classes/Score";
 import { TrainerBoard } from "./classes/TrainerBoard";
 
 import { db } from "./utils/db";
-import { katago } from "./utils/katago";
+import { kataGo } from "./utils/kataGo";
 import { scoreChart } from "./utils/scoreChart";
 import { ratioChart } from "./utils/ratioChart";
 import { settings } from "./utils/settings";
@@ -41,7 +41,7 @@ trainerPage.init = async function (
 
     trainerG.init(trainerRef, gameLoadInfo);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
-    await katago.init(trainerConnectionRef);
+    await kataGo.init(trainerConnectionRef);
     await settings.init(gameLoadInfo);
     trainerG.board.init(gameLoadInfo ? gameLoadInfo.boardsize : null,
         gameLoadInfo ? gameLoadInfo.handicap : null,
@@ -98,7 +98,7 @@ trainerPage.clear = async function () {
     cornerPlacer.clear();
     preMovePlacer.clear();
     await selfplay.clear();
-    await katago.clear();
+    await kataGo.clear();
     db.clear();
 };
 
@@ -109,7 +109,7 @@ trainerPage.start = async function () {
 
     settings.togglePreGameSettings();
 
-    await katago.start();
+    await kataGo.start();
     
     if (trainerG.isLoadingServerData || debug.testData) {
         trainerG.isLoadingServerData = false;
@@ -136,7 +136,7 @@ trainerPage.sgfLoadedListener = async function () {
     await stats.clear();
     ratioChart.clear();
     gameplay.clear();
-    await katago.clear();
+    await kataGo.clear();
 
     gameplay.start(false);
 };
@@ -153,7 +153,7 @@ export {
     // TrainerBoard,
 
     db,
-    // katago,
+    // kataGo,
     // scoreChart,
     // ratioChart,
     // settings,
