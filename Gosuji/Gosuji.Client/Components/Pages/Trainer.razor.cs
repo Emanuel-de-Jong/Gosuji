@@ -186,6 +186,8 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task UpdateTrainerSettingConfigTrainerConnection(string propertyName, string value)
         {
+            ReflectionHelper.SetProperty(nullableTrainerSettings, propertyName, value);
+
             bool isSetSuccess = ReflectionHelper.SetProperty(trainerSettingConfig, propertyName, value);
             if (!isSetSuccess)
             {
