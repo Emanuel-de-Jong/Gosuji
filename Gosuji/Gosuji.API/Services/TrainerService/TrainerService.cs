@@ -1,7 +1,6 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.API.Helpers;
 using Gosuji.Client.Data;
-using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,6 @@ namespace Gosuji.API.Services.TrainerService
 
         public Game Game { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
-        public NullableTrainerSettings? NullableTrainerSettings { get; set; }
         public KataGo? KataGo { get; set; }
         public MoveTree MoveTree { get; set; } = new();
 
@@ -36,9 +34,9 @@ namespace Gosuji.API.Services.TrainerService
         {
             await (await GetKataGo()).Restart();
             (await GetKataGo()).SetBoardsize(TrainerSettingConfig.Boardsize);
-            (await GetKataGo()).SetRuleset(NullableTrainerSettings.Ruleset);
+            (await GetKataGo()).SetRuleset(TrainerSettingConfig.GetRuleset);
             (await GetKataGo()).SetHandicap(TrainerSettingConfig.Handicap);
-            (await GetKataGo()).SetKomi(NullableTrainerSettings.Komi);
+            (await GetKataGo()).SetKomi(TrainerSettingConfig.GetKomi);
         }
 
         public async Task<bool> UserHasInstance()
@@ -46,11 +44,9 @@ namespace Gosuji.API.Services.TrainerService
             return pool.UserHasInstance(UserId);
         }
 
-        public async Task Init(TrainerSettingConfig trainerSettingConfig, NullableTrainerSettings nullableTrainerSettings,
-            bool isThirdPartySGF)
+        public async Task Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF)
         {
             TrainerSettingConfig = trainerSettingConfig;
-            NullableTrainerSettings = nullableTrainerSettings;
             Game.IsThirdPartySGF = isThirdPartySGF;
 
             await StartKataGo();
@@ -59,13 +55,6 @@ namespace Gosuji.API.Services.TrainerService
         public async Task UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
         {
             TrainerSettingConfig = trainerSettingConfig;
-
-            NullableTrainerSettings.Ruleset = trainerSettingConfig.Ruleset ?? NullableTrainerSettings.Ruleset;
-            NullableTrainerSettings.Komi = trainerSettingConfig.Komi ?? NullableTrainerSettings.Komi;
-            NullableTrainerSettings.SuggestionVisits = trainerSettingConfig.SuggestionVisits ?? NullableTrainerSettings.SuggestionVisits;
-            NullableTrainerSettings.OpponentVisits = trainerSettingConfig.OpponentVisits ?? NullableTrainerSettings.OpponentVisits;
-            NullableTrainerSettings.PreVisits = trainerSettingConfig.PreVisits ?? NullableTrainerSettings.PreVisits;
-            NullableTrainerSettings.SelfplayVisits = trainerSettingConfig.SelfplayVisits ?? NullableTrainerSettings.SelfplayVisits;
         }
 
         public async Task SyncBoard(Move[] moves)

@@ -32,7 +32,6 @@ trainerPage.init = async function (
     isPreMoveStoneSound,
     isSelfplayStoneSound,
     trainerSettingConfig,
-    nullableTrainerSettings,
     gameLoadInfo
 ) {
     trainerG.isLoadingServerData = gameLoadInfo != null;
@@ -44,7 +43,7 @@ trainerPage.init = async function (
     trainerG.init(trainerRef, gameLoadInfo);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
     await kataGo.init(trainerConnectionRef);
-    await settings.init(trainerSettingConfig, nullableTrainerSettings, gameLoadInfo);
+    await settings.init(trainerSettingConfig, gameLoadInfo);
     trainerG.board.init(gameLoadInfo ? gameLoadInfo.boardsize : null,
         gameLoadInfo ? gameLoadInfo.handicap : null,
         gameLoadInfo ? gameLoadInfo.sgf : null,

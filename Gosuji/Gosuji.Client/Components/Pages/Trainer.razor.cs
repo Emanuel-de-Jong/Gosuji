@@ -48,13 +48,15 @@ namespace Gosuji.Client.Components.Pages
         private UserState? userState;
         private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
-        private NullableTrainerSettings? nullableTrainerSettings;
 
         private Game? game;
         private GameStat? gameStat;
         private GameStat? openingStat;
         private GameStat? midgameStat;
         private GameStat? endgameStat;
+
+        private string sgfRuleset;
+        private double sgfKomi;
 
         private MoveSuggestion[]? suggestions;
 
@@ -82,8 +84,6 @@ namespace Gosuji.Client.Components.Pages
             currentPreset = presets[userState.LastPresetId];
 
             await SetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
-
-            nullableTrainerSettings = new(trainerSettingConfig, settingConfigService.SettingConfig.LanguageId);
 
             isInitialized = true;
         }
@@ -135,7 +135,6 @@ namespace Gosuji.Client.Components.Pages
                 settingConfigService.SettingConfig.IsPreMoveStoneSound,
                 settingConfigService.SettingConfig.IsSelfplayStoneSound,
                 trainerSettingConfig,
-                nullableTrainerSettings,
                 gameLoadInfo);
 
             settingConfigService.StoneVolumeChanged += async (int volume) =>
@@ -181,14 +180,16 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task<bool> InitTrainerConnection(string ruleset, double komi, bool isThirdParty)
+        public async Task<bool> InitTrainerConnection(string sgfRuleset, double sgfKomi, bool isThirdParty)
         {
-            // Cloning removes TrainerSettingConfig reference
-            NullableTrainerSettings ntsWithGameValues = ReflectionHelper.DeepClone(nullableTrainerSettings);
-            ntsWithGameValues.Ruleset = ruleset;
-            ntsWithGameValues.Komi = komi;
+            this.sgfRuleset = sgfRuleset;
+            this.sgfKomi = sgfKomi;
 
-            APIResponse response = await trainerConnection.Init(trainerSettingConfig, ntsWithGameValues, isThirdParty);
+            TrainerSettingConfig tscWithSGFSettings = ReflectionHelper.DeepClone(trainerSettingConfig);
+            tscWithSGFSettings.SGFRuleset = sgfRuleset;
+            tscWithSGFSettings.SGFKomi = sgfKomi;
+
+            APIResponse response = await trainerConnection.Init(tscWithSGFSettings, isThirdParty);
             if (G.StatusMessage.HandleAPIResponse(response)) return false;
 
             return true;
@@ -197,8 +198,6 @@ namespace Gosuji.Client.Components.Pages
         [JSInvokable]
         public async Task UpdateTrainerSettingConfig(string propertyName, string value)
         {
-            ReflectionHelper.SetProperty(nullableTrainerSettings, propertyName, value);
-
             bool isSetSuccess = ReflectionHelper.SetProperty(trainerSettingConfig, propertyName, value);
             if (!isSetSuccess)
             {
@@ -208,7 +207,11 @@ namespace Gosuji.Client.Components.Pages
 
             if (trainerConnection.IsConnected)
             {
-                APIResponse response = await trainerConnection.UpdateTrainerSettingConfig(trainerSettingConfig);
+                TrainerSettingConfig tscWithSGFSettings = ReflectionHelper.DeepClone(trainerSettingConfig);
+                tscWithSGFSettings.SGFRuleset = sgfRuleset;
+                tscWithSGFSettings.SGFKomi = sgfKomi;
+
+                APIResponse response = await trainerConnection.UpdateTrainerSettingConfig(tscWithSGFSettings);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
         }
@@ -234,9 +237,7 @@ namespace Gosuji.Client.Components.Pages
 
             await SetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
 
-            nullableTrainerSettings.Init(trainerSettingConfig, settingConfigService.SettingConfig.LanguageId);
-
-            await jsRef.InvokeVoidAsync("settings.syncWithCS", trainerSettingConfig, nullableTrainerSettings);
+            await jsRef.InvokeVoidAsync("settings.syncWithCS", trainerSettingConfig);
 
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;

@@ -91,7 +91,7 @@ settings.FORCE_OPPONENT_CORNERS = {
 };
 
 
-settings.init = async function (trainerSettingConfig, nullableTrainerSettings, gameLoadInfo) {
+settings.init = async function (trainerSettingConfig, gameLoadInfo) {
     for (const key in settings.SETTINGS) {
         settings[key + "Element"] = document.getElementById(key);
     }
@@ -113,7 +113,7 @@ settings.init = async function (trainerSettingConfig, nullableTrainerSettings, g
         }
     }
 
-    await settings.syncWithCS(trainerSettingConfig, nullableTrainerSettings);
+    await settings.syncWithCS(trainerSettingConfig);
 
     settings.clear(gameLoadInfo);
 };
@@ -181,18 +181,21 @@ settings.inputAndSelectInputListener = async function (event) {
     }
 };
 
-settings.syncWithCS = async function (trainerSettingConfig, nullableTrainerSettings) {
+settings.syncWithCS = async function (trainerSettingConfig) {
     settings.isSyncingWithCS = true;
 
     const customKomi = trainerSettingConfig.hasOwnProperty("komi") && trainerSettingConfig["komi"] != null;
-
-    for (const [name, value] of Object.entries(nullableTrainerSettings)) {
-        trainerSettingConfig[name] = value;
-    }
     
     for (const [name, value] of Object.entries(trainerSettingConfig)) {
         await settings.setSetting(name, value, true);
     }
+
+    await settings.setSetting("ruleset", trainerSettingConfig.getRuleset, true);
+    await settings.setSetting("komi", trainerSettingConfig.getKomi, true);
+    await settings.setSetting("suggestionVisits", trainerSettingConfig.getSuggestionVisits, true);
+    await settings.setSetting("opponentVisits", trainerSettingConfig.getOpponentVisits, true);
+    await settings.setSetting("preVisits", trainerSettingConfig.getPreVisits, true);
+    await settings.setSetting("selfplayVisits", trainerSettingConfig.getSelfplayVisits, true);
 
     settings.customKomiElement.checked = customKomi;
     settings.customKomiElement.dispatchEvent(new Event("input"));

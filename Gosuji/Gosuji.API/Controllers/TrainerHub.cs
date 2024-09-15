@@ -56,10 +56,9 @@ namespace Gosuji.API.Controllers
             return OkData(await trainerServices[Context.ConnectionId].UserHasInstance());
         }
 
-        public async Task<HubResponse> Init(TrainerSettingConfig trainerSettingConfig, NullableTrainerSettings nullableTrainerSettings,
-            bool isThirdPartySGF)
+        public async Task<HubResponse> Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF)
         {
-            await trainerServices[Context.ConnectionId].Init(trainerSettingConfig, nullableTrainerSettings, isThirdPartySGF);
+            await trainerServices[Context.ConnectionId].Init(trainerSettingConfig, isThirdPartySGF);
             return Ok;
         }
 
