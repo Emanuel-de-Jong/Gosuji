@@ -114,7 +114,7 @@ trainerG.hideLoadAnimation = function() {
 
 trainerG.analyze = async function (moveType, color) {
     trainerG.suggestions = await kataGo.analyze(moveType, color);
-    await trainerG.pass(trainerG.suggestions.getPass());
+    await trainerG.pass(trainerG.suggestions.passSuggestion);
 };
 
 trainerG.analyzeMove = async function (coord) {

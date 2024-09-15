@@ -4,9 +4,9 @@
     {
         public List<MoveSuggestion> Suggestions { get; set; } = [];
         public MoveSuggestion? AnalyzeMoveSuggestion { get; set; }
+        public MoveSuggestion? PassSuggestion { get; set; }
         public int Visits { get; set; }
         public int? PlayIndex { get; set; }
-        public bool IsPass { get; set; } = false;
 
         public MoveSuggestionList() { }
 
@@ -44,25 +44,24 @@
             Suggestions = Suggestions[..index];
         }
 
-        public bool CheckPass()
+        public void CheckPass()
         {
             if (Suggestions.Count == 0)
             {
-                return IsPass;
+                return;
             }
 
             double highestScoreLead = Math.Round(Suggestions[0].Score.ScoreLead, 2);
             for (int i = 1; i < Suggestions.Count; i++)
             {
-                if (Suggestions[i].IsPass && Math.Round(Suggestions[i].Score.ScoreLead, 2) == highestScoreLead)
+                MoveSuggestion suggestion = Suggestions[i];
+                if (suggestion.IsPass && Math.Round(suggestion.Score.ScoreLead, 2) == highestScoreLead)
                 {
-                    IsPass = true;
-                    PlayIndex = i;
+                    PassSuggestion = suggestion;
+                    Suggestions.Remove(PassSuggestion);
                     break;
                 }
             }
-
-            return IsPass;
         }
 
         public void AddGrades()

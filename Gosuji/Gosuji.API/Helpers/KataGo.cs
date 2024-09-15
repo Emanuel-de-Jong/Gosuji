@@ -240,9 +240,9 @@ namespace Gosuji.API.Helpers
                 }
             }
 
+            filteredSuggestions.CheckPass();
             filteredSuggestions.AddGrades();
             filteredSuggestions.Filter(moveOptions);
-            filteredSuggestions.CheckPass();
 
             return filteredSuggestions;
         }

@@ -8,9 +8,9 @@ class MoveSuggestionList {
 
     suggestions = [];
     analyzeMoveSuggestion;
+    passSuggestion;
     visits;
     playIndex;
-    isPass = false;
 
 
     constructor(suggestions, analyzeMoveSuggestion) {
@@ -21,28 +21,6 @@ class MoveSuggestionList {
 
     add(suggestion) {
         this.suggestions.push(suggestion);
-    }
-
-    getPass() {
-        if (!this.isPass) {
-            return;
-        }
-
-        return this.suggestions[this.playIndex]
-    }
-
-    filterByPass() {
-        let filteredSuggestions = [];
-        for (const suggestion of this.suggestions) {
-            if (!suggestion.isPass()) {
-                filteredSuggestions.push(suggestion);
-            }
-        }
-
-        let firstSuggestion = this.suggestions[0];
-        this.suggestions = filteredSuggestions;
-
-        return firstSuggestion;
     }
 
     getFilterByWeaker() {
@@ -114,9 +92,9 @@ class MoveSuggestionList {
 
     static fromKataGo(kataGoSuggestions) {
         let suggestions = new MoveSuggestionList();
+        suggestions.passSuggestion = kataGoSuggestions.passSuggestion;
         suggestions.visits = kataGoSuggestions.visits;
         suggestions.playIndex = kataGoSuggestions.playIndex;
-        suggestions.isPass = kataGoSuggestions.isPass;
 
         for (const kataGoSuggestion of kataGoSuggestions.suggestions) {
             suggestions.add(MoveSuggestion.fromKataGo(kataGoSuggestion));
@@ -127,8 +105,9 @@ class MoveSuggestionList {
 
     static fromServer(serverSuggestions) {
         let suggestions = new MoveSuggestionList(serverSuggestions.analyzeMoveSuggestion);
+        suggestions.passSuggestion = serverSuggestions.passSuggestion;
+        suggestions.visits = serverSuggestions.visits;
         suggestions.playIndex = serverSuggestions.playIndex;
-        suggestions.isPass = serverSuggestions.isPass;
 
         for (const serverSuggestion of serverSuggestions.suggestions) {
             suggestions.add(MoveSuggestion.fromKataGo(serverSuggestion));

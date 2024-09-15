@@ -60,9 +60,7 @@ kataGo.analyze = async function (
         return;
     }
 
-    let suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
-    suggestions.filterByPass();
-    return suggestions;
+    return MoveSuggestionList.fromKataGo(kataGoSuggestions);
 };
 
 kataGo.play = async function (coord, color = trainerG.board.getColor()) {
