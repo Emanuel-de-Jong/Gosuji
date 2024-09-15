@@ -1,4 +1,3 @@
-import { db } from "./utils/db";
 import { kataGo } from "./utils/kataGo";
 import { scoreChart } from "./utils/scoreChart";
 import { settings } from "./utils/settings";
@@ -37,7 +36,6 @@ debug.logAllFuncCalls = function () {
         G,
         utils,
 
-        db,
         kataGo,
         scoreChart,
         settings,

@@ -75,53 +75,6 @@ class History {
             yield this.get(node);
         }
     }
-
-    static fromServer() {
-        return new History();
-    }
-
-    // encode() {
-    //     if (!this.dataType) return [];
-
-    //     let encoded = [];
-
-    //     for (const gridPoint of this.iterateGrid()) {
-    //         if (!gridPoint.data) {
-    //             encoded = byteUtils.numToBytes(this.ENCODE_Y_INDICATOR, 2, encoded);
-    //             encoded = byteUtils.numToBytes(gridPoint.y, 2, encoded);
-    //         } else {
-    //             encoded = byteUtils.numToBytes(gridPoint.x, 2, encoded);
-
-    //             if (this.dataType == "object") {
-    //                 encoded = encoded.concat(gridPoint.data.encode());
-    //             } else {
-    //                 encoded = byteUtils.numToBytes(gridPoint.data, 1, encoded);
-    //             }
-    //         }
-    //     }
-
-    //     return encoded;
-    // }
-
-    // *iterateGrid() {
-    //     for (let y = 0; y < this.grid.length; y++) {
-    //         if (!this.grid[y]) continue;
-    //         yield {
-    //             y: y,
-    //             x: null,
-    //             data: null,
-    //         };
-
-    //         for (let x = 0; x < this.grid[y].length; x++) {
-    //             if (!this.grid[y][x]) continue;
-    //             yield {
-    //                 y: y,
-    //                 x: x,
-    //                 data: this.grid[y][x],
-    //             };
-    //         }
-    //     }
-    // }
 }
 
 if (!window.trainer) window.trainer = {};

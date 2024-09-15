@@ -5,7 +5,6 @@ import { Ratio } from "./classes/Ratio";
 import { Score } from "./classes/Score";
 import { TrainerBoard } from "./classes/TrainerBoard";
 
-import { db } from "./utils/db";
 import { kataGo } from "./utils/kataGo";
 import { scoreChart } from "./utils/scoreChart";
 import { ratioChart } from "./utils/ratioChart";
@@ -69,13 +68,6 @@ trainerPage.init = async function (
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
-    db.init();
-
-    // console.log(stats.playerResultHistory);
-    // console.log(trainerG.suggestionsHistory);
-    // console.log(trainerG.moveTypeHistory);
-    // console.log(gameplay.chosenNotPlayedCoordHistory);
-    // console.log(scoreChart.history);
 
     sgf.sgfLoadingEvent.add(trainerPage.sgfLoadingListener);
     sgf.sgfLoadedEvent.add(trainerPage.sgfLoadedListener);
@@ -102,7 +94,6 @@ trainerPage.clear = async function () {
     preMovePlacer.clear();
     await selfplay.clear();
     await kataGo.clear();
-    db.clear();
 };
 
 
@@ -155,7 +146,6 @@ export {
     // Score,
     // TrainerBoard,
 
-    db,
     // kataGo,
     // scoreChart,
     // ratioChart,

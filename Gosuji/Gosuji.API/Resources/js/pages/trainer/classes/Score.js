@@ -34,18 +34,6 @@ class Score {
     copy() {
         return new Score(this.winrate, this.scoreLead);
     }
-
-    encode() {
-        let encoded = [];
-        encoded = byteUtils.numToBytes(this.winrate, 4, encoded);
-        encoded = byteUtils.numToBytes(this.scoreLead, 4, encoded);
-        return encoded;
-    }
-
-
-    static fromServer(serverScore) {
-        return new Score(serverScore.winrate, serverScore.scoreLead);
-    }
 }
 
 if (!window.trainer) window.trainer = {};

@@ -154,8 +154,6 @@ trainerG.pass = async function (suggestion) {
     sgf.setResultMeta(resultStr);
 
     trainerG.board.finishedOverlay.hidden = false;
-
-    await db.save();
 };
 
 trainerG.getResultStr = function () {

@@ -4,8 +4,6 @@ import { trainerG } from "../utils/trainerG";
 import { gameplay } from "../gameplay";
 
 class MoveSuggestionList {
-    static ENCODE_ANALYZE_MOVE_INDICATOR = -2;
-
     suggestions = [];
     analyzeMoveSuggestion;
     passSuggestion;
@@ -59,23 +57,6 @@ class MoveSuggestionList {
         }
     }
 
-    encode() {
-        let encoded = [];
-
-        if (this.analyzeMoveSuggestion) {
-            encoded = byteUtils.numToBytes(this.ENCODE_ANALYZE_MOVE_INDICATOR, 2, encoded);
-            encoded = encoded.concat(this.analyzeMoveSuggestion.encode());
-        }
-
-        encoded = byteUtils.numToBytes(this.suggestions.length, 2, encoded);
-
-        for (const suggestion of this.suggestions) {
-            encoded = encoded.concat(suggestion.encode());
-        }
-
-        return encoded;
-    }
-
 
     get(index) {
         return this.suggestions[index];
@@ -98,19 +79,6 @@ class MoveSuggestionList {
 
         for (const kataGoSuggestion of kataGoSuggestions.suggestions) {
             suggestions.add(MoveSuggestion.fromKataGo(kataGoSuggestion));
-        }
-
-        return suggestions;
-    }
-
-    static fromServer(serverSuggestions) {
-        let suggestions = new MoveSuggestionList(serverSuggestions.analyzeMoveSuggestion);
-        suggestions.passSuggestion = serverSuggestions.passSuggestion;
-        suggestions.visits = serverSuggestions.visits;
-        suggestions.playIndex = serverSuggestions.playIndex;
-
-        for (const serverSuggestion of serverSuggestions.suggestions) {
-            suggestions.add(MoveSuggestion.fromKataGo(serverSuggestion));
         }
 
         return suggestions;
