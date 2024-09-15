@@ -24,7 +24,7 @@ class Score {
     }
 
     getReverseWinrate() {
-        return 1 - this.winrate;
+        return 100 - this.winrate;
     }
 
     getReverseScoreLead() {

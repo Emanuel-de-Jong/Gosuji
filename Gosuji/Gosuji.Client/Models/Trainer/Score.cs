@@ -25,7 +25,7 @@
 
         public double GetReverseWinrate()
         {
-            return 1.0 - Winrate;
+            return 100.0 - Winrate;
         }
 
         public double GetReverseScoreLead()

@@ -39,7 +39,7 @@
         {
             Score ??= new Score();
 
-            Score.Winrate = double.Parse(winrate);
+            Score.Winrate = double.Parse(winrate) * 100.0;
             if (color == EMoveColor.WHITE)
             {
                 Score.Winrate = Score.GetReverseWinrate();
