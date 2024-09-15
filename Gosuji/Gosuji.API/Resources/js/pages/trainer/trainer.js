@@ -31,6 +31,8 @@ trainerPage.init = async function (
     stoneVolume,
     isPreMoveStoneSound,
     isSelfplayStoneSound,
+    trainerSettingConfig,
+    nullableTrainerSettings,
     gameLoadInfo
 ) {
     trainerG.isLoadingServerData = gameLoadInfo != null;
@@ -42,7 +44,7 @@ trainerPage.init = async function (
     trainerG.init(trainerRef, gameLoadInfo);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
     await kataGo.init(trainerConnectionRef);
-    await settings.init(gameLoadInfo);
+    await settings.init(trainerSettingConfig, nullableTrainerSettings, gameLoadInfo);
     trainerG.board.init(gameLoadInfo ? gameLoadInfo.boardsize : null,
         gameLoadInfo ? gameLoadInfo.handicap : null,
         gameLoadInfo ? gameLoadInfo.sgf : null,
@@ -78,6 +80,8 @@ trainerPage.init = async function (
 
     sgf.sgfLoadingEvent.add(trainerPage.sgfLoadingListener);
     sgf.sgfLoadedEvent.add(trainerPage.sgfLoadedListener);
+
+    document.getElementById("settingsAccordion").hidden = false;
 };
 
 trainerPage.clear = async function () {

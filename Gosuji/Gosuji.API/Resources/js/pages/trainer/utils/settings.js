@@ -91,7 +91,7 @@ settings.FORCE_OPPONENT_CORNERS = {
 };
 
 
-settings.init = async function (gameLoadInfo) {
+settings.init = async function (trainerSettingConfig, nullableTrainerSettings, gameLoadInfo) {
     for (const key in settings.SETTINGS) {
         settings[key + "Element"] = document.getElementById(key);
     }
@@ -115,11 +115,7 @@ settings.init = async function (gameLoadInfo) {
         }
     }
 
-    settings.isGetInitialSettings = true;
-    for (const key in settings.SETTINGS) {
-        await settings.updateSetting(key);
-    }
-    settings.isGetInitialSettings = false;
+    await settings.syncWithCS(trainerSettingConfig, nullableTrainerSettings);
 
     settings.clear(gameLoadInfo);
 };
@@ -147,21 +143,32 @@ settings.updateSetting = async function (name) {
 
     settings[name] = value;
 
-    if (!settings.isGetInitialSettings && !settings.isSyncingWithCS) {
+    if (!settings.isSyncingWithCS) {
+        if (name == "customKomi") {
+            return;
+        }
+
         const propertyName = name[0].toUpperCase() + name.slice(1);
         const strValue = type == utils.TYPE.BOOL ? '' + element.checked : element.value;
-        await kataGo.updateTrainerSettingConfig(propertyName, strValue);
+        await settings.updateTrainerSettingConfig(propertyName, strValue);
     }
 };
 
 settings.setSetting = function (name, value) {
+    let type = settings.SETTINGS[name];
+
     name += "Element";
     if (!settings.hasOwnProperty(name)) {
         return;
     }
 
     const el = settings[name];
-    el.value = value;
+    if (type == utils.TYPE.BOOL) {
+        el.checked = value;
+    } else {
+        el.value = value;
+    }
+
     el.dispatchEvent(new Event("input"));
 };
 
@@ -182,6 +189,10 @@ settings.syncWithCS = async function (trainerSettingConfig, nullableTrainerSetti
         settings.setSetting(name, value);
     }
     settings.isSyncingWithCS = false;
+};
+
+settings.updateTrainerSettingConfig = async function (propertyName, value) {
+    return await kataGo.invokeCS(trainerG.trainerRef, "UpdateTrainerSettingConfig", propertyName, value);
 };
 
 settings.togglePreGameSettings = function (enable = false) {

@@ -37,10 +37,6 @@ kataGo.initTrainerConnection = async function () {
     return await kataGo.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty);
 };
 
-kataGo.updateTrainerSettingConfig = async function (propertyName, value) {
-    return await kataGo.sendPageRequest("UpdateTrainerSettingConfig", propertyName, value);
-};
-
 kataGo.syncBoard = async function () {
     let moves = trainerG.board.getMoves();
     return await kataGo.sendRequest("SyncBoard", moves);
@@ -85,12 +81,7 @@ kataGo.sendRequest = async function (uri, ...args) {
 
     await kataGo.start();
 
-    let result;
-    try {
-        result = await kataGo.serviceRef.invokeMethodAsync(uri, ...args);
-    } catch (error) {
-        console.error(error);
-    }
+    let result = await kataGo.invokeCS(kataGo.serviceRef, uri, ...args);
 
     trainerG.hideLoadAnimation();
     return result;
@@ -101,14 +92,19 @@ kataGo.sendPageRequest = async function (uri, ...args) {
 
     await kataGo.start();
 
+    let result = await kataGo.invokeCS(trainerG.trainerRef, uri, ...args);
+
+    trainerG.hideLoadAnimation();
+    return result;
+};
+
+kataGo.invokeCS = async function (ref, uri, ...args) {
     let result;
     try {
-        result = await trainerG.trainerRef.invokeMethodAsync(uri, ...args);
+        result = await ref.invokeMethodAsync(uri, ...args);
     } catch (error) {
         console.error(error);
     }
-
-    trainerG.hideLoadAnimation();
     return result;
 };
 

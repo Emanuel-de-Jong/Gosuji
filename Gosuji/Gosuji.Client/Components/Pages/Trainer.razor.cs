@@ -136,6 +136,8 @@ namespace Gosuji.Client.Components.Pages
                 settingConfigService.SettingConfig.CalcStoneVolume(),
                 settingConfigService.SettingConfig.IsPreMoveStoneSound,
                 settingConfigService.SettingConfig.IsSelfplayStoneSound,
+                trainerSettingConfig,
+                nullableTrainerSettings,
                 gameLoadInfo);
 
             settingConfigService.StoneVolumeChanged += async (int volume) =>

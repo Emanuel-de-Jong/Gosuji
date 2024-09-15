@@ -48,7 +48,7 @@
                             </EditForm>
                         </div>
 
-                        <div class="accordion accordion-flush" id="settingsAccordion">
+                        <div class="accordion accordion-flush" id="settingsAccordion" hidden>
                             <form novalidate>
                                 <div class="accordion-item">
                                     <h3 class="accordion-header" id="basicsSettingsHeader">
@@ -63,7 +63,7 @@
                                                     <div class="row">
                                                         <div class="col-6">
                                                             <label for="boardsize" class="form-label">Board size</label>
-                                                            <select class="form-select" id="boardsize" value="@trainerSettingConfig.Boardsize">
+                                                            <select class="form-select" id="boardsize">
                                                                 <option value="19">19</option>
                                                                 <option value="13">13</option>
                                                                 <option value="9">9</option>
@@ -71,7 +71,7 @@
                                                         </div>
                                                         <div class="col-6">
                                                             <label for="handicap" class="form-label">Handicap</label>
-                                                            <select class="form-select" id="handicap" value="@trainerSettingConfig.Handicap">
+                                                            <select class="form-select" id="handicap">
                                                                 <option value="0">0</option>
                                                                 <option value="2">2</option>
                                                                 <option value="3">3</option>
@@ -89,16 +89,16 @@
                                                             <label for="preMoves" class="form-label">Pre moves</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="preMovesSwitch" checked="@(trainerSettingConfig.PreMovesSwitch ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="preMovesSwitch">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="preMoves" min="0" max="50" value="@trainerSettingConfig.PreMoves">
+                                                                <input type="number" class="form-control" id="preMoves" min="0" max="50">
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="hideOptions" class="form-label">Hide options</label>
-                                                            <select class="form-select" id="hideOptions" value="@((int)trainerSettingConfig.HideOptions)">
+                                                            <select class="form-select" id="hideOptions">
                                                                 @foreach (EHideOptions hideOption in Enum.GetValues(typeof(EHideOptions)))
                                                                 {
                                                                     <option value="@((int)hideOption)">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
@@ -112,7 +112,7 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="colorType" class="form-label">Color</label>
-                                                            <select class="form-select" id="colorType" value="@((int)trainerSettingConfig.ColorType)">
+                                                            <select class="form-select" id="colorType">
                                                                 @foreach (EMoveColor moveColor in Enum.GetValues(typeof(EMoveColor)))
                                                                 {
                                                                     <option value="@((int)moveColor)">@tl[$"TrainerSettingConfig_EMoveColor_{moveColor}"]</option>
@@ -123,19 +123,17 @@
                                                     <div class="row">
                                                         <div class="col-6">
                                                             <label for="suggestionVisits" class="form-label">Suggestion strength</label>
-                                                            <input type="number" class="form-control" id="suggestionVisits" min="2" max="25000"
-                                                                value="@nullableTrainerSettings.SuggestionVisits">
+                                                            <input type="number" class="form-control" id="suggestionVisits" min="2" max="25000">
                                                         </div>
                                                         <div class="col-6">
                                                             <label for="opponentVisits" class="form-label">Opponent strength</label>
-                                                            <input type="number" class="form-control" id="opponentVisits" min="2" max="25000"
-                                                                value="@nullableTrainerSettings.OpponentVisits">
+                                                            <input type="number" class="form-control" id="opponentVisits" min="2" max="25000">
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="wrongMoveCorrection" checked="@(trainerSettingConfig.WrongMoveCorrection ? "true" : null)">
+                                                                <input class="form-check-input" type="checkbox" id="wrongMoveCorrection">
                                                                 <label class="form-check-label" for="wrongMoveCorrection">
                                                                     Wrong move correction
                                                                 </label>
@@ -162,8 +160,8 @@
                                                         <div class="col-12">
                                                             <label for="ruleset" class="form-label">Ruleset</label>
                                                             <select class="form-select" id="ruleset">
-                                                                <option value="Japanese" selected=@(nullableTrainerSettings.Ruleset.ToLower().Contains("jap") ? "true" : null)>Japanese</option>
-                                                                <option value="Chinese" selected=@(nullableTrainerSettings.Ruleset.ToLower().Contains("chin") ? "true" : null)>Chinese</option>
+                                                                <option value="Japanese">Japanese</option>
+                                                                <option value="Chinese">Chinese</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -176,10 +174,9 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text">Custom</span>
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="customKomi" checked="@(trainerSettingConfig.Komi != null ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="customKomi">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="komi" step="0.5" min="-150" max="150" value="@nullableTrainerSettings.Komi"
-                                                                       disabled="@(trainerSettingConfig.Komi == null ? "true" : null)">
+                                                                <input type="number" class="form-control" id="komi" step="0.5" min="-150" max="150">
                                                                 <div class="form-invalid-message"></div>
                                                             </div>
                                                         </div>
@@ -203,7 +200,7 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="forceOpponentCorners" class="form-label">Force opponent corners</label>
-                                                            <select class="form-select" id="forceOpponentCorners" value="@((int)trainerSettingConfig.ForceOpponentCorners)">
+                                                            <select class="form-select" id="forceOpponentCorners">
                                                                 @foreach (EForceOpponentCorners forceOpponentCorners in Enum.GetValues(typeof(EForceOpponentCorners)))
                                                                 {
                                                                     <option value="@((int)forceOpponentCorners)">@tl[$"TrainerSettingConfig_EForceOpponentCorners_{forceOpponentCorners}"]</option>
@@ -217,37 +214,37 @@
                                                             <div class="input-group">
                                                                 <span class="input-group-text">4-4</span>
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch44" checked="@(trainerSettingConfig.CornerSwitch44 ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch44">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="cornerChance44" min="0" max="100" value="@trainerSettingConfig.CornerChance44">
+                                                                <input type="number" class="form-control" id="cornerChance44" min="0" max="100">
                                                             </div>
                                                             <div class="input-group">
                                                                 <span class="input-group-text">3-4</span>
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch34" checked="@(trainerSettingConfig.CornerSwitch34 ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch34">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="cornerChance34" min="0" max="100" value="@trainerSettingConfig.CornerChance34">
+                                                                <input type="number" class="form-control" id="cornerChance34" min="0" max="100">
                                                             </div>
                                                             <div class="input-group">
                                                                 <span class="input-group-text">3-3</span>
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch33" checked="@(trainerSettingConfig.CornerSwitch33 ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch33">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="cornerChance33" min="0" max="100" value="@trainerSettingConfig.CornerChance33">
+                                                                <input type="number" class="form-control" id="cornerChance33" min="0" max="100">
                                                             </div>
                                                             <div class="input-group">
                                                                 <span class="input-group-text">4-5</span>
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch45" checked="@(trainerSettingConfig.CornerSwitch45 ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch45">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="cornerChance45" min="0" max="100" value="@trainerSettingConfig.CornerChance45">
+                                                                <input type="number" class="form-control" id="cornerChance45" min="0" max="100">
                                                             </div>
                                                             <div class="input-group">
                                                                 <span class="input-group-text">3-5</span>
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch35" checked="@(trainerSettingConfig.CornerSwitch35 ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="cornerSwitch35">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="cornerChance35" min="0" max="100" value="@trainerSettingConfig.CornerChance35">
+                                                                <input type="number" class="form-control" id="cornerChance35" min="0" max="100">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -257,14 +254,13 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="preVisits" class="form-label">Pre move strength</label>
-                                                            <input type="number" class="form-control" id="preVisits" min="2" max="25000"
-                                                                value="@nullableTrainerSettings.PreVisits">
+                                                            <input type="number" class="form-control" id="preVisits" min="2" max="25000">
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="preOptions" class="form-label">Options</label>
-                                                            <input type="number" class="form-control" id="preOptions" min="1" max="10" value="@trainerSettingConfig.PreOptions">
+                                                            <input type="number" class="form-control" id="preOptions" min="1" max="10">
                                                         </div>
                                                     </div>
                                                     <div class="row" id="preOptionPercDiv">
@@ -272,9 +268,9 @@
                                                             <label for="preOptionPerc" class="form-label">Option chance</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="preOptionPercSwitch" checked="@(trainerSettingConfig.PreOptionPercSwitch ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="preOptionPercSwitch">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="preOptionPerc" step="0.1" min="0" max="100" value="@trainerSettingConfig.PreOptionPerc">
+                                                                <input type="number" class="form-control" id="preOptionPerc" step="0.1" min="0" max="100">
                                                                 <span class="input-group-text">%</span>
                                                                 <div class="form-invalid-message"></div>
                                                             </div>
@@ -299,13 +295,13 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="suggestionOptions" class="form-label">Suggestion options</label>
-                                                            <input type="number" class="form-control" id="suggestionOptions" min="1" max="25" value="@trainerSettingConfig.SuggestionOptions">
+                                                            <input type="number" class="form-control" id="suggestionOptions" min="1" max="25">
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="form-check">
-                                                                <input class="form-check-input" type="checkbox" id="hideWeakerOptions" checked="@(trainerSettingConfig.HideWeakerOptions ? "true" : null)">
+                                                                <input class="form-check-input" type="checkbox" id="hideWeakerOptions">
                                                                 <label class="form-check-label" for="hideWeakerOptions">Hide weaker options</label>
                                                             </div>
                                                         </div>
@@ -318,9 +314,9 @@
                                                             <label for="minVisitsPerc" class="form-label">Min strength</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="minVisitsPercSwitch" checked="@(trainerSettingConfig.MinVisitsPercSwitch ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="minVisitsPercSwitch">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="minVisitsPerc" step="0.1" min="0" max="100" value="@trainerSettingConfig.MinVisitsPerc">
+                                                                <input type="number" class="form-control" id="minVisitsPerc" step="0.1" min="0" max="100">
                                                                 <span class="input-group-text">%</span>
                                                                 <div class="form-invalid-message"></div>
                                                             </div>
@@ -331,9 +327,9 @@
                                                             <label for="maxVisitDiffPerc" class="form-label">Max strength difference</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="maxVisitDiffPercSwitch" checked="@(trainerSettingConfig.MaxVisitDiffPercSwitch ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="maxVisitDiffPercSwitch">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="maxVisitDiffPerc" step="0.1" min="0" max="100" value="@trainerSettingConfig.MaxVisitDiffPerc">
+                                                                <input type="number" class="form-control" id="maxVisitDiffPerc" step="0.1" min="0" max="100">
                                                                 <span class="input-group-text">%</span>
                                                                 <div class="form-invalid-message"></div>
                                                             </div>
@@ -358,13 +354,13 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="opponentOptions" class="form-label">Options</label>
-                                                            <input type="number" class="form-control" id="opponentOptions" min="1" max="10" value="@trainerSettingConfig.OpponentOptions">
+                                                            <input type="number" class="form-control" id="opponentOptions" min="1" max="10">
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="hideOpponentOptions" class="form-label">Hide options</label>
-                                                            <select class="form-select" id="hideOpponentOptions" value="@((int)trainerSettingConfig.HideOpponentOptions)">
+                                                            <select class="form-select" id="hideOpponentOptions">
                                                                 @foreach (EHideOpponentOptions hideOption in Enum.GetValues(typeof(EHideOpponentOptions)))
                                                                 {
                                                                     <option value="@((int)hideOption)">@tl[$"TrainerSettingConfig_EHideOptions_{hideOption}"]</option>
@@ -380,9 +376,9 @@
                                                             <label for="opponentOptionPerc" class="form-label">Option chance</label>
                                                             <div class="input-group">
                                                                 <div class="input-group-text">
-                                                                    <input class="form-check-input mt-0" type="checkbox" id="opponentOptionPercSwitch" checked="@(trainerSettingConfig.OpponentOptionPercSwitch ? "true" : null)">
+                                                                    <input class="form-check-input mt-0" type="checkbox" id="opponentOptionPercSwitch">
                                                                 </div>
-                                                                <input type="number" class="form-control" id="opponentOptionPerc" step="0.1" min="0" max="100" value="@trainerSettingConfig.OpponentOptionPerc">
+                                                                <input type="number" class="form-control" id="opponentOptionPerc" step="0.1" min="0" max="100">
                                                                 <span class="input-group-text">%</span>
                                                                 <div class="form-invalid-message"></div>
                                                             </div>
@@ -407,7 +403,7 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="selfplayPlaySpeed" class="form-label">Play speed</label>
-                                                            <input type="number" class="form-control" id="selfplayPlaySpeed" min="1.5" max="4" step="0.5" value="@trainerSettingConfig.SelfplayPlaySpeed">
+                                                            <input type="number" class="form-control" id="selfplayPlaySpeed" min="1.5" max="4" step="0.5">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -416,8 +412,7 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <label for="selfplayVisits" class="form-label">Selfplay strength</label>
-                                                            <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000"
-                                                                value="@nullableTrainerSettings.SelfplayVisits">
+                                                            <input type="number" class="form-control" id="selfplayVisits" min="2" max="25000">
                                                         </div>
                                                     </div>
                                                 </div>
