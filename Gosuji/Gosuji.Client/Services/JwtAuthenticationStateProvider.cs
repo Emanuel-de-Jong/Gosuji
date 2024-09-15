@@ -1,5 +1,6 @@
 ﻿using Gosuji.Client.Helpers;
 using Gosuji.Client.Services.User;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
@@ -8,13 +9,17 @@ namespace Gosuji.Client.Services
     public class JwtAuthenticationStateProvider : AuthenticationStateProvider
     {
         private UserAPI userAPI;
+        private NavigationManager navigationManager;
+
         private AuthenticationState? state;
         private readonly AuthenticationState anonymousState;
+
         public string? Token { get; set; }
 
-        public JwtAuthenticationStateProvider(UserAPI userAPI)
+        public JwtAuthenticationStateProvider(UserAPI userAPI, NavigationManager navigationManager)
         {
             this.userAPI = userAPI;
+            this.navigationManager = navigationManager;
             anonymousState = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
         }
 
@@ -74,6 +79,7 @@ namespace Gosuji.Client.Services
             if (shouldNotify)
             {
                 NotifyAuthenticationStateChanged(Task.FromResult(state));
+                navigationManager.NavigateTo(navigationManager.Uri, forceLoad: true);
             }
         }
     }

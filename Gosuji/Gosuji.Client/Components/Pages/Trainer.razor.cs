@@ -81,16 +81,7 @@ namespace Gosuji.Client.Components.Pages
 
             currentPreset = presets[userState.LastPresetId];
 
-            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
-            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
-            trainerSettingConfig = trainerSettingConfigResponse.Data;
-
-            APIResponse<Subscription?> subscriptionResponse = await dataAPI.GetSubscription();
-            if (G.StatusMessage.HandleAPIResponse(subscriptionResponse)) return;
-            Subscription? subscription = subscriptionResponse.Data;
-
-            trainerSettingConfig.Language = Enum.Parse<ELanguage>(settingConfigService.SettingConfig.LanguageId);
-            trainerSettingConfig.SubscriptionType = subscription?.SubscriptionType;
+            await SetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
 
             nullableTrainerSettings = new(trainerSettingConfig, settingConfigService.SettingConfig.LanguageId);
 
@@ -153,6 +144,16 @@ namespace Gosuji.Client.Components.Pages
                 await jsRef.InvokeVoidAsync("trainerG.board.setIsPreMoveStoneSound", isStoneSound);
             settingConfigService.IsSelfplayStoneSoundChanged += async (bool isStoneSound) =>
                 await jsRef.InvokeVoidAsync("trainerG.board.setIsSelfplayStoneSound", isStoneSound);
+        }
+
+        private async Task SetTrainerSettingConfig(long id)
+        {
+            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(id);
+            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
+            trainerSettingConfig = trainerSettingConfigResponse.Data;
+
+            trainerSettingConfig.Language = Enum.Parse<ELanguage>(settingConfigService.SettingConfig.LanguageId);
+            trainerSettingConfig.SubscriptionType = settingConfigService.Subscription?.SubscriptionType;
         }
 
         [JSInvokable]
@@ -230,9 +231,8 @@ namespace Gosuji.Client.Components.Pages
         private async Task SelectPreset(long presetId)
         {
             Preset lastPreset = presets[presetId];
-            APIResponse<TrainerSettingConfig> getTrainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
-            if (G.StatusMessage.HandleAPIResponse(getTrainerSettingConfigResponse)) return;
-            trainerSettingConfig = getTrainerSettingConfigResponse.Data;
+
+            await SetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
 
             nullableTrainerSettings.Init(trainerSettingConfig, settingConfigService.SettingConfig.LanguageId);
 

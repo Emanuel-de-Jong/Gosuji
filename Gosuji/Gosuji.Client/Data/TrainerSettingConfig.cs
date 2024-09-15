@@ -100,34 +100,42 @@ namespace Gosuji.Client.Data
         public double SelfplayPlaySpeed { get; set; }
 
         [NotMapped]
-        public ELanguage Language { get; set; }
+        public ELanguage Language { get; set; } = ELanguage.en;
         [NotMapped]
         public ESubscriptionType? SubscriptionType { get; set; }
+        [NotMapped]
+        public string? SGFRuleset { get; set; }
         [NotMapped]
         public string GetRuleset
         {
             get
             {
-                string? ruleset = Ruleset;
-                if (ruleset == null)
+                if (SGFRuleset != null)
                 {
-                    if (Language == ELanguage.zh || Language == ELanguage.ko)
-                    {
-                        ruleset = "Chinese";
-                    }
-                    else
-                    {
-                        ruleset = "Japanese";
-                    }
+                    return SGFRuleset;
                 }
-                return ruleset;
+                if (Ruleset != null)
+                {
+                    return Ruleset;
+                }
+                if (Language == ELanguage.zh || Language == ELanguage.ko)
+                {
+                    return "Chinese";
+                }
+                return "Japanese";
             }
         }
+        [NotMapped]
+        public double? SGFKomi { get; set; }
         [NotMapped]
         public double GetKomi
         {
             get
             {
+                if (SGFKomi != null)
+                {
+                    return SGFKomi.Value;
+                }
                 if (Komi != null)
                 {
                     return Komi.Value;
