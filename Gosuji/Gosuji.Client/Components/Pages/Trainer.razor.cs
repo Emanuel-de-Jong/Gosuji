@@ -85,6 +85,13 @@ namespace Gosuji.Client.Components.Pages
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             trainerSettingConfig = trainerSettingConfigResponse.Data;
 
+            APIResponse<Subscription?> subscriptionResponse = await dataAPI.GetSubscription();
+            if (G.StatusMessage.HandleAPIResponse(subscriptionResponse)) return;
+            Subscription? subscription = subscriptionResponse.Data;
+
+            trainerSettingConfig.Language = Enum.Parse<ELanguage>(settingConfigService.SettingConfig.LanguageId);
+            trainerSettingConfig.SubscriptionType = subscription?.SubscriptionType;
+
             nullableTrainerSettings = new(trainerSettingConfig, settingConfigService.SettingConfig.LanguageId);
 
             isInitialized = true;

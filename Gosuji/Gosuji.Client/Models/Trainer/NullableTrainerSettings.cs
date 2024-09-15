@@ -39,7 +39,7 @@ namespace Gosuji.Client.Models.Trainer
                 }
             }
 
-            double komi = trainerSettingConfig.GetKomi(ruleset);
+            double komi = 6.5;
 
             int suggestionVisits = trainerSettingConfig.SuggestionVisits != null ? trainerSettingConfig.SuggestionVisits.Value : 200;
             int opponentVisits = trainerSettingConfig.OpponentVisits != null ? trainerSettingConfig.OpponentVisits.Value : 200;

@@ -1,5 +1,6 @@
 ﻿using Gosuji.Client.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -98,34 +99,83 @@ namespace Gosuji.Client.Data
         [Range(1.5, 4)]
         public double SelfplayPlaySpeed { get; set; }
 
-        public double GetKomi(string? ruleset)
+        [NotMapped]
+        public ELanguage Language { get; set; }
+        [NotMapped]
+        public ESubscriptionType? SubscriptionType { get; set; }
+        [NotMapped]
+        public string GetRuleset
         {
-            if (Komi != null)
+            get
             {
-                return Komi.Value;
+                string? ruleset = Ruleset;
+                if (ruleset == null)
+                {
+                    if (Language == ELanguage.zh || Language == ELanguage.ko)
+                    {
+                        ruleset = "Chinese";
+                    }
+                    else
+                    {
+                        ruleset = "Japanese";
+                    }
+                }
+                return ruleset;
             }
-
-            return GetDefaultKomi(ruleset);
         }
+        [NotMapped]
+        public double GetKomi
+        {
+            get
+            {
+                if (Komi != null)
+                {
+                    return Komi.Value;
+                }
+                return GetDefaultKomi(GetRuleset);
+            }
+        }
+        [NotMapped]
+        public int GetSuggestionVisits => GetVisits(SuggestionVisits, 100, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+        [NotMapped]
+        public int GetOpponentVisits => GetVisits(OpponentVisits, 100, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+        [NotMapped]
+        public int GetPreVisits => GetVisits(PreVisits, 100, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+        [NotMapped]
+        public int GetSelfplayVisits => GetVisits(SelfplayVisits, 100, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
 
-        public double GetDefaultKomi(string? ruleset)
+        public double GetDefaultKomi(string ruleset)
         {
             if (Handicap != 0)
             {
                 return 0.5;
             }
 
-            if (ruleset == null)
-            {
-                ruleset = Ruleset;
-            }
-
-            if (ruleset != null && ruleset.ToLower().Contains("chin"))
+            if (ruleset.ToLower().Contains("chin"))
             {
                 return 7.5;
             }
 
             return 6.5;
+        }
+
+        private int GetVisits(int? visits, int noSubVisits, Dictionary<ESubscriptionType, int> visitsBySub)
+        {
+            if (visits != null)
+            {
+                return visits.Value;
+            }
+
+            if (SubscriptionType == null)
+            {
+                return noSubVisits;
+            }
+
+            return visitsBySub[SubscriptionType.Value];
         }
 
         public TrainerSettingConfig SetHash()
