@@ -112,8 +112,8 @@ trainerG.hideLoadAnimation = function() {
     trainerG.loadAnimation.hidden = true;
 };
 
-trainerG.analyze = async function (maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color) {
-    trainerG.suggestions = await kataGo.analyze(maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color);
+trainerG.analyze = async function (moveType, color) {
+    trainerG.suggestions = await kataGo.analyze(moveType, color);
     await trainerG.pass(trainerG.suggestions.getPass());
 };
 

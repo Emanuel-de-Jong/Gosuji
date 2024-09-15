@@ -4,7 +4,6 @@ using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 
 namespace Gosuji.API.Services.TrainerService
 {
@@ -98,7 +97,7 @@ namespace Gosuji.API.Services.TrainerService
             return suggestion;
         }
 
-        public async Task<MoveSuggestionList> Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public async Task<MoveSuggestionList> Analyze(EMoveType moveType, EMoveColor color)
         {
             if (isAnalyzing)
             {
@@ -106,7 +105,36 @@ namespace Gosuji.API.Services.TrainerService
             }
             isAnalyzing = true;
 
-            MoveSuggestionList suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+            int maxVisits = 0;
+            double minVisitsPerc = 0;
+            double maxVisitDiffPerc = 100;
+            int moveOptions = 1;
+            switch (moveType)
+            {
+                case EMoveType.PLAYER:
+                    maxVisits = TrainerSettingConfig.GetSuggestionVisits;
+                    minVisitsPerc = TrainerSettingConfig.MinVisitsPercSwitch ? TrainerSettingConfig.MinVisitsPerc : minVisitsPerc;
+                    maxVisitDiffPerc = TrainerSettingConfig.MaxVisitDiffPercSwitch ? TrainerSettingConfig.MaxVisitDiffPerc : maxVisitDiffPerc;
+                    moveOptions = TrainerSettingConfig.SuggestionOptions;
+                    break;
+                case EMoveType.OPPONENT:
+                    maxVisits = TrainerSettingConfig.GetOpponentVisits;
+                    minVisitsPerc = 10;
+                    maxVisitDiffPerc = 50;
+                    moveOptions = TrainerSettingConfig.OpponentOptions;
+                    break;
+                case EMoveType.PRE:
+                    maxVisits = TrainerSettingConfig.GetPreVisits;
+                    minVisitsPerc = 10;
+                    maxVisitDiffPerc = 50;
+                    moveOptions = TrainerSettingConfig.PreOptions;
+                    break;
+                case EMoveType.SELFPLAY:
+                    maxVisits = TrainerSettingConfig.GetSelfplayVisits;
+                    break;
+            }
+
+            MoveSuggestionList suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc, moveOptions);
             MoveTree.CurrentNode.Suggestions = suggestions;
 
             isAnalyzing = false;

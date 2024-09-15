@@ -31,20 +31,6 @@ class MoveSuggestionList {
         return this.suggestions[this.playIndex]
     }
 
-    filterByMoveOptions(moveOptions) {
-        let moveOptionCount = 1;
-        let index;
-        for (index = 0; index < this.suggestions.length; index++) {
-            if (index != 0 && this.suggestions[index].visits != this.suggestions[index - 1].visits) {
-                moveOptionCount++;
-                if (moveOptionCount == moveOptions + 1) break;
-            }
-        }
-
-        this.suggestions = this.suggestions.splice(0, index);
-        return this;
-    }
-
     filterByPass() {
         let filteredSuggestions = [];
         for (const suggestion of this.suggestions) {

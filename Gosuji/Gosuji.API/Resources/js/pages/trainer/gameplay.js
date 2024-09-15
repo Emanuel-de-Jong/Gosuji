@@ -42,12 +42,7 @@ gameplay.start = function (isSuggestionNeeded = true) {
 
     if (trainerG.color == trainerG.board.getColor()) {
         if (!cornerPlacer.shouldForce()) {
-            gameplay.suggestionsPromise = trainerG.analyze(
-                settings.opponentVisits,
-                settings.opponentOptions,
-                gameplay.OPPONENT_MIN_VISITS_PERC,
-                gameplay.OPPONENT_MAX_VISIT_DIFF_PERC
-            );
+            gameplay.suggestionsPromise = trainerG.analyze(trainerG.MOVE_TYPE.OPPONENT);
         }
         gameplay.opponentTurn();
     } else {
@@ -148,12 +143,7 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
     }
 
     if (!cornerPlacer.shouldForce()) {
-        gameplay.suggestionsPromise = trainerG.analyze(
-            settings.opponentVisits,
-            settings.opponentOptions,
-            gameplay.OPPONENT_MIN_VISITS_PERC,
-            gameplay.OPPONENT_MAX_VISIT_DIFF_PERC
-        );
+        gameplay.suggestionsPromise = trainerG.analyze(trainerG.MOVE_TYPE.OPPONENT);
     }
 };
 

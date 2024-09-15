@@ -52,23 +52,16 @@ kataGo.analyzeMove = async function (coord, color = trainerG.board.getNextColor(
 };
 
 kataGo.analyze = async function (
-    maxVisits = settings.suggestionVisits,
-    moveOptions = settings.suggestionOptions,
-    minVisitsPerc = settings.minVisitsPerc,
-    maxVisitDiffPerc = settings.maxVisitDiffPerc,
+    moveType = trainerG.MOVE_TYPE.PLAYER,
     color = trainerG.board.getNextColor()
 ) {
-    minVisitsPerc = settings.minVisitsPercSwitch ? minVisitsPerc : 0;
-    maxVisitDiffPerc = settings.maxVisitDiffPercSwitch ? maxVisitDiffPerc : 100;
-    
-    let kataGoSuggestions = await kataGo.sendRequest("Analyze", color, maxVisits, minVisitsPerc, maxVisitDiffPerc);
+    let kataGoSuggestions = await kataGo.sendRequest("Analyze", moveType, color);
     if (kataGoSuggestions == null) {
         return;
     }
 
     let suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
     suggestions.filterByPass();
-    suggestions.filterByMoveOptions(moveOptions);
     return suggestions;
 };
 

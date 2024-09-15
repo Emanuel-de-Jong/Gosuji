@@ -43,7 +43,7 @@ selfplay.start = async function () {
     await gameplay.handleJumped();
 
     while (selfplay.isPlaying || trainerG.color != trainerG.board.getNextColor()) {
-        await trainerG.analyze(settings.selfplayVisits, 1);
+        await trainerG.analyze(trainerG.MOVE_TYPE.SELFPLAY);
         if (trainerG.isPassed) {
             selfplay.button.click();
             return;

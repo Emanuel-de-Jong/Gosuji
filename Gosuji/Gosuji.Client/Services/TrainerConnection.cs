@@ -59,12 +59,12 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<MoveSuggestionList?> Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public async Task<MoveSuggestionList?> Analyze(EMoveType moveType, EMoveColor color)
         {
             string uri = "Analyze";
             APIResponse<MoveSuggestionList> response = await HubResponseHandler.TryCatch<MoveSuggestionList>(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                color, maxVisits, minVisitsPerc, maxVisitDiffPerc));
+                moveType, color));
             return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
 

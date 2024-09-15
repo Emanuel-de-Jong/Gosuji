@@ -190,7 +190,7 @@ namespace Gosuji.API.Helpers
             return ParseAnalysis(analysis, move.Color.Value).FirstOrDefault();
         }
 
-        public MoveSuggestionList Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public MoveSuggestionList Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc, int moveOptions)
         {
             if (lastMaxVisits != maxVisits)
             {
@@ -241,6 +241,7 @@ namespace Gosuji.API.Helpers
             }
 
             filteredSuggestions.AddGrades();
+            filteredSuggestions.Filter(moveOptions);
             filteredSuggestions.CheckPass();
 
             return filteredSuggestions;

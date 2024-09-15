@@ -80,7 +80,7 @@ preMovePlacer.play = async function (isForced = false) {
         trainerG.shouldBeImperfectSuggestion = true;
     }
 
-    await trainerG.analyze(settings.preVisits, preOptions, preMovePlacer.MIN_VISITS_PERC, preMovePlacer.MAX_VISIT_DIFF_PERC);
+    await trainerG.analyze(trainerG.MOVE_TYPE.PRE);
     if (trainerG.isPassed) preMovePlacer.isStopped = true;
     if (!isForced && preMovePlacer.isStopped) return;
 

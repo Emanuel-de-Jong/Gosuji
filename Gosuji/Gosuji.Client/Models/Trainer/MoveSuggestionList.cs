@@ -20,6 +20,30 @@
             Suggestions.Add(suggestion);
         }
 
+        public void Filter(int moveOptions)
+        {
+            if (Suggestions.Count <= moveOptions)
+            {
+                return;
+            }
+
+            int moveOptionCount = 1;
+            int index;
+            for (index = 0; index < Suggestions.Count; index++)
+            {
+                if (index != 0 && Suggestions[index].Grade != Suggestions[index - 1].Grade)
+                {
+                    moveOptionCount++;
+                    if (moveOptionCount > moveOptions)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            Suggestions = Suggestions[..index];
+        }
+
         public bool CheckPass()
         {
             if (Suggestions.Count == 0)
