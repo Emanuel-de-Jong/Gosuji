@@ -44,7 +44,6 @@ namespace Gosuji.Client.Data
         public string? Ruleset { get; set; }
 
         [Required]
-        [MaxLength(100)]
         public EForceOpponentCorners ForceOpponentCorners { get; set; }
         [Required]
         public bool CornerSwitch44 { get; set; }

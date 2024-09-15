@@ -70,6 +70,15 @@ gameplay.takePlayerControl = function () {
 
 gameplay.playerMarkupPlacedCheckListener = async function (event) {
     if (event.markupChange && event.mark == 4 && gameplay.isPlayerControlling && !sgf.isSGFLoading) {
+        let markupCoord = new Coord(event.x, event.y);
+
+        // Coord already has stone
+        if (trainerG.board.get().getStone(event.x, event.y) != 0) {
+            trainerG.board.removeMarkup(markupCoord);
+            trainerG.board.redraw();
+            return;
+        }
+
         trainerG.board.nextButton.disabled = true;
         gameplay.takePlayerControl();
 
@@ -77,7 +86,6 @@ gameplay.playerMarkupPlacedCheckListener = async function (event) {
             trainerG.setColor();
         }
 
-        let markupCoord = new Coord(event.x, event.y);
         trainerG.board.removeMarkup(markupCoord);
 
         await gameplay.playerTurn(markupCoord);
