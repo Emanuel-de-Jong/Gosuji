@@ -104,8 +104,6 @@ settings.init = async function (trainerSettingConfig, nullableTrainerSettings, g
     settings.customKomiElement.addEventListener("input", settings.toggleCustomKomi);
     settings.handicapElement.addEventListener("input", settings.setKomi);
     settings.rulesetElement.addEventListener("input", settings.setRuleset);
-    settings.boardsizeElement.addEventListener("input", settings.setKomi);
-
     for (const input of utils.querySelectorAlls(["#settingsAccordion input", "#settingsAccordion select"])) {
         if (input.type != "checkbox") {
             input.required = true;
@@ -186,7 +184,7 @@ settings.inputAndSelectInputListener = async function (event) {
 settings.syncWithCS = async function (trainerSettingConfig, nullableTrainerSettings) {
     settings.isSyncingWithCS = true;
 
-    const customKomi = trainerSettingConfig.hasOwnProperty("Komi") && trainerSettingConfig["Komi"] != null;
+    const customKomi = trainerSettingConfig.hasOwnProperty("komi") && trainerSettingConfig["komi"] != null;
 
     for (const [name, value] of Object.entries(nullableTrainerSettings)) {
         trainerSettingConfig[name] = value;
