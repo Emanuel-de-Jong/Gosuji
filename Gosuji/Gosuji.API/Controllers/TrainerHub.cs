@@ -29,14 +29,16 @@ namespace Gosuji.API.Controllers
             TrainerHub.dbContextFactory ??= dbContextFactory;
         }
 
-        public override Task OnConnectedAsync()
+        public override async Task OnConnectedAsync()
         {
             string connectionId = Context.ConnectionId;
 
             TrainerService service = new(GetUserId(), pool, dbContextFactory);
+            await service.SetSubscription();
+
             trainerServices.TryAdd(connectionId, service);
 
-            return base.OnConnectedAsync();
+            await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)

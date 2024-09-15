@@ -15,6 +15,8 @@ namespace Gosuji.API.Services.TrainerService
         public string UserId { get; set; }
 
         public Game Game { get; set; }
+        public Subscription? Subscription { get; set; }
+
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
         public KataGo? KataGo { get; set; }
         public MoveTree MoveTree { get; set; } = new();
@@ -26,8 +28,14 @@ namespace Gosuji.API.Services.TrainerService
             UserId = userId;
             pool = kataGoPool;
             this.dbContextFactory = dbContextFactory;
-
             Game = new();
+        }
+
+        public async Task SetSubscription()
+        {
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            Subscription = await dbContext.Subscriptions.FirstOrDefaultAsync(s => s.UserId == UserId);
+            await dbContext.DisposeAsync();
         }
 
         private async Task StartKataGo()
@@ -49,12 +57,15 @@ namespace Gosuji.API.Services.TrainerService
             TrainerSettingConfig = trainerSettingConfig;
             Game.IsThirdPartySGF = isThirdPartySGF;
 
+            TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
+
             await StartKataGo();
         }
 
         public async Task UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
         {
             TrainerSettingConfig = trainerSettingConfig;
+            TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
         }
 
         public async Task SyncBoard(Move[] moves)
