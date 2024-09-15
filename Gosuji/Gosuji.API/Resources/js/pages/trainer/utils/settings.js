@@ -154,22 +154,26 @@ settings.updateSetting = async function (name) {
     }
 };
 
-settings.setSetting = function (name, value) {
-    let type = settings.SETTINGS[name];
-
-    name += "Element";
-    if (!settings.hasOwnProperty(name)) {
+settings.setSetting = async function (name, value, isBatchSet = false) {
+    const elName = name + "Element";
+    if (!settings.hasOwnProperty(elName)) {
         return;
     }
 
-    const el = settings[name];
+    const el = settings[elName];
+
+    const type = settings.SETTINGS[name];
     if (type == utils.TYPE.BOOL) {
         el.checked = value;
     } else {
         el.value = value;
     }
 
-    el.dispatchEvent(new Event("input"));
+    if (!isBatchSet) {
+        el.dispatchEvent(new Event("input"));
+    } else {
+        await settings.updateSetting(name);
+    }
 };
 
 settings.inputAndSelectInputListener = async function (event) {
@@ -180,14 +184,21 @@ settings.inputAndSelectInputListener = async function (event) {
 };
 
 settings.syncWithCS = async function (trainerSettingConfig, nullableTrainerSettings) {
+    settings.isSyncingWithCS = true;
+
+    const customKomi = trainerSettingConfig.hasOwnProperty("Komi") && trainerSettingConfig["Komi"] != null;
+
     for (const [name, value] of Object.entries(nullableTrainerSettings)) {
         trainerSettingConfig[name] = value;
     }
     
-    settings.isSyncingWithCS = true;
     for (const [name, value] of Object.entries(trainerSettingConfig)) {
-        settings.setSetting(name, value);
+        await settings.setSetting(name, value, true);
     }
+
+    settings.customKomiElement.checked = customKomi;
+    settings.customKomiElement.dispatchEvent(new Event("input"));
+
     settings.isSyncingWithCS = false;
 };
 
@@ -246,7 +257,7 @@ settings.setKomi = async function () {
     let komi = await trainerG.trainerRef.invokeMethodAsync("GetDefaultKomi", settings.ruleset);
 
     if (komi != oldKomi) {
-        settings.setSetting("komi", komi);
+        await settings.setSetting("komi", komi);
         sgf.setKomi(komi);
     }
 };
