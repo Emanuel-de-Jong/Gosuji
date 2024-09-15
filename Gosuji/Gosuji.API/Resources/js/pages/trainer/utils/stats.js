@@ -123,6 +123,10 @@ stats.setSuggestions = async function (suggestionList) {
         suggestionPerGrade.push(suggestion);
     }
 
+    if (suggestionList.analyzeMoveSuggestion) {
+        suggestionPerGrade.push(suggestionList.analyzeMoveSuggestion);
+    }
+
     await trainerG.trainerRef.invokeMethodAsync("SetSuggestions", suggestionPerGrade);
 };
 

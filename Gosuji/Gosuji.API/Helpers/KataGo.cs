@@ -187,7 +187,10 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            return ParseAnalysis(analysis, move.Color.Value).FirstOrDefault();
+            MoveSuggestion suggestion = ParseAnalysis(analysis, move.Color.Value).FirstOrDefault();
+            suggestion.Grade = "X";
+
+            return suggestion;
         }
 
         public MoveSuggestionList Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc, int moveOptions)
