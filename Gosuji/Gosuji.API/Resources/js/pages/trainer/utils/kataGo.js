@@ -64,7 +64,13 @@ kataGo.analyze = async function (
 };
 
 kataGo.play = async function (coord, color = trainerG.board.getColor()) {
-    return await kataGo.sendRequest("Play", new Move(color, coord));
+    return await kataGo.sendRequest("Play",
+        new Move(color, coord),
+        stats.rightStreak,
+        stats.perfectStreak,
+        stats.rightTopStreak,
+        stats.perfectTopStreak
+    );
 };
 
 kataGo.sendRequest = async function (uri, ...args) {

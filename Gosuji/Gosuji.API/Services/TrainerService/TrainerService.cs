@@ -105,6 +105,8 @@ namespace Gosuji.API.Services.TrainerService
             }
             isAnalyzing = true;
 
+            MoveTree.CurrentNode.MoveType = moveType;
+
             int maxVisits = 0;
             double minVisitsPerc = 0;
             double maxVisitDiffPerc = 100;
@@ -141,9 +143,15 @@ namespace Gosuji.API.Services.TrainerService
             return suggestions;
         }
 
-        public async Task Play(Move move)
+        public async Task Play(Move move, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
             MoveTree.Add(move);
+
+            Game.RightStreak = rightStreak;
+            Game.PerfectStreak = perfectStreak;
+            Game.RightTopStreak = rightTopStreak != null ? rightTopStreak.Value : Game.RightTopStreak;
+            Game.PerfectTopStreak = perfectTopStreak != null ? perfectTopStreak.Value : Game.PerfectTopStreak;
+
             (await GetKataGo()).Play(move);
         }
 
