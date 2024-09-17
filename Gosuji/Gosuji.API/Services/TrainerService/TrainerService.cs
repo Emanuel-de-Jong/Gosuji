@@ -202,7 +202,7 @@ namespace Gosuji.API.Services.TrainerService
             suggestions.PlayIndex = playIndex;
         }
 
-        public async Task PlayUser(Move move, EPlayerResult playerResult, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        public async Task PlayPlayer(Move move, EPlayerResult playerResult, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
             MoveTree.Add(move);
             MoveTree.CurrentNode.PlayerResult = playerResult;

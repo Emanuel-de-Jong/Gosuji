@@ -64,8 +64,8 @@ kataGo.analyze = async function (
     return MoveSuggestionList.fromKataGo(kataGoSuggestions);
 };
 
-kataGo.playUser = async function (coord, color = trainerG.board.getColor()) {
-    return await kataGo.sendRequest("PlayUser",
+kataGo.playPlayer = async function (coord, color = trainerG.board.getColor()) {
+    return await kataGo.sendRequest("PlayPlayer",
         new Move(color, coord),
         stats.playerResultHistory.get(),
         stats.rightStreak,
