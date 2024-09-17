@@ -69,12 +69,12 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<bool> PlayUser(Move move, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        public async Task<bool> PlayUser(Move move, EPlayerResult playerResult, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
             string uri = "PlayUser";
             APIResponse response = await HubResponseHandler.TryCatch(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                move, rightStreak, perfectStreak, rightTopStreak, perfectTopStreak));
+                move, playerResult, rightStreak, perfectStreak, rightTopStreak, perfectTopStreak));
             return !G.StatusMessage.HandleAPIResponse(response);
         }
     }

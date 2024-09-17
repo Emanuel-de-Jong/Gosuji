@@ -11,6 +11,7 @@ namespace Gosuji.API.Services.TrainerService
 
         public Move Move { get; set; }
         public EMoveType? MoveType { get; set; }
+        public EPlayerResult? PlayerResult { get; set; }
         public MoveSuggestionList? Suggestions { get; set; }
         public Coord? ChosenNotPlayedCoord { get; set; }
 

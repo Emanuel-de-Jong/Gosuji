@@ -9,18 +9,20 @@ namespace Gosuji.API.Services.TrainerService
 {
     public class TrainerService : IAsyncDisposable
     {
+        public string UserId { get; set; }
         private KataGoPool pool;
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
-        public string UserId { get; set; }
 
         public Game Game { get; set; }
+        public MoveTree MoveTree { get; set; } = new();
         public Subscription? Subscription { get; set; }
 
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
         public KataGo? KataGo { get; set; }
-        public MoveTree MoveTree { get; set; } = new();
 
+        private Random rnd = new();
         private bool isAnalyzing = false;
+        private bool shouldBeImperfectSuggestion = false;
 
         public TrainerService(string userId, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
@@ -105,8 +107,6 @@ namespace Gosuji.API.Services.TrainerService
             }
             isAnalyzing = true;
 
-            MoveTree.CurrentNode.MoveType = moveType;
-
             int maxVisits = 0;
             double minVisitsPerc = 0;
             double maxVisitDiffPerc = 100;
@@ -139,13 +139,74 @@ namespace Gosuji.API.Services.TrainerService
             MoveSuggestionList suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc, moveOptions);
             MoveTree.CurrentNode.Suggestions = suggestions;
 
+            CalcPlayIndex(suggestions, moveType);
+
+            if (suggestions.PlayIndex != null)
+            {
+                Move move = new(color, suggestions.Suggestions[suggestions.PlayIndex.Value].Coord);
+                MoveTree.Add(move);
+                MoveTree.CurrentNode.MoveType = moveType;
+
+                (await GetKataGo()).Play(move);
+            }
+
             isAnalyzing = false;
             return suggestions;
         }
 
-        public async Task PlayUser(Move move, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        private void CalcPlayIndex(MoveSuggestionList suggestions, EMoveType moveType)
+        {
+            if (moveType == EMoveType.PLAYER)
+            {
+                return;
+            }
+
+            int playIndex = 0;
+            if (moveType is EMoveType.OPPONENT or EMoveType.PRE)
+            {
+                if (!shouldBeImperfectSuggestion)
+                {
+                    if ((moveType == EMoveType.OPPONENT &&
+                        TrainerSettingConfig.OpponentOptionPercSwitch &&
+                        rnd.Next(1, 101) <= TrainerSettingConfig.OpponentOptionPerc)
+                        ||
+                        (moveType == EMoveType.PRE &&
+                        TrainerSettingConfig.PreOptionPercSwitch &&
+                        rnd.Next(1, 101) <= TrainerSettingConfig.PreOptionPerc))
+                    {
+                        shouldBeImperfectSuggestion = true;
+                    }
+                }
+
+                if (shouldBeImperfectSuggestion)
+                {
+                    List<MoveSuggestion> imperfectSuggestions = suggestions.Suggestions.Where(s => s.Grade != "A").ToList();
+
+                    if (imperfectSuggestions.Count != 0)
+                    {
+                        shouldBeImperfectSuggestion = false;
+
+                        MoveSuggestion suggestion = imperfectSuggestions[rnd.Next(imperfectSuggestions.Count)];
+                        for (int i = 0; i < suggestions.Suggestions.Count; i++)
+                        {
+                            if (suggestions.Suggestions[i] == suggestion)
+                            {
+                                playIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            suggestions.PlayIndex = playIndex;
+        }
+
+        public async Task PlayUser(Move move, EPlayerResult playerResult, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
             MoveTree.Add(move);
+            MoveTree.CurrentNode.PlayerResult = playerResult;
+            MoveTree.CurrentNode.MoveType = EMoveType.PLAYER;
 
             Game.RightStreak = rightStreak;
             Game.PerfectStreak = perfectStreak;
