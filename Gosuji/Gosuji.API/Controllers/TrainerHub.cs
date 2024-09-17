@@ -81,14 +81,16 @@ namespace Gosuji.API.Controllers
             return OkData(await trainerServices[Context.ConnectionId].AnalyzeMove(move));
         }
 
-        public async Task<HubResponse> Analyze(EMoveType moveType, EMoveColor color)
+        public async Task<HubResponse> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
-            return OkData(await trainerServices[Context.ConnectionId].Analyze(moveType, color));
+            return OkData(await trainerServices[Context.ConnectionId].Analyze(moveType, color, isMainBranch));
         }
 
-        public async Task<HubResponse> PlayPlayer(Move move, EPlayerResult playerResult, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        public async Task<HubResponse> PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
+            int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
-            await trainerServices[Context.ConnectionId].PlayPlayer(move, playerResult, rightStreak, perfectStreak, rightTopStreak, perfectTopStreak);
+            await trainerServices[Context.ConnectionId].PlayPlayer(move, playerResult, chosenNotPlayedCoord,
+                rightStreak, perfectStreak, rightTopStreak, perfectTopStreak);
             return Ok;
         }
     }

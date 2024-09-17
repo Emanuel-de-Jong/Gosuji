@@ -5,6 +5,7 @@ import { settings } from "./settings";
 import { sgf } from "./sgf";
 import { stats } from "./stats";
 import { trainerG } from "./trainerG";
+import { gameplay } from "../gameplay";
 
 let kataGo = { id: "kataGo" };
 
@@ -56,7 +57,17 @@ kataGo.analyze = async function (
     moveType = trainerG.MOVE_TYPE.PLAYER,
     color = trainerG.board.getNextColor()
 ) {
-    let kataGoSuggestions = await kataGo.sendRequest("Analyze", moveType, color);
+    let isMainBranch = false;
+    const highestNode = trainerG.moveTypeHistory.getHighestX();
+    const currentNode = trainerG.board.get();
+    if (highestNode != null && (
+        highestNode.navTreeX != currentNode.navTreeX ||
+        highestNode.navTreeY != currentNode.navTreeY)
+    ) {
+        isMainBranch = true;
+    }
+
+    let kataGoSuggestions = await kataGo.sendRequest("Analyze", moveType, color, isMainBranch);
     if (kataGoSuggestions == null) {
         return;
     }
@@ -68,6 +79,7 @@ kataGo.playPlayer = async function (coord, color = trainerG.board.getColor()) {
     return await kataGo.sendRequest("PlayPlayer",
         new Move(color, coord),
         stats.playerResultHistory.get(),
+        gameplay.chosenNotPlayedCoordHistory.get(trainerG.board.get().parent),
         stats.rightStreak,
         stats.perfectStreak,
         stats.rightTopStreak,

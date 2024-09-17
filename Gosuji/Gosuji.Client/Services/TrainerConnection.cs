@@ -59,22 +59,24 @@ namespace Gosuji.Client.Services
         }
 
         [JSInvokable]
-        public async Task<MoveSuggestionList?> Analyze(EMoveType moveType, EMoveColor color)
+        public async Task<MoveSuggestionList?> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
             string uri = "Analyze";
             APIResponse<MoveSuggestionList> response = await HubResponseHandler.TryCatch<MoveSuggestionList>(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                moveType, color));
+                moveType, color, isMainBranch));
             return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
 
         [JSInvokable]
-        public async Task<bool> PlayPlayer(Move move, EPlayerResult playerResult, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        public async Task<bool> PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
+            int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
             string uri = "PlayPlayer";
             APIResponse response = await HubResponseHandler.TryCatch(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                move, playerResult, rightStreak, perfectStreak, rightTopStreak, perfectTopStreak));
+                move, playerResult, chosenNotPlayedCoord,
+                rightStreak, perfectStreak, rightTopStreak, perfectTopStreak));
             return !G.StatusMessage.HandleAPIResponse(response);
         }
     }

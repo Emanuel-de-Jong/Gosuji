@@ -99,7 +99,7 @@ namespace Gosuji.API.Services.TrainerService
             return suggestion;
         }
 
-        public async Task<MoveSuggestionList> Analyze(EMoveType moveType, EMoveColor color)
+        public async Task<MoveSuggestionList> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
             if (isAnalyzing)
             {
@@ -149,6 +149,8 @@ namespace Gosuji.API.Services.TrainerService
 
                 (await GetKataGo()).Play(move);
             }
+
+            MoveTree.MainBranch = isMainBranch ? MoveTree.CurrentNode : MoveTree.MainBranch;
 
             isAnalyzing = false;
             return suggestions;
@@ -202,11 +204,18 @@ namespace Gosuji.API.Services.TrainerService
             suggestions.PlayIndex = playIndex;
         }
 
-        public async Task PlayPlayer(Move move, EPlayerResult playerResult, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        public async Task PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
+            int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
             MoveTree.Add(move);
             MoveTree.CurrentNode.PlayerResult = playerResult;
             MoveTree.CurrentNode.MoveType = EMoveType.PLAYER;
+            MoveTree.CurrentNode.Parent.ChosenNotPlayedCoord = chosenNotPlayedCoord;
+
+            if (MoveTree.MainBranch == MoveTree.CurrentNode.Parent)
+            {
+                MoveTree.MainBranch = MoveTree.CurrentNode;
+            }
 
             Game.RightStreak = rightStreak;
             Game.PerfectStreak = perfectStreak;
