@@ -56,7 +56,6 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.moveTypeHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.moveTypes) : new History();
     trainerG.result = null;
     trainerG.isPassed = false;
-    trainerG.shouldBeImperfectSuggestion = false;
 };
 
 trainerG.getGameColor = function () {

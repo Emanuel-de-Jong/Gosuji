@@ -178,36 +178,11 @@ gameplay.opponentTurn = async function () {
         await gameplay.suggestionsPromise;
         if (trainerG.isPassed) return;
 
-        if (!trainerG.shouldBeImperfectSuggestion &&
-            settings.opponentOptionPercSwitch &&
-            utils.randomInt(100) + 1 <= settings.opponentOptionPerc
-        ) {
-            trainerG.shouldBeImperfectSuggestion = true;
-        }
-
+        let suggestion = trainerG.suggestions.get();
         trainerG.isRightChoice = true;
-        trainerG.isPerfectChoice = true;
-
-        let suggestion = trainerG.suggestions.get(0);
-
-        if (trainerG.shouldBeImperfectSuggestion) {
-            let imperfectSuggestions = [];
-            for (const s of trainerG.suggestions.suggestions) {
-                if (s.grade != "A") {
-                    imperfectSuggestions.push(s);
-                }
-            }
-
-            if (imperfectSuggestions.length != 0) {
-                suggestion = imperfectSuggestions[utils.randomInt(imperfectSuggestions.length)];
-
-                trainerG.isPerfectChoice = false;
-                trainerG.shouldBeImperfectSuggestion = false;
-            }
-        }
+        trainerG.isPerfectChoice = suggestion.grade == "A";
 
         if (opponentTurnId != gameplay.opponentTurnId) return;
-        
         await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.OPPONENT);
     }
 

@@ -58,7 +58,7 @@ class MoveSuggestionList {
     }
 
 
-    get(index) {
+    get(index = playIndex) {
         return this.suggestions[index];
     }
 

@@ -70,37 +70,11 @@ preMovePlacer.stopButtonClickListener = function () {
 preMovePlacer.play = async function (isForced = false) {
     if (!isForced && preMovePlacer.isStopped) return;
 
-    let preOptions = 1;
-    if (trainerG.board.getNextColor() != trainerG.color && (
-            trainerG.shouldBeImperfectSuggestion || (
-                settings.preOptionPercSwitch &&
-                utils.randomInt(100) + 1 <= settings.preOptionPerc))
-    ) {
-        preOptions = settings.preOptions;
-        trainerG.shouldBeImperfectSuggestion = true;
-    }
-
     await trainerG.analyze(trainerG.MOVE_TYPE.PRE);
     if (trainerG.isPassed) preMovePlacer.isStopped = true;
     if (!isForced && preMovePlacer.isStopped) return;
 
-    let suggestion = trainerG.suggestions.get(0);
-
-    if (trainerG.shouldBeImperfectSuggestion) {
-        let imperfectSuggestions = [];
-        for (const s of trainerG.suggestions.suggestions) {
-            if (s.grade != "A") {
-                imperfectSuggestions.push(s);
-            }
-        }
-
-        if (imperfectSuggestions.length != 0) {
-            suggestion = imperfectSuggestions[utils.randomInt(imperfectSuggestions.length)];
-
-            trainerG.shouldBeImperfectSuggestion = false;
-        }
-    }
-
+    let suggestion = trainerG.suggestions.get();
     await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.PRE);
 };
 
