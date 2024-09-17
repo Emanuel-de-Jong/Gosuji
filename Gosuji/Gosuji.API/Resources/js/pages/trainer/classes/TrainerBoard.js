@@ -138,11 +138,11 @@ class TrainerBoard extends Board {
 
             if (sendToServer) {
                 if (tool == "auto") {
-                    await kataGo.play(coord);
+                    await kataGo.playUser(coord);
                 } else if (tool == "playB") {
-                    await kataGo.play(coord, g.COLOR_TYPE.B);
+                    await kataGo.playUser(coord, g.COLOR_TYPE.B);
                 } else if (tool == "playW") {
-                    await kataGo.play(coord, g.COLOR_TYPE.W);
+                    await kataGo.playUser(coord, g.COLOR_TYPE.W);
                 }
             }
         }

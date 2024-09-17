@@ -3,6 +3,7 @@ import { MoveSuggestionList } from "../classes/MoveSuggestionList";
 import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { settings } from "./settings";
 import { sgf } from "./sgf";
+import { stats } from "./stats";
 import { trainerG } from "./trainerG";
 
 let kataGo = { id: "kataGo" };
@@ -63,8 +64,8 @@ kataGo.analyze = async function (
     return MoveSuggestionList.fromKataGo(kataGoSuggestions);
 };
 
-kataGo.play = async function (coord, color = trainerG.board.getColor()) {
-    return await kataGo.sendRequest("Play",
+kataGo.playUser = async function (coord, color = trainerG.board.getColor()) {
+    return await kataGo.sendRequest("PlayUser",
         new Move(color, coord),
         stats.rightStreak,
         stats.perfectStreak,

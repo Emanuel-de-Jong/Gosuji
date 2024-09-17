@@ -143,7 +143,7 @@ namespace Gosuji.API.Services.TrainerService
             return suggestions;
         }
 
-        public async Task Play(Move move, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        public async Task PlayUser(Move move, int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
             MoveTree.Add(move);
 
