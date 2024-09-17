@@ -109,7 +109,7 @@ class TrainerBoard extends Board {
     }
 
     async play(suggestion, moveType, tool = "auto") {
-        await this.draw(suggestion.coord, tool, true);
+        await this.draw(suggestion.coord, tool, moveType == trainerG.MOVE_TYPE.PLAYER);
         scoreChart.update(suggestion);
         trainerG.moveTypeHistory.add(moveType);
 
