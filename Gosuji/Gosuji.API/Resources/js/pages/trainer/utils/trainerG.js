@@ -54,7 +54,6 @@ trainerG.clear = function (gameLoadInfo) {
         ? History.fromServer(gameLoadInfo.suggestions, MoveSuggestionList)
         : new History();
     trainerG.moveTypeHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.moveTypes) : new History();
-    trainerG.result = null;
     trainerG.isPassed = false;
 };
 
@@ -128,8 +127,8 @@ trainerG.hideLoadAnimation = function() {
     trainerG.loadAnimation.hidden = true;
 };
 
-trainerG.pass = async function (suggestion = trainerG.suggestions.passSuggestion) {
-    if (!suggestion) return;
+trainerG.handleResult = function (result) {
+    if (!result) return;
 
     trainerG.isPassed = true;
     gameplay.takePlayerControl();
@@ -137,24 +136,10 @@ trainerG.pass = async function (suggestion = trainerG.suggestions.passSuggestion
 
     trainerG.board.pass();
 
-    if (!trainerG.isMainBranch()) {
-        return;
-    }
-
-    trainerG.result = suggestion.score.copy();
-
-    let resultStr = trainerG.getResultStr();
-    stats.setResult(resultStr);
-    sgf.setResultMeta(resultStr);
+    stats.setResult(result);
+    sgf.setResultMeta(result);
 
     trainerG.board.finishedOverlay.hidden = false;
-};
-
-trainerG.getResultStr = function () {
-    if (trainerG.result.scoreLead >= 0) {
-        return g.COLOR_NAME_TYPE.B + "+" + trainerG.result.formatScoreLead();
-    }
-    return g.COLOR_NAME_TYPE.W + "+" + trainerG.result.formatScoreLead(true);
 };
 
 if (!window.trainer) window.trainer = {};

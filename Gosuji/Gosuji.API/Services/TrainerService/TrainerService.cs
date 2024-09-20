@@ -1,8 +1,10 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.API.Helpers;
+using Gosuji.Client;
 using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
+using Gosuji.Client.Services.Trainer;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gosuji.API.Services.TrainerService
@@ -99,7 +101,7 @@ namespace Gosuji.API.Services.TrainerService
             return suggestion;
         }
 
-        public async Task<MoveSuggestionList> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
+        public async Task<AnalyzeResponse> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
             if (isAnalyzing)
             {
@@ -152,11 +154,13 @@ namespace Gosuji.API.Services.TrainerService
 
             MoveTree.MainBranch = isMainBranch ? MoveTree.CurrentNode : MoveTree.MainBranch;
 
+            AnalyzeResponse response = new(suggestions, GetResult(suggestions));
+
             isAnalyzing = false;
-            return suggestions;
+            return response;
         }
 
-        public async Task<MoveSuggestionList> AnalyzeAfterJump(Move[] moves, EMoveType moveType, EMoveColor color, bool isMainBranch)
+        public async Task<AnalyzeResponse> AnalyzeAfterJump(Move[] moves, EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
             await SyncBoard(moves);
             return await Analyze(moveType, color, isMainBranch);
@@ -170,7 +174,24 @@ namespace Gosuji.API.Services.TrainerService
                 return null;
             }
 
-            string result;
+            double scoreLead = passSuggestion.Score.ScoreLead;
+            // Round to nearest x.0 or x.5
+            scoreLead = Math.Round(scoreLead * 2, MidpointRounding.AwayFromZero) / 2;
+            scoreLead = Math.Round(scoreLead, 1);
+
+            if (scoreLead == 0)
+            {
+                return "Draw!";
+            }
+
+            EMoveColor wonColor = EMoveColor.BLACK;
+            if (scoreLead < 0)
+            {
+                wonColor = EMoveColor.WHITE;
+                scoreLead = Math.Round(scoreLead * -1, 1);
+            }
+
+            string result = $"{G.ColorToName(wonColor)}+{scoreLead.ToString("F1")}";
 
             return result;
         }

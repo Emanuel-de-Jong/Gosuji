@@ -66,13 +66,14 @@ kataGo.analyze = async function (
 ) {
     let isMainBranch = trainerG.isMainBranch();
 
-    let kataGoSuggestions = await kataGo.sendRequest("Analyze", moveType, color, isMainBranch);
-    if (kataGoSuggestions == null) {
+    let analyzeResponse = await kataGo.sendRequest("Analyze", moveType, color, isMainBranch);
+    if (analyzeResponse == null) {
         return;
     }
 
-    trainerG.suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
-    await trainerG.pass();
+    trainerG.suggestions = MoveSuggestionList.fromKataGo(analyzeResponse.suggestionList);
+    trainerG.handleResult(analyzeResponse.result);
+    
     return trainerG.suggestions;
 };
 
@@ -83,13 +84,14 @@ kataGo.analyzeAfterJump = async function (
     let isMainBranch = trainerG.isMainBranch();
     let moves = trainerG.board.getMoves();
 
-    let kataGoSuggestions = await kataGo.sendRequest("AnalyzeAfterJump", moves, moveType, color, isMainBranch);
-    if (kataGoSuggestions == null) {
+    let analyzeResponse = await kataGo.sendRequest("AnalyzeAfterJump", moves, moveType, color, isMainBranch);
+    if (analyzeResponse == null) {
         return;
     }
 
-    trainerG.suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
-    await trainerG.pass();
+    trainerG.suggestions = MoveSuggestionList.fromKataGo(analyzeResponse.suggestionList);
+    trainerG.handleResult(analyzeResponse.result);
+
     return trainerG.suggestions;
 };
 
