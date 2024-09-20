@@ -7,8 +7,6 @@ namespace Gosuji.Client.Models.Trainer
         public string Name { get; set; }
         public EMoveColor Color { get; set; }
         public double? Result { get; set; }
-        public int PrevNodeX { get; set; }
-        public int PrevNodeY { get; set; }
 
         public int RightStreak { get; set; }
         public int PerfectStreak { get; set; }
@@ -22,8 +20,6 @@ namespace Gosuji.Client.Models.Trainer
             Name = game.Name;
             Color = game.Color;
             Result = game.Result;
-            PrevNodeX = game.LastNodeX;
-            PrevNodeY = game.LastNodeY;
 
             RightStreak = game.RightStreak;
             PerfectStreak = game.PerfectStreak;

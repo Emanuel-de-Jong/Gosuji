@@ -38,8 +38,6 @@ namespace Gosuji.Client.Data
         public string Ruleset { get; set; }
         public double Komi { get; set; }
 
-        public int LastNodeX { get; set; }
-        public int LastNodeY { get; set; }
         public int RightStreak { get; set; }
         public int PerfectStreak { get; set; }
         public int RightTopStreak { get; set; }
