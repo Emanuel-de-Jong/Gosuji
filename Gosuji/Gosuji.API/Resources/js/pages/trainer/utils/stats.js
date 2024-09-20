@@ -152,8 +152,8 @@ stats.setResult = function (resultStr) {
 };
 
 stats.clearResult = function () {
-    stats.resultElement.textContent = "";
     stats.resultDivElement.hidden = true;
+    stats.resultElement.textContent = "";
 };
 
 

@@ -39,11 +39,6 @@ kataGo.initTrainerConnection = async function () {
     return await kataGo.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty);
 };
 
-kataGo.syncBoard = async function () {
-    let moves = trainerG.board.getMoves();
-    return await kataGo.sendRequest("SyncBoard", moves);
-};
-
 kataGo.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
     let kataGoSuggestion = await kataGo.sendRequest("AnalyzeMove", new Move(color, coord));
     if (kataGoSuggestion == null) {

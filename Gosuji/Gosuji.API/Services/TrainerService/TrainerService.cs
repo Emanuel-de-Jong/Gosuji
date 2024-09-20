@@ -41,15 +41,6 @@ namespace Gosuji.API.Services.TrainerService
             await dbContext.DisposeAsync();
         }
 
-        private async Task StartKataGo()
-        {
-            await (await GetKataGo()).Restart();
-            (await GetKataGo()).SetBoardsize(TrainerSettingConfig.Boardsize);
-            (await GetKataGo()).SetRuleset(TrainerSettingConfig.GetRuleset);
-            (await GetKataGo()).SetHandicap(TrainerSettingConfig.Handicap);
-            (await GetKataGo()).SetKomi(TrainerSettingConfig.GetKomi);
-        }
-
         public async Task<bool> UserHasInstance()
         {
             return pool.UserHasInstance(UserId);
@@ -69,19 +60,6 @@ namespace Gosuji.API.Services.TrainerService
         {
             TrainerSettingConfig = trainerSettingConfig;
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
-        }
-
-        public async Task SyncBoard(Move[] moves)
-        {
-            (await GetKataGo()).ClearBoard();
-            (await GetKataGo()).SetHandicap(TrainerSettingConfig.Handicap);
-            (await GetKataGo()).PlayRange(moves);
-
-            MoveTree.CurrentNode = MoveTree.RootNode;
-            foreach (Move move in moves)
-            {
-                MoveTree.Add(move);
-            }
         }
 
         public async Task<MoveSuggestion> AnalyzeMove(Move move)
@@ -269,6 +247,15 @@ namespace Gosuji.API.Services.TrainerService
             MoveSuggestion suggestion = await AnalyzeMove(move);
             await Play(move, EMoveType.FORCED_CORNER);
             return suggestion;
+        }
+
+        private async Task StartKataGo()
+        {
+            await (await GetKataGo()).Restart();
+            (await GetKataGo()).SetBoardsize(TrainerSettingConfig.Boardsize);
+            (await GetKataGo()).SetRuleset(TrainerSettingConfig.GetRuleset);
+            (await GetKataGo()).SetHandicap(TrainerSettingConfig.Handicap);
+            (await GetKataGo()).SetKomi(TrainerSettingConfig.GetKomi);
         }
 
         private async Task<KataGo> GetKataGo()

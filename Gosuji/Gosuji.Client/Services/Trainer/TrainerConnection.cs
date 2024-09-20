@@ -39,16 +39,6 @@ namespace Gosuji.Client.Services.Trainer
         }
 
         [JSInvokable]
-        public async Task<bool> SyncBoard(Move[] moves)
-        {
-            string uri = "SyncBoard";
-            APIResponse response = await HubResponseHandler.TryCatch(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri,
-                moves));
-            return !G.StatusMessage.HandleAPIResponse(response);
-        }
-
-        [JSInvokable]
         public async Task<MoveSuggestion?> AnalyzeMove(Move move)
         {
             string uri = "AnalyzeMove";
