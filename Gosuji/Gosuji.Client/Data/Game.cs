@@ -16,7 +16,7 @@ namespace Gosuji.Client.Data
         public KataGoVersion? KataGoVersion { get; set; }
         public long GameStatId { get; set; }
         public GameStat? GameStat { get; set; }
-        public long OpeningStatId { get; set; }
+        public long? OpeningStatId { get; set; }
         public GameStat? OpeningStat { get; set; }
         public long? MidgameStatId { get; set; }
         public GameStat? MidgameStat { get; set; }

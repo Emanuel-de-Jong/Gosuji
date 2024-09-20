@@ -11,8 +11,8 @@ namespace Gosuji.API.Services.TrainerService
 {
     public class TrainerService : IAsyncDisposable
     {
-        public const int MIDDLE_GAME_MOVE_NUMBER = 41;
-        public const int END_GAME_MOVE_NUMBER = 121;
+        public const int MIDGAME_MOVE_NUMBER = 41;
+        public const int ENDGAME_MOVE_NUMBER = 121;
 
         public string UserId { get; set; }
         private KataGoPool pool;
@@ -289,20 +289,47 @@ namespace Gosuji.API.Services.TrainerService
                 Game.GenerateId();
             }
 
+            Game.UserId = UserId;
             Game.ProductVersion = await SG.GetVersion();
             Game.KataGoVersionId = (await pool.GetVersion()).Id;
 
-            SetGameStats();
+            await SetGameStats();
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
+            TrainerSettingConfig.SetHash();
+            TrainerSettingConfig? duplicateTrainerSettingConfig = await dbContext.TrainerSettingConfigs.FirstOrDefaultAsync(t => t.Hash == TrainerSettingConfig.Hash);
+            if (duplicateTrainerSettingConfig != null)
+            {
+                TrainerSettingConfig = duplicateTrainerSettingConfig;
+            }
+            else
+            {
+                await dbContext.TrainerSettingConfigs.AddAsync(TrainerSettingConfig);
+            }
+            Game.TrainerSettingConfigId = TrainerSettingConfig.Id;
 
+            await dbContext.GameStats.AddAsync(Game.GameStat);
+            if (Game.OpeningStat != null)
+            {
+                await dbContext.GameStats.AddAsync(Game.OpeningStat);
+            }
+            if (Game.MidgameStat != null)
+            {
+                await dbContext.GameStats.AddAsync(Game.MidgameStat);
+            }
+            if (Game.EndgameStat != null)
+            {
+                await dbContext.GameStats.AddAsync(Game.EndgameStat);
+            }
+
+            await dbContext.Games.AddAsync(Game);
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
         }
 
-        private void SetGameStats()
+        private async Task SetGameStats()
         {
             MoveNode parentNode = MoveTree.MainBranch != null ? MoveTree.MainBranch : MoveTree.CurrentNode;
             List<MoveNode> nodes = [];
@@ -314,29 +341,100 @@ namespace Gosuji.API.Services.TrainerService
 
             nodes.Reverse();
 
+            GameStat stat = Game.GameStat ?? new();
+            stat.From = 1;
+            stat.To = nodes.Count;
 
-            Game.GameStat = Game.GameStat ?? new();
-            Game.GameStat.From = 0;
-            Game.GameStat.To = nodes.Last().Depth;
+            GameStat openingStat = Game.OpeningStat ?? new();
+            openingStat.From = 1;
+            openingStat.To = Math.Min(nodes.Count, MIDGAME_MOVE_NUMBER - 1);
 
-            foreach (MoveNode node in nodes)
+            GameStat midgameStat = Game.MidgameStat ?? new();
+            midgameStat.From = MIDGAME_MOVE_NUMBER;
+            midgameStat.To = Math.Min(nodes.Count, ENDGAME_MOVE_NUMBER - 1);
+
+            GameStat endgameStat = Game.EndgameStat ?? new();
+            endgameStat.From = ENDGAME_MOVE_NUMBER;
+            endgameStat.To = nodes.Count;
+
+            for (int i = 0; i < nodes.Count; i++)
             {
+                MoveNode node = nodes[i];
                 EPlayerResult? playerResult = node.PlayerResult;
                 if (playerResult == null)
                 {
                     continue;
                 }
 
-                Game.GameStat.Total++;
-                if (playerResult == EPlayerResult.PERFECT)
+                int moveNumber = i + 1;
+
+                UpdateGameStatWithResult(stat, playerResult.Value);
+                if (moveNumber < MIDGAME_MOVE_NUMBER)
                 {
-                    Game.GameStat.Perfect++;
-                    Game.GameStat.Right++;
+                    UpdateGameStatWithResult(openingStat, playerResult.Value);
                 }
-                else if (playerResult == EPlayerResult.RIGHT)
+                else if (moveNumber < ENDGAME_MOVE_NUMBER)
                 {
-                    Game.GameStat.Right++;
+                    UpdateGameStatWithResult(midgameStat, playerResult.Value);
                 }
+                else
+                {
+                    UpdateGameStatWithResult(endgameStat, playerResult.Value);
+                }
+            }
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+            Game.GameStat = stat;
+
+            if (openingStat.Total != 0)
+            {
+                Game.OpeningStat = openingStat;
+            }
+            else if (Game.OpeningStat != null)
+            {
+                dbContext.GameStats.Remove(Game.OpeningStat);
+                Game.OpeningStat = null;
+                Game.OpeningStatId = null;
+            }
+
+            if (midgameStat.Total != 0)
+            {
+                Game.MidgameStat = midgameStat;
+            }
+            else if (Game.MidgameStat != null)
+            {
+                dbContext.GameStats.Remove(Game.MidgameStat);
+                Game.MidgameStat = null;
+                Game.MidgameStatId = null;
+            }
+
+            if (endgameStat.Total != 0)
+            {
+                Game.EndgameStat = endgameStat;
+            }
+            else if (Game.EndgameStat != null)
+            {
+                dbContext.GameStats.Remove(Game.EndgameStat);
+                Game.EndgameStat = null;
+                Game.EndgameStatId = null;
+            }
+
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+        }
+
+        private void UpdateGameStatWithResult(GameStat stat, EPlayerResult playerResult)
+        {
+            stat.Total++;
+            if (playerResult == EPlayerResult.PERFECT)
+            {
+                stat.Perfect++;
+                stat.Right++;
+            }
+            else if (playerResult == EPlayerResult.RIGHT)
+            {
+                stat.Right++;
             }
         }
 
