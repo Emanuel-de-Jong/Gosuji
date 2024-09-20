@@ -32,6 +32,16 @@ namespace Gosuji.Client.Data
         [NotMapped]
         public int PerfectPercent => (int)((double)Perfect / Total * 100);
 
+        public GameStat() { }
+
+        public GameStat(long? id)
+        {
+            if (id.HasValue)
+            {
+                Id = id.Value;
+            }
+        }
+
         public bool Equal(GameStat other)
         {
             return From == other.From &&

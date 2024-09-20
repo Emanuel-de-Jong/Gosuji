@@ -293,7 +293,7 @@ namespace Gosuji.API.Services.TrainerService
             Game.ProductVersion = await SG.GetVersion();
             Game.KataGoVersionId = (await pool.GetVersion()).Id;
 
-            await SetGameStats();
+            await AddGameStats();
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
@@ -307,21 +307,13 @@ namespace Gosuji.API.Services.TrainerService
             {
                 await dbContext.TrainerSettingConfigs.AddAsync(TrainerSettingConfig);
             }
-            Game.TrainerSettingConfigId = TrainerSettingConfig.Id;
 
-            await dbContext.GameStats.AddAsync(Game.GameStat);
-            if (Game.OpeningStat != null)
-            {
-                await dbContext.GameStats.AddAsync(Game.OpeningStat);
-            }
-            if (Game.MidgameStat != null)
-            {
-                await dbContext.GameStats.AddAsync(Game.MidgameStat);
-            }
-            if (Game.EndgameStat != null)
-            {
-                await dbContext.GameStats.AddAsync(Game.EndgameStat);
-            }
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+
+            dbContext = await dbContextFactory.CreateDbContextAsync();
+
+            Game.TrainerSettingConfigId = TrainerSettingConfig.Id;
 
             await dbContext.Games.AddAsync(Game);
 
@@ -329,7 +321,7 @@ namespace Gosuji.API.Services.TrainerService
             await dbContext.DisposeAsync();
         }
 
-        private async Task SetGameStats()
+        private async Task AddGameStats()
         {
             MoveNode parentNode = MoveTree.MainBranch != null ? MoveTree.MainBranch : MoveTree.CurrentNode;
             List<MoveNode> nodes = [];
@@ -341,19 +333,19 @@ namespace Gosuji.API.Services.TrainerService
 
             nodes.Reverse();
 
-            GameStat stat = Game.GameStat ?? new();
+            GameStat stat = new(Game.GameStatId);
             stat.From = 1;
             stat.To = nodes.Count;
 
-            GameStat openingStat = Game.OpeningStat ?? new();
+            GameStat openingStat = new(Game.OpeningStatId);
             openingStat.From = 1;
             openingStat.To = Math.Min(nodes.Count, MIDGAME_MOVE_NUMBER - 1);
 
-            GameStat midgameStat = Game.MidgameStat ?? new();
+            GameStat midgameStat = new(Game.MidgameStatId);
             midgameStat.From = MIDGAME_MOVE_NUMBER;
             midgameStat.To = Math.Min(nodes.Count, ENDGAME_MOVE_NUMBER - 1);
 
-            GameStat endgameStat = Game.EndgameStat ?? new();
+            GameStat endgameStat = new(Game.EndgameStatId);
             endgameStat.From = ENDGAME_MOVE_NUMBER;
             endgameStat.To = nodes.Count;
 
@@ -385,38 +377,39 @@ namespace Gosuji.API.Services.TrainerService
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
+            dbContext.GameStats.Update(stat);
             Game.GameStat = stat;
 
             if (openingStat.Total != 0)
             {
+                dbContext.GameStats.Update(openingStat);
                 Game.OpeningStat = openingStat;
             }
-            else if (Game.OpeningStat != null)
+            else if (Game.OpeningStatId != null)
             {
-                dbContext.GameStats.Remove(Game.OpeningStat);
-                Game.OpeningStat = null;
+                dbContext.GameStats.Remove(openingStat);
                 Game.OpeningStatId = null;
             }
 
             if (midgameStat.Total != 0)
             {
+                dbContext.GameStats.Update(midgameStat);
                 Game.MidgameStat = midgameStat;
             }
-            else if (Game.MidgameStat != null)
+            else if (Game.MidgameStatId != null)
             {
-                dbContext.GameStats.Remove(Game.MidgameStat);
-                Game.MidgameStat = null;
+                dbContext.GameStats.Remove(midgameStat);
                 Game.MidgameStatId = null;
             }
 
             if (endgameStat.Total != 0)
             {
+                dbContext.GameStats.Update(endgameStat);
                 Game.EndgameStat = endgameStat;
             }
             else if (Game.EndgameStat != null)
             {
-                dbContext.GameStats.Remove(Game.EndgameStat);
-                Game.EndgameStat = null;
+                dbContext.GameStats.Remove(endgameStat);
                 Game.EndgameStatId = null;
             }
 
