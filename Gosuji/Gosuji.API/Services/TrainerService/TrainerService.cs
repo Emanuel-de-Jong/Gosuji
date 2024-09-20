@@ -1,6 +1,5 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.API.Helpers;
-using Gosuji.Client;
 using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
@@ -29,6 +28,7 @@ namespace Gosuji.API.Services.TrainerService
         private bool isAnalyzing = false;
         private bool shouldBeImperfectSuggestion = false;
         private string? name = null;
+        private bool isExistingGame = false;
 
         public TrainerService(string userId, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
@@ -271,17 +271,7 @@ namespace Gosuji.API.Services.TrainerService
 
         private async Task Save()
         {
-            bool hasPlayerResults = false;
-            foreach (MoveNode node in MoveTree.AllNodes)
-            {
-                if (node.PlayerResult != null)
-                {
-                    hasPlayerResults = true;
-                    break;
-                }
-            }
-
-            if (!hasPlayerResults)
+            if (!MoveTree.AllNodes.Any(node => node.PlayerResult != null))
             {
                 return;
             }
@@ -297,12 +287,15 @@ namespace Gosuji.API.Services.TrainerService
 
             SetMainBranchColor();
 
-            await AddGameStats();
-
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
+            await AddOrUpdateGameStats(dbContext);
+
             TrainerSettingConfig.SetHash();
-            TrainerSettingConfig? duplicateTrainerSettingConfig = await dbContext.TrainerSettingConfigs.FirstOrDefaultAsync(t => t.Hash == TrainerSettingConfig.Hash);
+            TrainerSettingConfig? duplicateTrainerSettingConfig = await dbContext.TrainerSettingConfigs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(t => t.Hash == TrainerSettingConfig.Hash);
+
             if (duplicateTrainerSettingConfig != null)
             {
                 TrainerSettingConfig = duplicateTrainerSettingConfig;
@@ -315,13 +308,20 @@ namespace Gosuji.API.Services.TrainerService
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
-            await SetGameName();
-
             dbContext = await dbContextFactory.CreateDbContextAsync();
 
             Game.TrainerSettingConfigId = TrainerSettingConfig.Id;
 
-            dbContext.Games.Update(Game);
+            await SetGameName(dbContext);
+
+            if (isExistingGame)
+            {
+                dbContext.Games.Update(Game);
+            }
+            else
+            {
+                await dbContext.Games.AddAsync(Game);
+            }
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
@@ -353,7 +353,7 @@ namespace Gosuji.API.Services.TrainerService
             }
         }
 
-        private async Task AddGameStats()
+        private async Task AddOrUpdateGameStats(ApplicationDbContext dbContext)
         {
             MoveNode parentNode = MoveTree.MainBranch ?? MoveTree.CurrentNode;
             List<MoveNode> nodes = [];
@@ -365,21 +365,10 @@ namespace Gosuji.API.Services.TrainerService
 
             nodes.Reverse();
 
-            GameStat stat = new(Game.GameStatId);
-            stat.From = 1;
-            stat.To = nodes.Count;
-
-            GameStat openingStat = new(Game.OpeningStatId);
-            openingStat.From = 1;
-            openingStat.To = Math.Min(nodes.Count, MIDGAME_MOVE_NUMBER - 1);
-
-            GameStat midgameStat = new(Game.MidgameStatId);
-            midgameStat.From = MIDGAME_MOVE_NUMBER;
-            midgameStat.To = Math.Min(nodes.Count, ENDGAME_MOVE_NUMBER - 1);
-
-            GameStat endgameStat = new(Game.EndgameStatId);
-            endgameStat.From = ENDGAME_MOVE_NUMBER;
-            endgameStat.To = nodes.Count;
+            GameStat stat = new(Game.GameStatId, 1, nodes.Count);
+            GameStat openingStat = new(Game.OpeningStatId, 1, Math.Min(nodes.Count, MIDGAME_MOVE_NUMBER - 1));
+            GameStat midgameStat = new(Game.MidgameStatId, MIDGAME_MOVE_NUMBER, Math.Min(nodes.Count, ENDGAME_MOVE_NUMBER - 1));
+            GameStat endgameStat = new(Game.EndgameStatId, ENDGAME_MOVE_NUMBER, nodes.Count);
 
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -407,46 +396,16 @@ namespace Gosuji.API.Services.TrainerService
                 }
             }
 
-            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-
             dbContext.GameStats.Update(stat);
             Game.GameStat = stat;
 
-            if (openingStat.Total != 0)
-            {
-                dbContext.GameStats.Update(openingStat);
-                Game.OpeningStat = openingStat;
-            }
-            else if (Game.OpeningStatId != null)
-            {
-                dbContext.GameStats.Remove(openingStat);
-                Game.OpeningStatId = null;
-            }
+            Game.OpeningStat = HandleStatUpdate(dbContext, openingStat, Game.OpeningStatId);
+            Game.MidgameStat = HandleStatUpdate(dbContext, midgameStat, Game.MidgameStatId);
+            Game.EndgameStat = HandleStatUpdate(dbContext, endgameStat, Game.EndgameStatId);
 
-            if (midgameStat.Total != 0)
-            {
-                dbContext.GameStats.Update(midgameStat);
-                Game.MidgameStat = midgameStat;
-            }
-            else if (Game.MidgameStatId != null)
-            {
-                dbContext.GameStats.Remove(midgameStat);
-                Game.MidgameStatId = null;
-            }
-
-            if (endgameStat.Total != 0)
-            {
-                dbContext.GameStats.Update(endgameStat);
-                Game.EndgameStat = endgameStat;
-            }
-            else if (Game.EndgameStat != null)
-            {
-                dbContext.GameStats.Remove(endgameStat);
-                Game.EndgameStatId = null;
-            }
-
-            await dbContext.SaveChangesAsync();
-            await dbContext.DisposeAsync();
+            Game.OpeningStatId = null;
+            Game.MidgameStatId = null;
+            Game.EndgameStatId = null;
         }
 
         private void UpdateGameStatWithResult(GameStat stat, EPlayerResult playerResult)
@@ -463,14 +422,27 @@ namespace Gosuji.API.Services.TrainerService
             }
         }
 
-        private async Task SetGameName()
+        private GameStat? HandleStatUpdate(ApplicationDbContext dbContext, GameStat stat, long? oldStatId)
         {
-            if (Game.Name != null)
+            if (stat.Total != 0)
+            {
+                dbContext.GameStats.Update(stat);
+            }
+            else if (oldStatId != null)
+            {
+                dbContext.GameStats.Remove(stat);
+                return null;
+            }
+
+            return stat;
+        }
+
+        private async Task SetGameName(ApplicationDbContext dbContext)
+        {
+            if (!string.IsNullOrEmpty(Game.Name))
             {
                 return;
             }
-
-            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
             if (string.IsNullOrEmpty(name))
             {
@@ -478,14 +450,8 @@ namespace Gosuji.API.Services.TrainerService
                     .Where(p => p.UserId == null || p.UserId == UserId)
                     .Where(p => p.TrainerSettingConfigId == TrainerSettingConfig.Id)
                     .FirstOrDefaultAsync();
-                if (preset != null)
-                {
-                    name = preset.Name;
-                }
-                else
-                {
-                    name = Game.DEFAULT_NAME;
-                }
+
+                string name = preset?.Name ?? Game.DEFAULT_NAME;
             }
 
             List<string> existingNames = await dbContext.Games
@@ -494,21 +460,17 @@ namespace Gosuji.API.Services.TrainerService
                 .Where(n => n.StartsWith(name))
                 .ToListAsync();
 
-            await dbContext.DisposeAsync();
-
             if (existingNames.Count != 0)
             {
-                int i = 2;
-                while (name == null)
+                int counter = 2;
+                string newName;
+                do
                 {
-                    string name_attempt = $"{Game.Name} ({i})";
-                    if (!existingNames.Contains(name_attempt))
-                    {
-                        name = name_attempt;
-                    }
+                    newName = $"{name} ({counter})";
+                    counter++;
+                } while (existingNames.Contains(newName));
 
-                    i++;
-                }
+                name = newName;
             }
 
             Game.Name = name;
