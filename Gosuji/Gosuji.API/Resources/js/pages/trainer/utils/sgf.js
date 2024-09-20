@@ -112,7 +112,8 @@ sgf.setKomiMeta = function () {
 };
 
 sgf.setResultMeta = function (result) {
-    trainerG.board.editor.setGameInfo(result, "RE");
+    let resultStr = g.getResultStr(result);
+    trainerG.board.editor.setGameInfo(resultStr, "RE");
 };
 
 if (!window.trainer) window.trainer = {};

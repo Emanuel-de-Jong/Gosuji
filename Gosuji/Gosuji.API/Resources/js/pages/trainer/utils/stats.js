@@ -30,6 +30,7 @@ stats.init = async function (gameLoadInfo) {
 
 stats.clear = async function (gameLoadInfo) {
     stats.playerResultHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.playerResults) : new History();
+    stats.resultHistory = new History();
 
     await stats.clearSuggestions();
     stats.clearResult();
@@ -135,8 +136,13 @@ stats.clearSuggestions = async function () {
 };
 
 
-stats.setResult = function (result) {
-    stats.resultElement.textContent = result;
+stats.setResult = function (result = stats.resultHistory.findFirstInBranch()) {
+    if (result == null) {
+        return;
+    }
+
+    let resultStr = g.getResultStr(result);
+    stats.resultElement.textContent = resultStr;
     stats.resultDivElement.hidden = false;
 };
 

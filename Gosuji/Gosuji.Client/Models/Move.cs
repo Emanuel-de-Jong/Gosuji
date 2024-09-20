@@ -12,6 +12,7 @@
             'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' };
 
         public static Coord PASS_COORD = new(0, 0);
+        public static Move PASS = new(PASS_COORD);
 
         public EMoveColor? Color { get; set; }
         public Coord? Coord { get; set; }

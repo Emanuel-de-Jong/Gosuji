@@ -136,9 +136,9 @@ trainerG.handleResult = function (result) {
 
     trainerG.board.pass();
 
-    let resultStr = g.getResultStr(result);
-    stats.setResult(resultStr);
-    sgf.setResultMeta(resultStr);
+    stats.resultHistory.add(result);
+    stats.setResult(result);
+    sgf.setResultMeta(result);
 
     trainerG.board.finishedOverlay.hidden = false;
 };

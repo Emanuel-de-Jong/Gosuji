@@ -141,23 +141,32 @@ namespace Gosuji.API.Services.TrainerService
             MoveSuggestionList suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc, moveOptions);
             MoveTree.CurrentNode.Suggestions = suggestions;
 
-            CalcPlayIndex(suggestions, moveType);
+            double? result = GetResult(suggestions);
+            MoveTree.CurrentNode.Result = result;
 
-            if (suggestions.PlayIndex != null)
+            if (result == null)
             {
-                Move move = new(color, suggestions.Suggestions[suggestions.PlayIndex.Value].Coord);
-                MoveTree.Add(move);
-                MoveTree.CurrentNode.MoveType = moveType;
+                CalcPlayIndex(suggestions, moveType);
 
-                (await GetKataGo()).Play(move);
+                if (suggestions.PlayIndex != null)
+                {
+                    Move move = new(color, suggestions.Suggestions[suggestions.PlayIndex.Value].Coord);
+                    MoveTree.Add(move);
+                    MoveTree.CurrentNode.MoveType = moveType;
+
+                    (await GetKataGo()).Play(move);
+                }
+            }
+            else
+            {
+                MoveTree.Add(Move.PASS);
+                MoveTree.CurrentNode.MoveType = EMoveType.PASS;
             }
 
             MoveTree.MainBranch = isMainBranch ? MoveTree.CurrentNode : MoveTree.MainBranch;
 
-            MoveTree.CurrentNode.Result = GetResult(suggestions);
-
             isAnalyzing = false;
-            return new AnalyzeResponse(suggestions, MoveTree.CurrentNode.Result);
+            return new AnalyzeResponse(suggestions, result);
         }
 
         public async Task<AnalyzeResponse> AnalyzeAfterJump(Move[] moves, EMoveType moveType, EMoveColor color, bool isMainBranch)

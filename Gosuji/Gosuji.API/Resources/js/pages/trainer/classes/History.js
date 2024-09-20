@@ -42,6 +42,33 @@ class History {
         return this.get(node) != null;
     }
 
+    findFirstInBranch(node=trainerG.board.get()) {
+        let data;
+        let childNode = node;
+        while (childNode) {
+            data = childNode[this.nodeKey];
+            if (data != null) {
+                return data;
+            }
+
+            if (childNode.children.length == 0) {
+                break;
+            }
+
+            childNode = childNode.children[0];
+        }
+
+        let parentNode = node.parent;
+        while (parentNode) {
+            data = parentNode[this.nodeKey];
+            if (data != null) {
+                return data;
+            }
+
+            parentNode = parentNode.parent;
+        }
+    }
+
     refreshNodes() {
         for (const node of this.nodes) {
             if (!node) {
