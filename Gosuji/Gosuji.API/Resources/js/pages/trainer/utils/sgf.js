@@ -12,6 +12,8 @@ sgf.init = async function (userName, gameLoadInfo) {
     sgf.sgfLoadingEvent = new CEvent(sgf.sgfLoadingListener);
     sgf.sgfLoadedEvent = new CEvent(sgf.sgfLoadedListener);
 
+    trainerG.board.editor.addListener(sgf.boardEditorListener);
+
     await sgf.clear(gameLoadInfo);
 };
 
@@ -28,8 +30,6 @@ sgf.clear = async function (gameLoadInfo) {
 
     sgf.setPlayersMeta();
     sgf.setHandicapMeta();
-
-    trainerG.board.editor.addListener(sgf.boardEditorListener);
 };
 
 
@@ -111,8 +111,7 @@ sgf.setKomiMeta = function () {
     trainerG.board.editor.setGameInfo(sgf.komi + "", "KM");
 };
 
-sgf.setResultMeta = function (result) {
-    let resultStr = g.getResultStr(result);
+sgf.setResultMeta = function (resultStr) {
     trainerG.board.editor.setGameInfo(resultStr, "RE");
 };
 

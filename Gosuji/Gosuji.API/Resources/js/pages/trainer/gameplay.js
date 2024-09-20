@@ -18,6 +18,10 @@ gameplay.OPPONENT_MAX_VISIT_DIFF_PERC = 50;
 
 
 gameplay.init = function (gameLoadInfo) {
+    trainerG.board.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
+    trainerG.board.editor.addListener(gameplay.detectJump);
+    trainerG.board.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
+
     gameplay.clear(gameLoadInfo);
 };
 
@@ -30,10 +34,6 @@ gameplay.clear = function (gameLoadInfo) {
     gameplay.isJumped = false;
     gameplay.playerTurnId = 0;
     gameplay.opponentTurnId = 0;
-
-    trainerG.board.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
-    trainerG.board.editor.addListener(gameplay.detectJump);
-    trainerG.board.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
 };
 
 
@@ -204,6 +204,7 @@ gameplay.detectJump = async function (event) {
 
         gameplay.givePlayerControl(false);
 
+        stats.setResult();
         scoreChart.refresh();
         ratioChart.refresh();
     }

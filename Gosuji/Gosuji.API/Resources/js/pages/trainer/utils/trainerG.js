@@ -137,8 +137,10 @@ trainerG.handleResult = function (result) {
     trainerG.board.pass();
 
     stats.resultHistory.add(result);
-    stats.setResult(result);
-    sgf.setResultMeta(result);
+    
+    let resultStr = g.getResultStr(result);
+    stats.setResult(resultStr);
+    sgf.setResultMeta(resultStr);
 
     trainerG.board.finishedOverlay.hidden = false;
 };

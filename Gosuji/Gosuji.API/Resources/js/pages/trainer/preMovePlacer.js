@@ -14,6 +14,8 @@ preMovePlacer.MAX_VISIT_DIFF_PERC = 50;
 
 preMovePlacer.init = function () {
     preMovePlacer.clear();
+    
+    preMovePlacer.stopButton.addEventListener("click", preMovePlacer.stopButtonClickListener);
 };
 
 preMovePlacer.clear = function () {
@@ -27,7 +29,6 @@ preMovePlacer.clear = function () {
     preMovePlacer.overlay = document.getElementById("preMoveOverlay");
 
     preMovePlacer.stopButton = document.getElementById("stopPreMovesBtn");
-    preMovePlacer.stopButton.addEventListener("click", preMovePlacer.stopButtonClickListener);
 };
 
 

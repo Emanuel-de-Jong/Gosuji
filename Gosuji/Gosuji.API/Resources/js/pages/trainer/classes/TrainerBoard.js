@@ -82,12 +82,10 @@ class TrainerBoard extends Board {
                     </div>
                 </div>`);
         this.finishedOverlay = document.getElementById("finishedOverlay");
-        document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
 
         document.querySelector("#trainerGame .besogo-control")
             .insertAdjacentHTML("beforeend", '<button class="bsg" id="deleteBranchBtn"><i class="fa-solid fa-trash"></i></button>');
         this.deleteBranchButton = document.getElementById("deleteBranchBtn");
-        this.deleteBranchButton.addEventListener("click", this.deleteBranch);
 
         this.navStartButton = document.querySelector('#trainerGame button[title="First node"]');
         this.navBranchStartButton = document.querySelector('#trainerGame button[title="Jump back"]');
@@ -102,6 +100,11 @@ class TrainerBoard extends Board {
         this.komiDisplay = document.getElementById("komiDisplay");
 
         this.phaseChangedListener({ phase: trainerG.phase });
+
+        if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
+            document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
+            this.deleteBranchButton.addEventListener("click", this.deleteBranch);
+        }
 
         // console.log(besogo);
         // console.log(this.editor);

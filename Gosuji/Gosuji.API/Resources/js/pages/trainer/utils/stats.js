@@ -25,6 +25,8 @@ stats.init = async function (gameLoadInfo) {
     stats.resultDivElement = document.getElementById("resultDiv");
     stats.resultElement = document.getElementById("result");
 
+    trainerG.board.editor.addListener(stats.drawStats);
+
     await stats.clear(gameLoadInfo);
 };
 
@@ -39,8 +41,6 @@ stats.clear = async function (gameLoadInfo) {
     stats.perfectStreak = gameLoadInfo ? gameLoadInfo.perfectStreak : 0;
     stats.rightTopStreak = gameLoadInfo ? gameLoadInfo.rightTopStreak : 0;
     stats.perfectTopStreak = gameLoadInfo ? gameLoadInfo.perfectTopStreak : 0;
-
-    trainerG.board.editor.addListener(stats.drawStats);
 };
 
 
@@ -136,12 +136,17 @@ stats.clearSuggestions = async function () {
 };
 
 
-stats.setResult = function (result = stats.resultHistory.findFirstInBranch()) {
-    if (result == null) {
-        return;
+stats.setResult = function (resultStr) {
+    if (resultStr == null) {
+        let result = stats.resultHistory.findFirstInBranch();
+        if (result == null) {
+            stats.clearResult();
+            return;
+        }
+
+        resultStr = g.getResultStr(result);
     }
 
-    let resultStr = g.getResultStr(result);
     stats.resultElement.textContent = resultStr;
     stats.resultDivElement.hidden = false;
 };
