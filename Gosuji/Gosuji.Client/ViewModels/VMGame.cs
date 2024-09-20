@@ -10,7 +10,7 @@ namespace Gosuji.Client.ViewModels
         public GameStat? MidgameStat { get; set; }
         public GameStat? EndgameStat { get; set; }
         public string Name { get; set; }
-        public int? Result { get; set; }
+        public double? Result { get; set; }
         public int RightTopStreak { get; set; }
         public int PerfectTopStreak { get; set; }
         public int Boardsize { get; set; }

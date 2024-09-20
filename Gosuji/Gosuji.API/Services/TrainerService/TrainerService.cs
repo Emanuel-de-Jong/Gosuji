@@ -154,10 +154,10 @@ namespace Gosuji.API.Services.TrainerService
 
             MoveTree.MainBranch = isMainBranch ? MoveTree.CurrentNode : MoveTree.MainBranch;
 
-            AnalyzeResponse response = new(suggestions, GetResult(suggestions));
+            MoveTree.CurrentNode.Result = GetResult(suggestions);
 
             isAnalyzing = false;
-            return response;
+            return new AnalyzeResponse(suggestions, MoveTree.CurrentNode.Result);
         }
 
         public async Task<AnalyzeResponse> AnalyzeAfterJump(Move[] moves, EMoveType moveType, EMoveColor color, bool isMainBranch)
@@ -166,7 +166,7 @@ namespace Gosuji.API.Services.TrainerService
             return await Analyze(moveType, color, isMainBranch);
         }
 
-        private string? GetResult(MoveSuggestionList moveSuggestionList)
+        private double? GetResult(MoveSuggestionList moveSuggestionList)
         {
             MoveSuggestion? passSuggestion = moveSuggestionList.PassSuggestion;
             if (passSuggestion == null)
@@ -177,23 +177,7 @@ namespace Gosuji.API.Services.TrainerService
             double scoreLead = passSuggestion.Score.ScoreLead;
             // Round to nearest x.0 or x.5
             scoreLead = Math.Round(scoreLead * 2, MidpointRounding.AwayFromZero) / 2;
-            scoreLead = Math.Round(scoreLead, 1);
-
-            if (scoreLead == 0)
-            {
-                return "Draw!";
-            }
-
-            EMoveColor wonColor = EMoveColor.BLACK;
-            if (scoreLead < 0)
-            {
-                wonColor = EMoveColor.WHITE;
-                scoreLead = Math.Round(scoreLead * -1, 1);
-            }
-
-            string result = $"{G.ColorToName(wonColor)}+{scoreLead.ToString("F1")}";
-
-            return result;
+            return Math.Round(scoreLead, 1);
         }
 
         private void CalcPlayIndex(MoveSuggestionList suggestions, EMoveType moveType)

@@ -6,7 +6,7 @@ namespace Gosuji.Client.Models.Trainer
     {
         public string Name { get; set; }
         public int Color { get; set; }
-        public int? Result { get; set; }
+        public double? Result { get; set; }
         public int PrevNodeX { get; set; }
         public int PrevNodeY { get; set; }
 

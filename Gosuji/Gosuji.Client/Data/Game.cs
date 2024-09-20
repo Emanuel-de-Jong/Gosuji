@@ -25,7 +25,7 @@ namespace Gosuji.Client.Data
 
         public string Name { get; set; }
         public int Color { get; set; }
-        public int? Result { get; set; }
+        public double? Result { get; set; }
         public string ProductVersion { get; set; }
         public bool IsDeleted { get; set; }
         public bool ShouldIgnoreStats { get; set; }

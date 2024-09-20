@@ -128,7 +128,7 @@ trainerG.hideLoadAnimation = function() {
 };
 
 trainerG.handleResult = function (result) {
-    if (!result) return;
+    if (result == null) return;
 
     trainerG.isPassed = true;
     gameplay.takePlayerControl();
@@ -136,8 +136,9 @@ trainerG.handleResult = function (result) {
 
     trainerG.board.pass();
 
-    stats.setResult(result);
-    sgf.setResultMeta(result);
+    let resultStr = g.getResultStr(result);
+    stats.setResult(resultStr);
+    sgf.setResultMeta(resultStr);
 
     trainerG.board.finishedOverlay.hidden = false;
 };
