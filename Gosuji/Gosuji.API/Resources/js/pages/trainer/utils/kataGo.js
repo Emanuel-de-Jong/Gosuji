@@ -39,22 +39,6 @@ kataGo.initTrainerConnection = async function () {
     return await kataGo.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty);
 };
 
-kataGo.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
-    let kataGoSuggestion = await kataGo.sendRequest("AnalyzeMove", new Move(color, coord));
-    if (kataGoSuggestion == null) {
-        return;
-    }
-
-    let suggestion = MoveSuggestion.fromKataGo(kataGoSuggestion);
-
-    if (!trainerG.suggestions) {
-        trainerG.suggestions = new MoveSuggestionList();
-    }
-    trainerG.suggestions.analyzeMoveSuggestion = suggestion;
-
-    return suggestion;
-};
-
 kataGo.analyze = async function (
     moveType = trainerG.MOVE_TYPE.PLAYER,
     color = trainerG.board.getNextColor()
@@ -88,6 +72,22 @@ kataGo.analyzeAfterJump = async function (
     trainerG.handleResult(analyzeResponse.result);
 
     return trainerG.suggestions;
+};
+
+kataGo.analyzeMove = async function (coord, color = trainerG.board.getNextColor()) {
+    let kataGoSuggestion = await kataGo.sendRequest("AnalyzeMove", new Move(color, coord));
+    if (kataGoSuggestion == null) {
+        return;
+    }
+
+    let suggestion = MoveSuggestion.fromKataGo(kataGoSuggestion);
+
+    if (!trainerG.suggestions) {
+        trainerG.suggestions = new MoveSuggestionList();
+    }
+    trainerG.suggestions.analyzeMoveSuggestion = suggestion;
+
+    return suggestion;
 };
 
 kataGo.playPlayer = async function (coord, color = trainerG.board.getColor()) {

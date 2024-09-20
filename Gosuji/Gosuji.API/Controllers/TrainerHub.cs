@@ -70,11 +70,6 @@ namespace Gosuji.API.Controllers
             return Ok;
         }
 
-        public async Task<HubResponse> AnalyzeMove(Move move)
-        {
-            return OkData(await trainerServices[Context.ConnectionId].AnalyzeMove(move));
-        }
-
         public async Task<HubResponse> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
             return OkData(await trainerServices[Context.ConnectionId].Analyze(moveType, color, isMainBranch));
@@ -83,6 +78,11 @@ namespace Gosuji.API.Controllers
         public async Task<HubResponse> AnalyzeAfterJump(Move[] moves, EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
             return OkData(await trainerServices[Context.ConnectionId].AnalyzeAfterJump(moves, moveType, color, isMainBranch));
+        }
+
+        public async Task<HubResponse> AnalyzeMove(Move move)
+        {
+            return OkData(await trainerServices[Context.ConnectionId].AnalyzeMove(move));
         }
 
         public async Task<HubResponse> PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,

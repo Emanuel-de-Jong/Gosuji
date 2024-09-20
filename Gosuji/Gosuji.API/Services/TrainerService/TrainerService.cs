@@ -62,23 +62,6 @@ namespace Gosuji.API.Services.TrainerService
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
         }
 
-        public async Task<MoveSuggestion> AnalyzeMove(Move move)
-        {
-            if (isAnalyzing)
-            {
-                return null;
-            }
-            isAnalyzing = true;
-
-            MoveSuggestion suggestion = (await GetKataGo()).AnalyzeMove(move);
-
-            MoveTree.CurrentNode.Suggestions ??= new MoveSuggestionList();
-            MoveTree.CurrentNode.Suggestions.AnalyzeMoveSuggestion = suggestion;
-
-            isAnalyzing = false;
-            return suggestion;
-        }
-
         public async Task<AnalyzeResponse> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
             if (isAnalyzing)
@@ -151,6 +134,44 @@ namespace Gosuji.API.Services.TrainerService
         {
             await SyncBoard(moves);
             return await Analyze(moveType, color, isMainBranch);
+        }
+
+        public async Task<MoveSuggestion> AnalyzeMove(Move move)
+        {
+            if (isAnalyzing)
+            {
+                return null;
+            }
+            isAnalyzing = true;
+
+            MoveSuggestion suggestion = (await GetKataGo()).AnalyzeMove(move);
+
+            MoveTree.CurrentNode.Suggestions ??= new MoveSuggestionList();
+            MoveTree.CurrentNode.Suggestions.AnalyzeMoveSuggestion = suggestion;
+
+            isAnalyzing = false;
+            return suggestion;
+        }
+
+        public async Task PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
+            int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        {
+            await Play(move, EMoveType.PLAYER);
+
+            MoveTree.CurrentNode.PlayerResult = playerResult;
+            MoveTree.CurrentNode.Parent.ChosenNotPlayedCoord = chosenNotPlayedCoord;
+
+            Game.RightStreak = rightStreak;
+            Game.PerfectStreak = perfectStreak;
+            Game.RightTopStreak = rightTopStreak != null ? rightTopStreak.Value : Game.RightTopStreak;
+            Game.PerfectTopStreak = perfectTopStreak != null ? perfectTopStreak.Value : Game.PerfectTopStreak;
+        }
+
+        public async Task<MoveSuggestion> PlayForcedCorner(Move move)
+        {
+            MoveSuggestion suggestion = await AnalyzeMove(move);
+            await Play(move, EMoveType.FORCED_CORNER);
+            return suggestion;
         }
 
         private double? GetResult(MoveSuggestionList moveSuggestionList)
@@ -228,25 +249,16 @@ namespace Gosuji.API.Services.TrainerService
             (await GetKataGo()).Play(move);
         }
 
-        public async Task PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
-            int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        private async Task SyncBoard(Move[] moves)
         {
-            await Play(move, EMoveType.PLAYER);
-
-            MoveTree.CurrentNode.PlayerResult = playerResult;
-            MoveTree.CurrentNode.Parent.ChosenNotPlayedCoord = chosenNotPlayedCoord;
-
-            Game.RightStreak = rightStreak;
-            Game.PerfectStreak = perfectStreak;
-            Game.RightTopStreak = rightTopStreak != null ? rightTopStreak.Value : Game.RightTopStreak;
-            Game.PerfectTopStreak = perfectTopStreak != null ? perfectTopStreak.Value : Game.PerfectTopStreak;
-        }
-
-        public async Task<MoveSuggestion> PlayForcedCorner(Move move)
-        {
-            MoveSuggestion suggestion = await AnalyzeMove(move);
-            await Play(move, EMoveType.FORCED_CORNER);
-            return suggestion;
+            (await GetKataGo()).ClearBoard();
+            (await GetKataGo()).SetHandicap(TrainerSettingConfig.Handicap);
+            (await GetKataGo()).PlayRange(moves);
+            MoveTree.CurrentNode = MoveTree.RootNode;
+            foreach (Move move in moves)
+            {
+                MoveTree.Add(move);
+            }
         }
 
         private async Task StartKataGo()

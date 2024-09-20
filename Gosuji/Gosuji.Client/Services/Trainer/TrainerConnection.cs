@@ -39,16 +39,6 @@ namespace Gosuji.Client.Services.Trainer
         }
 
         [JSInvokable]
-        public async Task<MoveSuggestion?> AnalyzeMove(Move move)
-        {
-            string uri = "AnalyzeMove";
-            APIResponse<MoveSuggestion> response = await HubResponseHandler.TryCatch<MoveSuggestion>(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri,
-                move));
-            return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
-        }
-
-        [JSInvokable]
         public async Task<AnalyzeResponse?> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
         {
             string uri = "Analyze";
@@ -65,6 +55,16 @@ namespace Gosuji.Client.Services.Trainer
             APIResponse<AnalyzeResponse> response = await HubResponseHandler.TryCatch<AnalyzeResponse>(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
                 moves, moveType, color, isMainBranch));
+            return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
+        }
+
+        [JSInvokable]
+        public async Task<MoveSuggestion?> AnalyzeMove(Move move)
+        {
+            string uri = "AnalyzeMove";
+            APIResponse<MoveSuggestion> response = await HubResponseHandler.TryCatch<MoveSuggestion>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri,
+                move));
             return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
         }
 
