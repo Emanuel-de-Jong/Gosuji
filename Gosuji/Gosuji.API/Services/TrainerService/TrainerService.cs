@@ -284,6 +284,8 @@ namespace Gosuji.API.Services.TrainerService
             Game.UserId = UserId;
             Game.ProductVersion = await SG.GetVersion();
             Game.KataGoVersionId = (await pool.GetVersion()).Id;
+            Game.Ruleset = TrainerSettingConfig.GetRuleset;
+            Game.Komi = TrainerSettingConfig.GetKomi;
 
             SetMainBranchColor();
 
@@ -357,10 +359,22 @@ namespace Gosuji.API.Services.TrainerService
         {
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
-            dbContext.Remove(Game.GameStat);
-            dbContext.Remove(Game.OpeningStat);
-            dbContext.Remove(Game.MidgameStat);
-            dbContext.Remove(Game.EndgameStat);
+            if (Game.GameStat != null)
+            {
+                dbContext.Remove(Game.GameStat);
+            }
+            if (Game.OpeningStat != null)
+            {
+                dbContext.Remove(Game.OpeningStat);
+            }
+            if (Game.MidgameStat != null)
+            {
+                dbContext.Remove(Game.MidgameStat);
+            }
+            if (Game.EndgameStat != null)
+            {
+                dbContext.Remove(Game.EndgameStat);
+            }
 
             MoveNode parentNode = MoveTree.MainBranch ?? MoveTree.CurrentNode;
             List<MoveNode> nodes = [];
