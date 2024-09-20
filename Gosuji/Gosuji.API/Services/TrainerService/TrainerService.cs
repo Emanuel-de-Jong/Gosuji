@@ -316,6 +316,8 @@ namespace Gosuji.API.Services.TrainerService
 
             await SetGameName(dbContext);
 
+            Game.EncodedData = [];
+
             if (isExistingGame)
             {
                 dbContext.Games.Update(Game);
@@ -366,14 +368,20 @@ namespace Gosuji.API.Services.TrainerService
             if (Game.OpeningStat != null)
             {
                 dbContext.Remove(Game.OpeningStat);
+                Game.OpeningStat = null;
+                Game.OpeningStatId = null;
             }
             if (Game.MidgameStat != null)
             {
                 dbContext.Remove(Game.MidgameStat);
+                Game.MidgameStat = null;
+                Game.MidgameStatId = null;
             }
             if (Game.EndgameStat != null)
             {
                 dbContext.Remove(Game.EndgameStat);
+                Game.EndgameStat = null;
+                Game.EndgameStatId = null;
             }
 
             MoveNode parentNode = MoveTree.MainBranch ?? MoveTree.CurrentNode;
@@ -386,10 +394,10 @@ namespace Gosuji.API.Services.TrainerService
 
             nodes.Reverse();
 
-            Game.GameStat = new(1, nodes.Count);
-            Game.OpeningStat = new(1, Math.Min(nodes.Count, MIDGAME_MOVE_NUMBER - 1));
-            Game.MidgameStat = new(MIDGAME_MOVE_NUMBER, Math.Min(nodes.Count, ENDGAME_MOVE_NUMBER - 1));
-            Game.EndgameStat = new(ENDGAME_MOVE_NUMBER, nodes.Count);
+            GameStat gameStat = new(1, nodes.Count);
+            GameStat openingStat = new(1, Math.Min(nodes.Count, MIDGAME_MOVE_NUMBER - 1));
+            GameStat midgameStat = new(MIDGAME_MOVE_NUMBER, Math.Min(nodes.Count, ENDGAME_MOVE_NUMBER - 1));
+            GameStat endgameStat = new(ENDGAME_MOVE_NUMBER, nodes.Count);
 
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -402,42 +410,42 @@ namespace Gosuji.API.Services.TrainerService
 
                 int moveNumber = i + 1;
 
-                UpdateGameStatWithResult(Game.GameStat, playerResult.Value);
+                UpdateGameStatWithResult(gameStat, playerResult.Value);
                 if (moveNumber < MIDGAME_MOVE_NUMBER)
                 {
-                    UpdateGameStatWithResult(Game.OpeningStat, playerResult.Value);
+                    UpdateGameStatWithResult(openingStat, playerResult.Value);
                 }
                 else if (moveNumber < ENDGAME_MOVE_NUMBER)
                 {
-                    UpdateGameStatWithResult(Game.MidgameStat, playerResult.Value);
+                    UpdateGameStatWithResult(midgameStat, playerResult.Value);
                 }
                 else
                 {
-                    UpdateGameStatWithResult(Game.EndgameStat, playerResult.Value);
+                    UpdateGameStatWithResult(endgameStat, playerResult.Value);
                 }
             }
 
-            await dbContext.GameStats.AddAsync(Game.GameStat);
-            if (Game.OpeningStat.Total != 0)
+            await dbContext.GameStats.AddAsync(gameStat);
+            if (openingStat.Total != 0)
             {
-                await dbContext.GameStats.AddAsync(Game.OpeningStat);
+                await dbContext.GameStats.AddAsync(openingStat);
             }
-            if (Game.MidgameStat.Total != 0)
+            if (midgameStat.Total != 0)
             {
-                await dbContext.GameStats.AddAsync(Game.MidgameStat);
+                await dbContext.GameStats.AddAsync(midgameStat);
             }
-            if (Game.EndgameStat.Total != 0)
+            if (endgameStat.Total != 0)
             {
-                await dbContext.GameStats.AddAsync(Game.EndgameStat);
+                await dbContext.GameStats.AddAsync(endgameStat);
             }
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
-            Game.GameStatId = Game.GameStat.Id;
-            Game.OpeningStatId = Game.OpeningStat.Id;
-            Game.MidgameStatId = Game.MidgameStat.Id;
-            Game.EndgameStatId = Game.EndgameStat.Id;
+            Game.GameStatId = gameStat.Id;
+            Game.OpeningStatId = openingStat.Id != 0 ? openingStat.Id : null;
+            Game.MidgameStatId = midgameStat.Id != 0 ? midgameStat.Id : null;
+            Game.EndgameStatId = endgameStat.Id != 0 ? endgameStat.Id : null;
         }
 
         private void UpdateGameStatWithResult(GameStat stat, EPlayerResult playerResult)
