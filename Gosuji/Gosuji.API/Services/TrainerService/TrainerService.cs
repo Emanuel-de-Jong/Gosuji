@@ -162,6 +162,19 @@ namespace Gosuji.API.Services.TrainerService
             return await Analyze(moveType, color, isMainBranch);
         }
 
+        private string? GetResult(MoveSuggestionList moveSuggestionList)
+        {
+            MoveSuggestion? passSuggestion = moveSuggestionList.PassSuggestion;
+            if (passSuggestion == null)
+            {
+                return null;
+            }
+
+            string result;
+
+            return result;
+        }
+
         private void CalcPlayIndex(MoveSuggestionList suggestions, EMoveType moveType)
         {
             if (moveType == EMoveType.PLAYER)

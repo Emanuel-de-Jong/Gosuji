@@ -1,6 +1,7 @@
 using Gosuji.Client.Components;
 using Gosuji.Client.Helpers;
 using Gosuji.Client.Services;
+using Gosuji.Client.Services.Trainer;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;

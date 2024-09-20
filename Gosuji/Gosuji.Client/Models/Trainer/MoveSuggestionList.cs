@@ -1,7 +1,11 @@
-﻿namespace Gosuji.Client.Models.Trainer
+﻿using System.Xml.Linq;
+
+namespace Gosuji.Client.Models.Trainer
 {
     public class MoveSuggestionList
     {
+        public const int MAX_OPTIONS = 15;
+
         public List<MoveSuggestion> Suggestions { get; set; } = [];
         public MoveSuggestion? AnalyzeMoveSuggestion { get; set; }
         public MoveSuggestion? PassSuggestion { get; set; }
@@ -10,17 +14,105 @@
 
         public MoveSuggestionList() { }
 
-        public MoveSuggestionList(int visits)
+        public bool Add(MoveSuggestion suggestion)
         {
-            Visits = visits;
-        }
+            if (Suggestions.Count >= MAX_OPTIONS)
+            {
+                return false;
+            }
 
-        public void Add(MoveSuggestion suggestion)
-        {
             Suggestions.Add(suggestion);
+            return true;
         }
 
-        public void Filter(int moveOptions)
+        public void Filter(double minVisitsPerc, double maxVisitDiffPerc, int moveOptions)
+        {
+            FilterPass();
+            FilterByVisits(minVisitsPerc, maxVisitDiffPerc);
+            AddGrades();
+            FilterByOptions(moveOptions);
+        }
+
+        public void FilterPass()
+        {
+            if (Suggestions.Count == 0)
+            {
+                return;
+            }
+
+            double mainScoreLead = Math.Round(Suggestions[0].Score.ScoreLead, 2);
+            foreach (MoveSuggestion suggestion in Suggestions)
+            {
+                if (!suggestion.IsPass)
+                {
+                    continue;
+                }
+
+                if (Math.Round(suggestion.Score.ScoreLead, 2) >= mainScoreLead)
+                {
+                    PassSuggestion = suggestion;
+                }
+
+                Suggestions.Remove(suggestion);
+                break;
+            }
+        }
+
+        public void FilterByVisits(double minVisitsPerc, double maxVisitDiffPerc)
+        {
+            int highestVisits = 0;
+            foreach (MoveSuggestion suggestion in Suggestions)
+            {
+                if (highestVisits < suggestion.Visits)
+                {
+                    highestVisits = suggestion.Visits;
+                }
+            }
+
+            int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * Visits);
+            int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(Visits, highestVisits));
+
+            int index;
+            int lastSuggestionVisits = int.MaxValue;
+            for (index = 0; index < Suggestions.Count; index++)
+            {
+                MoveSuggestion suggestion = Suggestions[index];
+                if (suggestion.Visits < minVisits || lastSuggestionVisits - suggestion.Visits > maxVisitDiff)
+                {
+                    index--;
+                    break;
+                }
+
+                if (lastSuggestionVisits > suggestion.Visits)
+                {
+                    lastSuggestionVisits = suggestion.Visits;
+                }
+            }
+
+            if (index == 0 && Suggestions.Count != 0)
+            {
+                index = 1;
+            }
+
+            Suggestions = Suggestions[..index];
+        }
+
+        public void AddGrades()
+        {
+            int gradeIndex = 0;
+            for (int i = 0; i < Suggestions.Count; i++)
+            {
+                MoveSuggestion suggestion = Suggestions[i];
+                if (i != 0 && suggestion.Visits != Suggestions[i - 1].Visits)
+                {
+                    gradeIndex++;
+                }
+
+                suggestion.Grade = ((char)(gradeIndex + 65)).ToString();
+            }
+        }
+
+        public void FilterByOptions(int moveOptions)
         {
             if (Suggestions.Count <= moveOptions)
             {
@@ -42,46 +134,6 @@
             }
 
             Suggestions = Suggestions[..index];
-        }
-
-        public void CheckPass()
-        {
-            if (Suggestions.Count == 0)
-            {
-                return;
-            }
-
-            double highestScoreLead = Math.Round(Suggestions[0].Score.ScoreLead, 2);
-            for (int i = 1; i < Suggestions.Count; i++)
-            {
-                MoveSuggestion suggestion = Suggestions[i];
-                if (suggestion.IsPass && Math.Round(suggestion.Score.ScoreLead, 2) == highestScoreLead)
-                {
-                    PassSuggestion = suggestion;
-                    Suggestions.Remove(PassSuggestion);
-                    break;
-                }
-            }
-        }
-
-        public void AddGrades()
-        {
-            int gradeIndex = 0;
-            for (int i = 0; i < Suggestions.Count; i++)
-            {
-                MoveSuggestion suggestion = Suggestions[i];
-                if (suggestion.IsPass)
-                {
-                    continue;
-                }
-
-                if (i != 0 && suggestion.Visits != Suggestions[i - 1].Visits)
-                {
-                    gradeIndex++;
-                }
-
-                suggestion.Grade = ((char)(gradeIndex + 65)).ToString();
-            }
         }
     }
 }

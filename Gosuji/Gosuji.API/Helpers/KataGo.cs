@@ -121,9 +121,9 @@ namespace Gosuji.API.Helpers
             ClearReader();
         }
 
-        public List<MoveSuggestion> ParseAnalysis(string[] analysis, EMoveColor color)
+        public MoveSuggestionList ParseAnalysis(string[] analysis, EMoveColor color)
         {
-            List<MoveSuggestion> suggestions = [];
+            MoveSuggestionList suggestionList = new();
             MoveSuggestion? suggestion = null;
             for (int i = 0; i < analysis.Length; i++)
             {
@@ -146,9 +146,22 @@ namespace Gosuji.API.Helpers
                 }
                 else if (element == "pv")
                 {
+                    bool isPassed = false;
                     while (analysis.Length - 1 >= i + 1 && analysis[i + 1] != "info")
                     {
-                        suggestion?.Continuation.Add(Move.CoordFromKataGo(analysis[i + 1], boardsize));
+                        if (!isPassed)
+                        {
+                            Coord coord = Move.CoordFromKataGo(analysis[i + 1], boardsize);
+                            if (Move.IsPass(coord))
+                            {
+                                isPassed = true;
+                            }
+                            else
+                            {
+                                suggestion?.Continuation.Add(coord);
+                            }
+                        }
+
                         i++;
                     }
                 }
@@ -157,13 +170,16 @@ namespace Gosuji.API.Helpers
                 {
                     if (suggestion != null)
                     {
-                        suggestions.Add(suggestion);
+                        if (!suggestionList.Add(suggestion))
+                        {
+                            break;
+                        }
                     }
                     suggestion = new MoveSuggestion();
                 }
             }
 
-            return suggestions;
+            return suggestionList;
         }
 
         public MoveSuggestion AnalyzeMove(Move move)
@@ -187,7 +203,7 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            MoveSuggestion suggestion = ParseAnalysis(analysis, move.Color.Value).FirstOrDefault();
+            MoveSuggestion suggestion = ParseAnalysis(analysis, move.Color.Value).Suggestions.FirstOrDefault();
             suggestion.Grade = "X";
 
             return suggestion;
@@ -212,42 +228,12 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            List<MoveSuggestion> suggestions = ParseAnalysis(analysis, color);
+            MoveSuggestionList suggestionList = ParseAnalysis(analysis, color);
+            suggestionList.Visits = maxVisits;
 
-            int highestVisits = 0;
-            foreach (MoveSuggestion suggestion in suggestions)
-            {
-                if (highestVisits < suggestion.Visits)
-                {
-                    highestVisits = suggestion.Visits;
-                }
-            }
-            int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(maxVisits, highestVisits));
-            int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * maxVisits);
+            suggestionList.Filter(minVisitsPerc, maxVisitDiffPerc, moveOptions);
 
-            MoveSuggestionList filteredSuggestions = new(maxVisits);
-            int lastSuggestionVisits = int.MaxValue;
-            foreach (MoveSuggestion suggestion in suggestions)
-            {
-                if (filteredSuggestions.Suggestions.Count > 0 &&
-                        !Move.IsPass(filteredSuggestions.Suggestions.Last().Coord) &&
-                        (suggestion.Visits < minVisits ||
-                        lastSuggestionVisits - suggestion.Visits > maxVisitDiff))
-                {
-                    break;
-                }
-                filteredSuggestions.Add(suggestion);
-                if (lastSuggestionVisits > suggestion.Visits)
-                {
-                    lastSuggestionVisits = suggestion.Visits;
-                }
-            }
-
-            filteredSuggestions.CheckPass();
-            filteredSuggestions.AddGrades();
-            filteredSuggestions.Filter(moveOptions);
-
-            return filteredSuggestions;
+            return suggestionList;
         }
 
         public void Play(Move move)

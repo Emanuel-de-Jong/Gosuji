@@ -43,7 +43,7 @@ preMovePlacer.start = async function () {
             if (preMovePlacer.isStopped) break;
 
             if (cornerPlacer.shouldForce()) {
-                await cornerPlacer.play(suggestion);
+                await cornerPlacer.play();
             } else {
                 await preMovePlacer.play();
             }

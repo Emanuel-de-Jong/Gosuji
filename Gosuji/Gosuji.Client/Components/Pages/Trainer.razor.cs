@@ -4,6 +4,7 @@ using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
+using Gosuji.Client.Services.Trainer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Localization;

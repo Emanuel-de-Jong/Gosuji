@@ -6,7 +6,7 @@ using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
 
-namespace Gosuji.Client.Services
+namespace Gosuji.Client.Services.Trainer
 {
     public class TrainerConnection : BaseConnection
     {

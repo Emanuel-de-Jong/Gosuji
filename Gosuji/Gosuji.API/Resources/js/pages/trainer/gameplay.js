@@ -169,7 +169,7 @@ gameplay.opponentTurn = async function () {
     let opponentTurnId = ++gameplay.opponentTurnId;
 
     if (cornerPlacer.shouldForce()) {
-        await cornerPlacer.play(suggestion);
+        await cornerPlacer.play();
     } else {
         await gameplay.suggestionsPromise;
         if (trainerG.isPassed) return;
