@@ -20,6 +20,11 @@ namespace Gosuji.Client.Data
         public EncodedGameData(string id, List<byte> data)
         {
             Id = id;
+            SetData(data);
+        }
+
+        public void SetData(List<byte> data)
+        {
             Data = data.ToArray();
         }
     }

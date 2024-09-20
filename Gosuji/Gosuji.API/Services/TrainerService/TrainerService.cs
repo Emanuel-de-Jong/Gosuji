@@ -307,6 +307,20 @@ namespace Gosuji.API.Services.TrainerService
                 await dbContext.TrainerSettingConfigs.AddAsync(TrainerSettingConfig);
             }
 
+            GameEncoder gameEncoder = new();
+            List<byte> data = gameEncoder.Encode(MoveTree);
+
+            if (Game.EncodedGameData != null)
+            {
+                Game.EncodedGameData.SetData(data);
+                dbContext.Update(Game.EncodedGameData);
+            }
+            else
+            {
+                Game.EncodedGameData = new(Game.Id, data);
+                await dbContext.EncodedGameDatas.AddAsync(Game.EncodedGameData);
+            }
+
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
@@ -315,9 +329,6 @@ namespace Gosuji.API.Services.TrainerService
             Game.TrainerSettingConfigId = TrainerSettingConfig.Id;
 
             await SetGameName(dbContext);
-
-            GameEncoder gameEncoder = new();
-            //Game.EncodedData = gameEncoder.Encode(MoveTree);
 
             if (isExistingGame)
             {

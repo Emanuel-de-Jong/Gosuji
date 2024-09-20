@@ -7,11 +7,11 @@ namespace Gosuji.API.Helpers
         private List<byte> data = [];
         private int nodeId = 0;
 
-        public byte[] Encode(MoveTree tree)
+        public List<byte> Encode(MoveTree tree)
         {
             EncodeLoop(tree.RootNode);
 
-            return data.ToArray();
+            return data;
         }
 
         public void EncodeLoop(MoveNode node)
