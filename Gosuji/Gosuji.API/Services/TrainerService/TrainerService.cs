@@ -11,6 +11,9 @@ namespace Gosuji.API.Services.TrainerService
 {
     public class TrainerService : IAsyncDisposable
     {
+        public const int MIDDLE_GAME_MOVE_NUMBER = 41;
+        public const int END_GAME_MOVE_NUMBER = 121;
+
         public string UserId { get; set; }
         private KataGoPool pool;
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
@@ -266,7 +269,75 @@ namespace Gosuji.API.Services.TrainerService
 
         private async Task Save()
         {
+            bool hasPlayerResults = false;
+            foreach (MoveNode node in MoveTree.AllNodes)
+            {
+                if (node.PlayerResult != null)
+                {
+                    hasPlayerResults = true;
+                    break;
+                }
+            }
 
+            if (!hasPlayerResults)
+            {
+                return;
+            }
+
+            if (Game.Id == null)
+            {
+                Game.GenerateId();
+            }
+
+            Game.ProductVersion = await SG.GetVersion();
+            Game.KataGoVersionId = (await pool.GetVersion()).Id;
+
+            SetGameStats();
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+
+
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+        }
+
+        private void SetGameStats()
+        {
+            MoveNode parentNode = MoveTree.MainBranch != null ? MoveTree.MainBranch : MoveTree.CurrentNode;
+            List<MoveNode> nodes = [];
+            while (parentNode != null)
+            {
+                nodes.Add(parentNode);
+                parentNode = parentNode.Parent;
+            }
+
+            nodes.Reverse();
+
+
+            Game.GameStat = Game.GameStat ?? new();
+            Game.GameStat.From = 0;
+            Game.GameStat.To = nodes.Last().Depth;
+
+            foreach (MoveNode node in nodes)
+            {
+                EPlayerResult? playerResult = node.PlayerResult;
+                if (playerResult == null)
+                {
+                    continue;
+                }
+
+                Game.GameStat.Total++;
+                if (playerResult == EPlayerResult.PERFECT)
+                {
+                    Game.GameStat.Perfect++;
+                    Game.GameStat.Right++;
+                }
+                else if (playerResult == EPlayerResult.RIGHT)
+                {
+                    Game.GameStat.Right++;
+                }
+            }
         }
 
         private async Task StartKataGo()
