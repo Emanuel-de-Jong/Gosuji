@@ -34,15 +34,10 @@ namespace Gosuji.Client.Data
 
         public GameStat() { }
 
-        public GameStat(long? id, int from, int to)
+        public GameStat(int from, int to)
         {
-            if (id.HasValue)
-            {
-                Id = id.Value;
-            }
-
-            this.From = from;
-            this.To = to;
+            From = from;
+            To = to;
         }
 
         public bool Equal(GameStat other)
