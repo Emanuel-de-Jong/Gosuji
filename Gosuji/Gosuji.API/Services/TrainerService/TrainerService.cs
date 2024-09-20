@@ -156,6 +156,12 @@ namespace Gosuji.API.Services.TrainerService
             return suggestions;
         }
 
+        public async Task<MoveSuggestionList> AnalyzeAfterJump(Move[] moves, EMoveType moveType, EMoveColor color, bool isMainBranch)
+        {
+            await SyncBoard(moves);
+            return await Analyze(moveType, color, isMainBranch);
+        }
+
         private void CalcPlayIndex(MoveSuggestionList suggestions, EMoveType moveType)
         {
             if (moveType == EMoveType.PLAYER)

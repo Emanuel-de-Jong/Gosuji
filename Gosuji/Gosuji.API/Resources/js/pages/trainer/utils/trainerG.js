@@ -58,6 +58,20 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.isPassed = false;
 };
 
+trainerG.isMainBranch = function () {
+    let isMainBranch = false;
+    const highestNode = trainerG.moveTypeHistory.getHighestX();
+    const currentNode = trainerG.board.get();
+    if (highestNode != null && (
+        highestNode.navTreeX != currentNode.navTreeX ||
+        highestNode.navTreeY != currentNode.navTreeY)
+    ) {
+        isMainBranch = true;
+    }
+
+    return isMainBranch;
+};
+
 trainerG.getGameColor = function () {
     let color = trainerG.color;
 
@@ -113,6 +127,11 @@ trainerG.hideLoadAnimation = function() {
 
 trainerG.analyze = async function (moveType, color) {
     trainerG.suggestions = await kataGo.analyze(moveType, color);
+    await trainerG.pass(trainerG.suggestions.passSuggestion);
+};
+
+trainerG.analyzeAfterJump = async function (moveType, color) {
+    trainerG.suggestions = await kataGo.analyzeAfterJump(moveType, color);
     await trainerG.pass(trainerG.suggestions.passSuggestion);
 };
 

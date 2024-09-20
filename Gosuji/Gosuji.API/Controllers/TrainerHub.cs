@@ -86,6 +86,11 @@ namespace Gosuji.API.Controllers
             return OkData(await trainerServices[Context.ConnectionId].Analyze(moveType, color, isMainBranch));
         }
 
+        public async Task<HubResponse> AnalyzeAfterJump(Move[] moves, EMoveType moveType, EMoveColor color, bool isMainBranch)
+        {
+            return OkData(await trainerServices[Context.ConnectionId].AnalyzeAfterJump(moves, moveType, color, isMainBranch));
+        }
+
         public async Task<HubResponse> PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
             int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {

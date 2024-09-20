@@ -57,17 +57,24 @@ kataGo.analyze = async function (
     moveType = trainerG.MOVE_TYPE.PLAYER,
     color = trainerG.board.getNextColor()
 ) {
-    let isMainBranch = false;
-    const highestNode = trainerG.moveTypeHistory.getHighestX();
-    const currentNode = trainerG.board.get();
-    if (highestNode != null && (
-        highestNode.navTreeX != currentNode.navTreeX ||
-        highestNode.navTreeY != currentNode.navTreeY)
-    ) {
-        isMainBranch = true;
-    }
+    let isMainBranch = trainerG.isMainBranch();
 
     let kataGoSuggestions = await kataGo.sendRequest("Analyze", moveType, color, isMainBranch);
+    if (kataGoSuggestions == null) {
+        return;
+    }
+
+    return MoveSuggestionList.fromKataGo(kataGoSuggestions);
+};
+
+kataGo.analyzeAfterJump = async function (
+    moveType = trainerG.MOVE_TYPE.PLAYER,
+    color = trainerG.board.getNextColor()
+) {
+    let isMainBranch = trainerG.isMainBranch();
+    let moves = trainerG.board.getMoves();
+
+    let kataGoSuggestions = await kataGo.sendRequest("AnalyzeAfterJump", moves, moveType, color, isMainBranch);
     if (kataGoSuggestions == null) {
         return;
     }
