@@ -418,9 +418,18 @@ namespace Gosuji.API.Services.TrainerService
             }
 
             await dbContext.GameStats.AddAsync(Game.GameStat);
-            await dbContext.GameStats.AddAsync(Game.OpeningStat);
-            await dbContext.GameStats.AddAsync(Game.MidgameStat);
-            await dbContext.GameStats.AddAsync(Game.EndgameStat);
+            if (Game.OpeningStat.Total != 0)
+            {
+                await dbContext.GameStats.AddAsync(Game.OpeningStat);
+            }
+            if (Game.MidgameStat.Total != 0)
+            {
+                await dbContext.GameStats.AddAsync(Game.MidgameStat);
+            }
+            if (Game.EndgameStat.Total != 0)
+            {
+                await dbContext.GameStats.AddAsync(Game.EndgameStat);
+            }
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();

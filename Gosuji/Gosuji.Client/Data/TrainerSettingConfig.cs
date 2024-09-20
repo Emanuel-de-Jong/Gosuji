@@ -8,7 +8,8 @@ namespace Gosuji.Client.Data
 {
     public class TrainerSettingConfig : DbModel
     {
-        [Key] public long Id { get; set; }
+        [Key]
+        public long Id { get; set; }
 
         [MaxLength(150)]
         public string? Hash { get; set; }

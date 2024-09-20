@@ -10,7 +10,9 @@ namespace Gosuji.Client.Data
         [NotMapped]
         public const string MODEL = "kata1-b28c512nbt-s7332806912-d4357057652";
 
-        [Key] public long Id { get; set; }
+        [Key]
+        public long Id { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string Version { get; set; }

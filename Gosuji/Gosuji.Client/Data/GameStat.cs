@@ -10,7 +10,9 @@ namespace Gosuji.Client.Data
         public static Color PERFECT_COLOR = new(0, 200, 0);
 
 
-        [Key] public long Id { get; set; }
+        [Key]
+        public long Id { get; set; }
+
         [Required]
         [Range(0, 500)]
         public int From { get; set; }

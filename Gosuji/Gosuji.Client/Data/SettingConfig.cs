@@ -5,7 +5,9 @@ namespace Gosuji.Client.Data
 {
     public class SettingConfig : DbModel
     {
-        [Key] public string Id { get; set; }
+        [Key]
+        public string Id { get; set; }
+
         [Required]
         public string LanguageId { get; set; } = ELanguage.en.ToString();
         public Language? Language { get; set; }

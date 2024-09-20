@@ -5,7 +5,8 @@ namespace Gosuji.Client.Data
 {
     public class Preset : DbModel
     {
-        [Key] public long Id { get; set; }
+        [Key]
+        public long Id { get; set; }
 
         [StringLength(36)]
         public string? UserId { get; set; }

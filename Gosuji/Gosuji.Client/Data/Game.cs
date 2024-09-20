@@ -8,7 +8,8 @@ namespace Gosuji.Client.Data
         public const string DEFAULT_NAME = "Game";
 
         [StringLength(12)]
-        [Key] public string Id { get; set; }
+        [Key]
+        public string Id { get; set; }
 
         [StringLength(36)]
         public string? UserId { get; set; }

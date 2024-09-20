@@ -5,7 +5,8 @@ namespace Gosuji.API.Data
 {
     public class PendingUserChange : DbModel
     {
-        [Key] public string Id { get; set; }
+        [Key]
+        public string Id { get; set; }
         public User? User { get; set; }
 
         public string? UserName { get; set; }

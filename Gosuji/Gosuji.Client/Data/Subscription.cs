@@ -13,7 +13,9 @@ namespace Gosuji.Client.Data
 
     public class Subscription : DbModel
     {
-        [Key] public long Id { get; set; }
+        [Key]
+        public long Id { get; set; }
+
         [Required]
         [StringLength(36)]
         public string UserId { get; set; }
