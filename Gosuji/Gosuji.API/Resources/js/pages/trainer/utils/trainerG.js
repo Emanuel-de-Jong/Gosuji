@@ -58,13 +58,17 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.isPassed = false;
 };
 
+trainerG.getMainBranch = function () {
+    return trainerG.moveTypeHistory.getHighestX();
+};
+
 trainerG.isMainBranch = function () {
     let isMainBranch = false;
-    const highestNode = trainerG.moveTypeHistory.getHighestX();
+    const mainBranchNode = trainerG.getMainBranch();
     const currentNode = trainerG.board.get();
-    if (highestNode != null && (
-        highestNode.navTreeX != currentNode.navTreeX ||
-        highestNode.navTreeY != currentNode.navTreeY)
+    if (mainBranchNode != null && (
+        mainBranchNode.navTreeX != currentNode.navTreeX ||
+        mainBranchNode.navTreeY != currentNode.navTreeY)
     ) {
         isMainBranch = true;
     }
@@ -75,7 +79,7 @@ trainerG.isMainBranch = function () {
 trainerG.getGameColor = function () {
     let color = trainerG.color;
 
-    let node = trainerG.moveTypeHistory.getHighestX();
+    let node = trainerG.getMainBranch();
     if (node == null) {
         return color;
     }
@@ -155,13 +159,7 @@ trainerG.pass = async function (suggestion) {
 
     trainerG.board.pass();
 
-    // Only count result of longest branch
-    const highestNode = trainerG.moveTypeHistory.getHighestX();
-    const currentNode = trainerG.board.get();
-    if (highestNode != null && (
-        highestNode.navTreeX != currentNode.navTreeX ||
-        highestNode.navTreeY != currentNode.navTreeY)
-    ) {
+    if (!trainerG.isMainBranch()) {
         return;
     }
 
