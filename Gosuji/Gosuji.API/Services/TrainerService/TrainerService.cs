@@ -321,7 +321,7 @@ namespace Gosuji.API.Services.TrainerService
 
             Game.TrainerSettingConfigId = TrainerSettingConfig.Id;
 
-            await dbContext.Games.AddAsync(Game);
+            dbContext.Games.Update(Game);
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
