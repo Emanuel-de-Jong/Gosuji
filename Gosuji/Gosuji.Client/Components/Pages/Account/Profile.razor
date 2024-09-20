@@ -50,7 +50,7 @@
                                     <td>@(game.Result != null ? "Yes" : "No")</td>
                                     <td>@game.Boardsize</td>
                                     <td>@game.Handicap</td>
-                                    <td>@G.ColorToFullName((EMoveColor)game.Color)</td>
+                                    <td>@G.ColorToFullName(game.Color)</td>
                                     <td>@game.GameStat?.From</td>
                                     <td>@game.GameStat?.Total</td>
                                     <td>@(game.GameStat?.RightPercent)%</td>

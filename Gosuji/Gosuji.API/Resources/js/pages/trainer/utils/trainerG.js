@@ -75,32 +75,6 @@ trainerG.isMainBranch = function () {
     return isMainBranch;
 };
 
-trainerG.getGameColor = function () {
-    let color = trainerG.color;
-
-    let node = trainerG.getMainBranch();
-    if (node == null) {
-        return color;
-    }
-
-    let moveType;
-    while (node) {
-        const tempMoveType = trainerG.moveTypeHistory.get(node);
-        if (tempMoveType != null && tempMoveType == trainerG.MOVE_TYPE.PLAYER) {
-            moveType = tempMoveType;
-            break;
-        }
-
-        node = node.parent;
-    }
-    if (moveType == null) {
-        return color;
-    }
-
-    color = node.move.color;
-    return color;
-};
-
 trainerG.setPhase = function (phase) {
     trainerG.phase = phase;
     trainerG.phaseChangedEvent.dispatch({ phase: phase });

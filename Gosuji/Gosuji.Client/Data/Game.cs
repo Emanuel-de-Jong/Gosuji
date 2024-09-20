@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
 {
@@ -26,7 +27,7 @@ namespace Gosuji.Client.Data
         public GameStat? EndgameStat { get; set; }
 
         public string Name { get; set; }
-        public int Color { get; set; }
+        public EMoveColor Color { get; set; } = EMoveColor.RANDOM;
         public double? Result { get; set; }
         public string ProductVersion { get; set; }
         public bool IsDeleted { get; set; }

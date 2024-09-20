@@ -295,6 +295,8 @@ namespace Gosuji.API.Services.TrainerService
             Game.ProductVersion = await SG.GetVersion();
             Game.KataGoVersionId = (await pool.GetVersion()).Id;
 
+            SetMainBranchColor();
+
             await AddGameStats();
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -325,60 +327,35 @@ namespace Gosuji.API.Services.TrainerService
             await dbContext.DisposeAsync();
         }
 
-        private async Task SetGameName()
+        private void SetMainBranchColor()
         {
-            if (Game.Name != null)
+            if (Game.Color != EMoveColor.RANDOM)
             {
                 return;
             }
 
-            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-
-            if (string.IsNullOrEmpty(name))
+            MoveNode parentNode = MoveTree.MainBranch ?? MoveTree.CurrentNode;
+            while (parentNode != null)
             {
-                Preset? preset = await dbContext.Presets
-                    .Where(p => p.UserId == null || p.UserId == UserId)
-                    .Where(p => p.TrainerSettingConfigId == TrainerSettingConfig.Id)
-                    .FirstOrDefaultAsync();
-                if (preset != null)
+                if (parentNode.MoveType == EMoveType.PLAYER)
                 {
-                    name = preset.Name;
+                    Game.Color = parentNode.Move.Color.Value;
+                    return;
                 }
-                else
-                {
-                    name = Game.DEFAULT_NAME;
-                }
+
+                parentNode = parentNode.Parent;
             }
 
-            List<string> existingNames = await dbContext.Games
-                .Where(g => g.UserId == UserId)
-                .Select(g => g.Name)
-                .Where(n => n.StartsWith(name))
-                .ToListAsync();
-
-            await dbContext.DisposeAsync();
-
-            if (existingNames.Count != 0)
+            Game.Color = EMoveColor.BLACK;
+            if (TrainerSettingConfig.ColorType != EMoveColor.RANDOM)
             {
-                int i = 2;
-                while (name == null)
-                {
-                    string name_attempt = $"{Game.Name} ({i})";
-                    if (!existingNames.Contains(name_attempt))
-                    {
-                        name = name_attempt;
-                    }
-
-                    i++;
-                }
+                Game.Color = TrainerSettingConfig.ColorType;
             }
-
-            Game.Name = name;
         }
 
         private async Task AddGameStats()
         {
-            MoveNode parentNode = MoveTree.MainBranch != null ? MoveTree.MainBranch : MoveTree.CurrentNode;
+            MoveNode parentNode = MoveTree.MainBranch ?? MoveTree.CurrentNode;
             List<MoveNode> nodes = [];
             while (parentNode != null)
             {
@@ -486,6 +463,57 @@ namespace Gosuji.API.Services.TrainerService
             }
         }
 
+        private async Task SetGameName()
+        {
+            if (Game.Name != null)
+            {
+                return;
+            }
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+            if (string.IsNullOrEmpty(name))
+            {
+                Preset? preset = await dbContext.Presets
+                    .Where(p => p.UserId == null || p.UserId == UserId)
+                    .Where(p => p.TrainerSettingConfigId == TrainerSettingConfig.Id)
+                    .FirstOrDefaultAsync();
+                if (preset != null)
+                {
+                    name = preset.Name;
+                }
+                else
+                {
+                    name = Game.DEFAULT_NAME;
+                }
+            }
+
+            List<string> existingNames = await dbContext.Games
+                .Where(g => g.UserId == UserId)
+                .Select(g => g.Name)
+                .Where(n => n.StartsWith(name))
+                .ToListAsync();
+
+            await dbContext.DisposeAsync();
+
+            if (existingNames.Count != 0)
+            {
+                int i = 2;
+                while (name == null)
+                {
+                    string name_attempt = $"{Game.Name} ({i})";
+                    if (!existingNames.Contains(name_attempt))
+                    {
+                        name = name_attempt;
+                    }
+
+                    i++;
+                }
+            }
+
+            Game.Name = name;
+        }
+
         private async Task StartKataGo()
         {
             await (await GetKataGo()).Restart();
@@ -510,7 +538,7 @@ namespace Gosuji.API.Services.TrainerService
         public async ValueTask DisposeAsync()
         {
             await pool.Return(UserId);
-            await Save();
+            //await Save();
         }
     }
 }

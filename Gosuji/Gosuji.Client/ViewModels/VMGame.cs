@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Models;
 
 namespace Gosuji.Client.ViewModels
 {
@@ -15,7 +16,7 @@ namespace Gosuji.Client.ViewModels
         public int PerfectTopStreak { get; set; }
         public int Boardsize { get; set; }
         public int Handicap { get; set; }
-        public int Color { get; set; }
+        public EMoveColor Color { get; set; }
         public bool IsThirdPartySGF { get; set; }
         public DateTimeOffset CreateDate { get; set; }
         public DateTimeOffset ModifyDate { get; set; }

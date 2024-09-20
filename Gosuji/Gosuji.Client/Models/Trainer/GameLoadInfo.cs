@@ -5,7 +5,7 @@ namespace Gosuji.Client.Models.Trainer
     public class GameLoadInfo
     {
         public string Name { get; set; }
-        public int Color { get; set; }
+        public EMoveColor Color { get; set; }
         public double? Result { get; set; }
         public int PrevNodeX { get; set; }
         public int PrevNodeY { get; set; }
