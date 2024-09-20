@@ -25,29 +25,31 @@ namespace Gosuji.API.Helpers
 
         private void EncodeNode(MoveNode node)
         {
-            data.AddRange(BitConverter.GetBytes(nodeId));
-            data.AddRange(BitConverter.GetBytes((int)EDataTypes.Node));
+            nodeId++;
 
-            data.AddRange(BitConverter.GetBytes(node.Move.X.Value));
-            data.AddRange(BitConverter.GetBytes(node.Move.Y.Value));
+            data.Add((byte)nodeId);
+            data.Add((byte)EDataTypes.Node);
+
+            data.Add((byte)node.Move.X.Value);
+            data.Add((byte)node.Move.Y.Value);
 
             if (node.MoveType != null)
             {
-                data.AddRange(BitConverter.GetBytes((int)EDataTypes.MoveType));
-                data.AddRange(BitConverter.GetBytes((int)node.MoveType));
+                data.Add((byte)EDataTypes.MoveType);
+                data.Add((byte)node.MoveType);
             }
 
             if (node.ChosenNotPlayedCoord != null)
             {
-                data.AddRange(BitConverter.GetBytes((int)EDataTypes.ChosenNotPlayedCoord));
-                data.AddRange(BitConverter.GetBytes(node.ChosenNotPlayedCoord.X));
-                data.AddRange(BitConverter.GetBytes(node.ChosenNotPlayedCoord.Y));
+                data.Add((byte)EDataTypes.ChosenNotPlayedCoord);
+                data.Add((byte)node.ChosenNotPlayedCoord.X);
+                data.Add((byte)node.ChosenNotPlayedCoord.Y);
             }
 
             if (node.Result != null)
             {
-                data.AddRange(BitConverter.GetBytes((int)EDataTypes.Result));
-                data.AddRange(BitConverter.GetBytes(node.Result.Value));
+                data.Add((byte)EDataTypes.Result);
+                data.AddRange(BitConverter.GetBytes((float)node.Result.Value));
             }
 
             EncodeSuggestions(node.Suggestions);
@@ -60,34 +62,32 @@ namespace Gosuji.API.Helpers
                 return;
             }
 
-            data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.Suggestions));
+            data.Add((byte)ESuggestionsField.Suggestions);
+
             foreach (MoveSuggestion suggestion in suggestions.Suggestions)
             {
-                data.AddRange(BitConverter.GetBytes(suggestion.Score.Winrate));
-                data.AddRange(BitConverter.GetBytes(suggestion.Score.ScoreLead));
+                data.Add((byte)(suggestion.Score.Winrate / 100.0));
             }
 
             if (suggestions.AnalyzeMoveSuggestion != null)
             {
-                data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.AnalyzeMoveSuggestion));
-                data.AddRange(BitConverter.GetBytes(suggestions.AnalyzeMoveSuggestion.Score.Winrate));
-                data.AddRange(BitConverter.GetBytes(suggestions.AnalyzeMoveSuggestion.Score.ScoreLead));
+                data.Add((byte)ESuggestionsField.AnalyzeMoveSuggestion);
+                data.Add((byte)(suggestions.AnalyzeMoveSuggestion.Score.Winrate / 100.0));
             }
 
             if (suggestions.PassSuggestion != null)
             {
-                data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.PassSuggestion));
-                data.AddRange(BitConverter.GetBytes(suggestions.PassSuggestion.Score.Winrate));
-                data.AddRange(BitConverter.GetBytes(suggestions.PassSuggestion.Score.ScoreLead));
+                data.Add((byte)ESuggestionsField.PassSuggestion);
+                data.Add((byte)(suggestions.PassSuggestion.Score.Winrate / 100.0));
             }
 
-            data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.Visits));
+            data.Add((byte)ESuggestionsField.Visits);
             data.AddRange(BitConverter.GetBytes(suggestions.Visits));
 
             if (suggestions.PlayIndex != null)
             {
-                data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.PlayIndex));
-                data.AddRange(BitConverter.GetBytes(suggestions.PlayIndex.Value));
+                data.Add((byte)ESuggestionsField.PlayIndex);
+                data.Add((byte)suggestions.PlayIndex.Value);
             }
         }
     }
