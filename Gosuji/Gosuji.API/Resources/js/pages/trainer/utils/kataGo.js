@@ -36,7 +36,11 @@ kataGo.start = async function () {
 };
 
 kataGo.initTrainerConnection = async function () {
-    return await kataGo.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty);
+    let name = null;
+    if (sgf.isThirdParty) {
+        name = "MySGF";
+    }
+    return await kataGo.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty, name);
 };
 
 kataGo.analyze = async function (

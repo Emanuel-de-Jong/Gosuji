@@ -4,6 +4,8 @@ namespace Gosuji.Client.Data
 {
     public class Game : DbModel
     {
+        public const string DEFAULT_NAME = "Game";
+
         [StringLength(12)]
         [Key] public string Id { get; set; }
 

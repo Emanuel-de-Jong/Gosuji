@@ -22,12 +22,12 @@ namespace Gosuji.Client.Services.Trainer
                 HubConnection.InvokeAsync<HubResponse>(uri));
         }
 
-        public async Task<APIResponse> Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF)
+        public async Task<APIResponse> Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF, string? name)
         {
             string uri = "Init";
             return await HubResponseHandler.TryCatch(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                trainerSettingConfig, isThirdPartySGF));
+                trainerSettingConfig, isThirdPartySGF, name));
         }
 
         public async Task<APIResponse> UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)

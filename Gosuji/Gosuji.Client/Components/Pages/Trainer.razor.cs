@@ -181,7 +181,7 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task<bool> InitTrainerConnection(string sgfRuleset, double sgfKomi, bool isThirdParty)
+        public async Task<bool> InitTrainerConnection(string sgfRuleset, double sgfKomi, bool isThirdParty, string? name)
         {
             this.sgfRuleset = sgfRuleset;
             this.sgfKomi = sgfKomi;
@@ -190,7 +190,7 @@ namespace Gosuji.Client.Components.Pages
             tscWithSGFSettings.SGFRuleset = sgfRuleset;
             tscWithSGFSettings.SGFKomi = sgfKomi;
 
-            APIResponse response = await trainerConnection.Init(tscWithSGFSettings, isThirdParty);
+            APIResponse response = await trainerConnection.Init(tscWithSGFSettings, isThirdParty, name);
             if (G.StatusMessage.HandleAPIResponse(response)) return false;
 
             return true;

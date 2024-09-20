@@ -28,6 +28,7 @@ namespace Gosuji.API.Services.TrainerService
         private Random rnd = new();
         private bool isAnalyzing = false;
         private bool shouldBeImperfectSuggestion = false;
+        private string? name = null;
 
         public TrainerService(string userId, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
@@ -49,7 +50,7 @@ namespace Gosuji.API.Services.TrainerService
             return pool.UserHasInstance(UserId);
         }
 
-        public async Task Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF)
+        public async Task Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF, string? name)
         {
             // On restart
             if (KataGo != null)
@@ -59,6 +60,7 @@ namespace Gosuji.API.Services.TrainerService
 
             TrainerSettingConfig = trainerSettingConfig;
             Game.IsThirdPartySGF = isThirdPartySGF;
+            this.name = name ?? Game.Name;
 
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
 
@@ -311,6 +313,8 @@ namespace Gosuji.API.Services.TrainerService
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
+            await SetGameName();
+
             dbContext = await dbContextFactory.CreateDbContextAsync();
 
             Game.TrainerSettingConfigId = TrainerSettingConfig.Id;
@@ -319,6 +323,57 @@ namespace Gosuji.API.Services.TrainerService
 
             await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
+        }
+
+        private async Task SetGameName()
+        {
+            if (Game.Name != null)
+            {
+                return;
+            }
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+
+            if (string.IsNullOrEmpty(name))
+            {
+                Preset? preset = await dbContext.Presets
+                    .Where(p => p.UserId == null || p.UserId == UserId)
+                    .Where(p => p.TrainerSettingConfigId == TrainerSettingConfig.Id)
+                    .FirstOrDefaultAsync();
+                if (preset != null)
+                {
+                    name = preset.Name;
+                }
+                else
+                {
+                    name = Game.DEFAULT_NAME;
+                }
+            }
+
+            List<string> existingNames = await dbContext.Games
+                .Where(g => g.UserId == UserId)
+                .Select(g => g.Name)
+                .Where(n => n.StartsWith(name))
+                .ToListAsync();
+
+            await dbContext.DisposeAsync();
+
+            if (existingNames.Count != 0)
+            {
+                int i = 2;
+                while (name == null)
+                {
+                    string name_attempt = $"{Game.Name} ({i})";
+                    if (!existingNames.Contains(name_attempt))
+                    {
+                        name = name_attempt;
+                    }
+
+                    i++;
+                }
+            }
+
+            Game.Name = name;
         }
 
         private async Task AddGameStats()
