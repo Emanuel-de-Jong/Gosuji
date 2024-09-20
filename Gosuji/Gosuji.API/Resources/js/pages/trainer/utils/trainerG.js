@@ -120,7 +120,6 @@ trainerG.setColor = function (color = trainerG.board.getNextColor()) {
     }
 };
 
-
 trainerG.showLoadAnimation = function() {
     trainerG.loadAnimation.hidden = false;
 };
@@ -129,28 +128,7 @@ trainerG.hideLoadAnimation = function() {
     trainerG.loadAnimation.hidden = true;
 };
 
-trainerG.analyze = async function (moveType, color) {
-    trainerG.suggestions = await kataGo.analyze(moveType, color);
-    await trainerG.pass(trainerG.suggestions.passSuggestion);
-};
-
-trainerG.analyzeAfterJump = async function (moveType, color) {
-    trainerG.suggestions = await kataGo.analyzeAfterJump(moveType, color);
-    await trainerG.pass(trainerG.suggestions.passSuggestion);
-};
-
-trainerG.analyzeMove = async function (coord) {
-    let suggestion = await kataGo.analyzeMove(coord);
-
-    if (!trainerG.suggestions) {
-        trainerG.suggestions = new MoveSuggestionList();
-    }
-    trainerG.suggestions.analyzeMoveSuggestion = suggestion;
-
-    return suggestion;
-};
-
-trainerG.pass = async function (suggestion) {
+trainerG.pass = async function (suggestion = trainerG.suggestions.passSuggestion) {
     if (!suggestion) return;
 
     trainerG.isPassed = true;

@@ -1,3 +1,4 @@
+import { kataGo } from "./utils/kataGo";
 import { settings } from "./utils/settings";
 import { sgf } from "./utils/sgf";
 import { trainerG } from "./utils/trainerG";
@@ -43,7 +44,7 @@ selfplay.start = async function () {
     await gameplay.handleJumped();
 
     while (selfplay.isPlaying || trainerG.color != trainerG.board.getNextColor()) {
-        await trainerG.analyze(trainerG.MOVE_TYPE.SELFPLAY);
+        await kataGo.analyze(trainerG.MOVE_TYPE.SELFPLAY);
         if (trainerG.isPassed) {
             selfplay.button.click();
             return;

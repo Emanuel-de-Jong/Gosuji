@@ -50,7 +50,14 @@ kataGo.analyzeMove = async function (coord, color = trainerG.board.getNextColor(
         return;
     }
 
-    return MoveSuggestion.fromKataGo(kataGoSuggestion);
+    let suggestion = MoveSuggestion.fromKataGo(kataGoSuggestion);
+
+    if (!trainerG.suggestions) {
+        trainerG.suggestions = new MoveSuggestionList();
+    }
+    trainerG.suggestions.analyzeMoveSuggestion = suggestion;
+
+    return suggestion;
 };
 
 kataGo.analyze = async function (
@@ -64,7 +71,9 @@ kataGo.analyze = async function (
         return;
     }
 
-    return MoveSuggestionList.fromKataGo(kataGoSuggestions);
+    trainerG.suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
+    await trainerG.pass();
+    return trainerG.suggestions;
 };
 
 kataGo.analyzeAfterJump = async function (
@@ -79,7 +88,9 @@ kataGo.analyzeAfterJump = async function (
         return;
     }
 
-    return MoveSuggestionList.fromKataGo(kataGoSuggestions);
+    trainerG.suggestions = MoveSuggestionList.fromKataGo(kataGoSuggestions);
+    await trainerG.pass();
+    return trainerG.suggestions;
 };
 
 kataGo.playPlayer = async function (coord, color = trainerG.board.getColor()) {
@@ -92,6 +103,22 @@ kataGo.playPlayer = async function (coord, color = trainerG.board.getColor()) {
         stats.rightTopStreak,
         stats.perfectTopStreak
     );
+};
+
+kataGo.playForcedCorner = async function (coord, color = trainerG.board.getNextColor()) {
+    let kataGoSuggestion = await kataGo.sendRequest("PlayForcedCorner", new Move(color, coord));
+    if (kataGoSuggestion == null) {
+        return;
+    }
+    
+    let suggestion = MoveSuggestion.fromKataGo(kataGoSuggestion);
+
+    if (!trainerG.suggestions) {
+        trainerG.suggestions = new MoveSuggestionList();
+    }
+    trainerG.suggestions.analyzeMoveSuggestion = suggestion;
+
+    return suggestion;
 };
 
 kataGo.sendRequest = async function (uri, ...args) {

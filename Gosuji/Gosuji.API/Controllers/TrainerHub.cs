@@ -98,5 +98,10 @@ namespace Gosuji.API.Controllers
                 rightStreak, perfectStreak, rightTopStreak, perfectTopStreak);
             return Ok;
         }
+
+        public async Task<HubResponse> PlayForcedCorner(Move move)
+        {
+            return OkData(await trainerServices[Context.ConnectionId].PlayForcedCorner(move));
+        }
     }
 }

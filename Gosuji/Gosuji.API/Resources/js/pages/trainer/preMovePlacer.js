@@ -1,3 +1,4 @@
+import { kataGo } from "./utils/kataGo";
 import { settings } from "./utils/settings";
 import { sgf } from "./utils/sgf";
 import { trainerG } from "./utils/trainerG";
@@ -42,9 +43,6 @@ preMovePlacer.start = async function () {
             if (preMovePlacer.isStopped) break;
 
             if (cornerPlacer.shouldForce()) {
-                let suggestion = await cornerPlacer.getSuggestion();
-                if (preMovePlacer.isStopped) break;
-
                 await cornerPlacer.play(suggestion);
             } else {
                 await preMovePlacer.play();
@@ -70,7 +68,7 @@ preMovePlacer.stopButtonClickListener = function () {
 preMovePlacer.play = async function (isForced = false) {
     if (!isForced && preMovePlacer.isStopped) return;
 
-    await trainerG.analyze(trainerG.MOVE_TYPE.PRE);
+    await kataGo.analyze(trainerG.MOVE_TYPE.PRE);
     if (trainerG.isPassed) preMovePlacer.isStopped = true;
     if (!isForced && preMovePlacer.isStopped) return;
 

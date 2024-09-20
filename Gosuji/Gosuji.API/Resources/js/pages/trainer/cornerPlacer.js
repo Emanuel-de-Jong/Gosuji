@@ -1,3 +1,4 @@
+import { kataGo } from "./utils/kataGo";
 import { settings } from "./utils/settings";
 import { trainerG } from "./utils/trainerG";
 
@@ -51,13 +52,10 @@ cornerPlacer.shouldForce = function (isAfterDraw = false) {
     return false;
 };
 
-cornerPlacer.getSuggestion = async function () {
+cornerPlacer.play = async function () {
     let cornerOptions = cornerPlacer.getEmptyCorner();
     let coord = cornerPlacer.chooseCornerOption(cornerOptions);
-    return await trainerG.analyzeMove(coord);
-};
-
-cornerPlacer.play = async function (suggestion) {
+    let suggestion = await kataGo.playForcedCorner(coord);
     await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.FORCED_CORNER);
 };
 

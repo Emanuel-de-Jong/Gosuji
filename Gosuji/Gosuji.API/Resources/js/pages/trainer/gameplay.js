@@ -42,7 +42,7 @@ gameplay.start = function (isSuggestionNeeded = true) {
 
     if (trainerG.color == trainerG.board.getColor()) {
         if (!cornerPlacer.shouldForce()) {
-            gameplay.suggestionsPromise = trainerG.analyze(trainerG.MOVE_TYPE.OPPONENT);
+            gameplay.suggestionsPromise = kataGo.analyze(trainerG.MOVE_TYPE.OPPONENT);
         }
         gameplay.opponentTurn();
     } else {
@@ -54,7 +54,7 @@ gameplay.givePlayerControl = function (isSuggestionNeeded = true) {
     trainerG.board.editor.setTool("cross");
     gameplay.isPlayerControlling = true;
     if (isSuggestionNeeded) {
-        gameplay.suggestionsPromise = trainerG.analyze();
+        gameplay.suggestionsPromise = kataGo.analyze();
     }
 };
 
@@ -93,7 +93,7 @@ gameplay.playerTurn = async function (markupCoord) {
     await gameplay.handleJumped();
     if (playerTurnId != gameplay.playerTurnId) return;
 
-    if (!gameplay.suggestionsPromise) gameplay.suggestionsPromise = trainerG.analyze();
+    if (!gameplay.suggestionsPromise) gameplay.suggestionsPromise = kataGo.analyze();
 
     await gameplay.suggestionsPromise;
     if (trainerG.isPassed) return;
@@ -139,17 +139,17 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
             await trainerG.board.draw(markupCoord, "cross");
         }
     } else {
-        await trainerG.board.play(await trainerG.analyzeMove(markupCoord), trainerG.MOVE_TYPE.PLAYER);
+        await trainerG.board.play(await kataGo.analyzeMove(markupCoord), trainerG.MOVE_TYPE.PLAYER);
     }
 
     if (!cornerPlacer.shouldForce()) {
-        gameplay.suggestionsPromise = trainerG.analyze(trainerG.MOVE_TYPE.OPPONENT);
+        gameplay.suggestionsPromise = kataGo.analyze(trainerG.MOVE_TYPE.OPPONENT);
     }
 };
 
 gameplay.handleJumped = async function () {
     if (gameplay.isJumped) {
-        gameplay.suggestionsPromise = trainerG.analyzeAfterJump();
+        gameplay.suggestionsPromise = kataGo.analyzeAfterJump();
         gameplay.isJumped = false;
     }
 };
@@ -169,9 +169,6 @@ gameplay.opponentTurn = async function () {
     let opponentTurnId = ++gameplay.opponentTurnId;
 
     if (cornerPlacer.shouldForce()) {
-        let suggestion = await cornerPlacer.getSuggestion();
-        if (opponentTurnId != gameplay.opponentTurnId) return;
-
         await cornerPlacer.play(suggestion);
     } else {
         await gameplay.suggestionsPromise;
@@ -185,7 +182,7 @@ gameplay.opponentTurn = async function () {
         await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.OPPONENT);
     }
 
-    gameplay.suggestionsPromise = trainerG.analyze();
+    gameplay.suggestionsPromise = kataGo.analyze();
 
     if (gameplay.shouldShowOpponentOptions()) {
         trainerG.board.nextButton.disabled = false;

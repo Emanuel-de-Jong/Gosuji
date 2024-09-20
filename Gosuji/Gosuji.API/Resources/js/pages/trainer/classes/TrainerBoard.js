@@ -109,13 +109,7 @@ class TrainerBoard extends Board {
     }
 
     async play(suggestion, moveType, tool = "auto") {
-        let sendToServer = true;
-        if (moveType == trainerG.MOVE_TYPE.OPPONENT ||
-            moveType == trainerG.MOVE_TYPE.PRE ||
-            moveType == trainerG.MOVE_TYPE.SELFPLAY
-        ) {
-            sendToServer = false;
-        }
+        let sendToServer = moveType == trainerG.MOVE_TYPE.PLAYER;
 
         await this.draw(suggestion.coord, tool, sendToServer);
         scoreChart.update(suggestion);
@@ -126,7 +120,7 @@ class TrainerBoard extends Board {
         }
     }
 
-    async draw(coord, tool = "auto", sendToServer = true) {
+    async draw(coord, tool = "auto", sendToServer = false) {
         this.editor.setTool(tool);
         this.editor.click(coord.x, coord.y, false, false);
         this.editor.setTool("navOnly");

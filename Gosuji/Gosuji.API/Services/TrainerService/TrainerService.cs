@@ -210,25 +210,38 @@ namespace Gosuji.API.Services.TrainerService
             suggestions.PlayIndex = playIndex;
         }
 
-        public async Task PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
-            int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        private async Task Play(Move move, EMoveType moveType)
         {
             MoveTree.Add(move);
-            MoveTree.CurrentNode.PlayerResult = playerResult;
-            MoveTree.CurrentNode.MoveType = EMoveType.PLAYER;
-            MoveTree.CurrentNode.Parent.ChosenNotPlayedCoord = chosenNotPlayedCoord;
+            MoveTree.CurrentNode.MoveType = moveType;
 
             if (MoveTree.MainBranch == MoveTree.CurrentNode.Parent)
             {
                 MoveTree.MainBranch = MoveTree.CurrentNode;
             }
 
+            (await GetKataGo()).Play(move);
+        }
+
+        public async Task PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
+            int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
+        {
+            await Play(move, EMoveType.PLAYER);
+
+            MoveTree.CurrentNode.PlayerResult = playerResult;
+            MoveTree.CurrentNode.Parent.ChosenNotPlayedCoord = chosenNotPlayedCoord;
+
             Game.RightStreak = rightStreak;
             Game.PerfectStreak = perfectStreak;
             Game.RightTopStreak = rightTopStreak != null ? rightTopStreak.Value : Game.RightTopStreak;
             Game.PerfectTopStreak = perfectTopStreak != null ? perfectTopStreak.Value : Game.PerfectTopStreak;
+        }
 
-            (await GetKataGo()).Play(move);
+        public async Task<MoveSuggestion> PlayForcedCorner(Move move)
+        {
+            MoveSuggestion suggestion = await AnalyzeMove(move);
+            await Play(move, EMoveType.FORCED_CORNER);
+            return suggestion;
         }
 
         private async Task<KataGo> GetKataGo()

@@ -89,5 +89,15 @@ namespace Gosuji.Client.Services
                 rightStreak, perfectStreak, rightTopStreak, perfectTopStreak));
             return !G.StatusMessage.HandleAPIResponse(response);
         }
+
+        [JSInvokable]
+        public async Task<MoveSuggestion?> PlayForcedCorner(Move move)
+        {
+            string uri = "PlayForcedCorner";
+            APIResponse<MoveSuggestion> response = await HubResponseHandler.TryCatch<MoveSuggestion>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri,
+                move));
+            return G.StatusMessage.HandleAPIResponse(response) ? null : response.Data;
+        }
     }
 }
