@@ -48,6 +48,12 @@ namespace Gosuji.API.Services.TrainerService
 
         public async Task Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF)
         {
+            // On restart
+            if (KataGo != null)
+            {
+                await Save();
+            }
+
             TrainerSettingConfig = trainerSettingConfig;
             Game.IsThirdPartySGF = isThirdPartySGF;
 
@@ -112,10 +118,7 @@ namespace Gosuji.API.Services.TrainerService
                 if (suggestions.PlayIndex != null)
                 {
                     Move move = new(color, suggestions.Suggestions[suggestions.PlayIndex.Value].Coord);
-                    MoveTree.Add(move);
-                    MoveTree.CurrentNode.MoveType = moveType;
-
-                    (await GetKataGo()).Play(move);
+                    await Play(move, moveType);
                 }
             }
             else
@@ -261,6 +264,11 @@ namespace Gosuji.API.Services.TrainerService
             }
         }
 
+        private async Task Save()
+        {
+
+        }
+
         private async Task StartKataGo()
         {
             await (await GetKataGo()).Restart();
@@ -284,8 +292,8 @@ namespace Gosuji.API.Services.TrainerService
 
         public async ValueTask DisposeAsync()
         {
-            //await Save();
             await pool.Return(UserId);
+            await Save();
         }
     }
 }

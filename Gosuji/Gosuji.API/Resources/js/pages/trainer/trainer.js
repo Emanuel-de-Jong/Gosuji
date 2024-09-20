@@ -58,7 +58,7 @@ trainerPage.init = async function (
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
     trainerPage.newGameButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
-    await sgf.init(userName, gameLoadInfo);
+    sgf.init(userName, gameLoadInfo);
     sgfComment.init();
     scoreChart.init();
     await stats.init(gameLoadInfo);
@@ -80,10 +80,11 @@ trainerPage.clear = async function () {
 
     trainerPage.restartButton.disabled = true;
 
+    await selfplay.clear();
     trainerG.clear();
     settings.clear();
     trainerG.board.init();
-    await sgf.clear();
+    sgf.clear();
     sgfComment.clear();
     scoreChart.clear();
     await stats.clear();
@@ -92,7 +93,6 @@ trainerPage.clear = async function () {
     gameplay.clear();
     cornerPlacer.clear();
     preMovePlacer.clear();
-    await selfplay.clear();
     await kataGo.clear();
 };
 
@@ -119,8 +119,8 @@ trainerPage.restartButtonClickListener = async function () {
 };
 
 trainerPage.sgfLoadingListener = async function () {
-    preMovePlacer.clear();
     await selfplay.clear();
+    preMovePlacer.clear();
     trainerG.clear();
 };
 

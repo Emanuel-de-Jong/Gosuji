@@ -6,7 +6,7 @@ import { trainerG } from "./trainerG";
 let sgf = { id: "sgf" };
 
 
-sgf.init = async function (userName, gameLoadInfo) {
+sgf.init = function (userName, gameLoadInfo) {
     sgf.userName = userName;
 
     sgf.sgfLoadingEvent = new CEvent(sgf.sgfLoadingListener);
@@ -14,10 +14,10 @@ sgf.init = async function (userName, gameLoadInfo) {
 
     trainerG.board.editor.addListener(sgf.boardEditorListener);
 
-    await sgf.clear(gameLoadInfo);
+    sgf.clear(gameLoadInfo);
 };
 
-sgf.clear = async function (gameLoadInfo) {
+sgf.clear = function (gameLoadInfo) {
     sgf.isSGFLoading = false;
     sgf.isThirdParty = false;
 
