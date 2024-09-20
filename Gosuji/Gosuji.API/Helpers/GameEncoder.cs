@@ -1,4 +1,5 @@
 ﻿using Gosuji.API.Services.TrainerService;
+using Gosuji.Client.Models.Trainer;
 
 namespace Gosuji.API.Helpers
 {
@@ -36,18 +37,6 @@ namespace Gosuji.API.Helpers
                 data.AddRange(BitConverter.GetBytes((int)node.MoveType));
             }
 
-            if (node.Suggestions != null)
-            {
-                data.AddRange(BitConverter.GetBytes((int)EDataTypes.Suggestions));
-                //data.AddRange(BitConverter.GetBytes(node.Suggestions.Count));
-                //foreach (MoveSuggestion suggestion in node.Suggestions)
-                //{
-                //    data.AddRange(BitConverter.GetBytes(suggestion.Move.X));
-                //    data.AddRange(BitConverter.GetBytes(suggestion.Move.Y));
-                //    data.AddRange(BitConverter.GetBytes(suggestion.Score));
-                //}
-            }
-
             if (node.ChosenNotPlayedCoord != null)
             {
                 data.AddRange(BitConverter.GetBytes((int)EDataTypes.ChosenNotPlayedCoord));
@@ -58,18 +47,67 @@ namespace Gosuji.API.Helpers
             if (node.Result != null)
             {
                 data.AddRange(BitConverter.GetBytes((int)EDataTypes.Result));
-                data.AddRange(BitConverter.GetBytes((double)node.Result));
+                data.AddRange(BitConverter.GetBytes(node.Result.Value));
+            }
+
+            EncodeSuggestions(node.Suggestions);
+        }
+
+        private void EncodeSuggestions(MoveSuggestionList? suggestions)
+        {
+            if (suggestions == null)
+            {
+                return;
+            }
+
+            data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.Suggestions));
+            foreach (MoveSuggestion suggestion in suggestions.Suggestions)
+            {
+                data.AddRange(BitConverter.GetBytes(suggestion.Score.Winrate));
+                data.AddRange(BitConverter.GetBytes(suggestion.Score.ScoreLead));
+            }
+
+            if (suggestions.AnalyzeMoveSuggestion != null)
+            {
+                data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.AnalyzeMoveSuggestion));
+                data.AddRange(BitConverter.GetBytes(suggestions.AnalyzeMoveSuggestion.Score.Winrate));
+                data.AddRange(BitConverter.GetBytes(suggestions.AnalyzeMoveSuggestion.Score.ScoreLead));
+            }
+
+            if (suggestions.PassSuggestion != null)
+            {
+                data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.PassSuggestion));
+                data.AddRange(BitConverter.GetBytes(suggestions.PassSuggestion.Score.Winrate));
+                data.AddRange(BitConverter.GetBytes(suggestions.PassSuggestion.Score.ScoreLead));
+            }
+
+            data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.Visits));
+            data.AddRange(BitConverter.GetBytes(suggestions.Visits));
+
+            if (suggestions.PlayIndex != null)
+            {
+                data.AddRange(BitConverter.GetBytes((int)ESuggestionsField.PlayIndex));
+                data.AddRange(BitConverter.GetBytes(suggestions.PlayIndex.Value));
             }
         }
     }
 
     public enum EDataTypes
     {
-        Node = -1,
-        Move = 0,
-        MoveType = 1,
-        Suggestions = 2,
-        ChosenNotPlayedCoord = 3,
-        Result = 4,
+        Node,
+        Move,
+        MoveType,
+        ChosenNotPlayedCoord,
+        Result,
+        Suggestions,
+    }
+
+    public enum ESuggestionsField
+    {
+        Suggestions,
+        AnalyzeMoveSuggestion,
+        PassSuggestion,
+        Visits,
+        PlayIndex,
     }
 }
