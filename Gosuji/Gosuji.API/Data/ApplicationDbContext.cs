@@ -27,6 +27,7 @@ namespace Gosuji.API.Data
         public DbSet<UserState> UserStates { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<PendingUserChange> PendingUserChanges { get; set; }
+        public DbSet<EncodedGameData> EncodedGameDatas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -48,6 +49,10 @@ namespace Gosuji.API.Data
 
             builder.Entity<UserMoveCount>();
 
+            builder.Entity<Game>()
+                .HasOne(e => e.EncodedGameData)
+                .WithOne()
+                .HasForeignKey<EncodedGameData>(e => e.Id);
             builder.Entity<Game>()
                 .HasOne(e => e.GameStat)
                 .WithMany()
@@ -88,6 +93,8 @@ namespace Gosuji.API.Data
                 .HasOne(e => e.User)
                 .WithOne()
                 .HasForeignKey<PendingUserChange>(e => e.Id);
+
+            builder.Entity<EncodedGameData>();
         }
 
         public override EntityEntry<TEntity> Update<TEntity>(TEntity entity)

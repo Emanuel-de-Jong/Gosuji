@@ -18,6 +18,7 @@ namespace Gosuji.Client.Data
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
         public long KataGoVersionId { get; set; }
         public KataGoVersion? KataGoVersion { get; set; }
+        public EncodedGameData? EncodedGameData { get; set; }
         public long GameStatId { get; set; }
         public GameStat? GameStat { get; set; }
         public long? OpeningStatId { get; set; }
@@ -42,8 +43,6 @@ namespace Gosuji.Client.Data
         public int PerfectStreak { get; set; }
         public int RightTopStreak { get; set; }
         public int PerfectTopStreak { get; set; }
-
-        public byte[] EncodedData { get; set; }
 
         public void GenerateId()
         {

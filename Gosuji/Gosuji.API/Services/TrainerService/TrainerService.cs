@@ -317,7 +317,7 @@ namespace Gosuji.API.Services.TrainerService
             await SetGameName(dbContext);
 
             GameEncoder gameEncoder = new();
-            Game.EncodedData = gameEncoder.Encode(MoveTree);
+            //Game.EncodedData = gameEncoder.Encode(MoveTree);
 
             if (isExistingGame)
             {
