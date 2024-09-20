@@ -25,6 +25,21 @@ if (typeof g === "undefined") {
     };
 
 
+    g.getResultStr = function (result) {
+        if (result == 0) {
+            return "Draw";
+        }
+
+        let color = g.COLOR_TYPE.B;
+        if (result < 0) {
+            color = g.COLOR_TYPE.W;
+            result *= -1;
+        }
+
+        return g.colorNumToName(color) + "+" + result.toFixed(1);
+    };
+
+
     g.colorNumToName = function (num) {
         return num == g.COLOR_TYPE.W ? g.COLOR_NAME_TYPE.W : g.COLOR_NAME_TYPE.B;
     };

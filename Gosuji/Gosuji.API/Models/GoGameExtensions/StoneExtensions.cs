@@ -1,4 +1,6 @@
-﻿using IGOEnchi.GoGameLogic;
+﻿using Gosuji.Client;
+using Gosuji.Client.Models;
+using IGOEnchi.GoGameLogic;
 
 namespace Gosuji.API.Models.GoGameExtensions
 {
@@ -6,7 +8,7 @@ namespace Gosuji.API.Models.GoGameExtensions
     {
         public static string Print(this Stone stone)
         {
-            string output = stone.IsBlack ? "B" : "W";
+            string output = G.ColorToName(Move.ColorFromIGOEnchi(stone.IsBlack));
             if (stone.X == 20)
             {
                 output += "(PASS)";

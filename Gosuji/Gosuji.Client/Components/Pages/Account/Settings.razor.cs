@@ -28,9 +28,9 @@ namespace Gosuji.Client.Components.Pages.Account
         [Inject]
         private SettingConfigService settingConfigService { get; set; }
         [Inject]
-        private UserService userService { get; set; }
+        private UserAPI userAPI { get; set; }
         [Inject]
-        private DataService dataService { get; set; }
+        private DataAPI dataAPI { get; set; }
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
@@ -62,7 +62,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 Email = currentEmail
             };
 
-            APIResponse<Subscription?> response = await dataService.GetSubscription(true);
+            APIResponse<Subscription?> response = await dataAPI.GetSubscription(true);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             subscription = response.Data;
         }
@@ -93,7 +93,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 return;
             }
 
-            APIResponse response = await userService.UpdatePrivacy(vmUpdatePrivacy);
+            APIResponse response = await userAPI.UpdatePrivacy(vmUpdatePrivacy);
 
             if (response.IsSuccess)
             {
@@ -144,7 +144,7 @@ namespace Gosuji.Client.Components.Pages.Account
 
         private async Task DownloadPersonalData()
         {
-            APIResponse<byte[]> response = await userService.DownloadPersonalData();
+            APIResponse<byte[]> response = await userAPI.DownloadPersonalData();
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             byte[] fileBytes = response.Data;
 
@@ -162,7 +162,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 Password = deletePersonalDataInput.Password
             };
 
-            APIResponse response = await userService.DeletePersonalData(vmDeletePersonalData);
+            APIResponse response = await userAPI.DeletePersonalData(vmDeletePersonalData);
             if (response.IsSuccess)
             {
                 deletePersonalDataStatusMessage.SetMessage("A confirmation email has been sent. Please use the link in the email to confirm the deletion.");
@@ -186,7 +186,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 Email = currentEmail
             };
 
-            APIResponse response = await userService.ForgotPassword(vmForgotPassword);
+            APIResponse response = await userAPI.ForgotPassword(vmForgotPassword);
             if (response.IsSuccess)
             {
                 issuesStatusMessage.SetMessage("An email has been sent. Please use the link in the email to set a new password.");

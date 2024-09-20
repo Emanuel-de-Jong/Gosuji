@@ -16,7 +16,7 @@ namespace Gosuji.Client.Services
         private const string PRE_MOVE_SOUND_STORAGE_NAME = "isPreMoveStoneSound";
         private const string SELFPLAY_SOUND_STORAGE_NAME = "isSelfplayStoneSound";
 
-        private DataService dataService;
+        private DataAPI dataAPI;
         private IJSRuntime js;
         private NavigationManager navigationManager;
 
@@ -26,10 +26,11 @@ namespace Gosuji.Client.Services
 
         public bool IsUser { get; private set; } = false;
         public SettingConfig? SettingConfig { get; private set; }
+        public Subscription? Subscription { get; private set; }
 
-        public SettingConfigService(DataService dataService, IJSRuntime js, NavigationManager navigationManager)
+        public SettingConfigService(DataAPI dataAPI, IJSRuntime js, NavigationManager navigationManager)
         {
-            this.dataService = dataService;
+            this.dataAPI = dataAPI;
             this.js = js;
             this.navigationManager = navigationManager;
         }
@@ -59,8 +60,7 @@ namespace Gosuji.Client.Services
 
         public async Task<bool> FromDb()
         {
-            APIResponse<SettingConfig> settingConfigResponse = await dataService.GetSettingConfig();
-
+            APIResponse<SettingConfig> settingConfigResponse = await dataAPI.GetSettingConfig();
             if (G.StatusMessage.HandleAPIResponse(settingConfigResponse)) return false;
 
             if (settingConfigResponse.Data == null)
@@ -72,6 +72,11 @@ namespace Gosuji.Client.Services
             }
 
             SettingConfig = settingConfigResponse.Data;
+
+            APIResponse<Subscription?> subscriptionResponse = await dataAPI.GetSubscription();
+            if (G.StatusMessage.HandleAPIResponse(subscriptionResponse)) return false;
+            Subscription = subscriptionResponse.Data;
+
             IsUser = true;
             return true;
         }
@@ -82,7 +87,7 @@ namespace Gosuji.Client.Services
 
             if (IsUser)
             {
-                APIResponse response = await dataService.PutSettingConfig(SettingConfig);
+                APIResponse response = await dataAPI.PutSettingConfig(SettingConfig);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
             else

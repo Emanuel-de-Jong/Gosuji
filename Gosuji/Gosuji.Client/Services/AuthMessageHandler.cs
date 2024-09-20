@@ -10,13 +10,13 @@ namespace Gosuji.Client.Services
     public class AuthMessageHandler : DelegatingHandler
     {
         private IJSRuntime js;
-        private UserService userService;
+        private UserAPI userAPI;
         private JwtAuthenticationStateProvider authenticationStateProvider;
 
-        public AuthMessageHandler(IJSRuntime js, UserService userService, AuthenticationStateProvider authenticationStateProvider)
+        public AuthMessageHandler(IJSRuntime js, UserAPI userAPI, AuthenticationStateProvider authenticationStateProvider)
         {
             this.js = js;
-            this.userService = userService;
+            this.userAPI = userAPI;
             this.authenticationStateProvider = authenticationStateProvider as JwtAuthenticationStateProvider;
         }
 
@@ -37,7 +37,7 @@ namespace Gosuji.Client.Services
             HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
             if (response.StatusCode == HttpStatusCode.Unauthorized && authenticationStateProvider.Token != null)
             {
-                if (await userService.GetNewTokens())
+                if (await userAPI.GetNewTokens())
                 {
                     request.Headers.Authorization = new AuthenticationHeaderValue("bearer", authenticationStateProvider.Token);
                     response = await base.SendAsync(request, cancellationToken);

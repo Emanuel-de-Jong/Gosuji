@@ -14,7 +14,7 @@ namespace Gosuji.Client.Components.Pages.Account
         private InputModel input { get; set; } = new();
 
         [Inject]
-        private UserService userService { get; set; }
+        private UserAPI userAPI { get; set; }
         [Inject]
         private IJSRuntime js { get; set; }
 
@@ -34,7 +34,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 IsGetChangelogEmail = input.IsGetChangelogEmail
             };
 
-            APIResponse<string> response = await userService.Register(vmRegister);
+            APIResponse<string> response = await userAPI.Register(vmRegister);
             if (!statusMessage.HandleAPIResponse(response))
             {
                 input = new();

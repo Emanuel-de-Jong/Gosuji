@@ -4,13 +4,13 @@ using Gosuji.Client.ViewModels;
 
 namespace Gosuji.Client.Services
 {
-    public class DataService
+    public class DataAPI
     {
         private static string MAP_GROUP = "/api/Data";
 
         private HttpClient http;
 
-        public DataService(IHttpClientFactory httpClientFactory)
+        public DataAPI(IHttpClientFactory httpClientFactory)
         {
             http = httpClientFactory.CreateClient("Auth");
         }

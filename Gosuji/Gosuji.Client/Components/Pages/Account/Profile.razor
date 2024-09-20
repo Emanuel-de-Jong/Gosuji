@@ -1,5 +1,6 @@
 ﻿@page "/profile"
 
+@using Gosuji.Client.Models
 @using Gosuji.Client.ViewModels
 @using Gosuji.Client.Components.Shared
 
@@ -46,11 +47,11 @@
                             {
                                 <tr>
                                     <td><a href="/trainer/@game.Id">@game.Name</a></td>
-                                    <td>@game.IsFinished</td>
+                                    <td>@(game.Result != null ? "Yes" : "No")</td>
                                     <td>@game.Boardsize</td>
                                     <td>@game.Handicap</td>
-                                    <td>@G.ColorNumToFullName(game.Color)</td>
-                                    <td>@game.GameStat?.MoveNumber</td>
+                                    <td>@G.ColorToFullName(game.Color)</td>
+                                    <td>@game.GameStat?.From</td>
                                     <td>@game.GameStat?.Total</td>
                                     <td>@(game.GameStat?.RightPercent)%</td>
                                     <td>@game.RightTopStreak</td>

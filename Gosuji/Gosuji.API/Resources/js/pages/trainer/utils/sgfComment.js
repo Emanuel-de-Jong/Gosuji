@@ -17,7 +17,7 @@ sgfComment.clear = function () {
 
 
 sgfComment.setComment = function (moveType) {
-    if (moveType == trainerG.MOVE_TYPE.NONE) return;
+    if (moveType == null) return;
 
     let comment;
     switch (moveType) {
@@ -57,7 +57,7 @@ sgfComment.createInitComment = function () {
         "\nWrong move correction: " + settings.wrongMoveCorrection +
 
         "\n\nGame" +
-        "\nKomi change style: " + settings.komiChangeStyle +
+        "\nCustom komi: " + settings.customKomi +
         "\nKomi: " + sgf.komi +
         "\nRuleset: " + sgf.ruleset +
 

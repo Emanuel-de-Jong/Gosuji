@@ -1,21 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
 {
     public class Game : DbModel
     {
+        public const string DEFAULT_NAME = "Game";
+
         [StringLength(12)]
-        [Key] public string Id { get; set; }
+        [Key]
+        public string Id { get; set; }
 
         [StringLength(36)]
         public string? UserId { get; set; }
         [Required]
         public long TrainerSettingConfigId { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
-        [Required]
         public long KataGoVersionId { get; set; }
-        public KataGoVersion? kataGoVersion { get; set; }
-        public long? GameStatId { get; set; }
+        public KataGoVersion? KataGoVersion { get; set; }
+        public long GameStatId { get; set; }
         public GameStat? GameStat { get; set; }
         public long? OpeningStatId { get; set; }
         public GameStat? OpeningStat { get; set; }
@@ -24,53 +27,23 @@ namespace Gosuji.Client.Data
         public long? EndgameStatId { get; set; }
         public GameStat? EndgameStat { get; set; }
 
-        [Required]
-        [MaxLength(250)]
-        [MinLength(1)]
         public string Name { get; set; }
-        public int? Result { get; set; }
-        [Required]
-        [Range(0, 500)]
-        public int PrevNodeX { get; set; }
-        [Required]
-        [Range(0, 500)]
-        public int PrevNodeY { get; set; }
+        public EMoveColor Color { get; set; } = EMoveColor.RANDOM;
+        public double? Result { get; set; }
+        public string ProductVersion { get; set; }
+        public bool IsDeleted { get; set; }
+        public bool ShouldIgnoreStats { get; set; }
+        public bool IsThirdPartySGF { get; set; }
 
-        [Required]
-        public int RightStreak { get; set; }
-        [Required]
-        public int PerfectStreak { get; set; }
-        [Required]
-        public int RightTopStreak { get; set; }
-        [Required]
-        public int PerfectTopStreak { get; set; }
-
-        [Required]
-        [RegularExpression("^(9|13|19)$")]
-        public int Boardsize { get; set; }
-        [Required]
-        [Range(0, 9)]
-        public int Handicap { get; set; }
-        [Required]
-        [Range(-1, 1)]
-        public int Color { get; set; }
-        [Required]
-        [MaxLength(100)]
         public string Ruleset { get; set; }
-        [Required]
-        [Range(-150, 150)]
         public double Komi { get; set; }
 
-        [MaxLength(100_000)]
-        public string SGF { get; set; }
-        public byte[] PlayerResults { get; set; }
-        public byte[] Suggestions { get; set; }
-        public byte[] MoveTypes { get; set; }
-        public byte[] ChosenNotPlayedCoords { get; set; }
+        public int RightStreak { get; set; }
+        public int PerfectStreak { get; set; }
+        public int RightTopStreak { get; set; }
+        public int PerfectTopStreak { get; set; }
 
-        public bool IsFinished { get; set; }
-        public bool IsThirdPartySGF { get; set; }
-        public bool IsDeleted { get; set; }
+        public byte[] EncodedData { get; set; }
 
         public void GenerateId()
         {

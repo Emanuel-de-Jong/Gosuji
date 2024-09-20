@@ -5,8 +5,7 @@ import { Ratio } from "./classes/Ratio";
 import { Score } from "./classes/Score";
 import { TrainerBoard } from "./classes/TrainerBoard";
 
-import { db } from "./utils/db";
-import { katago } from "./utils/katago";
+import { kataGo } from "./utils/kataGo";
 import { scoreChart } from "./utils/scoreChart";
 import { ratioChart } from "./utils/ratioChart";
 import { settings } from "./utils/settings";
@@ -26,11 +25,12 @@ let trainerPage = { id: "trainerPage" };
 
 trainerPage.init = async function (
     trainerRef,
-    kataGoServiceRef,
+    trainerConnectionRef,
     userName,
     stoneVolume,
     isPreMoveStoneSound,
     isSelfplayStoneSound,
+    trainerSettingConfig,
     gameLoadInfo
 ) {
     trainerG.isLoadingServerData = gameLoadInfo != null;
@@ -41,7 +41,8 @@ trainerPage.init = async function (
 
     trainerG.init(trainerRef, gameLoadInfo);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
-    settings.init(gameLoadInfo);
+    await kataGo.init(trainerConnectionRef);
+    await settings.init(trainerSettingConfig, gameLoadInfo);
     trainerG.board.init(gameLoadInfo ? gameLoadInfo.boardsize : null,
         gameLoadInfo ? gameLoadInfo.handicap : null,
         gameLoadInfo ? gameLoadInfo.sgf : null,
@@ -57,7 +58,7 @@ trainerPage.init = async function (
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
     trainerPage.newGameButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
-    await sgf.init(userName, gameLoadInfo);
+    sgf.init(userName, gameLoadInfo);
     sgfComment.init();
     scoreChart.init();
     await stats.init(gameLoadInfo);
@@ -67,17 +68,11 @@ trainerPage.init = async function (
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
-    await katago.init(kataGoServiceRef);
-    db.init();
-
-    // console.log(stats.playerResultHistory);
-    // console.log(trainerG.suggestionsHistory);
-    // console.log(trainerG.moveTypeHistory);
-    // console.log(gameplay.chosenNotPlayedCoordHistory);
-    // console.log(scoreChart.history);
 
     sgf.sgfLoadingEvent.add(trainerPage.sgfLoadingListener);
     sgf.sgfLoadedEvent.add(trainerPage.sgfLoadedListener);
+
+    document.getElementById("settingsAccordion").hidden = false;
 };
 
 trainerPage.clear = async function () {
@@ -85,10 +80,11 @@ trainerPage.clear = async function () {
 
     trainerPage.restartButton.disabled = true;
 
+    await selfplay.clear();
     trainerG.clear();
     settings.clear();
     trainerG.board.init();
-    await sgf.clear();
+    sgf.clear();
     sgfComment.clear();
     scoreChart.clear();
     await stats.clear();
@@ -97,9 +93,7 @@ trainerPage.clear = async function () {
     gameplay.clear();
     cornerPlacer.clear();
     preMovePlacer.clear();
-    await selfplay.clear();
-    await katago.clear();
-    db.clear();
+    await kataGo.clear();
 };
 
 
@@ -109,7 +103,7 @@ trainerPage.start = async function () {
 
     settings.togglePreGameSettings();
 
-    await katago.start();
+    await kataGo.start();
     
     if (trainerG.isLoadingServerData || debug.testData) {
         trainerG.isLoadingServerData = false;
@@ -125,8 +119,8 @@ trainerPage.restartButtonClickListener = async function () {
 };
 
 trainerPage.sgfLoadingListener = async function () {
-    preMovePlacer.clear();
     await selfplay.clear();
+    preMovePlacer.clear();
     trainerG.clear();
 };
 
@@ -136,10 +130,7 @@ trainerPage.sgfLoadedListener = async function () {
     await stats.clear();
     ratioChart.clear();
     gameplay.clear();
-
-    await katago.clearBoard();
-    await katago.setBoardsize();
-    await katago.setHandicap();
+    await kataGo.clear();
 
     gameplay.start(false);
 };
@@ -155,11 +146,10 @@ export {
     // Score,
     // TrainerBoard,
 
-    db,
-    // katago,
+    // kataGo,
     // scoreChart,
     // ratioChart,
-    // settings,
+    settings,
     // sgf,
     // sgfComment,
     // stats,

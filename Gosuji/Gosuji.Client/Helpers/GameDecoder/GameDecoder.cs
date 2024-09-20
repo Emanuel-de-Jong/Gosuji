@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Models;
+using Gosuji.Client.Models.Trainer;
 
 namespace Gosuji.Client.Helpers.GameDecoder
 {
@@ -78,7 +79,7 @@ namespace Gosuji.Client.Helpers.GameDecoder
             }
         }
 
-        public static Dictionary<short, Dictionary<short, SuggestionList>> DecodeSuggestions(byte[] bytes)
+        public static Dictionary<short, Dictionary<short, MoveSuggestionList>> DecodeSuggestions(byte[] bytes)
         {
             try
             {
@@ -87,9 +88,9 @@ namespace Gosuji.Client.Helpers.GameDecoder
                     int suggestionLength = GetInt16(bytes, i);
                     i += 2;
 
-                    SuggestionList suggestionList = new();
+                    MoveSuggestionList suggestionList = new();
 
-                    (Suggestion, int) data;
+                    (MoveSuggestion, int) data;
                     if (suggestionLength == SuggestionsEncodeAnalyzeMoveIndicator)
                     {
                         data = DecodeSuggestion(bytes, i);
@@ -117,7 +118,7 @@ namespace Gosuji.Client.Helpers.GameDecoder
             }
         }
 
-        private static (Suggestion, int) DecodeSuggestion(byte[] bytes, int i)
+        private static (MoveSuggestion, int) DecodeSuggestion(byte[] bytes, int i)
         {
             int coordX = bytes[i++];
             int coordY = bytes[i++];
@@ -130,7 +131,7 @@ namespace Gosuji.Client.Helpers.GameDecoder
             int scoreLead = GetInt32(bytes, i);
             i += 4;
 
-            Suggestion suggestion = new()
+            MoveSuggestion suggestion = new()
             {
                 Coord = new Coord(coordX, coordY),
                 Visits = visits,

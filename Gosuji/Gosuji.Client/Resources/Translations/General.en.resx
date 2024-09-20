@@ -123,6 +123,18 @@
   <data name="Login_Title" xml:space="preserve">
     <value>Log in</value>
   </data>
+  <data name="TrainerSettingConfig_EForceOpponentCorners_BOTH" xml:space="preserve">
+    <value>Both</value>
+  </data>
+  <data name="TrainerSettingConfig_EForceOpponentCorners_FIRST" xml:space="preserve">
+    <value>First</value>
+  </data>
+  <data name="TrainerSettingConfig_EForceOpponentCorners_NONE" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="TrainerSettingConfig_EForceOpponentCorners_SECOND" xml:space="preserve">
+    <value>Second</value>
+  </data>
   <data name="TrainerSettingConfig_EHideOptions_ALWAYS" xml:space="preserve">
     <value>Always</value>
   </data>
@@ -134,5 +146,14 @@
   </data>
   <data name="TrainerSettingConfig_EHideOptions_RIGHT" xml:space="preserve">
     <value>Right move played</value>
+  </data>
+  <data name="TrainerSettingConfig_EMoveColor_BLACK" xml:space="preserve">
+    <value>Black</value>
+  </data>
+  <data name="TrainerSettingConfig_EMoveColor_RANDOM" xml:space="preserve">
+    <value>Random</value>
+  </data>
+  <data name="TrainerSettingConfig_EMoveColor_WHITE" xml:space="preserve">
+    <value>White</value>
   </data>
 </root>

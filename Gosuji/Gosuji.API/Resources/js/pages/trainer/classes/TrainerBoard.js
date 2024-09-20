@@ -1,5 +1,5 @@
 import { Move } from "./Move";
-import { katago } from "../utils/katago";
+import { kataGo } from "../utils/kataGo";
 import { ratioChart } from "../utils/ratioChart";
 import { scoreChart } from "../utils/scoreChart";
 import { settings } from "../utils/settings";
@@ -82,12 +82,10 @@ class TrainerBoard extends Board {
                     </div>
                 </div>`);
         this.finishedOverlay = document.getElementById("finishedOverlay");
-        document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
 
         document.querySelector("#trainerGame .besogo-control")
             .insertAdjacentHTML("beforeend", '<button class="bsg" id="deleteBranchBtn"><i class="fa-solid fa-trash"></i></button>');
         this.deleteBranchButton = document.getElementById("deleteBranchBtn");
-        this.deleteBranchButton.addEventListener("click", this.deleteBranch);
 
         this.navStartButton = document.querySelector('#trainerGame button[title="First node"]');
         this.navBranchStartButton = document.querySelector('#trainerGame button[title="Jump back"]');
@@ -103,13 +101,20 @@ class TrainerBoard extends Board {
 
         this.phaseChangedListener({ phase: trainerG.phase });
 
+        if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
+            document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
+            this.deleteBranchButton.addEventListener("click", this.deleteBranch);
+        }
+
         // console.log(besogo);
         // console.log(this.editor);
         // console.log(this.get());
     }
 
-    async play(suggestion, moveType = trainerG.MOVE_TYPE.NONE, tool = "auto") {
-        await this.draw(suggestion.coord, tool, true);
+    async play(suggestion, moveType, tool = "auto") {
+        let sendToServer = moveType == trainerG.MOVE_TYPE.PLAYER;
+
+        await this.draw(suggestion.coord, tool, sendToServer);
         scoreChart.update(suggestion);
         trainerG.moveTypeHistory.add(moveType);
 
@@ -118,7 +123,7 @@ class TrainerBoard extends Board {
         }
     }
 
-    async draw(coord, tool = "auto", sendToServer = true) {
+    async draw(coord, tool = "auto", sendToServer = false) {
         this.editor.setTool(tool);
         this.editor.click(coord.x, coord.y, false, false);
         this.editor.setTool("navOnly");
@@ -138,11 +143,11 @@ class TrainerBoard extends Board {
 
             if (sendToServer) {
                 if (tool == "auto") {
-                    await katago.play(coord);
+                    await kataGo.playPlayer(coord);
                 } else if (tool == "playB") {
-                    await katago.play(coord, g.COLOR_TYPE.B);
+                    await kataGo.playPlayer(coord, g.COLOR_TYPE.B);
                 } else if (tool == "playW") {
-                    await katago.play(coord, g.COLOR_TYPE.W);
+                    await kataGo.playPlayer(coord, g.COLOR_TYPE.W);
                 }
             }
         }
@@ -207,12 +212,6 @@ class TrainerBoard extends Board {
 
     setIsSelfplayStoneSound(isSelfplayStoneSound) {
         this.isSelfplayStoneSound = isSelfplayStoneSound;
-    }
-
-    async syncWithServer() {
-        await katago.clearBoard();
-        await katago.setHandicap();
-        await katago.playRange();
     }
 
     drawCoords(suggestionList) {

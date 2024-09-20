@@ -6,7 +6,9 @@ namespace Gosuji.API.Data
 {
     public class UserActivity : DbModel
     {
-        [Key] public long Id { get; set; }
+        [Key]
+        public long Id { get; set; }
+
         [Required]
         [StringLength(36)]
         public string UserId { get; set; }

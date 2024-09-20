@@ -1,6 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Models;
-using Gosuji.Client.Models.KataGo;
+using Gosuji.Client.Models.Trainer;
 using System.Diagnostics;
 using System.Text;
 
@@ -8,6 +8,7 @@ namespace Gosuji.API.Helpers
 {
     public class KataGo
     {
+        public bool IsPaused { get; set; } = false;
         public int TotalVisits { get; set; } = 0;
         public DateTimeOffset LastStartTime { get; set; }
 
@@ -16,14 +17,15 @@ namespace Gosuji.API.Helpers
         public StreamReader errorReader;
         public StreamWriter writer;
 
-        private bool stopped = false;
+        private bool isStopped = false;
         private int boardsize = 19;
+        private int handicap = 0;
 
         private int lastMaxVisits;
 
         public async Task Start()
         {
-            if (stopped)
+            if (isStopped)
             {
                 return;
             }
@@ -61,7 +63,7 @@ namespace Gosuji.API.Helpers
 
         public void Stop()
         {
-            stopped = true;
+            isStopped = true;
             process.Dispose();
         }
 
@@ -85,6 +87,11 @@ namespace Gosuji.API.Helpers
 
         public void SetBoardsize(int boardsize)
         {
+            if (this.boardsize == boardsize)
+            {
+                return;
+            }
+
             this.boardsize = boardsize;
             Write("boardsize " + boardsize);
             ClearReader();
@@ -104,8 +111,75 @@ namespace Gosuji.API.Helpers
 
         public void SetHandicap(int handicap)
         {
+            if (this.handicap == handicap)
+            {
+                return;
+            }
+
+            this.handicap = handicap;
             Write("fixed_handicap " + handicap);
             ClearReader();
+        }
+
+        public MoveSuggestionList ParseAnalysis(string[] analysis, EMoveColor color)
+        {
+            MoveSuggestionList suggestionList = new();
+            MoveSuggestion? suggestion = null;
+            for (int i = 0; i < analysis.Length; i++)
+            {
+                string element = analysis[i];
+                if (element == "move")
+                {
+                    suggestion.Coord ??= Move.CoordFromKataGo(analysis[i + 1], boardsize);
+                }
+                else if (element == "visits")
+                {
+                    suggestion?.SetVisits(analysis[i + 1]);
+                }
+                else if (element == "winrate")
+                {
+                    suggestion?.SetWinrate(analysis[i + 1], color);
+                }
+                else if (element == "scoreLead")
+                {
+                    suggestion?.SetScoreLead(analysis[i + 1], color);
+                }
+                else if (element == "pv")
+                {
+                    bool isPassed = false;
+                    while (analysis.Length - 1 >= i + 1 && analysis[i + 1] != "info")
+                    {
+                        if (!isPassed)
+                        {
+                            Coord coord = Move.CoordFromKataGo(analysis[i + 1], boardsize);
+                            if (Move.IsPass(coord))
+                            {
+                                isPassed = true;
+                            }
+                            else
+                            {
+                                suggestion?.Continuation.Add(coord);
+                            }
+                        }
+
+                        i++;
+                    }
+                }
+
+                if (element == "info" || i == analysis.Length - 1)
+                {
+                    if (suggestion != null)
+                    {
+                        if (!suggestionList.Add(suggestion))
+                        {
+                            break;
+                        }
+                    }
+                    suggestion = new MoveSuggestion();
+                }
+            }
+
+            return suggestionList;
         }
 
         public MoveSuggestion AnalyzeMove(Move move)
@@ -129,29 +203,13 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            MoveSuggestion suggestion = new();
-            suggestion.SetMove(move);
-            for (int i = 0; i < analysis.Length; i++)
-            {
-                string element = analysis[i];
-                if (element == "visits")
-                {
-                    suggestion?.SetVisits(analysis[i + 1]);
-                }
-                else if (element == "winrate")
-                {
-                    suggestion?.SetWinrate(analysis[i + 1]);
-                }
-                else if (element == "scoreLead")
-                {
-                    suggestion?.SetScoreLead(analysis[i + 1]);
-                }
-            }
+            MoveSuggestion suggestion = ParseAnalysis(analysis, move.Color.Value).Suggestions.FirstOrDefault();
+            suggestion.Grade = "X";
 
             return suggestion;
         }
 
-        public List<MoveSuggestion> Analyze(int color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc)
+        public MoveSuggestionList Analyze(EMoveColor color, int maxVisits, double minVisitsPerc, double maxVisitDiffPerc, int moveOptions)
         {
             if (lastMaxVisits != maxVisits)
             {
@@ -170,69 +228,12 @@ namespace Gosuji.API.Helpers
             Write("undo");
             ClearReader();
 
-            List<MoveSuggestion> suggestions = [];
-            MoveSuggestion? suggestion = null;
-            for (int i = 0; i < analysis.Length; i++)
-            {
-                string element = analysis[i];
-                if (element == "move")
-                {
-                    Move move = new(color, Move.CoordFromKataGo(analysis[i + 1], boardsize));
-                    suggestion?.SetMove(move);
-                }
-                else if (element == "visits")
-                {
-                    suggestion?.SetVisits(analysis[i + 1]);
-                }
-                else if (element == "winrate")
-                {
-                    suggestion?.SetWinrate(analysis[i + 1]);
-                }
-                else if (element == "scoreLead")
-                {
-                    suggestion?.SetScoreLead(analysis[i + 1]);
-                }
+            MoveSuggestionList suggestionList = ParseAnalysis(analysis, color);
+            suggestionList.Visits = maxVisits;
 
-                if (element == "info" || i == analysis.Length - 1)
-                {
-                    if (suggestion != null)
-                    {
-                        suggestions.Add(suggestion);
-                    }
-                    suggestion = new MoveSuggestion();
-                }
-            }
+            suggestionList.Filter(minVisitsPerc, maxVisitDiffPerc, moveOptions);
 
-            int highestVisits = 0;
-            foreach (MoveSuggestion moveSuggestion in suggestions)
-            {
-                if (highestVisits < moveSuggestion.visits)
-                {
-                    highestVisits = moveSuggestion.visits;
-                }
-            }
-            int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(maxVisits, highestVisits));
-            int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * maxVisits);
-
-            List<MoveSuggestion> filteredSuggestions = [];
-            int lastSuggestionVisits = int.MaxValue;
-            foreach (MoveSuggestion moveSuggestion in suggestions)
-            {
-                if (filteredSuggestions.Count > 0 &&
-                        !filteredSuggestions[^1].move.IsPass &&
-                        (moveSuggestion.visits < minVisits ||
-                        lastSuggestionVisits - moveSuggestion.visits > maxVisitDiff))
-                {
-                    break;
-                }
-                filteredSuggestions.Add(moveSuggestion);
-                if (lastSuggestionVisits > moveSuggestion.visits)
-                {
-                    lastSuggestionVisits = moveSuggestion.visits;
-                }
-            }
-
-            return filteredSuggestions;
+            return suggestionList;
         }
 
         public void Play(Move move)
@@ -241,9 +242,9 @@ namespace Gosuji.API.Helpers
             ClearReader();
         }
 
-        public void PlayRange(Moves moves)
+        public void PlayRange(Move[] moves)
         {
-            foreach (Move move in moves.moves)
+            foreach (Move move in moves)
             {
                 Play(move);
             }

@@ -1,6 +1,7 @@
 using Gosuji.Client.Components;
 using Gosuji.Client.Helpers;
 using Gosuji.Client.Services;
+using Gosuji.Client.Services.Trainer;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -27,7 +28,7 @@ namespace Gosuji.Client
             builder.Services.AddScoped(sp =>
                 new HttpClient { BaseAddress = new Uri(builder.Configuration["FrontendUrl"]) });
 
-            builder.Services.AddSingleton<UserService>();
+            builder.Services.AddSingleton<UserAPI>();
 
             builder.Services.AddTransient<AuthMessageHandler>();
 
@@ -39,18 +40,17 @@ namespace Gosuji.Client
 
             builder.Services.AddLocalization();
 
-            builder.Services.AddSingleton<DataService>();
-            builder.Services.AddSingleton<KataGoService>();
-            builder.Services.AddSingleton<JosekisService>();
-            builder.Services.AddSingleton<TestService>();
+            builder.Services.AddSingleton<DataAPI>();
+            builder.Services.AddSingleton<TrainerConnection>();
+            builder.Services.AddSingleton<JosekisConnection>();
             builder.Services.AddSingleton<SettingConfigService>();
 
             WebAssemblyHost host = builder.Build();
 
-            UserService userService = host.Services.GetRequiredService<UserService>();
+            UserAPI userAPI = host.Services.GetRequiredService<UserAPI>();
             IHttpClientFactory httpClientFactory = host.Services.GetRequiredService<IHttpClientFactory>();
-            userService.HTTP = httpClientFactory.CreateClient("Auth");
-            userService.AuthenticationStateProvider = host.Services.GetRequiredService<AuthenticationStateProvider>() as JwtAuthenticationStateProvider;
+            userAPI.HTTP = httpClientFactory.CreateClient("Auth");
+            userAPI.AuthenticationStateProvider = host.Services.GetRequiredService<AuthenticationStateProvider>() as JwtAuthenticationStateProvider;
 
             await LocalizeClient.Setup(host);
 

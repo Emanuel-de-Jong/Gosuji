@@ -368,32 +368,23 @@ namespace Gosuji.API.Migrations
                         .HasMaxLength(12)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Boardsize")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<byte[]>("ChosenNotPlayedCoords")
-                        .IsRequired()
-                        .HasColumnType("BLOB");
-
                     b.Property<int>("Color")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<byte[]>("EncodedData")
+                        .IsRequired()
+                        .HasColumnType("BLOB");
+
                     b.Property<long?>("EndgameStatId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("GameStatId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Handicap")
+                    b.Property<long>("GameStatId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsFinished")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsThirdPartySGF")
@@ -411,13 +402,8 @@ namespace Gosuji.API.Migrations
                     b.Property<DateTimeOffset>("ModifyDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<byte[]>("MoveTypes")
-                        .IsRequired()
-                        .HasColumnType("BLOB");
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(250)
                         .HasColumnType("TEXT");
 
                     b.Property<long?>("OpeningStatId")
@@ -429,18 +415,12 @@ namespace Gosuji.API.Migrations
                     b.Property<int>("PerfectTopStreak")
                         .HasColumnType("INTEGER");
 
-                    b.Property<byte[]>("PlayerResults")
+                    b.Property<string>("ProductVersion")
                         .IsRequired()
-                        .HasColumnType("BLOB");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int>("PrevNodeX")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("PrevNodeY")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Result")
-                        .HasColumnType("INTEGER");
+                    b.Property<double?>("Result")
+                        .HasColumnType("REAL");
 
                     b.Property<int>("RightStreak")
                         .HasColumnType("INTEGER");
@@ -450,17 +430,10 @@ namespace Gosuji.API.Migrations
 
                     b.Property<string>("Ruleset")
                         .IsRequired()
-                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("SGF")
-                        .IsRequired()
-                        .HasMaxLength(100000)
-                        .HasColumnType("TEXT");
-
-                    b.Property<byte[]>("Suggestions")
-                        .IsRequired()
-                        .HasColumnType("BLOB");
+                    b.Property<bool>("ShouldIgnoreStats")
+                        .HasColumnType("INTEGER");
 
                     b.Property<long>("TrainerSettingConfigId")
                         .HasColumnType("INTEGER");
@@ -495,11 +468,11 @@ namespace Gosuji.API.Migrations
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("From")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTimeOffset>("ModifyDate")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("MoveNumber")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Perfect")
                         .HasColumnType("INTEGER");
@@ -507,13 +480,10 @@ namespace Gosuji.API.Migrations
                     b.Property<int>("Right")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Score")
+                    b.Property<int>("To")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Total")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Winrate")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -727,10 +697,8 @@ namespace Gosuji.API.Migrations
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ForceOpponentCorners")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ForceOpponentCorners")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Handicap")
                         .HasColumnType("INTEGER");
@@ -748,13 +716,8 @@ namespace Gosuji.API.Migrations
                     b.Property<bool>("HideWeakerOptions")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Komi")
+                    b.Property<double?>("Komi")
                         .HasColumnType("REAL");
-
-                    b.Property<string>("KomiChangeStyle")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
 
                     b.Property<double>("MaxVisitDiffPerc")
                         .HasColumnType("REAL");
@@ -802,7 +765,6 @@ namespace Gosuji.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Ruleset")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -1030,9 +992,10 @@ namespace Gosuji.API.Migrations
                     b.HasOne("Gosuji.Client.Data.GameStat", "GameStat")
                         .WithMany()
                         .HasForeignKey("GameStatId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.HasOne("Gosuji.Client.Data.KataGoVersion", "kataGoVersion")
+                    b.HasOne("Gosuji.Client.Data.KataGoVersion", "KataGoVersion")
                         .WithMany()
                         .HasForeignKey("KataGoVersionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1058,13 +1021,13 @@ namespace Gosuji.API.Migrations
 
                     b.Navigation("GameStat");
 
+                    b.Navigation("KataGoVersion");
+
                     b.Navigation("MidgameStat");
 
                     b.Navigation("OpeningStat");
 
                     b.Navigation("TrainerSettingConfig");
-
-                    b.Navigation("kataGoVersion");
                 });
 
             modelBuilder.Entity("Gosuji.Client.Data.Preset", b =>

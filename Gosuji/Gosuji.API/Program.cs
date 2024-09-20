@@ -134,7 +134,7 @@ namespace Gosuji.API
             });
 
             builder.Services.AddSingleton<SanitizeService>();
-            builder.Services.AddSingleton<KataGoPoolService>();
+            builder.Services.AddSingleton<KataGoPool>();
 
             WebApplication app = builder.Build();
 
@@ -166,7 +166,7 @@ namespace Gosuji.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapHub<KataGoHub>("/katagohub", options =>
+            app.MapHub<TrainerHub>("/trainerhub", options =>
             {
                 options.Transports = HttpTransportType.WebSockets;
             });

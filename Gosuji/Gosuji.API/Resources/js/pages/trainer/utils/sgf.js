@@ -1,4 +1,4 @@
-import { katago } from "./katago";
+import { kataGo } from "./kataGo";
 import { settings } from "./settings";
 import { stats } from "./stats";
 import { trainerG } from "./trainerG";
@@ -6,21 +6,23 @@ import { trainerG } from "./trainerG";
 let sgf = { id: "sgf" };
 
 
-sgf.init = async function (userName, gameLoadInfo) {
+sgf.init = function (userName, gameLoadInfo) {
     sgf.userName = userName;
 
     sgf.sgfLoadingEvent = new CEvent(sgf.sgfLoadingListener);
     sgf.sgfLoadedEvent = new CEvent(sgf.sgfLoadedListener);
 
-    await sgf.clear(gameLoadInfo);
+    trainerG.board.editor.addListener(sgf.boardEditorListener);
+
+    sgf.clear(gameLoadInfo);
 };
 
-sgf.clear = async function (gameLoadInfo) {
+sgf.clear = function (gameLoadInfo) {
     sgf.isSGFLoading = false;
     sgf.isThirdParty = false;
 
-    await sgf.setRuleset(gameLoadInfo ? gameLoadInfo.ruleset : settings.ruleset);
-    await sgf.setKomi(gameLoadInfo ? gameLoadInfo.komi : settings.komi);
+    sgf.setRuleset(gameLoadInfo ? gameLoadInfo.ruleset : settings.ruleset);
+    sgf.setKomi(gameLoadInfo ? gameLoadInfo.komi : settings.komi);
 
     trainerG.board.editor.setGameInfo("Gosuji", "GN");
     trainerG.board.editor.setGameInfo("Gosuji", "SO");
@@ -28,17 +30,15 @@ sgf.clear = async function (gameLoadInfo) {
 
     sgf.setPlayersMeta();
     sgf.setHandicapMeta();
-
-    trainerG.board.editor.addListener(sgf.boardEditorListener);
 };
 
 
-sgf.boardEditorListener = function (event) {
+sgf.boardEditorListener = async function (event) {
     if (event.sgfEvent) {
         if (!event.sgfLoaded) {
-            sgf.sgfLoadingEvent.dispatch();
+            await sgf.sgfLoadingEvent.dispatchAsync();
         } else {
-            sgf.sgfLoadedEvent.dispatch();
+            await sgf.sgfLoadedEvent.dispatchAsync();
         }
     }
 };
@@ -47,7 +47,7 @@ sgf.sgfLoadingListener = function () {
     sgf.isSGFLoading = true;
 };
 
-sgf.sgfLoadedListener = async function () {
+sgf.sgfLoadedListener = function () {
     sgf.isThirdParty = true;
 
     let gameInfo = trainerG.board.editor.getGameInfo();
@@ -70,38 +70,27 @@ sgf.sgfLoadedListener = async function () {
         if (gameInfo.RU) {
             let ruleset = gameInfo.RU.toLowerCase();
             if (ruleset.includes("japan")) {
-                await sgf.setRuleset("Japanese");
+                sgf.setRuleset("Japanese");
             } else if (ruleset.includes("chin") || ruleset.includes("korea")) {
-                await sgf.setRuleset("Chinese");
+                sgf.setRuleset("Chinese");
             }
         }
 
-        await sgf.setKomi(parseFloat(gameInfo.KM));
+        sgf.setKomi(parseFloat(gameInfo.KM));
     }
 
     sgf.isSGFLoading = false;
 };
 
 
-sgf.setRuleset = async function (ruleset) {
+sgf.setRuleset = function (ruleset) {
     sgf.ruleset = ruleset;
-    sgf.setRulesetMeta();
-    if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
-        trainerG.phase != trainerG.PHASE_TYPE.INIT &&
-        trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
-        await katago.setRuleset();
-    }
+    document.getElementById("rulesetDisplay").textContent = ruleset;
 };
 
-sgf.setKomi = async function (komi) {
+sgf.setKomi = function (komi) {
     sgf.komi = komi;
-    sgf.setKomiMeta();
     trainerG.board.komiDisplay.textContent = komi;
-    if (trainerG.phase != trainerG.PHASE_TYPE.NONE &&
-        trainerG.phase != trainerG.PHASE_TYPE.INIT &&
-        trainerG.phase != trainerG.PHASE_TYPE.RESTART) {
-        await katago.setKomi();
-    }
 };
 
 
@@ -122,8 +111,8 @@ sgf.setKomiMeta = function () {
     trainerG.board.editor.setGameInfo(sgf.komi + "", "KM");
 };
 
-sgf.setResultMeta = function (result) {
-    trainerG.board.editor.setGameInfo(result, "RE");
+sgf.setResultMeta = function (resultStr) {
+    trainerG.board.editor.setGameInfo(resultStr, "RE");
 };
 
 if (!window.trainer) window.trainer = {};

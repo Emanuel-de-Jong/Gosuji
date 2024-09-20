@@ -13,7 +13,7 @@ namespace Gosuji.Client.Components.Pages.Account
         private InputModel input { get; set; } = new();
 
         [Inject]
-        private UserService userService { get; set; }
+        private UserAPI userAPI { get; set; }
 
         private CStatusMessage statusMessage;
 
@@ -24,7 +24,7 @@ namespace Gosuji.Client.Components.Pages.Account
                 Email = input.Email
             };
 
-            APIResponse response = await userService.ForgotPassword(vmForgotPassword);
+            APIResponse response = await userAPI.ForgotPassword(vmForgotPassword);
             if (response.IsSuccess)
             {
                 statusMessage.SetMessage("An email has been sent. Please use the link in the email to set a new password.");

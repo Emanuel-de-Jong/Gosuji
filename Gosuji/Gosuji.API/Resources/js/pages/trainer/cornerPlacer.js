@@ -1,3 +1,4 @@
+import { kataGo } from "./utils/kataGo";
 import { settings } from "./utils/settings";
 import { trainerG } from "./utils/trainerG";
 
@@ -37,10 +38,12 @@ cornerPlacer.shouldForce = function (isAfterDraw = false) {
 
     if (trainerG.board.handicap != 0 || (trainerG.board.boardsize != 19 && trainerG.board.boardsize != 13)) return false;
 
-    if ((settings.forceOpponentCorners == "First" || settings.forceOpponentCorners == "Both") && (
-        trainerG.color == g.COLOR_TYPE.W && moveNumber == 0 ||
-        trainerG.color == g.COLOR_TYPE.B && moveNumber == 1) ||
-        (settings.forceOpponentCorners == "Second" || settings.forceOpponentCorners == "Both") && (
+    if ((settings.forceOpponentCorners == settings.FORCE_OPPONENT_CORNERS.FIRST ||
+        settings.forceOpponentCorners == settings.BOTH) && (
+            trainerG.color == g.COLOR_TYPE.W && moveNumber == 0 ||
+            trainerG.color == g.COLOR_TYPE.B && moveNumber == 1) ||
+        (settings.forceOpponentCorners == settings.FORCE_OPPONENT_CORNERS.SECOND ||
+        settings.forceOpponentCorners == settings.FORCE_OPPONENT_CORNERS.BOTH) && (
             trainerG.color == g.COLOR_TYPE.W && moveNumber == 2 ||
             trainerG.color == g.COLOR_TYPE.B && moveNumber == 3)) {
         return true;
@@ -49,13 +52,10 @@ cornerPlacer.shouldForce = function (isAfterDraw = false) {
     return false;
 };
 
-cornerPlacer.getSuggestion = async function () {
+cornerPlacer.play = async function () {
     let cornerOptions = cornerPlacer.getEmptyCorner();
     let coord = cornerPlacer.chooseCornerOption(cornerOptions);
-    return await trainerG.analyzeMove(coord);
-};
-
-cornerPlacer.play = async function (suggestion) {
+    let suggestion = await kataGo.playForcedCorner(coord);
     await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.FORCED_CORNER);
 };
 

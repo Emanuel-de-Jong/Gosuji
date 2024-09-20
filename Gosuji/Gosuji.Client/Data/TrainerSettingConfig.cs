@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Gosuji.Client.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -6,7 +8,8 @@ namespace Gosuji.Client.Data
 {
     public class TrainerSettingConfig : DbModel
     {
-        [Key] public long Id { get; set; }
+        [Key]
+        public long Id { get; set; }
 
         [MaxLength(150)]
         public string? Hash { get; set; }
@@ -33,23 +36,17 @@ namespace Gosuji.Client.Data
         [Required]
         public EHideOptions HideOptions { get; set; }
         [Required]
-        public int ColorType { get; set; }
+        public EMoveColor ColorType { get; set; }
         [Required]
         public bool WrongMoveCorrection { get; set; }
 
-        [Required]
-        [MaxLength(100)]
-        public string KomiChangeStyle { get; set; }
-        [Required]
         [Range(-150, 150)]
-        public double Komi { get; set; }
-        [Required]
+        public double? Komi { get; set; }
         [MaxLength(100)]
-        public string Ruleset { get; set; }
+        public string? Ruleset { get; set; }
 
         [Required]
-        [MaxLength(100)]
-        public string ForceOpponentCorners { get; set; }
+        public EForceOpponentCorners ForceOpponentCorners { get; set; }
         [Required]
         public bool CornerSwitch44 { get; set; }
         [Required]
@@ -103,6 +100,93 @@ namespace Gosuji.Client.Data
         [Range(1.5, 4)]
         public double SelfplayPlaySpeed { get; set; }
 
+        [NotMapped]
+        public ELanguage Language { get; set; } = ELanguage.en;
+        [NotMapped]
+        public ESubscriptionType? SubscriptionType { get; set; }
+        [NotMapped]
+        public string? SGFRuleset { get; set; }
+        [NotMapped]
+        public string GetRuleset
+        {
+            get
+            {
+                if (SGFRuleset != null)
+                {
+                    return SGFRuleset;
+                }
+                if (Ruleset != null)
+                {
+                    return Ruleset;
+                }
+                if (Language == ELanguage.zh || Language == ELanguage.ko)
+                {
+                    return "Chinese";
+                }
+                return "Japanese";
+            }
+        }
+        [NotMapped]
+        public double? SGFKomi { get; set; }
+        [NotMapped]
+        public double GetKomi
+        {
+            get
+            {
+                if (SGFKomi != null)
+                {
+                    return SGFKomi.Value;
+                }
+                if (Komi != null)
+                {
+                    return Komi.Value;
+                }
+                return GetDefaultKomi(GetRuleset);
+            }
+        }
+        [NotMapped]
+        public int GetSuggestionVisits => GetVisits(SuggestionVisits, 100, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+        [NotMapped]
+        public int GetOpponentVisits => GetVisits(OpponentVisits, 100, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+        [NotMapped]
+        public int GetPreVisits => GetVisits(PreVisits, 100, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+        [NotMapped]
+        public int GetSelfplayVisits => GetVisits(SelfplayVisits, 100, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+
+        public double GetDefaultKomi(string ruleset)
+        {
+            if (Handicap != 0)
+            {
+                return 0.5;
+            }
+
+            if (ruleset.ToLower().Contains("chin"))
+            {
+                return 7.5;
+            }
+
+            return 6.5;
+        }
+
+        private int GetVisits(int? visits, int noSubVisits, Dictionary<ESubscriptionType, int> visitsBySub)
+        {
+            if (visits != null)
+            {
+                return visits.Value;
+            }
+
+            if (SubscriptionType == null)
+            {
+                return noSubVisits;
+            }
+
+            return visitsBySub[SubscriptionType.Value];
+        }
+
         public TrainerSettingConfig SetHash()
         {
             Hash = GenerateHash(this);
@@ -126,7 +210,6 @@ namespace Gosuji.Client.Data
             builder.Append(config.WrongMoveCorrection);
 
             builder.Append(config.Ruleset);
-            builder.Append(config.KomiChangeStyle);
             builder.Append(config.Komi);
 
             builder.Append(config.PreOptions);
@@ -178,5 +261,13 @@ namespace Gosuji.Client.Data
         NEVER = 0,
         PERFECT = 1,
         ALWAYS = 3
+    }
+
+    public enum EForceOpponentCorners
+    {
+        NONE = 0,
+        FIRST = 1,
+        SECOND = 2,
+        BOTH = 3
     }
 }

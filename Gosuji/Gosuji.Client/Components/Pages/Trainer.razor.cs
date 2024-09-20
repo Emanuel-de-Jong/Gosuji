@@ -1,8 +1,10 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Helpers;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
+using Gosuji.Client.Services.Trainer;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Localization;
@@ -22,11 +24,11 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private NavigationManager navigationManager { get; set; }
         [Inject]
-        private KataGoService kataGoService { get; set; }
+        private TrainerConnection trainerConnection { get; set; }
         [Inject]
         private IJSRuntime js { get; set; }
         [Inject]
-        private DataService dataService { get; set; }
+        private DataAPI dataAPI { get; set; }
         [Inject]
         private SettingConfigService settingConfigService { get; set; }
         [Inject]
@@ -35,25 +37,27 @@ namespace Gosuji.Client.Components.Pages
         [SupplyParameterFromForm]
         private PresetModel addPresetModel { get; set; } = new();
 
+        private bool isInitialized = false;
         private bool isJSInitialized = false;
         private IJSObjectReference jsRef;
         private string? userName;
 
         private DotNetObjectReference<Trainer>? trainerRef;
-        private DotNetObjectReference<KataGoService>? kataGoServiceRef;
+        private DotNetObjectReference<TrainerConnection>? trainerConnectionRef;
 
         private Dictionary<long, Preset>? presets;
         private UserState? userState;
         private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
-        private KataGoVisits? kataGoVisits;
 
         private Game? game;
         private GameStat? gameStat;
         private GameStat? openingStat;
         private GameStat? midgameStat;
         private GameStat? endgameStat;
-        private KataGoVersion? kataGoVersion;
+
+        private string sgfRuleset;
+        private double sgfKomi;
 
         private MoveSuggestion[]? suggestions;
 
@@ -68,29 +72,21 @@ namespace Gosuji.Client.Components.Pages
             userName = claimsPrincipal.FindFirst(ClaimTypes.Name)?.Value;
 
             trainerRef = DotNetObjectReference.Create(this);
-            kataGoServiceRef = DotNetObjectReference.Create(kataGoService);
+            trainerConnectionRef = DotNetObjectReference.Create(trainerConnection);
 
-            APIResponse<Dictionary<long, Preset>> presetsResponse = await dataService.GetPresets();
+            APIResponse<Dictionary<long, Preset>> presetsResponse = await dataAPI.GetPresets();
             if (G.StatusMessage.HandleAPIResponse(presetsResponse)) return;
             presets = presetsResponse.Data;
 
-            APIResponse<UserState> userStateResponse = await dataService.GetUserState();
+            APIResponse<UserState> userStateResponse = await dataAPI.GetUserState();
             if (G.StatusMessage.HandleAPIResponse(userStateResponse)) return;
             userState = userStateResponse.Data;
 
             currentPreset = presets[userState.LastPresetId];
 
-            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataService.GetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
-            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
-            trainerSettingConfig = trainerSettingConfigResponse.Data;
+            await SetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
 
-            kataGoVisits = new()
-            {
-                SuggestionVisits = trainerSettingConfig.SuggestionVisits != null ? trainerSettingConfig.SuggestionVisits.Value : 200,
-                OpponentVisits = trainerSettingConfig.OpponentVisits != null ? trainerSettingConfig.OpponentVisits.Value : 200,
-                PreVisits = trainerSettingConfig.PreVisits != null ? trainerSettingConfig.PreVisits.Value : 200,
-                SelfplayVisits = trainerSettingConfig.SelfplayVisits != null ? trainerSettingConfig.SelfplayVisits.Value : 200,
-            };
+            isInitialized = true;
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -109,7 +105,7 @@ namespace Gosuji.Client.Components.Pages
                 Console.WriteLine($"Error loading library: {ex.Message}");
             }
 
-            if (kataGoVisits != null && !isJSInitialized)
+            if (isInitialized && !isJSInitialized)
             {
                 isJSInitialized = true;
 
@@ -123,7 +119,7 @@ namespace Gosuji.Client.Components.Pages
             GameLoadInfo? gameLoadInfo = null;
             if (GameId != null)
             {
-                APIResponse<Game> response = await dataService.GetGame(GameId, true);
+                APIResponse<Game> response = await dataAPI.GetGame(GameId, true);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
                 game = response.Data;
 
@@ -134,11 +130,12 @@ namespace Gosuji.Client.Components.Pages
 
             await jsRef.InvokeVoidAsync("trainerPage.init",
                 trainerRef,
-                kataGoServiceRef,
+                trainerConnectionRef,
                 userName,
                 settingConfigService.SettingConfig.CalcStoneVolume(),
                 settingConfigService.SettingConfig.IsPreMoveStoneSound,
                 settingConfigService.SettingConfig.IsSelfplayStoneSound,
+                trainerSettingConfig,
                 gameLoadInfo);
 
             settingConfigService.StoneVolumeChanged += async (int volume) =>
@@ -149,18 +146,28 @@ namespace Gosuji.Client.Components.Pages
                 await jsRef.InvokeVoidAsync("trainerG.board.setIsSelfplayStoneSound", isStoneSound);
         }
 
+        private async Task SetTrainerSettingConfig(long id)
+        {
+            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(id);
+            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
+            trainerSettingConfig = trainerSettingConfigResponse.Data;
+
+            trainerSettingConfig.Language = Enum.Parse<ELanguage>(settingConfigService.SettingConfig.LanguageId);
+            trainerSettingConfig.SubscriptionType = settingConfigService.Subscription?.SubscriptionType;
+        }
+
         [JSInvokable]
         public async Task<bool> Start()
         {
-            if (kataGoService.IsConnected)
+            if (trainerConnection.IsConnected)
             {
                 return true;
             }
 
-            APIResponse startResponse = await kataGoService.Start();
+            APIResponse startResponse = await trainerConnection.Start();
             if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
 
-            APIResponse<bool> userHasInstanceResponse = await kataGoService.UserHasInstance();
+            APIResponse<bool> userHasInstanceResponse = await trainerConnection.UserHasInstance();
             if (G.StatusMessage.HandleAPIResponse(userHasInstanceResponse)) return false;
             bool userHasInstance = userHasInstanceResponse.Data;
 
@@ -170,13 +177,44 @@ namespace Gosuji.Client.Components.Pages
                 return false;
             }
 
-            APIResponse<KataGoVersion> getVersionResponse = await kataGoService.GetVersion();
-            if (G.StatusMessage.HandleAPIResponse(getVersionResponse)) return false;
-            kataGoVersion = getVersionResponse.Data;
+            return true;
+        }
 
-            await jsRef.InvokeVoidAsync("trainerG.setKataGoVersion", kataGoVersion);
+        [JSInvokable]
+        public async Task<bool> InitTrainerConnection(string sgfRuleset, double sgfKomi, bool isThirdParty, string? name)
+        {
+            this.sgfRuleset = sgfRuleset;
+            this.sgfKomi = sgfKomi;
+
+            TrainerSettingConfig tscWithSGFSettings = ReflectionHelper.DeepClone(trainerSettingConfig);
+            tscWithSGFSettings.SGFRuleset = sgfRuleset;
+            tscWithSGFSettings.SGFKomi = sgfKomi;
+
+            APIResponse response = await trainerConnection.Init(tscWithSGFSettings, isThirdParty, name);
+            if (G.StatusMessage.HandleAPIResponse(response)) return false;
 
             return true;
+        }
+
+        [JSInvokable]
+        public async Task UpdateTrainerSettingConfig(string propertyName, string value)
+        {
+            bool isSetSuccess = ReflectionHelper.SetProperty(trainerSettingConfig, propertyName, value);
+            if (!isSetSuccess)
+            {
+                G.StatusMessage.SetMessage($"{propertyName} is not in TrainerSettingConfig.", false);
+                return;
+            }
+
+            if (trainerConnection.IsConnected)
+            {
+                TrainerSettingConfig tscWithSGFSettings = ReflectionHelper.DeepClone(trainerSettingConfig);
+                tscWithSGFSettings.SGFRuleset = sgfRuleset;
+                tscWithSGFSettings.SGFKomi = sgfKomi;
+
+                APIResponse response = await trainerConnection.UpdateTrainerSettingConfig(tscWithSGFSettings);
+                if (G.StatusMessage.HandleAPIResponse(response)) return;
+            }
         }
 
         [JSInvokable]
@@ -197,19 +235,26 @@ namespace Gosuji.Client.Components.Pages
         private async Task SelectPreset(long presetId)
         {
             Preset lastPreset = presets[presetId];
-            APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataService.GetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
-            if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
-            trainerSettingConfig = trainerSettingConfigResponse.Data;
+
+            await SetTrainerSettingConfig(lastPreset.TrainerSettingConfigId);
+
+            await jsRef.InvokeVoidAsync("settings.syncWithCS", trainerSettingConfig);
 
             userState.LastPresetId = presetId;
             currentPreset = lastPreset;
-            APIResponse response = await dataService.PutUserState(userState);
-            if (G.StatusMessage.HandleAPIResponse(response)) return;
+            APIResponse userStateResponse = await dataAPI.PutUserState(userState);
+            if (G.StatusMessage.HandleAPIResponse(userStateResponse)) return;
+
+            if (trainerConnection.IsConnected)
+            {
+                APIResponse updateTrainerSettingConfigResponse = await trainerConnection.UpdateTrainerSettingConfig(trainerSettingConfig);
+                if (G.StatusMessage.HandleAPIResponse(updateTrainerSettingConfigResponse)) return;
+            }
         }
 
         private async Task SavePreset()
         {
-            APIResponse<long> trainerSettingConfigResponse = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            APIResponse<long> trainerSettingConfigResponse = await dataAPI.PostTrainerSettingConfig(trainerSettingConfig);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             long? trainerSettingConfigId = trainerSettingConfigResponse.Data;
 
@@ -217,7 +262,7 @@ namespace Gosuji.Client.Components.Pages
             {
                 currentPreset.TrainerSettingConfigId = trainerSettingConfigId.Value;
 
-                APIResponse response = await dataService.PutPreset(currentPreset);
+                APIResponse response = await dataAPI.PutPreset(currentPreset);
                 if (G.StatusMessage.HandleAPIResponse(response)) return;
             }
         }
@@ -229,7 +274,7 @@ namespace Gosuji.Client.Components.Pages
 
             presets.Remove(oldSelectedPresetId);
 
-            APIResponse response = await dataService.DeletePreset(oldSelectedPresetId);
+            APIResponse response = await dataAPI.DeletePreset(oldSelectedPresetId);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
         }
 
@@ -243,7 +288,7 @@ namespace Gosuji.Client.Components.Pages
 
         private async Task AddPreset()
         {
-            APIResponse<long> trainerSettingConfigResponse = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
+            APIResponse<long> trainerSettingConfigResponse = await dataAPI.PostTrainerSettingConfig(trainerSettingConfig);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
             long trainerSettingConfigId = trainerSettingConfigResponse.Data;
 
@@ -253,7 +298,7 @@ namespace Gosuji.Client.Components.Pages
                 TrainerSettingConfigId = trainerSettingConfigId
             };
 
-            APIResponse<long> presetResponse = await dataService.PostPreset(newPreset);
+            APIResponse<long> presetResponse = await dataAPI.PostPreset(newPreset);
             if (G.StatusMessage.HandleAPIResponse(presetResponse)) return;
             long newPresetId = presetResponse.Data;
 
@@ -263,203 +308,27 @@ namespace Gosuji.Client.Components.Pages
             userState.LastPresetId = newPreset.Id;
             currentPreset = newPreset;
 
-            APIResponse response = await dataService.PutUserState(userState);
+            APIResponse response = await dataAPI.PutUserState(userState);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             addPresetModel = new();
         }
 
         [JSInvokable]
-        public async Task SaveTrainerSettingConfig()
+        public async Task<double> GetDefaultKomi(string ruleset)
         {
-            APIResponse<long> response = await dataService.PostTrainerSettingConfig(trainerSettingConfig);
-            if (G.StatusMessage.HandleAPIResponse(response)) return;
-            long newId = response.Data;
-
-            trainerSettingConfig.Id = newId;
-        }
-
-        [JSInvokable]
-        public async Task SaveGameStats(GameStat? newGameStat, GameStat? newOpeningStat, GameStat? newMidgameStat, GameStat? newEndgameStat)
-        {
-            List<Task> tasks = [];
-
-            if (newGameStat != null)
-            {
-                tasks.Add(Task.Run(async () =>
-                {
-                    GameStat? updatedGameStat = await UpdateGameStat(gameStat, newGameStat);
-                    if (updatedGameStat != null)
-                    {
-                        gameStat = updatedGameStat;
-                    }
-                }));
-            }
-
-            if (newOpeningStat != null)
-            {
-                tasks.Add(Task.Run(async () =>
-                {
-                    GameStat? updatedGameStat = await UpdateGameStat(openingStat, newOpeningStat);
-                    if (updatedGameStat != null)
-                    {
-                        openingStat = updatedGameStat;
-                    }
-                }));
-            }
-
-            if (newMidgameStat != null)
-            {
-                tasks.Add(Task.Run(async () =>
-                {
-                    GameStat? updatedGameStat = await UpdateGameStat(midgameStat, newMidgameStat);
-                    if (updatedGameStat != null)
-                    {
-                        midgameStat = updatedGameStat;
-                    }
-                }));
-            }
-
-            if (newEndgameStat != null)
-            {
-                tasks.Add(Task.Run(async () =>
-                {
-                    GameStat? updatedGameStat = await UpdateGameStat(endgameStat, newEndgameStat);
-                    if (updatedGameStat != null)
-                    {
-                        endgameStat = updatedGameStat;
-                    }
-                }));
-            }
-
-            await Task.WhenAll(tasks);
-        }
-
-        private async Task<GameStat?> UpdateGameStat(GameStat? gameStat, GameStat newGameStat)
-        {
-            if (gameStat != null && gameStat.Equal(newGameStat))
-            {
-                return null;
-            }
-
-            if (gameStat == null)
-            {
-                APIResponse<long> response = await dataService.PostGameStat(newGameStat);
-                if (G.StatusMessage.HandleAPIResponse(response)) return null;
-                long newGameStatId = response.Data;
-
-                newGameStat.Id = newGameStatId;
-            }
-            else
-            {
-                newGameStat.Id = gameStat.Id;
-
-                APIResponse response = await dataService.PutGameStat(newGameStat);
-                if (G.StatusMessage.HandleAPIResponse(response)) return null;
-            }
-
-            return newGameStat;
-        }
-
-        [JSInvokable]
-        public async Task SaveGame(Game newGame)
-        {
-            if (userName == null)
-            {
-                return;
-            }
-
-            newGame.TrainerSettingConfigId = trainerSettingConfig.Id;
-            newGame.KataGoVersionId = kataGoVersion.Id;
-            newGame.GameStatId = gameStat?.Id;
-            newGame.OpeningStatId = openingStat?.Id;
-            newGame.MidgameStatId = midgameStat?.Id;
-            newGame.EndgameStatId = endgameStat?.Id;
-            newGame.Name = "GameX";
-
-            if (newGame.SGF == game?.SGF)
-            {
-                return;
-            }
-
-            if (game == null)
-            {
-                APIResponse<string> response = await dataService.PostGame(newGame);
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-                string newGameId = response.Data;
-
-                newGame.Id = newGameId;
-            }
-            else
-            {
-                newGame.Id = game.Id;
-
-                APIResponse response = await dataService.PutGame(newGame);
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-            }
-            game = newGame;
-
-            G.StatusMessage.SetMessage("Game saved.");
-        }
-
-        public async Task SetSuggestionVisits(ChangeEventArgs e)
-        {
-            if(!int.TryParse(e.Value?.ToString(), out int visits))
-            {
-               return;
-            }
-            kataGoVisits.SuggestionVisits = visits;
-            trainerSettingConfig.SuggestionVisits = visits;
-        }
-
-        public async Task SetOpponentVisits(ChangeEventArgs e)
-        {
-            if (!int.TryParse(e.Value?.ToString(), out int visits))
-            {
-                return;
-            }
-            kataGoVisits.OpponentVisits = visits;
-            trainerSettingConfig.OpponentVisits = visits;
-        }
-
-        public async Task SetPreVisits(ChangeEventArgs e)
-        {
-            if (!int.TryParse(e.Value?.ToString(), out int visits))
-            {
-                return;
-            }
-            kataGoVisits.PreVisits = visits;
-            trainerSettingConfig.PreVisits = visits;
-        }
-
-        public async Task SetSelfplayVisits(ChangeEventArgs e)
-        {
-            if (!int.TryParse(e.Value?.ToString(), out int visits))
-            {
-                return;
-            }
-            kataGoVisits.SelfplayVisits = visits;
-            trainerSettingConfig.SelfplayVisits = visits;
+            return trainerSettingConfig.GetDefaultKomi(ruleset);
         }
 
         public async ValueTask DisposeAsync()
         {
             trainerRef?.Dispose();
-            kataGoServiceRef?.Dispose();
+            trainerConnectionRef?.Dispose();
 
-            if (kataGoService.IsConnected)
+            if (trainerConnection.IsConnected)
             {
-                await kataGoService.Return();
-                await kataGoService.Stop();
+                await trainerConnection.Stop();
             }
         }
-    }
-
-    public class KataGoVisits
-    {
-        public int SuggestionVisits { get; set; }
-        public int OpponentVisits { get; set; }
-        public int PreVisits { get; set; }
-        public int SelfplayVisits { get; set; }
     }
 }

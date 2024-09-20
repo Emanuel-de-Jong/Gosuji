@@ -1,5 +1,6 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.Client.Data;
+using Gosuji.Client.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -68,19 +69,19 @@ namespace Gosuji.API.Helpers
             ApplicationDbContext dbContext = dbContextFactory.CreateDbContext();
             dbContext.Languages.AddRange([
                 new() {
-                    Id = "en",
+                    Id = ELanguage.en.ToString(),
                     Name = "English",
                 },
                 new() {
-                    Id = "zh",
+                    Id = ELanguage.zh.ToString(),
                     Name = "汉语",
                 },
                 new() {
-                    Id = "ko",
+                    Id = ELanguage.ko.ToString(),
                     Name = "한국어",
                 },
                 new() {
-                    Id = "ja",
+                    Id = ELanguage.ja.ToString(),
                     Name = "日本語",
                 },
             ]);
@@ -97,14 +98,10 @@ namespace Gosuji.API.Helpers
                 PreMovesSwitch = false,
                 PreMoves = 5,
                 HideOptions = EHideOptions.PERFECT,
-                ColorType = 0,
+                ColorType = EMoveColor.RANDOM,
                 WrongMoveCorrection = true,
 
-                KomiChangeStyle = "Automatic",
-                Komi = 6.5,
-                Ruleset = "Japanese",
-
-                ForceOpponentCorners = "Both",
+                ForceOpponentCorners = EForceOpponentCorners.BOTH,
                 CornerSwitch44 = true,
                 CornerSwitch34 = true,
                 CornerSwitch33 = false,
@@ -210,21 +207,21 @@ namespace Gosuji.API.Helpers
             dbContext.SettingConfigs.AddRange([
                 new() {
                     Id = userIds[0],
-                    LanguageId = "en",
+                    LanguageId = ELanguage.en.ToString(),
                     Theme = EThemeType.DARK,
                     MasterVolume = 100,
                     IsGetChangelogEmail = true,
                 },
                 new() {
                     Id = userIds[1],
-                    LanguageId = "en",
+                    LanguageId = ELanguage.en.ToString(),
                     Theme = EThemeType.DARK,
                     MasterVolume = 80,
                     IsGetChangelogEmail = false,
                 },
                 new() {
                     Id = userIds[2],
-                    LanguageId = "zh",
+                    LanguageId = ELanguage.zh.ToString(),
                     Theme = EThemeType.LIGHT,
                     MasterVolume = 100,
                     IsGetChangelogEmail = true,
@@ -270,7 +267,7 @@ namespace Gosuji.API.Helpers
             Random random = new();
             TrainerSettingConfig config = GetTrainerSettingConfigBase();
             config.Handicap = random.Next(10);
-            config.ColorType = random.Next(3) - 1;
+            config.ColorType = (EMoveColor)random.Next(3) - 1;
             config.PreMovesSwitch = random.Next(2) == 0;
             config.PreMoves = random.Next(11);
             config.WrongMoveCorrection = random.Next(2) == 0;

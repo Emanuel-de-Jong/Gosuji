@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Gosuji.Client.Services
 {
-    public class JosekisService : BaseHubService
+    public class JosekisConnection : BaseConnection
     {
-        public JosekisService(IConfiguration configuration, UserService userService)
-            : base(configuration, userService, "josekishub")
+        public JosekisConnection(IConfiguration configuration, UserAPI userAPI)
+            : base(configuration, userAPI, "josekishub")
         {
         }
 

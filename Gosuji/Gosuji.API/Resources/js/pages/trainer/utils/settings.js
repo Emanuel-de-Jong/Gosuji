@@ -1,3 +1,5 @@
+import { kataGo } from "./kataGo";
+import { sgf } from "./sgf";
 import { trainerG } from "./trainerG";
 
 let settings = { id: "settings" };
@@ -8,17 +10,17 @@ settings.SETTINGS = {
     handicap: utils.TYPE.INT,
     preMovesSwitch: utils.TYPE.BOOL,
     preMoves: utils.TYPE.INT,
-    hideOptions: utils.TYPE.STRING,
+    hideOptions: utils.TYPE.INT,
     colorType: utils.TYPE.INT,
     suggestionVisits: utils.TYPE.INT,
     opponentVisits: utils.TYPE.INT,
     wrongMoveCorrection: utils.TYPE.BOOL,
 
-    komiChangeStyle: utils.TYPE.STRING,
+    customKomi: utils.TYPE.BOOL,
     komi: utils.TYPE.FLOAT,
     ruleset: utils.TYPE.STRING,
 
-    forceOpponentCorners: utils.TYPE.STRING,
+    forceOpponentCorners: utils.TYPE.INT,
     cornerSwitch44: utils.TYPE.BOOL,
     cornerSwitch34: utils.TYPE.BOOL,
     cornerSwitch33: utils.TYPE.BOOL,
@@ -42,7 +44,7 @@ settings.SETTINGS = {
     maxVisitDiffPerc: utils.TYPE.FLOAT,
 
     opponentOptions: utils.TYPE.INT,
-    hideOpponentOptions: utils.TYPE.STRING,
+    hideOpponentOptions: utils.TYPE.INT,
     opponentOptionPercSwitch: utils.TYPE.BOOL,
     opponentOptionPerc: utils.TYPE.FLOAT,
     
@@ -56,7 +58,7 @@ settings.PRE_GAME_SETTINGS = [
     "preMovesSwitch",
     "preMoves",
     "colorType",
-    "komiChangeStyle",
+    "customKomi",
     "komi",
     "ruleset",
     "forceOpponentCorners",
@@ -69,20 +71,27 @@ settings.PRE_GAME_SETTINGS = [
 ];
 
 settings.HIDE_OPTIONS = {
-    NEVER: "NEVER",
-    PERFECT: "PERFECT",
-    RIGHT: "RIGHT",
-    ALWAYS: "ALWAYS",
+    NEVER: 0,
+    PERFECT: 1,
+    RIGHT: 2,
+    ALWAYS: 3,
 };
 
 settings.HIDE_OPPONENT_OPTIONS = {
-    NEVER: "NEVER",
-    PERFECT: "PERFECT",
-    ALWAYS: "ALWAYS",
+    NEVER: 0,
+    PERFECT: 1,
+    ALWAYS: 3,
+};
+
+settings.FORCE_OPPONENT_CORNERS = {
+    NONE: 0,
+    FIRST: 1,
+    SECOND: 2,
+    BOTH: 3,
 };
 
 
-settings.init = function (gameLoadInfo) {
+settings.init = async function (trainerSettingConfig, gameLoadInfo) {
     for (const key in settings.SETTINGS) {
         settings[key + "Element"] = document.getElementById(key);
     }
@@ -92,11 +101,9 @@ settings.init = function (gameLoadInfo) {
         "input",
         settings.inputAndSelectInputListener
     );
-    settings.komiChangeStyleElement.addEventListener("input", settings.komiChangeStyleElementInputListener);
+    settings.customKomiElement.addEventListener("input", settings.toggleCustomKomi);
     settings.handicapElement.addEventListener("input", settings.setKomi);
-    settings.rulesetElement.addEventListener("input", settings.setKomi);
-    settings.boardsizeElement.addEventListener("input", settings.setKomi);
-
+    settings.rulesetElement.addEventListener("input", settings.setRuleset);
     for (const input of utils.querySelectorAlls(["#settingsAccordion input", "#settingsAccordion select"])) {
         if (input.type != "checkbox") {
             input.required = true;
@@ -106,9 +113,7 @@ settings.init = function (gameLoadInfo) {
         }
     }
 
-    for (const key in settings.SETTINGS) {
-        settings.updateSetting(key);
-    }
+    await settings.syncWithCS(trainerSettingConfig);
 
     settings.clear(gameLoadInfo);
 };
@@ -122,7 +127,7 @@ settings.clear = function (gameLoadInfo) {
 };
 
 
-settings.updateSetting = function (name) {
+settings.updateSetting = async function (name) {
     let type = settings.SETTINGS[name];
 
     let element = settings[name + "Element"];
@@ -135,18 +140,71 @@ settings.updateSetting = function (name) {
     }
 
     settings[name] = value;
+
+    if (!settings.isSyncingWithCS) {
+        if (name == "customKomi") {
+            return;
+        }
+
+        const propertyName = name[0].toUpperCase() + name.slice(1);
+        const strValue = type == utils.TYPE.BOOL ? '' + element.checked : element.value;
+        await settings.updateTrainerSettingConfig(propertyName, strValue);
+    }
 };
 
-settings.setSetting = function (name, value) {
-    settings[name + "Element"].value = value;
-    settings[name + "Element"].dispatchEvent(new Event("input"));
+settings.setSetting = async function (name, value, isBatchSet = false) {
+    const elName = name + "Element";
+    if (!settings.hasOwnProperty(elName)) {
+        return;
+    }
+
+    const el = settings[elName];
+
+    const type = settings.SETTINGS[name];
+    if (type == utils.TYPE.BOOL) {
+        el.checked = value;
+    } else {
+        el.value = value;
+    }
+
+    if (!isBatchSet) {
+        el.dispatchEvent(new Event("input"));
+    } else {
+        await settings.updateSetting(name);
+    }
 };
 
-settings.inputAndSelectInputListener = function (event) {
+settings.inputAndSelectInputListener = async function (event) {
     let element = event.target;
     if (settings.validateInput(element)) {
-        settings.updateSetting(element.id);
+        await settings.updateSetting(element.id);
     }
+};
+
+settings.syncWithCS = async function (trainerSettingConfig) {
+    settings.isSyncingWithCS = true;
+
+    const customKomi = trainerSettingConfig.hasOwnProperty("komi") && trainerSettingConfig["komi"] != null;
+    
+    for (const [name, value] of Object.entries(trainerSettingConfig)) {
+        await settings.setSetting(name, value, true);
+    }
+
+    await settings.setSetting("ruleset", trainerSettingConfig.getRuleset, true);
+    await settings.setSetting("komi", trainerSettingConfig.getKomi, true);
+    await settings.setSetting("suggestionVisits", trainerSettingConfig.getSuggestionVisits, true);
+    await settings.setSetting("opponentVisits", trainerSettingConfig.getOpponentVisits, true);
+    await settings.setSetting("preVisits", trainerSettingConfig.getPreVisits, true);
+    await settings.setSetting("selfplayVisits", trainerSettingConfig.getSelfplayVisits, true);
+
+    settings.customKomiElement.checked = customKomi;
+    settings.customKomiElement.dispatchEvent(new Event("input"));
+
+    settings.isSyncingWithCS = false;
+};
+
+settings.updateTrainerSettingConfig = async function (propertyName, value) {
+    return await kataGo.invokeCS(trainerG.trainerRef, "UpdateTrainerSettingConfig", propertyName, value);
 };
 
 settings.togglePreGameSettings = function (enable = false) {
@@ -179,53 +237,29 @@ settings.hideInvalidMessage = function (input) {
     messageDiv.textContent = "";
 };
 
-settings.komiChangeStyleElementInputListener = function () {
-    if (settings.komiChangeStyle == "Automatic") {
-        settings.komiElement.disabled = true;
-        settings.setKomi();
-    } else {
+settings.toggleCustomKomi = async function () {
+    if (settings.customKomi) {
         settings.komiElement.disabled = false;
+    } else {
+        settings.komiElement.disabled = true;
+        await settings.setKomi();
     }
 };
 
-settings.setKomi = function () {
-    if (settings.komiChangeStyle != "Automatic") return;
+settings.setRuleset = async function () {
+    sgf.setRuleset(settings.ruleset);
+    await settings.setKomi();
+};
+
+settings.setKomi = async function () {
+    if (settings.customKomi) return;
 
     let oldKomi = settings.komi;
-    let komi;
-
-    if (settings.handicap != 0) {
-        komi = 0.5;
-    } else {
-        if (settings.ruleset == "Japanese") {
-            switch (settings.boardsize) {
-                case 19:
-                    komi = 6.5;
-                    break;
-                case 13:
-                    komi = 6.5;
-                    break;
-                case 9:
-                    komi = 6.5;
-                    break;
-            }
-        } else if (settings.ruleset == "Chinese") {
-            switch (settings.boardsize) {
-                case 19:
-                    komi = 7.5;
-                    break;
-                case 13:
-                    komi = 6.5;
-                    break;
-                case 9:
-                    komi = 6.5;
-                    break;
-            }
-        }
-    }
+    let komi = await trainerG.trainerRef.invokeMethodAsync("GetDefaultKomi", settings.ruleset);
 
     if (komi != oldKomi) {
-        settings.setSetting("komi", komi);
+        await settings.setSetting("komi", komi);
+        sgf.setKomi(komi);
     }
 };
 

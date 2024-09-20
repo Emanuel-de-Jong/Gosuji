@@ -14,7 +14,7 @@ namespace Gosuji.Client.Components.Pages
         [Inject]
         private AuthenticationStateProvider authenticationStateProvider { get; set; }
         [Inject]
-        private DataService dataService { get; set; }
+        private DataAPI dataAPI { get; set; }
 
         [SupplyParameterFromForm]
         private InputModel input { get; set; } = new();
@@ -46,7 +46,7 @@ namespace Gosuji.Client.Components.Pages
                 FeedbackType = input.FeedbackType
             };
 
-            APIResponse response = await dataService.PostFeedback(feedback);
+            APIResponse response = await dataAPI.PostFeedback(feedback);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
 
             input = new();

@@ -5,12 +5,15 @@ class MoveSuggestion {
     visits;
     score;
     grade;
+    continuation;
 
 
-    constructor(coord, visits, winrate, scoreLead) {
+    constructor(coord, visits, winrate, scoreLead, grade, continuation) {
         this.coord = coord;
         this.visits = visits;
         this.score = new Score(winrate, scoreLead);
+        this.grade = grade;
+        this.continuation = continuation;
     }
 
 
@@ -18,30 +21,15 @@ class MoveSuggestion {
         return this.coord.x == 0;
     }
 
-    encode() {
-        let encoded = [];
-        encoded = encoded.concat(this.coord.encode());
-        encoded = byteUtils.numToBytes(this.visits, 4, encoded);
-        encoded = encoded.concat(this.score.encode());
-        return encoded;
-    }
-
 
     static fromKataGo(kataGoSuggestion) {
         return new MoveSuggestion(
-            Coord.fromServer(kataGoSuggestion.move.coord),
+            Coord.fromKataGo(kataGoSuggestion.coord),
             kataGoSuggestion.visits,
-            kataGoSuggestion.winrate,
-            kataGoSuggestion.scoreLead
-        );
-    }
-
-    static fromServer(serverSuggestion) {
-        return new MoveSuggestion(
-            Coord.fromServer(serverSuggestion.coord),
-            serverSuggestion.visits,
-            serverSuggestion.score.winrate,
-            serverSuggestion.score.scoreLead
+            kataGoSuggestion.score.winrate,
+            kataGoSuggestion.score.scoreLead,
+            kataGoSuggestion.grade,
+            kataGoSuggestion.continuation
         );
     }
 }

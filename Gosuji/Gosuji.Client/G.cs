@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Components.Shared;
+using Gosuji.Client.Models;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
@@ -94,14 +95,14 @@ namespace Gosuji.Client
             return sentence;
         }
 
-        public static string ColorNumToName(int colorNum)
+        public static string ColorToName(EMoveColor color)
         {
-            return colorNum == -1 ? "B" : "W";
+            return color == EMoveColor.BLACK ? "B" : "W";
         }
 
-        public static string ColorNumToFullName(int colorNum)
+        public static string ColorToFullName(EMoveColor color)
         {
-            return colorNum == -1 ? "Black" : "White";
+            return color == EMoveColor.BLACK ? "Black" : "White";
         }
     }
 }

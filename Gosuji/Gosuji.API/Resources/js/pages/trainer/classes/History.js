@@ -9,6 +9,10 @@ class History {
     }
 
     add(data, node=trainerG.board.get()) {
+        if (data == null) {
+            return;
+        }
+        
         node[this.nodeKey] = data;
         this.nodes.add(node);
     }
@@ -36,6 +40,33 @@ class History {
 
     has(node=trainerG.board.get()) {
         return this.get(node) != null;
+    }
+
+    findFirstInBranch(node=trainerG.board.get()) {
+        let data;
+        let childNode = node;
+        while (childNode) {
+            data = childNode[this.nodeKey];
+            if (data != null) {
+                return data;
+            }
+
+            if (childNode.children.length == 0) {
+                break;
+            }
+
+            childNode = childNode.children[0];
+        }
+
+        let parentNode = node.parent;
+        while (parentNode) {
+            data = parentNode[this.nodeKey];
+            if (data != null) {
+                return data;
+            }
+
+            parentNode = parentNode.parent;
+        }
     }
 
     refreshNodes() {
@@ -71,53 +102,6 @@ class History {
             yield this.get(node);
         }
     }
-
-    static fromServer() {
-        return new History();
-    }
-
-    // encode() {
-    //     if (!this.dataType) return [];
-
-    //     let encoded = [];
-
-    //     for (const gridPoint of this.iterateGrid()) {
-    //         if (!gridPoint.data) {
-    //             encoded = byteUtils.numToBytes(this.ENCODE_Y_INDICATOR, 2, encoded);
-    //             encoded = byteUtils.numToBytes(gridPoint.y, 2, encoded);
-    //         } else {
-    //             encoded = byteUtils.numToBytes(gridPoint.x, 2, encoded);
-
-    //             if (this.dataType == "object") {
-    //                 encoded = encoded.concat(gridPoint.data.encode());
-    //             } else {
-    //                 encoded = byteUtils.numToBytes(gridPoint.data, 1, encoded);
-    //             }
-    //         }
-    //     }
-
-    //     return encoded;
-    // }
-
-    // *iterateGrid() {
-    //     for (let y = 0; y < this.grid.length; y++) {
-    //         if (!this.grid[y]) continue;
-    //         yield {
-    //             y: y,
-    //             x: null,
-    //             data: null,
-    //         };
-
-    //         for (let x = 0; x < this.grid[y].length; x++) {
-    //             if (!this.grid[y][x]) continue;
-    //             yield {
-    //                 y: y,
-    //                 x: x,
-    //                 data: this.grid[y][x],
-    //             };
-    //         }
-    //     }
-    // }
 }
 
 if (!window.trainer) window.trainer = {};

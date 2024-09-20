@@ -21,16 +21,9 @@ if (typeof Coord === "undefined") {
             return false;
         }
 
-        encode(byteCount = 1) {
-            let encoded = [];
-            encoded = byteUtils.numToBytes(this.x, byteCount, encoded);
-            encoded = byteUtils.numToBytes(this.y, byteCount, encoded);
-            return encoded;
-        }
 
-
-        static fromServer(serverCoord) {
-            return new Coord(serverCoord.x, serverCoord.y);
+        static fromKataGo(kataGoCoord) {
+            return new Coord(kataGoCoord.x, kataGoCoord.y);
         }
     }
 

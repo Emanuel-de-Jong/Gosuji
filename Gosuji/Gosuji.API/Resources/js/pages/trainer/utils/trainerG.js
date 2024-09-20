@@ -2,7 +2,7 @@ import { History } from "../classes/History";
 import { MoveSuggestionList } from "../classes/MoveSuggestionList";
 import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { TrainerBoard } from "../classes/TrainerBoard";
-import { katago } from "./katago";
+import { kataGo } from "./kataGo";
 import { sgf } from "./sgf";
 import { stats } from "./stats";
 import { debug } from "../debug";
@@ -12,13 +12,12 @@ let trainerG = { id: "trainerG" };
 
 
 trainerG.MOVE_TYPE = {
-    NONE: 0,
-    INIT: 1,
-    FORCED_CORNER: 2,
-    PRE: 3,
-    SELFPLAY: 4,
-    PLAYER: 5,
-    OPPONENT: 6,
+    INIT: 0,
+    FORCED_CORNER: 1,
+    PRE: 2,
+    SELFPLAY: 3,
+    PLAYER: 4,
+    OPPONENT: 5,
     PASS: 6,
 };
 
@@ -55,35 +54,25 @@ trainerG.clear = function (gameLoadInfo) {
         ? History.fromServer(gameLoadInfo.suggestions, MoveSuggestionList)
         : new History();
     trainerG.moveTypeHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.moveTypes) : new History();
-    trainerG.result = null;
     trainerG.isPassed = false;
-    trainerG.shouldBeImperfectSuggestion = false;
 };
 
-trainerG.getGameColor = function () {
-    let color = trainerG.color;
+trainerG.getMainBranch = function () {
+    return trainerG.moveTypeHistory.getHighestX();
+};
 
-    let node = trainerG.moveTypeHistory.getHighestX();
-    if (node == null) {
-        return color;
+trainerG.isMainBranch = function () {
+    let isMainBranch = false;
+    const mainBranchNode = trainerG.getMainBranch();
+    const currentNode = trainerG.board.get();
+    if (mainBranchNode != null && (
+        mainBranchNode.navTreeX != currentNode.navTreeX ||
+        mainBranchNode.navTreeY != currentNode.navTreeY)
+    ) {
+        isMainBranch = true;
     }
 
-    let moveType;
-    while (node) {
-        const tempMoveType = trainerG.moveTypeHistory.get(node);
-        if (tempMoveType != null && tempMoveType == trainerG.MOVE_TYPE.PLAYER) {
-            moveType = tempMoveType;
-            break;
-        }
-
-        node = node.parent;
-    }
-    if (moveType == null) {
-        return color;
-    }
-
-    color = node.move.color;
-    return color;
+    return isMainBranch;
 };
 
 trainerG.setPhase = function (phase) {
@@ -104,11 +93,6 @@ trainerG.setColor = function (color = trainerG.board.getNextColor()) {
     }
 };
 
-trainerG.setKataGoVersion = function (kataGoVersion) {
-    trainerG.kataGoVersion = kataGoVersion;
-};
-
-
 trainerG.showLoadAnimation = function() {
     trainerG.loadAnimation.hidden = false;
 };
@@ -117,24 +101,8 @@ trainerG.hideLoadAnimation = function() {
     trainerG.loadAnimation.hidden = true;
 };
 
-trainerG.analyze = async function (maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color) {
-    trainerG.suggestions = await katago.analyze(maxVisits, moveOptions, minVisitsPerc, maxVisitDiffPerc, color);
-    await trainerG.pass(trainerG.suggestions.passSuggestion);
-};
-
-trainerG.analyzeMove = async function (coord) {
-    let suggestion = await katago.analyzeMove(coord);
-
-    if (!trainerG.suggestions) {
-        trainerG.suggestions = new MoveSuggestionList();
-    }
-    trainerG.suggestions.analyzeMoveSuggestion = suggestion;
-
-    return suggestion;
-};
-
-trainerG.pass = async function (suggestion) {
-    if (!suggestion) return;
+trainerG.handleResult = function (result) {
+    if (result == null) return;
 
     trainerG.isPassed = true;
     gameplay.takePlayerControl();
@@ -142,32 +110,13 @@ trainerG.pass = async function (suggestion) {
 
     trainerG.board.pass();
 
-    // Only count result of longest branch
-    const highestNode = trainerG.moveTypeHistory.getHighestX();
-    const currentNode = trainerG.board.get();
-    if (highestNode != null && (
-        highestNode.navTreeX != currentNode.navTreeX ||
-        highestNode.navTreeY != currentNode.navTreeY)
-    ) {
-        return;
-    }
-
-    trainerG.result = suggestion.score.copy();
-
-    let resultStr = trainerG.getResultStr();
+    stats.resultHistory.add(result);
+    
+    let resultStr = g.getResultStr(result);
     stats.setResult(resultStr);
     sgf.setResultMeta(resultStr);
 
     trainerG.board.finishedOverlay.hidden = false;
-
-    await db.save();
-};
-
-trainerG.getResultStr = function () {
-    if (trainerG.result.scoreLead >= 0) {
-        return g.COLOR_NAME_TYPE.B + "+" + trainerG.result.formatScoreLead();
-    }
-    return g.COLOR_NAME_TYPE.W + "+" + trainerG.result.formatScoreLead(true);
 };
 
 if (!window.trainer) window.trainer = {};

@@ -70,6 +70,7 @@ namespace Gosuji.API.Controllers
                 .OrderByDescending(g => g.TrainerSettingConfigId)
                 .Skip(start - 1)
                 .Take(end - start + 1)
+                .Include(g => g.TrainerSettingConfig)
                 .Include(g => g.GameStat)
                 .Include(g => g.OpeningStat)
                 .Include(g => g.MidgameStat)
@@ -85,10 +86,9 @@ namespace Gosuji.API.Controllers
                     Result = g.Result,
                     RightTopStreak = g.RightTopStreak,
                     PerfectTopStreak = g.PerfectTopStreak,
-                    Boardsize = g.Boardsize,
-                    Handicap = g.Handicap,
+                    Boardsize = g.TrainerSettingConfig.Boardsize,
+                    Handicap = g.TrainerSettingConfig.Handicap,
                     Color = g.Color,
-                    IsFinished = g.IsFinished,
                     IsThirdPartySGF = g.IsThirdPartySGF,
                     CreateDate = g.CreateDate,
                     ModifyDate = g.ModifyDate

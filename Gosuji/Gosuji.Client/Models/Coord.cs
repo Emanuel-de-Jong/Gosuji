@@ -11,14 +11,19 @@
             Y = y;
         }
 
-        public bool Equals(Coord coordToCompare)
+        public bool Equals(Coord other)
         {
-            if (coordToCompare == null)
+            if (other == null)
             {
                 return false;
             }
 
-            return X == coordToCompare.X && Y == coordToCompare.Y;
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return X == other.X && Y == other.Y;
         }
     }
 }

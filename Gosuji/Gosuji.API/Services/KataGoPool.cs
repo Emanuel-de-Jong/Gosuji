@@ -2,10 +2,11 @@
 using Gosuji.API.Helpers;
 using Gosuji.Client.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Gosuji.API.Services
 {
-    public class KataGoPoolService : IDisposable
+    public class KataGoPool : IAsyncDisposable
     {
         private const int MIN_INSTANCES = 1;
         private const int MAX_INSTANCES = 8;
@@ -23,7 +24,7 @@ namespace Gosuji.API.Services
         private KataGo? tempInstance;
         // TEMP END
 
-        public KataGoPoolService(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
+        public KataGoPool(IDbContextFactory<ApplicationDbContext> _dbContextFactory)
         {
             dbContextFactory = _dbContextFactory;
 
@@ -68,17 +69,20 @@ namespace Gosuji.API.Services
 
         private async Task CashInTimerElapsed()
         {
-            foreach (KeyValuePair<string, KataGo> pair in new Dictionary<string, KataGo>(instances))
+            foreach (string userId in new Dictionary<string, KataGo>(instances).Keys)
             {
-                if ((DateTimeOffset.UtcNow - pair.Value.LastStartTime).Hours <= 6)
+                KataGo instance = instances[userId];
+                if ((DateTimeOffset.UtcNow - instance.LastStartTime).Hours <= 6)
                 {
                     continue;
                 }
 
-                await CashIn(pair.Key);
+                instances.Remove(userId);
+                instance.IsPaused = true;
 
-                pair.Value.Stop();
-                instances.Remove(pair.Key);
+                await CashIn(userId);
+
+                instance.Stop();
             }
         }
 
@@ -118,14 +122,17 @@ namespace Gosuji.API.Services
                 return;
             }
 
+            KataGo instance = instances[userId];
+            instances.Remove(userId);
+            instance.IsPaused = true;
+
             await CashIn(userId);
 
-            KataGo instance = instances[userId];
             await instance.Restart();
-            instance.TotalVisits = 0;
+
+            instance.IsPaused = false;
 
             freeInstances.Push(instance);
-            instances.Remove(userId);
 
             ManageFreeInstances();
         }
@@ -156,25 +163,37 @@ namespace Gosuji.API.Services
             }
         }
 
-        private async Task CashIn(string userId)
+        public async Task CashIn(string userId)
         {
+            if (!instances.ContainsKey(userId))
+            {
+                return;
+            }
+
+            KataGo instance = instances[userId];
+
             UserMoveCount? moveCount = await MoveCountHelper.Get(dbContextFactory, userId);
-            moveCount.KataGoVisits += instances[userId].TotalVisits;
+            moveCount.KataGoVisits += instance.TotalVisits;
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
 
             dbContext.Update(moveCount);
             await dbContext.SaveChangesAsync();
 
+            instance.TotalVisits = 0;
+
             await dbContext.DisposeAsync();
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
+            List<Task> tasks = [];
             foreach (string userId in instances.Keys)
             {
-                CashIn(userId).Wait();
+                tasks.Add(CashIn(userId));
             }
+
+            await Task.WhenAll(tasks);
         }
     }
 }

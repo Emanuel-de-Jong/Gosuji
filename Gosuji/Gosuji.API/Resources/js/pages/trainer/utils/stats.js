@@ -8,9 +8,9 @@ let stats = { id: "stats" };
 
 
 stats.PLAYER_RESULT_TYPE = {
-    WRONG: 1,
-    RIGHT: 2,
-    PERFECT: 3,
+    WRONG: 0,
+    RIGHT: 1,
+    PERFECT: 2,
 };
 
 stats.PLAYER_RESULT_Y_INDICATOR = -1;
@@ -25,11 +25,14 @@ stats.init = async function (gameLoadInfo) {
     stats.resultDivElement = document.getElementById("resultDiv");
     stats.resultElement = document.getElementById("result");
 
+    trainerG.board.editor.addListener(stats.drawStats);
+
     await stats.clear(gameLoadInfo);
 };
 
 stats.clear = async function (gameLoadInfo) {
     stats.playerResultHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.playerResults) : new History();
+    stats.resultHistory = new History();
 
     await stats.clearSuggestions();
     stats.clearResult();
@@ -38,8 +41,6 @@ stats.clear = async function (gameLoadInfo) {
     stats.perfectStreak = gameLoadInfo ? gameLoadInfo.perfectStreak : 0;
     stats.rightTopStreak = gameLoadInfo ? gameLoadInfo.rightTopStreak : 0;
     stats.perfectTopStreak = gameLoadInfo ? gameLoadInfo.perfectTopStreak : 0;
-
-    trainerG.board.editor.addListener(stats.drawStats);
 };
 
 
@@ -54,86 +55,6 @@ stats.update = function () {
     stats.playerResultHistory.add(type);
 
     stats.updateStreaks(type);
-};
-
-stats.encodePlayerResultHistory = function () {
-    let encoded = stats.encodePlayerResultHistoryLoop();
-
-    let firstY = byteUtils.numToBytes(stats.PLAYER_RESULT_Y_INDICATOR, 2);
-    firstY = byteUtils.numToBytes(0, 2, firstY);
-    firstY = byteUtils.numToBytes(0, 2, firstY);
-    firstY = byteUtils.numToBytes(0, 2, firstY);
-
-    encoded = firstY.concat(encoded);
-
-    // stats.decodePlayerResultHistory(encoded);
-
-    return encoded;
-};
-
-stats.encodePlayerResultHistoryLoop = function (node = trainerG.board.editor.getRoot()) {
-    let encoded = [];
-
-    for (let i = 0; i < node.children.length; i++) {
-        let childNode = node.children[i];
-
-        if (!stats.playerResultHistory.has(childNode)) continue;
-
-        if (i > 0) {
-            let parentNode = node;
-            while (parentNode.parent != null) {
-                if (stats.playerResultHistory.has(parentNode)) {
-                    break;
-                }
-
-                parentNode = parentNode.parent;
-            }
-
-            encoded = byteUtils.numToBytes(stats.PLAYER_RESULT_Y_INDICATOR, 2, encoded);
-            encoded = byteUtils.numToBytes(childNode.navTreeY, 2, encoded);
-            encoded = byteUtils.numToBytes(parentNode.navTreeY, 2, encoded);
-            encoded = byteUtils.numToBytes(parentNode.navTreeX, 2, encoded);
-        }
-
-        let val = stats.playerResultHistory.get(childNode);
-        if (val != null) {
-            encoded = byteUtils.numToBytes(childNode.navTreeX, 2, encoded);
-            encoded = byteUtils.numToBytes(val, 1, encoded);
-            // console.log(childNode.navTreeY + ", " + childNode.navTreeX + ": " + val);
-        }
-
-        encoded = encoded.concat(stats.encodePlayerResultHistoryLoop(childNode));
-    }
-
-    return encoded;
-};
-
-// stats.decodePlayerResultHistory = function (encoded) {
-//     let rootNode = new CNode();
-
-//     let i = 0;
-//     let y = 0;
-//     let node = rootNode;
-//     while (i < encoded.length) {
-//         let x = encoded[i];
-//         if (x == stats.PLAYER_RESULT_Y_INDICATOR) {
-//             y = encoded[i + 1];
-//             node = rootNode.nodes.get(encoded[i + 3], encoded[i + 2]);
-//             i += 4;
-//         } else {
-//             node = node.add(encoded[i + 1], x, y);
-//             i += 2;
-//         }
-//     }
-
-//     stats.printDecodedPlayerResultHistory(rootNode);
-// };
-
-stats.printDecodedPlayerResultHistory = function (node) {
-    for (const childNode of node.children) {
-        // console.log(childNode.y + ", " + childNode.x + ": " + childNode.value);
-        stats.printDecodedPlayerResultHistory(childNode);
-    }
 };
 
 stats.getMostPlayerResultsBranch = function (node = trainerG.board.editor.getRoot(), playerResultCount = 0) {
@@ -203,6 +124,10 @@ stats.setSuggestions = async function (suggestionList) {
         suggestionPerGrade.push(suggestion);
     }
 
+    if (suggestionList.analyzeMoveSuggestion) {
+        suggestionPerGrade.push(suggestionList.analyzeMoveSuggestion);
+    }
+
     await trainerG.trainerRef.invokeMethodAsync("SetSuggestions", suggestionPerGrade);
 };
 
@@ -211,14 +136,24 @@ stats.clearSuggestions = async function () {
 };
 
 
-stats.setResult = function (result) {
-    stats.resultElement.textContent = result;
+stats.setResult = function (resultStr) {
+    if (resultStr == null) {
+        let result = stats.resultHistory.findFirstInBranch();
+        if (result == null) {
+            stats.clearResult();
+            return;
+        }
+
+        resultStr = g.getResultStr(result);
+    }
+
+    stats.resultElement.textContent = resultStr;
     stats.resultDivElement.hidden = false;
 };
 
 stats.clearResult = function () {
-    stats.resultElement.textContent = "";
     stats.resultDivElement.hidden = true;
+    stats.resultElement.textContent = "";
 };
 
 
