@@ -79,7 +79,6 @@ namespace Gosuji.Client.Models.Trainer
                 MoveSuggestion suggestion = Suggestions[index];
                 if (suggestion.Visits < minVisits || lastSuggestionVisits - suggestion.Visits > maxVisitDiff)
                 {
-                    index--;
                     break;
                 }
 
@@ -88,6 +87,10 @@ namespace Gosuji.Client.Models.Trainer
                     lastSuggestionVisits = suggestion.Visits;
                 }
             }
+
+            // If loop broke, we want to go back to the last suggestion
+            // If loop didn't break, we want to revert the last increment before the loop check
+            index--;
 
             Suggestions = Suggestions[..(index + 1)];
         }
@@ -123,11 +126,14 @@ namespace Gosuji.Client.Models.Trainer
                     moveOptionCount++;
                     if (moveOptionCount > moveOptions)
                     {
-                        index--;
                         break;
                     }
                 }
             }
+
+            // If loop broke, we want to go back to the last suggestion
+            // If loop didn't break, we want to revert the last increment before the loop check
+            index--;
 
             Suggestions = Suggestions[..(index + 1)];
         }
