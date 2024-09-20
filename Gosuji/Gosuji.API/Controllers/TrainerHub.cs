@@ -8,7 +8,6 @@ using Gosuji.Client.Models.Trainer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Concurrent;
-using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.API.Controllers
 {

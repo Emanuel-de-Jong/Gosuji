@@ -1,6 +1,6 @@
 ﻿using Gosuji.API.Services.TrainerService;
-using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Models;
+using Gosuji.Client.Models.Trainer;
 
 namespace Gosuji.API.Helpers
 {
@@ -21,7 +21,7 @@ namespace Gosuji.API.Helpers
         {
             while (currentIndex < data.Length)
             {
-                var decodedNode = DecodeNode();
+                MoveNode decodedNode = DecodeNode();
                 node.Children.Add(decodedNode);
                 decodedNode.Parent = node;
 
@@ -43,12 +43,12 @@ namespace Gosuji.API.Helpers
             int x = data[currentIndex++];
             int y = data[currentIndex++];
 
-            Move move = new Move(x, y);
-            MoveNode node = new MoveNode(move);
+            Move move = new(x, y);
+            MoveNode node = new(move);
 
             while (currentIndex < data.Length)
             {
-                var fieldType = (EDataTypes)BitConverter.ToInt32(data, currentIndex);
+                EDataTypes fieldType = (EDataTypes)BitConverter.ToInt32(data, currentIndex);
                 currentIndex += 4;
 
                 switch (fieldType)
@@ -87,7 +87,7 @@ namespace Gosuji.API.Helpers
 
             while (currentIndex < data.Length)
             {
-                var suggestionsField = (ESuggestionsField)BitConverter.ToInt32(data, currentIndex);
+                ESuggestionsField suggestionsField = (ESuggestionsField)BitConverter.ToInt32(data, currentIndex);
                 currentIndex += 4;
 
                 switch (suggestionsField)

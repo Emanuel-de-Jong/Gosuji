@@ -119,7 +119,7 @@ namespace Gosuji.Client.Data
                 {
                     return Ruleset;
                 }
-                if (Language == ELanguage.zh || Language == ELanguage.ko)
+                if (Language is ELanguage.zh or ELanguage.ko)
                 {
                     return "Chinese";
                 }

@@ -2,7 +2,6 @@
 using Gosuji.API.Helpers;
 using Gosuji.Client.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Gosuji.API.Services
 {

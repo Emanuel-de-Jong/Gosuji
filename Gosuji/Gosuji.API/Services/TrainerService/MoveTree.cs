@@ -42,7 +42,7 @@ namespace Gosuji.API.Services.TrainerService
 
             if (CurrentNode?.Parent == null)
             {
-                   CurrentNode = RootNode;
+                CurrentNode = RootNode;
             }
             else if (CurrentNode.Equals(node))
             {

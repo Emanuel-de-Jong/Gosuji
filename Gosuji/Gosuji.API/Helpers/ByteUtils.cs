@@ -13,7 +13,9 @@
             }
 
             if (arr == null)
+            {
                 return bytes;
+            }
 
             return arr.Concat(bytes).ToArray();
         }
