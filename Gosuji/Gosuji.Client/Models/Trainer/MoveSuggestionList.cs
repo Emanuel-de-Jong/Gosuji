@@ -73,8 +73,8 @@ namespace Gosuji.Client.Models.Trainer
             int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(Visits, highestVisits));
 
             int index;
-            int lastSuggestionVisits = int.MaxValue;
-            for (index = 0; index < Suggestions.Count; index++)
+            int lastSuggestionVisits = Suggestions[0].Visits;
+            for (index = 1; index < Suggestions.Count; index++)
             {
                 MoveSuggestion suggestion = Suggestions[index];
                 if (suggestion.Visits < minVisits || lastSuggestionVisits - suggestion.Visits > maxVisitDiff)
@@ -89,12 +89,7 @@ namespace Gosuji.Client.Models.Trainer
                 }
             }
 
-            if (index == 0 && Suggestions.Count != 0)
-            {
-                index = 1;
-            }
-
-            Suggestions = Suggestions[..index];
+            Suggestions = Suggestions[..(index + 1)];
         }
 
         public void AddGrades()
@@ -128,12 +123,13 @@ namespace Gosuji.Client.Models.Trainer
                     moveOptionCount++;
                     if (moveOptionCount > moveOptions)
                     {
+                        index--;
                         break;
                     }
                 }
             }
 
-            Suggestions = Suggestions[..index];
+            Suggestions = Suggestions[..(index + 1)];
         }
     }
 }
