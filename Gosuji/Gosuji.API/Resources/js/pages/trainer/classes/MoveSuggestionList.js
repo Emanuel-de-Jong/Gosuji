@@ -10,39 +10,21 @@ class MoveSuggestionList {
     visits;
     playIndex;
 
-
     constructor(suggestions, analyzeMoveSuggestion) {
         this.suggestions = suggestions ? suggestions : [];
         this.analyzeMoveSuggestion = analyzeMoveSuggestion;
     }
 
-
-    add(suggestion) {
-        this.suggestions.push(suggestion);
-    }
-
     getFilterByWeaker() {
-        let move = trainerG.board.get().move;
-        if (!move) return this.suggestions;
-
-        let playedCoord = new Coord(move.x, move.y);
-
-        if (!settings.hideWeakerOptions || gameplay.chosenNotPlayedCoordHistory.get() || !this.find(playedCoord)) {
+        if (!settings.hideWeakerOptions || this.playIndex == null || gameplay.chosenNotPlayedCoordHistory.get()) {
             return this.suggestions;
         }
 
         let index;
-        let playedCoordIndex;
-        for (index = 0; index < this.suggestions.length; index++) {
-            if (playedCoordIndex == null) {
-                if (this.suggestions[index].coord.compare(playedCoord)) {
-                    playedCoordIndex = index;
-                }
-            } else {
-                if (this.suggestions[index].visits != this.suggestions[playedCoordIndex].visits) {
-                    index--;
-                    break;
-                }
+        for (index = this.playIndex; index < this.suggestions.length; index++) {
+            if (this.suggestions[index].grade != this.suggestions[this.playIndex].grade) {
+                index--;
+                break;
             }
         }
 
@@ -57,6 +39,9 @@ class MoveSuggestionList {
         }
     }
 
+    add(suggestion) {
+        this.suggestions.push(suggestion);
+    }
 
     get(index = this.playIndex) {
         return this.suggestions[index];

@@ -104,7 +104,7 @@ gameplay.playerTurn = async function (markupCoord) {
     trainerG.isPerfectChoice = false;
     for (let i = 0; i < trainerG.suggestions.length(); i++) {
         if (markupCoord.compare(trainerG.suggestions.get(i).coord)) {
-            if (i == 0 || trainerG.suggestions.get(i).visits == trainerG.suggestions.get(0).visits) {
+            if (trainerG.suggestions.get(i).grade == "A") {
                 trainerG.isPerfectChoice = true;
             }
 
