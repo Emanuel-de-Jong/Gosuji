@@ -184,14 +184,15 @@ namespace Gosuji.Client.Helpers
                 return false;
             }
 
-            Type type = value1.GetType();
+            Type type1 = value1.GetType();
+            Type type2 = value2.GetType();
 
-            if (type.IsPrimitive || type == typeof(string) || type.IsValueType)
+            if (type1 != type2)
             {
-                return value1.Equals(value2);
+                return false;
             }
 
-            if (typeof(IEquatable<>).MakeGenericType(type).IsAssignableFrom(type))
+            if (type1.IsPrimitive || type1 == typeof(string) || type1.IsValueType)
             {
                 return value1.Equals(value2);
             }
