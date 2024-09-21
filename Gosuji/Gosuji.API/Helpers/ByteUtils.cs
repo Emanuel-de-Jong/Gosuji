@@ -1,78 +1,63 @@
-﻿using System.Buffers.Binary;
-
-namespace Gosuji.API.Helpers
+﻿namespace Gosuji.API.Helpers
 {
     public class ByteUtils
     {
-        private List<byte> encodeBuffer;
-        private byte[] decodeBuffer;
-        private int decodeIndex;
+        private byte[] buffer;
+        private int index;
 
-        public void EncodeInit(List<byte> encodeBuffer)
+        public ByteUtils(int initialCapacity = 256)
         {
-            this.encodeBuffer = encodeBuffer;
+            buffer = new byte[initialCapacity];
+            index = 0;
         }
 
-        public void DecodeInit(byte[] ddecodeBuffer)
+        public ByteUtils(byte[] data)
         {
-            this.decodeBuffer = ddecodeBuffer;
+            buffer = data;
+            index = 0;
+        }
 
-            decodeIndex = 0;
+        private void EnsureCapacity(int additionalBytes)
+        {
+            if (index + additionalBytes > buffer.Length)
+            {
+                int newCapacity = Math.Max(buffer.Length * 2, index + additionalBytes);
+                Array.Resize(ref buffer, newCapacity);
+            }
         }
 
         public void AddInt(int value, int byteCount, bool isUnsigned = false)
         {
-            Span<byte> span = stackalloc byte[4];
-
-            if (isUnsigned)
+            EnsureCapacity(byteCount);
+            for (int i = 0; i < byteCount; i++)
             {
-                BinaryPrimitives.WriteUInt32LittleEndian(span, (uint)value);
+                buffer[index++] = (byte)(value >> (8 * i));
             }
-            else
-            {
-                BinaryPrimitives.WriteInt32LittleEndian(span, value);
-            }
-
-            encodeBuffer.AddRange(span[..byteCount].ToArray());
         }
 
         public void AddShort(short value, int byteCount, bool isUnsigned = false)
         {
-            Span<byte> span = stackalloc byte[2];
-
-            if (isUnsigned)
+            EnsureCapacity(byteCount);
+            for (int i = 0; i < byteCount; i++)
             {
-                BinaryPrimitives.WriteUInt16LittleEndian(span, (ushort)value);
+                buffer[index++] = (byte)(value >> (8 * i));
             }
-            else
-            {
-                BinaryPrimitives.WriteInt16LittleEndian(span, value);
-            }
-
-            encodeBuffer.AddRange(span[..byteCount].ToArray());
         }
 
         public void AddLong(long value, int byteCount, bool isUnsigned = false)
         {
-            Span<byte> span = stackalloc byte[8];
-
-            if (isUnsigned)
+            EnsureCapacity(byteCount);
+            for (int i = 0; i < byteCount; i++)
             {
-                BinaryPrimitives.WriteUInt64LittleEndian(span, (ulong)value);
+                buffer[index++] = (byte)(value >> (8 * i));
             }
-            else
-            {
-                BinaryPrimitives.WriteInt64LittleEndian(span, value);
-            }
-
-            encodeBuffer.AddRange(span[..byteCount].ToArray());
         }
 
         public void AddChar(char value)
         {
-            Span<byte> span = stackalloc byte[2];
-            BinaryPrimitives.WriteUInt16LittleEndian(span, value);
-            encodeBuffer.AddRange(span.ToArray());
+            EnsureCapacity(2);
+            buffer[index++] = (byte)value;
+            buffer[index++] = (byte)(value >> 8);
         }
 
         public void AddEnum<TEnum>(TEnum value, int byteCount, bool isUnsigned = false) where TEnum : Enum
@@ -82,45 +67,62 @@ namespace Gosuji.API.Helpers
 
         public int ExtractInt(int byteCount, bool isUnsigned = false)
         {
-            ReadOnlySpan<byte> span = new(decodeBuffer, decodeIndex, byteCount);
-            decodeIndex += byteCount;
-
-            return isUnsigned
-                ? (int)BinaryPrimitives.ReadUInt32LittleEndian(span)
-                : BinaryPrimitives.ReadInt32LittleEndian(span);
+            int result = 0;
+            for (int i = 0; i < byteCount; i++)
+            {
+                result |= buffer[index++] << (8 * i);
+            }
+            if (!isUnsigned && byteCount < 4 && (result & (1 << (8 * byteCount - 1))) != 0)
+            {
+                result |= -1 << (8 * byteCount);
+            }
+            return result;
         }
 
         public short ExtractShort(int byteCount, bool isUnsigned = false)
         {
-            ReadOnlySpan<byte> span = new(decodeBuffer, decodeIndex, byteCount);
-            decodeIndex += byteCount;
-
-            return isUnsigned
-                ? (short)BinaryPrimitives.ReadUInt16LittleEndian(span)
-                : BinaryPrimitives.ReadInt16LittleEndian(span);
+            int result = 0;
+            for (int i = 0; i < byteCount; i++)
+            {
+                result |= buffer[index++] << (8 * i);
+            }
+            if (!isUnsigned && byteCount < 2 && (result & (1 << (8 * byteCount - 1))) != 0)
+            {
+                result |= -1 << (8 * byteCount);
+            }
+            return (short)result;
         }
 
         public long ExtractLong(int byteCount, bool isUnsigned = false)
         {
-            ReadOnlySpan<byte> span = new(decodeBuffer, decodeIndex, byteCount);
-            decodeIndex += byteCount;
-
-            return isUnsigned
-                ? (long)BinaryPrimitives.ReadUInt64LittleEndian(span)
-                : BinaryPrimitives.ReadInt64LittleEndian(span);
+            long result = 0;
+            for (int i = 0; i < byteCount; i++)
+            {
+                result |= (long)buffer[index++] << (8 * i);
+            }
+            if (!isUnsigned && byteCount < 8 && (result & (1L << (8 * byteCount - 1))) != 0)
+            {
+                result |= -1L << (8 * byteCount);
+            }
+            return result;
         }
 
         public char ExtractChar()
         {
-            ReadOnlySpan<byte> span = new(decodeBuffer, decodeIndex, 2);
-            decodeIndex += 2;
-
-            return (char)BinaryPrimitives.ReadUInt16LittleEndian(span);
+            char result = (char)(buffer[index++] | (buffer[index++] << 8));
+            return result;
         }
 
         public TEnum ExtractEnum<TEnum>(int byteCount, bool isUnsigned = false) where TEnum : Enum
         {
             return (TEnum)Enum.ToObject(typeof(TEnum), ExtractInt(byteCount, isUnsigned));
+        }
+
+        public byte[] ToArray()
+        {
+            byte[] result = new byte[index];
+            Array.Copy(buffer, result, index);
+            return result;
         }
     }
 }
