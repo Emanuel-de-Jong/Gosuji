@@ -177,7 +177,7 @@ ratioChart.refresh = function () {
         const currentNode = node;
         node = node.parent;
 
-        if (trainerG.moveTypeHistory.get(currentNode) !== trainerG.MOVE_TYPE.PLAYER) {
+        if (trainerG.moveOriginHistory.get(currentNode) !== trainerG.MOVE_ORIGIN.PLAYER) {
             continue;
         }
 

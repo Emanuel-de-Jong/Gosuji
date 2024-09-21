@@ -11,7 +11,7 @@ import { gameplay } from "../gameplay";
 let trainerG = { id: "trainerG" };
 
 
-trainerG.MOVE_TYPE = {
+trainerG.MOVE_ORIGIN = {
     INIT: 0,
     FORCED_CORNER: 1,
     PRE: 2,
@@ -53,12 +53,12 @@ trainerG.clear = function (gameLoadInfo) {
     trainerG.suggestionsHistory = gameLoadInfo
         ? History.fromServer(gameLoadInfo.suggestions, MoveSuggestionList)
         : new History();
-    trainerG.moveTypeHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.moveTypes) : new History();
+    trainerG.moveOriginHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.moveOrigins) : new History();
     trainerG.isPassed = false;
 };
 
 trainerG.getMainBranch = function () {
-    return trainerG.moveTypeHistory.getHighestX();
+    return trainerG.moveOriginHistory.getHighestX();
 };
 
 trainerG.isMainBranch = function () {

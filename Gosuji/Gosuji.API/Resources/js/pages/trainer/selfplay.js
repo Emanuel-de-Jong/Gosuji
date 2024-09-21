@@ -32,7 +32,7 @@ selfplay.clear = async function () {
 
 selfplay.enableButton = function () {
     if (selfplay.button.disabled == true &&
-        trainerG.moveTypeHistory.count(trainerG.MOVE_TYPE.PLAYER) >= selfplay.PLAYER_MOVES_BEFORE_ENABLE
+        trainerG.moveOriginHistory.count(trainerG.MOVE_ORIGIN.PLAYER) >= selfplay.PLAYER_MOVES_BEFORE_ENABLE
     ) {
         selfplay.button.disabled = false;
     }
@@ -44,7 +44,7 @@ selfplay.start = async function () {
     await gameplay.handleJumped();
 
     while (selfplay.isPlaying || trainerG.color != trainerG.board.getNextColor()) {
-        await kataGo.analyze(trainerG.MOVE_TYPE.SELFPLAY);
+        await kataGo.analyze(trainerG.MOVE_ORIGIN.SELFPLAY);
         if (trainerG.isPassed) {
             selfplay.button.click();
             return;
@@ -71,7 +71,7 @@ selfplay.start = async function () {
 
         selfplay.lastMoveTime = Date.now();
         
-        await trainerG.board.play(trainerG.suggestions.get(0), trainerG.MOVE_TYPE.SELFPLAY);
+        await trainerG.board.play(trainerG.suggestions.get(0), trainerG.MOVE_ORIGIN.SELFPLAY);
     }
 };
 

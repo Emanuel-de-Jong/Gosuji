@@ -16,27 +16,27 @@ sgfComment.clear = function () {
 };
 
 
-sgfComment.setComment = function (moveType) {
-    if (moveType == null) return;
+sgfComment.setComment = function (moveOrigin) {
+    if (moveOrigin == null) return;
 
     let comment;
-    switch (moveType) {
-        case trainerG.MOVE_TYPE.INIT:
+    switch (moveOrigin) {
+        case trainerG.MOVE_ORIGIN.INIT:
             comment = sgfComment.createInitComment();
             break;
-        case trainerG.MOVE_TYPE.FORCED_CORNER:
+        case trainerG.MOVE_ORIGIN.FORCED_CORNER:
             comment = sgfComment.createForcedCornerComment();
             break;
-        case trainerG.MOVE_TYPE.PRE:
+        case trainerG.MOVE_ORIGIN.PRE:
             comment = sgfComment.createPreComment();
             break;
-        case trainerG.MOVE_TYPE.SELFPLAY:
+        case trainerG.MOVE_ORIGIN.SELFPLAY:
             comment = sgfComment.createSelfplayComment();
             break;
-        case trainerG.MOVE_TYPE.PLAYER:
+        case trainerG.MOVE_ORIGIN.PLAYER:
             comment = sgfComment.createPlayerComment();
             break;
-        case trainerG.MOVE_TYPE.OPPONENT:
+        case trainerG.MOVE_ORIGIN.OPPONENT:
             comment = sgfComment.createOpponentComment();
             break;
     }

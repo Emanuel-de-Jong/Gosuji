@@ -2,6 +2,8 @@
 {
     public class MoveSuggestion
     {
+        public const int MAX_CONTINUATION_SIZE = 10;
+
         public Coord Coord { get; set; }
         public int Visits { get; set; }
         public Score Score { get; set; }

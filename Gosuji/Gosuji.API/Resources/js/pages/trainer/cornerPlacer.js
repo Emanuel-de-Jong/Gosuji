@@ -56,7 +56,7 @@ cornerPlacer.play = async function () {
     let cornerOptions = cornerPlacer.getEmptyCorner();
     let coord = cornerPlacer.chooseCornerOption(cornerOptions);
     let suggestion = await kataGo.playForcedCorner(coord);
-    await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.FORCED_CORNER);
+    await trainerG.board.play(suggestion, trainerG.MOVE_ORIGIN.FORCED_CORNER);
 };
 
 cornerPlacer.getEmptyCorner = function () {

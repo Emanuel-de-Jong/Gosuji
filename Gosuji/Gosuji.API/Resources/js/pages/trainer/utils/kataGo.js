@@ -39,12 +39,12 @@ kataGo.start = async function () {
 };
 
 kataGo.analyze = async function (
-    moveType = trainerG.MOVE_TYPE.PLAYER,
+    moveOrigin = trainerG.MOVE_ORIGIN.PLAYER,
     color = trainerG.board.getNextColor()
 ) {
     let isMainBranch = trainerG.isMainBranch();
 
-    let analyzeResponse = await kataGo.sendRequest("Analyze", moveType, color, isMainBranch);
+    let analyzeResponse = await kataGo.sendRequest("Analyze", moveOrigin, color, isMainBranch);
     if (analyzeResponse == null) {
         return;
     }
@@ -56,13 +56,13 @@ kataGo.analyze = async function (
 };
 
 kataGo.analyzeAfterJump = async function (
-    moveType = trainerG.MOVE_TYPE.PLAYER,
+    moveOrigin = trainerG.MOVE_ORIGIN.PLAYER,
     color = trainerG.board.getNextColor()
 ) {
     let isMainBranch = trainerG.isMainBranch();
     let moves = trainerG.board.getMoves();
 
-    let analyzeResponse = await kataGo.sendRequest("AnalyzeAfterJump", moves, moveType, color, isMainBranch);
+    let analyzeResponse = await kataGo.sendRequest("AnalyzeAfterJump", moves, moveOrigin, color, isMainBranch);
     if (analyzeResponse == null) {
         return;
     }

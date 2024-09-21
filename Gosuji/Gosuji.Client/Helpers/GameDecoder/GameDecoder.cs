@@ -141,14 +141,14 @@ namespace Gosuji.Client.Helpers.GameDecoder
             return (suggestion, i);
         }
 
-        public static Dictionary<short, Dictionary<short, EMoveType>> DecodeMoveTypes(byte[] bytes)
+        public static Dictionary<short, Dictionary<short, EMoveOrigin>> DecodeMoveOrigins(byte[] bytes)
         {
             try
             {
                 return Decode(bytes, (i) =>
                 {
-                    EMoveType moveType = (EMoveType)bytes[i++];
-                    return (moveType, i);
+                    EMoveOrigin moveOrigin = (EMoveOrigin)bytes[i++];
+                    return (moveOrigin, i);
                 });
             }
             catch (Exception e)

@@ -69,12 +69,12 @@ preMovePlacer.stopButtonClickListener = function () {
 preMovePlacer.play = async function (isForced = false) {
     if (!isForced && preMovePlacer.isStopped) return;
 
-    await kataGo.analyze(trainerG.MOVE_TYPE.PRE);
+    await kataGo.analyze(trainerG.MOVE_ORIGIN.PRE);
     if (trainerG.isPassed) preMovePlacer.isStopped = true;
     if (!isForced && preMovePlacer.isStopped) return;
 
     let suggestion = trainerG.suggestions.get();
-    await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.PRE);
+    await trainerG.board.play(suggestion, trainerG.MOVE_ORIGIN.PRE);
 };
 
 if (!window.trainer) window.trainer = {};

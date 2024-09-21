@@ -159,6 +159,11 @@ namespace Gosuji.API.Helpers
                             else
                             {
                                 suggestion?.Continuation.Add(coord);
+
+                                if (suggestion?.Continuation.Count >= MoveSuggestion.MAX_CONTINUATION_SIZE)
+                                {
+                                    break;
+                                }
                             }
                         }
 

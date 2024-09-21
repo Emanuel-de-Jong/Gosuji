@@ -12,7 +12,7 @@
             'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' };
 
         public static Coord PASS_COORD = new(0, 0);
-        public static Coord EMPTY_COORD = new(-1, -1);
+        public static Coord EMPTY_COORD = new(20, 20);
         public static Move PASS_MOVE = new(EMoveColor.BLACK, PASS_COORD);
         public static Move EMPTY_MOVE = new(EMoveColor.BLACK, EMPTY_COORD);
 

@@ -1,6 +1,6 @@
 ﻿namespace Gosuji.Client.Models.Trainer
 {
-    public enum EMoveType
+    public enum EMoveOrigin
     {
         INIT = 0,
         FORCED_CORNER = 1,

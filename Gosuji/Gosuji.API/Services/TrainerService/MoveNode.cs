@@ -10,7 +10,7 @@ namespace Gosuji.API.Services.TrainerService
         public int Depth { get; set; }
 
         public Move Move { get; set; }
-        public EMoveType? MoveType { get; set; }
+        public EMoveOrigin? MoveOrigin { get; set; }
         public EPlayerResult? PlayerResult { get; set; }
         public MoveSuggestionList? Suggestions { get; set; }
         public Coord? ChosenNotPlayedCoord { get; set; }
@@ -61,7 +61,7 @@ namespace Gosuji.API.Services.TrainerService
 
             return Move.Equals(other.Move) &&
                 (Parent == null || Parent.Move.Equals(other.Parent?.Move)) &&
-                MoveType == other.MoveType;
+                MoveOrigin == other.MoveOrigin;
         }
     }
 }

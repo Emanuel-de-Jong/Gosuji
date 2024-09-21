@@ -110,14 +110,14 @@ class TrainerBoard extends Board {
         // console.log(this.get());
     }
 
-    async play(suggestion, moveType, tool = "auto") {
-        let sendToServer = moveType == trainerG.MOVE_TYPE.PLAYER;
+    async play(suggestion, moveOrigin, tool = "auto") {
+        let sendToServer = moveOrigin == trainerG.MOVE_ORIGIN.PLAYER;
 
         await this.draw(suggestion.coord, tool, sendToServer);
         scoreChart.update(suggestion);
-        trainerG.moveTypeHistory.add(moveType);
+        trainerG.moveOriginHistory.add(moveOrigin);
 
-        if (moveType == trainerG.MOVE_TYPE.PLAYER) {
+        if (moveOrigin == trainerG.MOVE_ORIGIN.PLAYER) {
             ratioChart.update();
         }
     }
@@ -154,7 +154,7 @@ class TrainerBoard extends Board {
 
     pass() {
         super.pass();
-        trainerG.moveTypeHistory.add(trainerG.MOVE_TYPE.PASS);
+        trainerG.moveOriginHistory.add(trainerG.MOVE_ORIGIN.PASS);
     }
 
     findNode(coord, node=this.editor.getRoot()) {
@@ -196,7 +196,7 @@ class TrainerBoard extends Board {
 
         stats.playerResultHistory.refreshNodes();
         trainerG.suggestionsHistory.refreshNodes();
-        trainerG.moveTypeHistory.refreshNodes();
+        trainerG.moveOriginHistory.refreshNodes();
         gameplay.chosenNotPlayedCoordHistory.refreshNodes();
         scoreChart.history.refreshNodes();
 

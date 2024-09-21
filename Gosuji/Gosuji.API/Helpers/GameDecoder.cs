@@ -53,8 +53,8 @@ namespace Gosuji.API.Helpers
 
                 switch (fieldType)
                 {
-                    case EDataTypes.MoveType:
-                        node.MoveType = (EMoveType)BitConverter.ToInt32(data, currentIndex);
+                    case EDataTypes.MoveOrigin:
+                        node.MoveOrigin = (EMoveOrigin)BitConverter.ToInt32(data, currentIndex);
                         currentIndex += 4;
                         break;
 

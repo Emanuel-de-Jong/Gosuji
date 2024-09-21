@@ -33,10 +33,10 @@ namespace Gosuji.API.Helpers
             data.Add((byte)node.Move.Coord.X);
             data.Add((byte)node.Move.Coord.Y);
 
-            if (node.MoveType != null)
+            if (node.MoveOrigin != null)
             {
-                data.Add((byte)EDataTypes.MoveType);
-                data.Add((byte)node.MoveType);
+                data.Add((byte)EDataTypes.MoveOrigin);
+                data.Add((byte)node.MoveOrigin);
             }
 
             if (node.ChosenNotPlayedCoord != null)
@@ -96,7 +96,7 @@ namespace Gosuji.API.Helpers
     {
         Node,
         Move,
-        MoveType,
+        MoveOrigin,
         ChosenNotPlayedCoord,
         Result,
         Suggestions,

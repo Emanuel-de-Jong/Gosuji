@@ -42,7 +42,7 @@ gameplay.start = function (isSuggestionNeeded = true) {
 
     if (trainerG.color == trainerG.board.getColor()) {
         if (!cornerPlacer.shouldForce()) {
-            gameplay.suggestionsPromise = kataGo.analyze(trainerG.MOVE_TYPE.OPPONENT);
+            gameplay.suggestionsPromise = kataGo.analyze(trainerG.MOVE_ORIGIN.OPPONENT);
         }
         gameplay.opponentTurn();
     } else {
@@ -127,7 +127,7 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
     stats.update();
 
     if (settings.wrongMoveCorrection || trainerG.isRightChoice) {
-        await trainerG.board.play(suggestionToPlay, trainerG.MOVE_TYPE.PLAYER);
+        await trainerG.board.play(suggestionToPlay, trainerG.MOVE_ORIGIN.PLAYER);
 
         if (!trainerG.isRightChoice) {
             gameplay.chosenNotPlayedCoordHistory.add(markupCoord);
@@ -139,11 +139,11 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
             await trainerG.board.draw(markupCoord, "cross");
         }
     } else {
-        await trainerG.board.play(await kataGo.analyzeMove(markupCoord), trainerG.MOVE_TYPE.PLAYER);
+        await trainerG.board.play(await kataGo.analyzeMove(markupCoord), trainerG.MOVE_ORIGIN.PLAYER);
     }
 
     if (!cornerPlacer.shouldForce()) {
-        gameplay.suggestionsPromise = kataGo.analyze(trainerG.MOVE_TYPE.OPPONENT);
+        gameplay.suggestionsPromise = kataGo.analyze(trainerG.MOVE_ORIGIN.OPPONENT);
     }
 };
 
@@ -179,7 +179,7 @@ gameplay.opponentTurn = async function () {
         trainerG.isPerfectChoice = suggestion.grade == "A";
 
         if (opponentTurnId != gameplay.opponentTurnId) return;
-        await trainerG.board.play(suggestion, trainerG.MOVE_TYPE.OPPONENT);
+        await trainerG.board.play(suggestion, trainerG.MOVE_ORIGIN.OPPONENT);
     }
 
     gameplay.suggestionsPromise = kataGo.analyze();

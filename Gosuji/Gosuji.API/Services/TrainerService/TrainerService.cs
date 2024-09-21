@@ -109,7 +109,7 @@ namespace Gosuji.API.Services.TrainerService
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
         }
 
-        public async Task<AnalyzeResponse> Analyze(EMoveType moveType, EMoveColor color, bool isMainBranch)
+        public async Task<AnalyzeResponse> Analyze(EMoveOrigin moveOrigin, EMoveColor color, bool isMainBranch)
         {
             if (isAnalyzing)
             {
@@ -121,27 +121,27 @@ namespace Gosuji.API.Services.TrainerService
             double minVisitsPerc = 0;
             double maxVisitDiffPerc = 100;
             int moveOptions = 1;
-            switch (moveType)
+            switch (moveOrigin)
             {
-                case EMoveType.PLAYER:
+                case EMoveOrigin.PLAYER:
                     maxVisits = TrainerSettingConfig.GetSuggestionVisits;
                     minVisitsPerc = TrainerSettingConfig.MinVisitsPercSwitch ? TrainerSettingConfig.MinVisitsPerc : minVisitsPerc;
                     maxVisitDiffPerc = TrainerSettingConfig.MaxVisitDiffPercSwitch ? TrainerSettingConfig.MaxVisitDiffPerc : maxVisitDiffPerc;
                     moveOptions = TrainerSettingConfig.SuggestionOptions;
                     break;
-                case EMoveType.OPPONENT:
+                case EMoveOrigin.OPPONENT:
                     maxVisits = TrainerSettingConfig.GetOpponentVisits;
                     minVisitsPerc = 10;
                     maxVisitDiffPerc = 50;
                     moveOptions = TrainerSettingConfig.OpponentOptions;
                     break;
-                case EMoveType.PRE:
+                case EMoveOrigin.PRE:
                     maxVisits = TrainerSettingConfig.GetPreVisits;
                     minVisitsPerc = 10;
                     maxVisitDiffPerc = 50;
                     moveOptions = TrainerSettingConfig.PreOptions;
                     break;
-                case EMoveType.SELFPLAY:
+                case EMoveOrigin.SELFPLAY:
                     maxVisits = TrainerSettingConfig.GetSelfplayVisits;
                     break;
             }
@@ -154,18 +154,18 @@ namespace Gosuji.API.Services.TrainerService
 
             if (result == null)
             {
-                CalcPlayIndex(suggestions, moveType);
+                CalcPlayIndex(suggestions, moveOrigin);
 
                 if (suggestions.PlayIndex != null)
                 {
                     Move move = new(color, suggestions.Suggestions[suggestions.PlayIndex.Value].Coord);
-                    await Play(move, moveType);
+                    await Play(move, moveOrigin);
                 }
             }
             else
             {
                 MoveTree.Add(Move.PASS_MOVE);
-                MoveTree.CurrentNode.MoveType = EMoveType.PASS;
+                MoveTree.CurrentNode.MoveOrigin = EMoveOrigin.PASS;
             }
 
             MoveTree.MainBranch = isMainBranch ? MoveTree.CurrentNode : MoveTree.MainBranch;
@@ -174,10 +174,10 @@ namespace Gosuji.API.Services.TrainerService
             return new AnalyzeResponse(suggestions, result);
         }
 
-        public async Task<AnalyzeResponse> AnalyzeAfterJump(Move[] moves, EMoveType moveType, EMoveColor color, bool isMainBranch)
+        public async Task<AnalyzeResponse> AnalyzeAfterJump(Move[] moves, EMoveOrigin moveOrigin, EMoveColor color, bool isMainBranch)
         {
             await SyncBoard(moves);
-            return await Analyze(moveType, color, isMainBranch);
+            return await Analyze(moveOrigin, color, isMainBranch);
         }
 
         public async Task<MoveSuggestion> AnalyzeMove(Move move)
@@ -200,7 +200,7 @@ namespace Gosuji.API.Services.TrainerService
         public async Task PlayPlayer(Move move, EPlayerResult playerResult, Coord? chosenNotPlayedCoord,
             int rightStreak, int perfectStreak, int? rightTopStreak, int? perfectTopStreak)
         {
-            await Play(move, EMoveType.PLAYER);
+            await Play(move, EMoveOrigin.PLAYER);
 
             MoveTree.CurrentNode.PlayerResult = playerResult;
             MoveTree.CurrentNode.Parent.ChosenNotPlayedCoord = chosenNotPlayedCoord;
@@ -214,7 +214,7 @@ namespace Gosuji.API.Services.TrainerService
         public async Task<MoveSuggestion> PlayForcedCorner(Move move)
         {
             MoveSuggestion suggestion = await AnalyzeMove(move);
-            await Play(move, EMoveType.FORCED_CORNER);
+            await Play(move, EMoveOrigin.FORCED_CORNER);
             return suggestion;
         }
 
@@ -242,23 +242,23 @@ namespace Gosuji.API.Services.TrainerService
             return Math.Round(scoreLead, 1);
         }
 
-        private void CalcPlayIndex(MoveSuggestionList suggestions, EMoveType moveType)
+        private void CalcPlayIndex(MoveSuggestionList suggestions, EMoveOrigin moveOrigin)
         {
-            if (moveType == EMoveType.PLAYER)
+            if (moveOrigin == EMoveOrigin.PLAYER)
             {
                 return;
             }
 
             int playIndex = 0;
-            if (moveType is EMoveType.OPPONENT or EMoveType.PRE)
+            if (moveOrigin is EMoveOrigin.OPPONENT or EMoveOrigin.PRE)
             {
                 if (!shouldBeImperfectSuggestion)
                 {
-                    if ((moveType == EMoveType.OPPONENT &&
+                    if ((moveOrigin == EMoveOrigin.OPPONENT &&
                         TrainerSettingConfig.OpponentOptionPercSwitch &&
                         rnd.Next(1, 101) <= TrainerSettingConfig.OpponentOptionPerc)
                         ||
-                        (moveType == EMoveType.PRE &&
+                        (moveOrigin == EMoveOrigin.PRE &&
                         TrainerSettingConfig.PreOptionPercSwitch &&
                         rnd.Next(1, 101) <= TrainerSettingConfig.PreOptionPerc))
                     {
@@ -290,10 +290,10 @@ namespace Gosuji.API.Services.TrainerService
             suggestions.PlayIndex = playIndex;
         }
 
-        private async Task Play(Move move, EMoveType moveType)
+        private async Task Play(Move move, EMoveOrigin moveOrigin)
         {
             MoveTree.Add(move);
-            MoveTree.CurrentNode.MoveType = moveType;
+            MoveTree.CurrentNode.MoveOrigin = moveOrigin;
 
             if (MoveTree.MainBranch == MoveTree.CurrentNode.Parent)
             {
@@ -399,7 +399,7 @@ namespace Gosuji.API.Services.TrainerService
             MoveNode parentNode = MoveTree.MainBranch ?? MoveTree.CurrentNode;
             while (parentNode != null)
             {
-                if (parentNode.MoveType == EMoveType.PLAYER)
+                if (parentNode.MoveOrigin == EMoveOrigin.PLAYER)
                 {
                     Game.Color = parentNode.Move.Color.Value;
                     return;
