@@ -126,7 +126,7 @@ namespace Gosuji.Client.Helpers
             return result.ToString();
         }
 
-        public static bool Equals<T>(T obj1, T obj2)
+        public static bool Equals(object? obj1, object? obj2)
         {
             if (obj1 == null && obj2 == null)
             {
@@ -143,9 +143,11 @@ namespace Gosuji.Client.Helpers
                 return false;
             }
 
-            Type type = typeof(T);
+            Type type = obj1.GetType();
 
-            Dictionary<string, FieldInfo> fields = GetFields(type);
+            Dictionary<string, FieldInfo> fields = FieldCache.GetOrAdd(type, t => t
+                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .ToDictionary(f => f.Name));
             foreach (FieldInfo field in fields.Values)
             {
                 object? value1 = field.GetValue(obj1);
@@ -157,7 +159,10 @@ namespace Gosuji.Client.Helpers
                 }
             }
 
-            Dictionary<string, PropertyInfo> properties = GetProperties(type);
+            Dictionary<string, PropertyInfo> properties = PropertyCache.GetOrAdd(type, t => t
+                .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(p => p.CanRead)
+                .ToDictionary(p => p.Name));
             foreach (PropertyInfo property in properties.Values)
             {
                 object? value1 = property.GetValue(obj1);
