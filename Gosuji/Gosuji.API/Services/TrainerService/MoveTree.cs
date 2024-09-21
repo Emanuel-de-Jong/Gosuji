@@ -4,7 +4,7 @@ namespace Gosuji.API.Services.TrainerService
 {
     public class MoveTree
     {
-        public MoveNode RootNode { get; set; } = new MoveNode(Move.EMPTY_MOVE);
+        public MoveNode RootNode { get; set; } = new MoveNode(Move.ROOT_MOVE);
         public List<MoveNode> AllNodes { get; set; } = [];
         public MoveNode CurrentNode { get; set; }
         public MoveNode? MainBranch { get; set; }

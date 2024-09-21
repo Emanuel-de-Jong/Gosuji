@@ -12,12 +12,13 @@
             'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' };
 
         public static Coord PASS_COORD = new(0, 0);
-        public static Coord EMPTY_COORD = new(20, 20);
-        public static Move PASS_MOVE = new(EMoveColor.BLACK, PASS_COORD);
-        public static Move EMPTY_MOVE = new(EMoveColor.BLACK, EMPTY_COORD);
+        public static Coord OTHER_COORD = new(20, 20);
+        public static Move PASS_MOVE = new(EMoveColor.BLACK, PASS_COORD) { Type = EMoveType.PASS };
+        public static Move ROOT_MOVE = new(EMoveColor.BLACK, OTHER_COORD) { Type = EMoveType.ROOT };
 
         public EMoveColor? Color { get; set; }
         public Coord? Coord { get; set; }
+        public EMoveType? Type { get; set; }
 
 
         public Move() { }
@@ -200,5 +201,11 @@
         BLACK = -1,
         RANDOM = 0,
         WHITE = 1,
+    }
+
+    public enum EMoveType
+    {
+        PASS = 0,
+        ROOT = 1,
     }
 }

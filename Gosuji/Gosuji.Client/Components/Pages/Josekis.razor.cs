@@ -160,7 +160,7 @@ namespace Gosuji.Client.Components.Pages
         {
             if (!await Start()) return;
 
-            JosekisNode node = new(new Move(Move.PASS_COORD));
+            JosekisNode node = new(Move.PASS_MOVE);
             APIResponse response = await josekisConnection.ToChild(sessionId, node);
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             

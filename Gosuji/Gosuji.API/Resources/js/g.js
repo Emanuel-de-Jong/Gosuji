@@ -24,6 +24,11 @@ if (typeof g === "undefined") {
         W: "White",
     };
 
+    g.MOVE_TYPE = {
+        PASS: 0,
+        ROOT: 1,
+    };
+
 
     g.getResultStr = function (result) {
         if (result == 0) {

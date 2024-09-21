@@ -4,6 +4,7 @@ if (typeof Move === "undefined") {
     Move = class Move {
         color;
         coord;
+        type;
     
         constructor(color, coord) {
             this.color = color;
