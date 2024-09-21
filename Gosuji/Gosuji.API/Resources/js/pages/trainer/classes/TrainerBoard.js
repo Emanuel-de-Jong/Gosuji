@@ -1,4 +1,3 @@
-import { Move } from "./Move";
 import { kataGo } from "../utils/kataGo";
 import { ratioChart } from "../utils/ratioChart";
 import { scoreChart } from "../utils/scoreChart";

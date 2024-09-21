@@ -15,19 +15,13 @@ namespace Gosuji.Client.Services.Trainer
         {
         }
 
-        public async Task<APIResponse<bool>> UserHasInstance()
-        {
-            string uri = "UserHasInstance";
-            return await HubResponseHandler.TryCatch<bool>(uri,
-                HubConnection.InvokeAsync<HubResponse>(uri));
-        }
-
-        public async Task<APIResponse> Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF, string? name)
+        public async Task<APIResponse<bool>> Init(TrainerSettingConfig trainerSettingConfig,
+            TreeNode<Move?>? thirdPartyMoves, string? name, string? gameId)
         {
             string uri = "Init";
-            return await HubResponseHandler.TryCatch(uri,
+            return await HubResponseHandler.TryCatch<bool>(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                trainerSettingConfig, isThirdPartySGF, name));
+                trainerSettingConfig, thirdPartyMoves, name));
         }
 
         public async Task<APIResponse> UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)

@@ -1,6 +1,7 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Helpers;
 using Gosuji.Client.Helpers.HttpResponseHandler;
+using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
@@ -157,32 +158,15 @@ namespace Gosuji.Client.Components.Pages
         }
 
         [JSInvokable]
-        public async Task<bool> Start()
+        public async Task<bool> InitTrainerConnection(string sgfRuleset, double sgfKomi,
+            TreeNode<Move?>? thirdPartyMoves, string? name)
         {
-            if (trainerConnection.IsConnected)
+            if (!trainerConnection.IsConnected)
             {
-                return true;
+                APIResponse startResponse = await trainerConnection.Start();
+                if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
             }
 
-            APIResponse startResponse = await trainerConnection.Start();
-            if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
-
-            APIResponse<bool> userHasInstanceResponse = await trainerConnection.UserHasInstance();
-            if (G.StatusMessage.HandleAPIResponse(userHasInstanceResponse)) return false;
-            bool userHasInstance = userHasInstanceResponse.Data;
-
-            if (userHasInstance)
-            {
-                G.StatusMessage.SetMessage("You already use this page somewhere else!", false);
-                return false;
-            }
-
-            return true;
-        }
-
-        [JSInvokable]
-        public async Task<bool> InitTrainerConnection(string sgfRuleset, double sgfKomi, bool isThirdParty, string? name)
-        {
             this.sgfRuleset = sgfRuleset;
             this.sgfKomi = sgfKomi;
 
@@ -190,8 +174,15 @@ namespace Gosuji.Client.Components.Pages
             tscWithSGFSettings.SGFRuleset = sgfRuleset;
             tscWithSGFSettings.SGFKomi = sgfKomi;
 
-            APIResponse response = await trainerConnection.Init(tscWithSGFSettings, isThirdParty, name);
+            APIResponse<bool> response = await trainerConnection.Init(tscWithSGFSettings, thirdPartyMoves, name, GameId);
             if (G.StatusMessage.HandleAPIResponse(response)) return false;
+            bool userHasInstance = response.Data;
+
+            if (userHasInstance)
+            {
+                G.StatusMessage.SetMessage("You already use this page somewhere else!", false);
+                return false;
+            }
 
             return true;
         }

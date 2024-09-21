@@ -1,4 +1,3 @@
-import { Move } from "../classes/Move";
 import { MoveSuggestionList } from "../classes/MoveSuggestionList";
 import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { settings } from "./settings";
@@ -27,20 +26,16 @@ kataGo.start = async function () {
     }
     kataGo.isStarted = true;
 
-    let invokeResult = await kataGo.sendPageRequest("Start");
-    if (!invokeResult) {
-        return;
-    }
+    let thirdPartyMoves;
+    let name;
 
-    await kataGo.initTrainerConnection();
-};
-
-kataGo.initTrainerConnection = async function () {
-    let name = null;
     if (sgf.isThirdParty) {
+        thirdPartyMoves = trainerG.board.getAllMoves();
         name = "MySGF";
     }
-    return await kataGo.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi, sgf.isThirdParty, name);
+
+    return await kataGo.sendPageRequest("InitTrainerConnection", sgf.ruleset, sgf.komi,
+        thirdPartyMoves, name);
 };
 
 kataGo.analyze = async function (

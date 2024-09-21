@@ -30,8 +30,8 @@ namespace Gosuji.API.Helpers
             data.Add((byte)nodeId);
             data.Add((byte)EDataTypes.Node);
 
-            data.Add((byte)node.Move.X.Value);
-            data.Add((byte)node.Move.Y.Value);
+            data.Add((byte)node.Move.Coord.X);
+            data.Add((byte)node.Move.Coord.Y);
 
             if (node.MoveType != null)
             {

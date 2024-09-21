@@ -17,10 +17,6 @@
         public EMoveColor? Color { get; set; }
         public Coord? Coord { get; set; }
 
-        public int? X => Coord?.X;
-        public int? Y => Coord?.Y;
-        public bool IsBlack => Color == EMoveColor.BLACK;
-
 
         public Move() { }
 
@@ -38,10 +34,10 @@
             Color = color;
         }
 
-        public Move(EMoveColor color, int x, int y)
-            : this(x, y)
+
+        public bool IsBlack()
         {
-            Color = color;
+            return Color == EMoveColor.BLACK;
         }
 
 

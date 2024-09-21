@@ -1,6 +1,8 @@
 import { Board } from "./classes/Board";
 import { CEvent } from "./classes/CEvent";
 import { Coord } from "./classes/Coord";
+import { Move } from "./classes/Move";
+import { TreeNode } from "./classes/TreeNode";
 import { byteUtils } from "./byteUtils";
 import { g } from "./g";
 import { theme } from "./theme";
@@ -37,4 +39,5 @@ if (typeof custom === "undefined") {
     window.onload = () => custom.init();
 }
 
-export { Board, CEvent, Coord, byteUtils, g, theme, utils, custom };
+export { Board, CEvent, Coord, Move, TreeNode,
+    byteUtils, g, theme, utils, custom };

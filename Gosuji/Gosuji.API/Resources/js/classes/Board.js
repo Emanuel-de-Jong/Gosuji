@@ -1,3 +1,6 @@
+import { Move } from "./Move";
+import { TreeNode } from "./TreeNode";
+
 let Board = window.Board;
 
 if (typeof Board === "undefined") {
@@ -198,6 +201,21 @@ if (typeof Board === "undefined") {
             for (const gs of document.querySelectorAll(".besogo-board .ghostStone")) {
                 gs.remove();
             }
+        }
+
+        getAllMoves(node = this.editor.getRoot()) {
+            let move;
+            if (node.move != null) {
+                move = new Move(node.move.color, new Coord(node.move.x, node.move.y));
+            }
+
+            const treeNode = new TreeNode(move);
+
+            for (const childNode of node.children) {
+                treeNode.add(this.getAllMoves(childNode));
+            }
+
+            return treeNode;
         }
 
         getMoveNumber() {

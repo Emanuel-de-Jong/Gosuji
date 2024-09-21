@@ -45,12 +45,8 @@ namespace Gosuji.API.Services.TrainerService
             await dbContext.DisposeAsync();
         }
 
-        public async Task<bool> UserHasInstance()
-        {
-            return pool.UserHasInstance(UserId);
-        }
-
-        public async Task Init(TrainerSettingConfig trainerSettingConfig, bool isThirdPartySGF, string? name)
+        public async Task<bool> Init(TrainerSettingConfig trainerSettingConfig,
+            TreeNode<Move?>? thirdPartyMoves, string? name, string? gameId)
         {
             // On restart
             if (KataGo != null)
@@ -59,12 +55,15 @@ namespace Gosuji.API.Services.TrainerService
             }
 
             TrainerSettingConfig = trainerSettingConfig;
-            Game.IsThirdPartySGF = isThirdPartySGF;
+            Game.IsThirdPartySGF = thirdPartyMoves != null;
             this.name = name ?? Game.Name;
+            isExistingGame = gameId != null;
 
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
 
             await StartKataGo();
+
+            return pool.UserHasInstance(UserId);
         }
 
         public async Task UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
