@@ -22,43 +22,55 @@ namespace Gosuji.API.Helpers
 
         public void AddInt(int value, int byteCount, bool isUnsigned = false)
         {
-            Span<byte> span = stackalloc byte[4]; // 4 bytes for int
+            Span<byte> span = stackalloc byte[4];
 
             if (isUnsigned)
+            {
                 BinaryPrimitives.WriteUInt32LittleEndian(span, (uint)value);
+            }
             else
+            {
                 BinaryPrimitives.WriteInt32LittleEndian(span, value);
+            }
 
-            encodeBuffer.AddRange(span.Slice(0, byteCount).ToArray());
+            encodeBuffer.AddRange(span[..byteCount].ToArray());
         }
 
         public void AddShort(short value, int byteCount, bool isUnsigned = false)
         {
-            Span<byte> span = stackalloc byte[2]; // 2 bytes for short
+            Span<byte> span = stackalloc byte[2];
 
             if (isUnsigned)
+            {
                 BinaryPrimitives.WriteUInt16LittleEndian(span, (ushort)value);
+            }
             else
+            {
                 BinaryPrimitives.WriteInt16LittleEndian(span, value);
+            }
 
-            encodeBuffer.AddRange(span.Slice(0, byteCount).ToArray());
+            encodeBuffer.AddRange(span[..byteCount].ToArray());
         }
 
         public void AddLong(long value, int byteCount, bool isUnsigned = false)
         {
-            Span<byte> span = stackalloc byte[8]; // 8 bytes for long
+            Span<byte> span = stackalloc byte[8];
 
             if (isUnsigned)
+            {
                 BinaryPrimitives.WriteUInt64LittleEndian(span, (ulong)value);
+            }
             else
+            {
                 BinaryPrimitives.WriteInt64LittleEndian(span, value);
+            }
 
-            encodeBuffer.AddRange(span.Slice(0, byteCount).ToArray());
+            encodeBuffer.AddRange(span[..byteCount].ToArray());
         }
 
         public void AddChar(char value)
         {
-            Span<byte> span = stackalloc byte[2]; // Char is 2 bytes
+            Span<byte> span = stackalloc byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(span, value);
             encodeBuffer.AddRange(span.ToArray());
         }
@@ -70,7 +82,7 @@ namespace Gosuji.API.Helpers
 
         public int ExtractInt(int byteCount, bool isUnsigned = false)
         {
-            var span = new ReadOnlySpan<byte>(decodeBuffer, decodeIndex, byteCount);
+            ReadOnlySpan<byte> span = new(decodeBuffer, decodeIndex, byteCount);
             decodeIndex += byteCount;
 
             return isUnsigned
@@ -80,7 +92,7 @@ namespace Gosuji.API.Helpers
 
         public short ExtractShort(int byteCount, bool isUnsigned = false)
         {
-            var span = new ReadOnlySpan<byte>(decodeBuffer, decodeIndex, byteCount);
+            ReadOnlySpan<byte> span = new(decodeBuffer, decodeIndex, byteCount);
             decodeIndex += byteCount;
 
             return isUnsigned
@@ -90,7 +102,7 @@ namespace Gosuji.API.Helpers
 
         public long ExtractLong(int byteCount, bool isUnsigned = false)
         {
-            var span = new ReadOnlySpan<byte>(decodeBuffer, decodeIndex, byteCount);
+            ReadOnlySpan<byte> span = new(decodeBuffer, decodeIndex, byteCount);
             decodeIndex += byteCount;
 
             return isUnsigned
@@ -100,7 +112,7 @@ namespace Gosuji.API.Helpers
 
         public char ExtractChar()
         {
-            var span = new ReadOnlySpan<byte>(decodeBuffer, decodeIndex, 2); // Char is 2 bytes
+            ReadOnlySpan<byte> span = new(decodeBuffer, decodeIndex, 2);
             decodeIndex += 2;
 
             return (char)BinaryPrimitives.ReadUInt16LittleEndian(span);
