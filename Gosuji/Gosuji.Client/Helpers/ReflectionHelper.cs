@@ -20,6 +20,7 @@ namespace Gosuji.Client.Helpers
         {
             return PropertyCache.GetOrAdd(type, t => t
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(p => p.CanRead)
                 .ToDictionary(p => p.Name));
         }
 
@@ -123,6 +124,79 @@ namespace Gosuji.Client.Helpers
             }
 
             return result.ToString();
+        }
+
+        public static bool Equals<T>(T obj1, T obj2)
+        {
+            if (obj1 == null && obj2 == null)
+            {
+                return true;
+            }
+
+            if (obj1 == null || obj2 == null)
+            {
+                return false;
+            }
+
+            if (obj1.GetType() != obj2.GetType())
+            {
+                return false;
+            }
+
+            Type type = typeof(T);
+
+            Dictionary<string, FieldInfo> fields = GetFields(type);
+            foreach (FieldInfo field in fields.Values)
+            {
+                object? value1 = field.GetValue(obj1);
+                object? value2 = field.GetValue(obj2);
+
+                if (!AreEqual(value1, value2))
+                {
+                    return false;
+                }
+            }
+
+            Dictionary<string, PropertyInfo> properties = GetProperties(type);
+            foreach (PropertyInfo property in properties.Values)
+            {
+                object? value1 = property.GetValue(obj1);
+                object? value2 = property.GetValue(obj2);
+
+                if (!AreEqual(value1, value2))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool AreEqual(object? value1, object? value2)
+        {
+            if (value1 == null && value2 == null)
+            {
+                return true;
+            }
+
+            if (value1 == null || value2 == null)
+            {
+                return false;
+            }
+
+            Type type = value1.GetType();
+
+            if (type.IsPrimitive || type == typeof(string) || type.IsValueType)
+            {
+                return value1.Equals(value2);
+            }
+
+            if (typeof(IEquatable<>).MakeGenericType(type).IsAssignableFrom(type))
+            {
+                return value1.Equals(value2);
+            }
+
+            return Equals(value1, value2);
         }
     }
 }
