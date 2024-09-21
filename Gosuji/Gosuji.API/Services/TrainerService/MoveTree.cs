@@ -49,5 +49,15 @@ namespace Gosuji.API.Services.TrainerService
                 CurrentNode = node.Parent;
             }
         }
+
+        public async Task ApplyThirdPartyMoves(TreeNode<Move?>? thirdPartyMoves)
+        {
+            if (thirdPartyMoves == null)
+            {
+                return;
+            }
+
+
+        }
     }
 }

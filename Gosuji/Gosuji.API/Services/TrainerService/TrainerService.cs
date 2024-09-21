@@ -17,13 +17,14 @@ namespace Gosuji.API.Services.TrainerService
         private KataGoPool pool;
         private IDbContextFactory<ApplicationDbContext> dbContextFactory;
 
-        public Game Game { get; set; }
-        public MoveTree MoveTree { get; set; } = new();
         public Subscription? Subscription { get; set; }
 
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
+        public Game? Game { get; set; }
+        public MoveTree? MoveTree { get; set; }
         public KataGo? KataGo { get; set; }
 
+        private bool isFirstInit = true;
         private Random rnd = new();
         private bool isAnalyzing = false;
         private bool shouldBeImperfectSuggestion = false;
@@ -32,38 +33,67 @@ namespace Gosuji.API.Services.TrainerService
 
         public TrainerService(string userId, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
-            UserId = userId;
-            pool = kataGoPool;
+            this.UserId = userId;
+            this.pool = kataGoPool;
             this.dbContextFactory = dbContextFactory;
-            Game = new();
-        }
-
-        public async Task SetSubscription()
-        {
-            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-            Subscription = await dbContext.Subscriptions.FirstOrDefaultAsync(s => s.UserId == UserId);
-            await dbContext.DisposeAsync();
         }
 
         public async Task<bool> Init(TrainerSettingConfig trainerSettingConfig,
             TreeNode<Move?>? thirdPartyMoves, string? name, string? gameId)
         {
-            // On restart
-            if (KataGo != null)
+            if (isFirstInit)
+            {
+                isFirstInit = false;
+
+                if (pool.UserHasInstance(UserId))
+                {
+                    return false;
+                }
+
+                // So there is less time where the user could start 2 instances
+                await pool.Get(UserId);
+
+                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+                Subscription = await dbContext.Subscriptions.FirstOrDefaultAsync(s => s.UserId == UserId);
+                await dbContext.DisposeAsync();
+            }
+            else
             {
                 await Save();
             }
 
             TrainerSettingConfig = trainerSettingConfig;
+            TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
+
+            if (gameId != null)
+            {
+                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+                Game = await dbContext.Games
+                    .Where(g => g.Id == gameId)
+                    .Include(g => g.EncodedGameData)
+                    .Include(g => g.GameStat)
+                    .Include(g => g.OpeningStat)
+                    .Include(g => g.MidgameStat)
+                    .Include(g => g.EndgameStat)
+                    .FirstOrDefaultAsync();
+                await dbContext.DisposeAsync();
+
+                GameDecoder gameDecoder = new();
+                MoveTree = gameDecoder.Decode(Game.EncodedGameData.DataList);
+            }
+
+            Game = Game ?? new();
+            MoveTree = MoveTree ?? new();
+
             Game.IsThirdPartySGF = thirdPartyMoves != null;
             this.name = name ?? Game.Name;
             isExistingGame = gameId != null;
 
-            TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
-
             await StartKataGo();
 
-            return pool.UserHasInstance(UserId);
+            await MoveTree.ApplyThirdPartyMoves(thirdPartyMoves);
+
+            return true;
         }
 
         public async Task UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)

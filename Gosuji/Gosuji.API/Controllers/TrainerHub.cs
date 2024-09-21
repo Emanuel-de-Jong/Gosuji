@@ -33,8 +33,6 @@ namespace Gosuji.API.Controllers
             string connectionId = Context.ConnectionId;
 
             TrainerService service = new(GetUserId(), pool, dbContextFactory);
-            await service.SetSubscription();
-
             trainerServices.TryAdd(connectionId, service);
 
             await base.OnConnectedAsync();
