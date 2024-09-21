@@ -4,7 +4,7 @@ namespace Gosuji.API.Services.TrainerService
 {
     public class MoveTree
     {
-        public MoveNode RootNode { get; set; } = new MoveNode(new Move(-1, -1));
+        public MoveNode RootNode { get; set; } = new MoveNode(Move.EMPTY_MOVE);
         public List<MoveNode> AllNodes { get; set; } = [];
         public MoveNode CurrentNode { get; set; }
         public MoveNode? MainBranch { get; set; }
@@ -48,16 +48,6 @@ namespace Gosuji.API.Services.TrainerService
             {
                 CurrentNode = node.Parent;
             }
-        }
-
-        public async Task ApplyThirdPartyMoves(TreeNode<Move?>? thirdPartyMoves)
-        {
-            if (thirdPartyMoves == null)
-            {
-                return;
-            }
-
-
         }
     }
 }

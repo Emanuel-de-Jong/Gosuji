@@ -51,7 +51,7 @@ namespace Gosuji.API.Controllers
         }
 
         public async Task<HubResponse> Init(TrainerSettingConfig trainerSettingConfig,
-            TreeNode<Move?>? thirdPartyMoves, string? name, string? gameId)
+            TreeNode<Move>? thirdPartyMoves, string? name, string? gameId)
         {
             return OkData(await trainerServices[Context.ConnectionId].Init(trainerSettingConfig,
                 thirdPartyMoves, name, gameId));

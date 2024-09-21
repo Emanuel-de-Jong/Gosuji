@@ -159,7 +159,7 @@ namespace Gosuji.Client.Components.Pages
 
         [JSInvokable]
         public async Task<bool> InitTrainerConnection(string sgfRuleset, double sgfKomi,
-            TreeNode<Move?>? thirdPartyMoves, string? name)
+            TreeNode<Move>? thirdPartyMoves, string? name)
         {
             if (!trainerConnection.IsConnected)
             {

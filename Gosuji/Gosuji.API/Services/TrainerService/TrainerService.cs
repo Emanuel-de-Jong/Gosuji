@@ -39,7 +39,7 @@ namespace Gosuji.API.Services.TrainerService
         }
 
         public async Task<bool> Init(TrainerSettingConfig trainerSettingConfig,
-            TreeNode<Move?>? thirdPartyMoves, string? name, string? gameId)
+            TreeNode<Move>? thirdPartyMoves, string? name, string? gameId)
         {
             if (isFirstInit)
             {
@@ -65,6 +65,9 @@ namespace Gosuji.API.Services.TrainerService
             TrainerSettingConfig = trainerSettingConfig;
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
 
+            Game = new();
+            MoveTree = new();
+
             if (gameId != null)
             {
                 ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -82,16 +85,20 @@ namespace Gosuji.API.Services.TrainerService
                 MoveTree = gameDecoder.Decode(Game.EncodedGameData.DataList);
             }
 
-            Game = Game ?? new();
-            MoveTree = MoveTree ?? new();
-
             Game.IsThirdPartySGF = thirdPartyMoves != null;
             this.name = name ?? Game.Name;
             isExistingGame = gameId != null;
 
             await StartKataGo();
 
-            await MoveTree.ApplyThirdPartyMoves(thirdPartyMoves);
+            if (thirdPartyMoves != null)
+            {
+                // Skip the root as MoveTree already has one
+                foreach (TreeNode<Move> childTreeNode in thirdPartyMoves.Children)
+                {
+                    ApplyThirdPartyMoves(childTreeNode);
+                }
+            }
 
             return true;
         }
@@ -157,7 +164,7 @@ namespace Gosuji.API.Services.TrainerService
             }
             else
             {
-                MoveTree.Add(Move.PASS);
+                MoveTree.Add(Move.PASS_MOVE);
                 MoveTree.CurrentNode.MoveType = EMoveType.PASS;
             }
 
@@ -209,6 +216,16 @@ namespace Gosuji.API.Services.TrainerService
             MoveSuggestion suggestion = await AnalyzeMove(move);
             await Play(move, EMoveType.FORCED_CORNER);
             return suggestion;
+        }
+
+        private void ApplyThirdPartyMoves(TreeNode<Move> treeNode)
+        {
+            MoveNode moveNode = MoveTree.Add(treeNode.Value);
+            foreach (TreeNode<Move> childTreeNode in treeNode.Children)
+            {
+                ApplyThirdPartyMoves(childTreeNode);
+                MoveTree.CurrentNode = moveNode;
+            }
         }
 
         private double? GetResult(MoveSuggestionList moveSuggestionList)

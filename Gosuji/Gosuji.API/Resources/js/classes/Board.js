@@ -207,6 +207,8 @@ if (typeof Board === "undefined") {
             let move;
             if (node.move != null) {
                 move = new Move(node.move.color, new Coord(node.move.x, node.move.y));
+            } else {
+                move = new Move(g.COLOR_TYPE.B, new Coord(-1, -1));
             }
 
             const treeNode = new TreeNode(move);

@@ -16,7 +16,7 @@ namespace Gosuji.Client.Services.Trainer
         }
 
         public async Task<APIResponse<bool>> Init(TrainerSettingConfig trainerSettingConfig,
-            TreeNode<Move?>? thirdPartyMoves, string? name, string? gameId)
+            TreeNode<Move>? thirdPartyMoves, string? name, string? gameId)
         {
             string uri = "Init";
             return await HubResponseHandler.TryCatch<bool>(uri,

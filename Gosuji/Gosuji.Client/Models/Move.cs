@@ -12,7 +12,9 @@
             'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T' };
 
         public static Coord PASS_COORD = new(0, 0);
-        public static Move PASS = new(PASS_COORD);
+        public static Coord EMPTY_COORD = new(-1, -1);
+        public static Move PASS_MOVE = new(EMoveColor.BLACK, PASS_COORD);
+        public static Move EMPTY_MOVE = new(EMoveColor.BLACK, EMPTY_COORD);
 
         public EMoveColor? Color { get; set; }
         public Coord? Coord { get; set; }
@@ -33,6 +35,9 @@
         {
             Color = color;
         }
+
+        public Move(EMoveColor color, int x, int y)
+            : this(color, new(x, y)) { }
 
 
         public bool IsBlack()
