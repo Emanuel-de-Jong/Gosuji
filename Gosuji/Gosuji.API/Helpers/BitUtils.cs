@@ -1,25 +1,27 @@
-﻿namespace Gosuji.API.Helpers
+﻿using System.Buffers;
+
+namespace Gosuji.API.Helpers
 {
     public class BitUtils
     {
-        private List<byte> encodeBuffer;
+        private ArrayBufferWriter<byte> encodeBuffer;
         private int encodeBitPosition;
 
         private byte currentByte;
         private int currentByteBits;
 
-        private byte[] decodeBuffer;
+        private ReadOnlyMemory<byte> decodeBuffer;
         private int decodeBitPosition;
 
         public void EncodeInit()
         {
-            encodeBuffer = new List<byte>();
+            encodeBuffer = new ArrayBufferWriter<byte>();
             encodeBitPosition = 0;
             currentByte = 0;
             currentByteBits = 0;
         }
 
-        public void DecodeInit(byte[] buffer)
+        public void DecodeInit(ReadOnlyMemory<byte> buffer)
         {
             decodeBuffer = buffer;
             decodeBitPosition = 0;
@@ -30,6 +32,10 @@
             if (isSigned)
             {
                 value = (value << (32 - bitCount)) >> (32 - bitCount);
+            }
+            else
+            {
+                value &= (1 << bitCount) - 1;
             }
 
             WriteBits((uint)value, bitCount);
@@ -55,8 +61,8 @@
 
         public double ExtractDouble(int bitCount, int fractionalBits, bool isSigned = false)
         {
-            int scaledValue = ExtractInt(bitCount, isSigned);
             double scale = Math.Pow(10, fractionalBits);
+            int scaledValue = ExtractInt(bitCount, isSigned);
             return scaledValue / scale;
         }
 
@@ -75,16 +81,15 @@
             while (bitCount > 0)
             {
                 int bitsToWrite = Math.Min(bitCount, 8 - currentByteBits);
-                uint mask = ((1U << bitsToWrite) - 1) << (bitCount - bitsToWrite);
-                uint bits = (value & mask) >> (bitCount - bitsToWrite);
+                currentByte |= (byte)(((value >> (bitCount - bitsToWrite)) & ((1U << bitsToWrite) - 1)) << (8 - currentByteBits - bitsToWrite));
 
-                currentByte |= (byte)(bits << (8 - currentByteBits - bitsToWrite));
                 currentByteBits += bitsToWrite;
                 bitCount -= bitsToWrite;
 
                 if (currentByteBits == 8)
                 {
-                    encodeBuffer.Add(currentByte);
+                    encodeBuffer.GetSpan(1)[0] = currentByte;
+                    encodeBuffer.Advance(1);
                     currentByte = 0;
                     currentByteBits = 0;
                 }
@@ -94,19 +99,18 @@
         private uint ReadBits(int bitCount)
         {
             uint value = 0;
+            ReadOnlySpan<byte> span = decodeBuffer.Span;
+
             while (bitCount > 0)
             {
                 int byteIndex = decodeBitPosition >> 3;
                 int bitOffset = decodeBitPosition & 7;
-
-                byte currentByte = decodeBuffer[byteIndex];
+                byte currentByte = span[byteIndex];
 
                 int bitsAvailable = 8 - bitOffset;
                 int bitsToRead = Math.Min(bitCount, bitsAvailable);
 
-                uint bits = (uint)(currentByte >> (bitsAvailable - bitsToRead)) & ((1U << bitsToRead) - 1);
-
-                value = (value << bitsToRead) | bits;
+                value = (value << bitsToRead) | ((uint)(currentByte >> (bitsAvailable - bitsToRead)) & ((1U << bitsToRead) - 1));
 
                 decodeBitPosition += bitsToRead;
                 bitCount -= bitsToRead;
@@ -118,9 +122,10 @@
         {
             if (currentByteBits > 0)
             {
-                encodeBuffer.Add(currentByte);
+                encodeBuffer.GetSpan(1)[0] = currentByte;
+                encodeBuffer.Advance(1);
             }
-            return encodeBuffer.ToArray();
+            return encodeBuffer.WrittenSpan.ToArray();
         }
     }
 }
