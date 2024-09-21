@@ -176,9 +176,9 @@ namespace Gosuji.Client.Components.Pages
 
             APIResponse<bool> initResponse = await trainerConnection.Init(tscWithSGFSettings, thirdPartyMoves, name, GameId);
             if (G.StatusMessage.HandleAPIResponse(initResponse)) return false;
-            bool userHasInstance = initResponse.Data;
+            bool isOnlyInstance = initResponse.Data;
 
-            if (userHasInstance)
+            if (!isOnlyInstance)
             {
                 G.StatusMessage.SetMessage("You already use this page somewhere else!", false);
                 return false;
