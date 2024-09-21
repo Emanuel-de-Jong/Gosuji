@@ -15,7 +15,7 @@ namespace Gosuji.API.Helpers
 
         public void EncodeInit()
         {
-            encodeBuffer = new ArrayBufferWriter<byte>();
+            encodeBuffer = new ArrayBufferWriter<byte>(256);
             encodeBitPosition = 0;
             currentByte = 0;
             currentByteBits = 0;
@@ -110,7 +110,7 @@ namespace Gosuji.API.Helpers
                 int bitsAvailable = 8 - bitOffset;
                 int bitsToRead = Math.Min(bitCount, bitsAvailable);
 
-                value = (value << bitsToRead) | ((uint)(currentByte >> (bitsAvailable - bitsToRead)) & ((1U << bitsToRead) - 1));
+                value = (value << bitsToRead) | (uint)((currentByte >> (bitsAvailable - bitsToRead)) & ((1U << bitsToRead) - 1));
 
                 decodeBitPosition += bitsToRead;
                 bitCount -= bitsToRead;
