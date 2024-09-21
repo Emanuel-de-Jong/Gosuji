@@ -174,9 +174,9 @@ namespace Gosuji.Client.Components.Pages
             tscWithSGFSettings.SGFRuleset = sgfRuleset;
             tscWithSGFSettings.SGFKomi = sgfKomi;
 
-            APIResponse<bool> response = await trainerConnection.Init(tscWithSGFSettings, thirdPartyMoves, name, GameId);
-            if (G.StatusMessage.HandleAPIResponse(response)) return false;
-            bool userHasInstance = response.Data;
+            APIResponse<bool> initResponse = await trainerConnection.Init(tscWithSGFSettings, thirdPartyMoves, name, GameId);
+            if (G.StatusMessage.HandleAPIResponse(initResponse)) return false;
+            bool userHasInstance = initResponse.Data;
 
             if (userHasInstance)
             {

@@ -21,7 +21,7 @@ namespace Gosuji.Client.Services.Trainer
             string uri = "Init";
             return await HubResponseHandler.TryCatch<bool>(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                trainerSettingConfig, thirdPartyMoves, name));
+                trainerSettingConfig, thirdPartyMoves, name, gameId));
         }
 
         public async Task<APIResponse> UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
