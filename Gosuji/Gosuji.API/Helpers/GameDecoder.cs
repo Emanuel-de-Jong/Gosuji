@@ -30,6 +30,8 @@ namespace Gosuji.API.Helpers
                 MoveNode defaultRootNode = tree.RootNode;
                 tree.RootNode = tree.RootNode.Children[0];
                 tree.AllNodes.Remove(defaultRootNode);
+
+                CalcMissingValues();
             }
 
             return tree;
@@ -156,6 +158,22 @@ namespace Gosuji.API.Helpers
             } while (indicator != ESuggestionIndicator.END);
 
             return suggestion;
+        }
+
+        private void CalcMissingValues()
+        {
+            foreach (MoveNode moveNode in tree.AllNodes)
+            {
+                if (moveNode.Suggestions != null)
+                {
+                    moveNode.Suggestions.AddGrades();
+
+                    if (moveNode.MoveOrigin == EMoveOrigin.PLAYER)
+                    {
+                        moveNode.PlayerResult = EPlayerResult.PERFECT;
+                    }
+                }
+            }
         }
     }
 }

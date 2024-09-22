@@ -82,7 +82,7 @@ namespace Gosuji.API.Services.TrainerService
                 await dbContext.DisposeAsync();
 
                 GameDecoder gameDecoder = new();
-                MoveTree = gameDecoder.Decode(Game.EncodedGameData.DataList);
+                MoveTree = gameDecoder.Decode(Game.EncodedGameData.Data);
             }
 
             Game.IsThirdPartySGF = thirdPartyMoves != null;
