@@ -60,7 +60,6 @@ class MoveSuggestionList {
         let suggestions = new MoveSuggestionList();
         suggestions.passSuggestion = kataGoSuggestions.passSuggestion;
         suggestions.visits = kataGoSuggestions.visits;
-        suggestions.playIndex = kataGoSuggestions.playIndex;
 
         for (const kataGoSuggestion of kataGoSuggestions.suggestions) {
             suggestions.add(MoveSuggestion.fromKataGo(kataGoSuggestion));

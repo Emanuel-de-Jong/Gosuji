@@ -50,6 +50,7 @@ kataGo.analyze = async function (
     }
 
     trainerG.suggestions = MoveSuggestionList.fromKataGo(analyzeResponse.suggestionList);
+    trainerG.suggestions.playIndex = analyzeResponse.playIndex;
     trainerG.handleResult(analyzeResponse.result);
     
     return trainerG.suggestions;

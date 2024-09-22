@@ -149,16 +149,18 @@ namespace Gosuji.API.Services.TrainerService
             MoveSuggestionList suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc, moveOptions);
             MoveTree.CurrentNode.Suggestions = suggestions;
 
+            int? playIndex = null;
+
             double? result = GetResult(suggestions);
             MoveTree.CurrentNode.Result = result;
 
             if (result == null)
             {
-                CalcPlayIndex(suggestions, moveOrigin);
+                playIndex = CalcPlayIndex(suggestions, moveOrigin);
 
-                if (suggestions.PlayIndex != null)
+                if (playIndex != null)
                 {
-                    Move move = new(color, suggestions.Suggestions[suggestions.PlayIndex.Value].Coord);
+                    Move move = new(color, suggestions.Suggestions[playIndex.Value].Coord);
                     await Play(move, moveOrigin);
                 }
             }
@@ -171,7 +173,7 @@ namespace Gosuji.API.Services.TrainerService
             MoveTree.MainBranch = isMainBranch ? MoveTree.CurrentNode : MoveTree.MainBranch;
 
             isAnalyzing = false;
-            return new AnalyzeResponse(suggestions, result);
+            return new AnalyzeResponse(suggestions, playIndex, result);
         }
 
         public async Task<AnalyzeResponse> AnalyzeAfterJump(Move[] moves, EMoveOrigin moveOrigin, EMoveColor color, bool isMainBranch)
@@ -242,11 +244,11 @@ namespace Gosuji.API.Services.TrainerService
             return Math.Round(scoreLead, 1);
         }
 
-        private void CalcPlayIndex(MoveSuggestionList suggestions, EMoveOrigin moveOrigin)
+        private int? CalcPlayIndex(MoveSuggestionList suggestions, EMoveOrigin moveOrigin)
         {
             if (moveOrigin == EMoveOrigin.PLAYER)
             {
-                return;
+                return null;
             }
 
             int playIndex = 0;
@@ -287,7 +289,7 @@ namespace Gosuji.API.Services.TrainerService
                 }
             }
 
-            suggestions.PlayIndex = playIndex;
+            return playIndex;
         }
 
         private async Task Play(Move move, EMoveOrigin moveOrigin)

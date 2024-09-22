@@ -8,7 +8,6 @@
         public MoveSuggestion? AnalyzeMoveSuggestion { get; set; }
         public MoveSuggestion? PassSuggestion { get; set; }
         public int Visits { get; set; }
-        public int? PlayIndex { get; set; }
 
         public MoveSuggestionList() { }
 
