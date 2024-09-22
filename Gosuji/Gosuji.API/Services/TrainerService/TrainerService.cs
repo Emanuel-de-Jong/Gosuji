@@ -351,6 +351,7 @@ namespace Gosuji.API.Services.TrainerService
             }
             else
             {
+                TrainerSettingConfig.Id = 0;
                 await dbContext.TrainerSettingConfigs.AddAsync(TrainerSettingConfig);
                 await dbContext.SaveChangesAsync();
             }
