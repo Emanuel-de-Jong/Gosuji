@@ -75,6 +75,11 @@ namespace Gosuji.API.Helpers
             WriteBits((uint)value, bitCount);
         }
 
+        public void AddInt(int? value, int bitCount, bool isSigned = false)
+        {
+            AddInt(value.Value, bitCount, isSigned);
+        }
+
         public int ExtractInt(int bitCount, bool isSigned = false)
         {
             uint rawValue = ReadBits(bitCount);
@@ -93,6 +98,11 @@ namespace Gosuji.API.Helpers
             AddInt(scaledValue, bitCount, isSigned);
         }
 
+        public void AddDouble(double? value, int bitCount, int fractionalBits, bool isSigned = false)
+        {
+            AddDouble(value.Value, bitCount, fractionalBits, isSigned);
+        }
+
         public double ExtractDouble(int bitCount, int fractionalBits, bool isSigned = false)
         {
             double scale = Math.Pow(10, fractionalBits);
@@ -103,6 +113,11 @@ namespace Gosuji.API.Helpers
         public void AddEnum<TEnum>(TEnum value, int bitCount, bool isSigned = false) where TEnum : Enum
         {
             AddInt(Convert.ToInt32(value), bitCount, isSigned);
+        }
+
+        public void AddEnum<TEnum>(TEnum? value, int bitCount, bool isSigned = false) where TEnum : struct, Enum
+        {
+            AddEnum(value.Value, bitCount, isSigned);
         }
 
         public TEnum ExtractEnum<TEnum>(int bitCount, bool isSigned = false) where TEnum : Enum

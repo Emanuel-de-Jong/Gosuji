@@ -354,11 +354,11 @@ namespace Gosuji.API.Services.TrainerService
             }
 
             GameEncoder gameEncoder = new();
-            List<byte> data = gameEncoder.Encode(MoveTree);
+            byte[] data = gameEncoder.Encode(MoveTree);
 
             if (Game.EncodedGameData != null)
             {
-                Game.EncodedGameData.SetData(data);
+                Game.EncodedGameData.Data = data;
                 dbContext.Update(Game.EncodedGameData);
             }
             else

@@ -17,6 +17,12 @@ namespace Gosuji.Client.Data
 
         public EncodedGameData() { }
 
+        public EncodedGameData(string id, byte[] data)
+        {
+            Id = id;
+            data = data;
+        }
+
         public EncodedGameData(string id, List<byte> data)
         {
             Id = id;
