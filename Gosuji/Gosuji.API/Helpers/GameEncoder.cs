@@ -20,6 +20,8 @@ namespace Gosuji.API.Helpers
 
             EncodeLoop(tree.RootNode);
 
+            bitUtils.AddEnum(ENodeIndicator.END, 6);
+
             return bitUtils.ToArray();
         }
 
@@ -39,6 +41,7 @@ namespace Gosuji.API.Helpers
 
             bitUtils.AddEnum(ENodeIndicator.NODE, 6);
             bitUtils.AddInt(nodeId, 11);
+
             EncodeMove(node.Move);
 
             if (tree.CurrentNode == node)
@@ -62,17 +65,18 @@ namespace Gosuji.API.Helpers
             if (node.Result != null)
             {
                 bitUtils.AddEnum(ENodeIndicator.RESULT, 6);
-                bitUtils.AddDouble(node.Result, 15, 98563478, true);
+                bitUtils.AddDouble(node.Result, 15, 1, true);
+            }
+
+            if (node.Suggestions != null)
+            {
+                bitUtils.AddEnum(ENodeIndicator.SUGGESTIONS, 6);
+                EncodeSuggestions(node.Suggestions);
             }
         }
 
-        private void EncodeMove(Move? move)
+        private void EncodeMove(Move move)
         {
-            if (move == null)
-            {
-                return;
-            }
-
             bitUtils.AddEnum(move.Color, 1);
             bitUtils.AddInt(move.Coord.X, 5);
             bitUtils.AddInt(move.Coord.Y, 5);
@@ -84,11 +88,42 @@ namespace Gosuji.API.Helpers
             }
         }
 
-        private void EncodeSuggestions(MoveSuggestionList? suggestions)
+        private void EncodeSuggestions(MoveSuggestionList suggestions)
         {
-            if (suggestions == null)
+            bitUtils.AddInt(suggestions.Visits, 20);
+
+            bitUtils.AddInt(suggestions.Suggestions.Count, 6);
+            foreach (MoveSuggestion suggestion in suggestions.Suggestions)
             {
-                return;
+                EncodeSuggestion(suggestion);
+            }
+
+            if (suggestions.AnalyzeMoveSuggestion != null)
+            {
+                bitUtils.AddEnum(ESuggestionsIndicator.ANALYZE_MOVE_SUGGESTION, 5);
+                EncodeSuggestion(suggestions.AnalyzeMoveSuggestion);
+            }
+
+            if (suggestions.PassSuggestion != null)
+            {
+                bitUtils.AddEnum(ESuggestionsIndicator.PASS_SUGGESTION, 5);
+                EncodeSuggestion(suggestions.PassSuggestion);
+            }
+        }
+
+        private void EncodeSuggestion(MoveSuggestion suggestion)
+        {
+            bitUtils.AddInt(suggestion.Coord.X, 5);
+            bitUtils.AddInt(suggestion.Coord.Y, 5);
+            bitUtils.AddInt(suggestion.Visits, 20);
+            bitUtils.AddDouble(suggestion.Score.Winrate, 17, 3);
+            bitUtils.AddDouble(suggestion.Score.ScoreLead, 21, 3, true);
+
+            bitUtils.AddInt(suggestion.Continuation.Count, 9);
+            foreach (Coord coord in suggestion.Continuation)
+            {
+                bitUtils.AddInt(coord.X, 5);
+                bitUtils.AddInt(coord.Y, 5);
             }
         }
     }

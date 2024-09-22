@@ -91,21 +91,21 @@ namespace Gosuji.API.Helpers
             return (int)rawValue;
         }
 
-        public void AddDouble(double value, int bitCount, int fractionalBits, bool isSigned = false)
+        public void AddDouble(double value, int bitCount, int decimalPoints, bool isSigned = false)
         {
-            double scale = Math.Pow(10, fractionalBits);
+            double scale = Math.Pow(10, decimalPoints);
             int scaledValue = (int)Math.Round(value * scale);
             AddInt(scaledValue, bitCount, isSigned);
         }
 
-        public void AddDouble(double? value, int bitCount, int fractionalBits, bool isSigned = false)
+        public void AddDouble(double? value, int bitCount, int decimalPoints, bool isSigned = false)
         {
-            AddDouble(value.Value, bitCount, fractionalBits, isSigned);
+            AddDouble(value.Value, bitCount, decimalPoints, isSigned);
         }
 
-        public double ExtractDouble(int bitCount, int fractionalBits, bool isSigned = false)
+        public double ExtractDouble(int bitCount, int decimalPoints, bool isSigned = false)
         {
-            double scale = Math.Pow(10, fractionalBits);
+            double scale = Math.Pow(10, decimalPoints);
             int scaledValue = ExtractInt(bitCount, isSigned);
             return scaledValue / scale;
         }
