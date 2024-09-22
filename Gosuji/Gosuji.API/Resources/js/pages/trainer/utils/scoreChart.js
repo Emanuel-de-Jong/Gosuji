@@ -184,15 +184,6 @@ scoreChart.update = function (suggestion) {
     }
 
     scoreChart.labels.splice(index, 0, moveNumber);
-    
-    let type = stats.PLAYER_RESULT_TYPE.WRONG;
-    if (trainerG.isPerfectChoice) {
-        type = stats.PLAYER_RESULT_TYPE.PERFECT;
-    } else if (trainerG.isRightChoice) {
-        type = stats.PLAYER_RESULT_TYPE.RIGHT;
-    }
-
-    stats.playerResultHistory.add(type);
 
     let point = suggestion.score.copy();
     scoreChart.history.addWithCoord(point, moveNumber);
