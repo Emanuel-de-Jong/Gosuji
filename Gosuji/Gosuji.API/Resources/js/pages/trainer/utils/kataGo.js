@@ -40,11 +40,17 @@ kataGo.start = async function () {
 
 kataGo.analyze = async function (
     moveOrigin = trainerG.MOVE_ORIGIN.PLAYER,
-    color = trainerG.board.getNextColor()
+    color = trainerG.board.getNextColor(),
+    shouldSyncBoard = false
 ) {
     let isMainBranch = trainerG.isMainBranch();
 
-    let analyzeResponse = await kataGo.sendRequest("Analyze", moveOrigin, color, isMainBranch);
+    let moves;
+    if (shouldSyncBoard) {
+        moves = trainerG.board.getMoves();
+    }
+
+    let analyzeResponse = await kataGo.sendRequest("Analyze", moveOrigin, color, isMainBranch, moves);
     if (analyzeResponse == null) {
         return;
     }
@@ -53,24 +59,6 @@ kataGo.analyze = async function (
     trainerG.suggestions.playIndex = analyzeResponse.playIndex;
     trainerG.handleResult(analyzeResponse.result);
     
-    return trainerG.suggestions;
-};
-
-kataGo.analyzeAfterJump = async function (
-    moveOrigin = trainerG.MOVE_ORIGIN.PLAYER,
-    color = trainerG.board.getNextColor()
-) {
-    let isMainBranch = trainerG.isMainBranch();
-    let moves = trainerG.board.getMoves();
-
-    let analyzeResponse = await kataGo.sendRequest("AnalyzeAfterJump", moves, moveOrigin, color, isMainBranch);
-    if (analyzeResponse == null) {
-        return;
-    }
-
-    trainerG.suggestions = MoveSuggestionList.fromKataGo(analyzeResponse.suggestionList);
-    trainerG.handleResult(analyzeResponse.result);
-
     return trainerG.suggestions;
 };
 

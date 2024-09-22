@@ -149,7 +149,10 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
 
 gameplay.handleJumped = async function () {
     if (gameplay.isJumped) {
-        gameplay.suggestionsPromise = kataGo.analyzeAfterJump();
+        gameplay.suggestionsPromise = kataGo.analyze(
+            trainerG.MOVE_ORIGIN.PLAYER,
+            trainerG.board.getNextColor(),
+            true);
         gameplay.isJumped = false;
     }
 };

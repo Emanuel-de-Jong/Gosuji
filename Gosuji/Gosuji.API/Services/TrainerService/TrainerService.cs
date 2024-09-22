@@ -109,13 +109,18 @@ namespace Gosuji.API.Services.TrainerService
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
         }
 
-        public async Task<AnalyzeResponse> Analyze(EMoveOrigin moveOrigin, EMoveColor color, bool isMainBranch)
+        public async Task<AnalyzeResponse> Analyze(EMoveOrigin moveOrigin, EMoveColor color, bool isMainBranch, Move[]? moves)
         {
             if (isAnalyzing)
             {
                 return null;
             }
             isAnalyzing = true;
+
+            if (moves != null)
+            {
+                await SyncBoard(moves);
+            }
 
             int maxVisits = 0;
             double minVisitsPerc = 0;
@@ -174,12 +179,6 @@ namespace Gosuji.API.Services.TrainerService
 
             isAnalyzing = false;
             return new AnalyzeResponse(suggestions, playIndex, result);
-        }
-
-        public async Task<AnalyzeResponse> AnalyzeAfterJump(Move[] moves, EMoveOrigin moveOrigin, EMoveColor color, bool isMainBranch)
-        {
-            await SyncBoard(moves);
-            return await Analyze(moveOrigin, color, isMainBranch);
         }
 
         public async Task<MoveSuggestion> AnalyzeMove(Move move)
