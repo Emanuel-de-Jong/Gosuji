@@ -16,6 +16,8 @@ namespace Gosuji.API.Services.TrainerService
         public Coord? ChosenNotPlayedCoord { get; set; }
         public double? Result { get; set; }
 
+        public MoveNode() { }
+
         public MoveNode(Move move, MoveNode? parent = null)
         {
             Move = move;
@@ -23,11 +25,15 @@ namespace Gosuji.API.Services.TrainerService
             Depth = parent?.Depth + 1 ?? 0;
         }
 
-        public MoveNode Add(Move move)
+        public MoveNode Add(MoveNode newNode)
         {
-            MoveNode newNode = new(move, this);
             Children.Add(newNode);
             return newNode;
+        }
+
+        public MoveNode Add(Move move)
+        {
+            return Add(new MoveNode(move, this));
         }
 
         public IEnumerable<MoveNode> IterateChildren(bool includeSelf = false)

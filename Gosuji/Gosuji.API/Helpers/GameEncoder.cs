@@ -14,32 +14,33 @@ namespace Gosuji.API.Helpers
         {
             this.tree = tree;
 
-            nodeId = -1;
+            nodeId = 0;
             bitUtils = new();
             bitUtils.EncodeInit();
 
-            EncodeLoop(tree.RootNode);
+            EncodeLoop(tree.RootNode, 0);
 
             bitUtils.AddEnum(ENodeIndicator.END, 6);
 
             return bitUtils.ToArray();
         }
 
-        public void EncodeLoop(MoveNode node)
+        public void EncodeLoop(MoveNode node, int parentNodeId)
         {
-            EncodeNode(node);
+            int currentNodeId = ++nodeId;
+
+            EncodeNode(node, parentNodeId);
 
             foreach (MoveNode child in node.Children)
             {
-                EncodeLoop(child);
+                EncodeLoop(child, currentNodeId);
             }
         }
 
-        private void EncodeNode(MoveNode node)
+        private void EncodeNode(MoveNode node, int parentNodeId)
         {
-            nodeId++;
-
             bitUtils.AddEnum(ENodeIndicator.NODE, 6);
+            bitUtils.AddInt(parentNodeId, 11);
             bitUtils.AddInt(nodeId, 11);
 
             EncodeMove(node.Move);
@@ -47,6 +48,11 @@ namespace Gosuji.API.Helpers
             if (tree.CurrentNode == node)
             {
                 bitUtils.AddEnum(ENodeIndicator.CURRENT_NODE, 6);
+            }
+
+            if (tree.MainBranch == node)
+            {
+                bitUtils.AddEnum(ENodeIndicator.MAIN_BRANCH, 6);
             }
 
             if (node.MoveOrigin != null)
@@ -86,6 +92,8 @@ namespace Gosuji.API.Helpers
                 bitUtils.AddEnum(EMoveIndicator.MOVE_TYPE, 5);
                 bitUtils.AddEnum(move.Type, 5);
             }
+
+            bitUtils.AddEnum(EMoveIndicator.END, 5);
         }
 
         private void EncodeSuggestions(MoveSuggestionList suggestions)
@@ -109,6 +117,8 @@ namespace Gosuji.API.Helpers
                 bitUtils.AddEnum(ESuggestionsIndicator.PASS_SUGGESTION, 5);
                 EncodeSuggestion(suggestions.PassSuggestion);
             }
+
+            bitUtils.AddEnum(ESuggestionsIndicator.END, 5);
         }
 
         private void EncodeSuggestion(MoveSuggestion suggestion)
@@ -125,6 +135,8 @@ namespace Gosuji.API.Helpers
                 bitUtils.AddInt(coord.X, 5);
                 bitUtils.AddInt(coord.Y, 5);
             }
+
+            bitUtils.AddEnum(ESuggestionIndicator.END, 5);
         }
     }
 
@@ -133,21 +145,29 @@ namespace Gosuji.API.Helpers
         NODE = 0,
         MOVE = 1,
         CURRENT_NODE = 2,
-        MOVE_ORIGIN = 3,
-        CHOSEN_NOT_PLAYED_COORD = 4,
-        RESULT = 5,
-        SUGGESTIONS = 6,
-        END = 7
+        MAIN_BRANCH = 3,
+        MOVE_ORIGIN = 4,
+        CHOSEN_NOT_PLAYED_COORD = 5,
+        RESULT = 6,
+        SUGGESTIONS = 7,
+        END = 63
     }
 
     public enum EMoveIndicator
     {
-        MOVE_TYPE = 0
+        MOVE_TYPE = 0,
+        END = 31
     }
 
     public enum ESuggestionsIndicator
     {
         ANALYZE_MOVE_SUGGESTION = 0,
-        PASS_SUGGESTION = 1
+        PASS_SUGGESTION = 1,
+        END = 31
+    }
+
+    public enum ESuggestionIndicator
+    {
+        END = 31
     }
 }
