@@ -62,6 +62,10 @@ namespace Gosuji.API.Helpers
                 {
                     moveNode.MoveOrigin = bitUtils.ExtractEnum<EMoveOrigin>(5);
                 }
+                else if (indicator == ENodeIndicator.PLAYER_RESULT)
+                {
+                    moveNode.PlayerResult = bitUtils.ExtractEnum<EPlayerResult>(5);
+                }
                 else if (indicator == ENodeIndicator.CHOSEN_NOT_PLAYED_COORD)
                 {
                     moveNode.ChosenNotPlayedCoord = new Coord(bitUtils.ExtractInt(5), bitUtils.ExtractInt(5));
@@ -94,7 +98,8 @@ namespace Gosuji.API.Helpers
         {
             Move move = new();
 
-            move.Color = bitUtils.ExtractEnum<EMoveColor>(1);
+            int color = bitUtils.ExtractInt(1);
+            move.Color = color == 0 ? EMoveColor.BLACK : EMoveColor.WHITE;
             move.Coord = new Coord(bitUtils.ExtractInt(5), bitUtils.ExtractInt(5));
 
             EMoveIndicator indicator;
@@ -164,15 +169,7 @@ namespace Gosuji.API.Helpers
         {
             foreach (MoveNode moveNode in tree.AllNodes)
             {
-                if (moveNode.Suggestions != null)
-                {
-                    moveNode.Suggestions.AddGrades();
-
-                    if (moveNode.MoveOrigin == EMoveOrigin.PLAYER)
-                    {
-                        moveNode.PlayerResult = EPlayerResult.PERFECT;
-                    }
-                }
+                moveNode.Suggestions?.AddGrades();
             }
         }
     }

@@ -61,6 +61,12 @@ namespace Gosuji.API.Helpers
                 bitUtils.AddEnum(node.MoveOrigin, 5);
             }
 
+            if (node.PlayerResult != null)
+            {
+                bitUtils.AddEnum(ENodeIndicator.PLAYER_RESULT, 6);
+                bitUtils.AddEnum(node.PlayerResult, 5);
+            }
+
             if (node.ChosenNotPlayedCoord != null)
             {
                 bitUtils.AddEnum(ENodeIndicator.CHOSEN_NOT_PLAYED_COORD, 6);
@@ -83,7 +89,8 @@ namespace Gosuji.API.Helpers
 
         private void EncodeMove(Move move)
         {
-            bitUtils.AddEnum(move.Color, 1);
+            int color = move.Color == EMoveColor.BLACK ? 0 : 1;
+            bitUtils.AddInt(color, 1);
             bitUtils.AddInt(move.Coord.X, 5);
             bitUtils.AddInt(move.Coord.Y, 5);
 
@@ -147,9 +154,10 @@ namespace Gosuji.API.Helpers
         CURRENT_NODE = 2,
         MAIN_BRANCH = 3,
         MOVE_ORIGIN = 4,
-        CHOSEN_NOT_PLAYED_COORD = 5,
-        RESULT = 6,
-        SUGGESTIONS = 7,
+        PLAYER_RESULT = 5,
+        CHOSEN_NOT_PLAYED_COORD = 6,
+        RESULT = 7,
+        SUGGESTIONS = 8,
         END = 63
     }
 
