@@ -351,23 +351,9 @@ namespace Gosuji.API.Services.TrainerService
             else
             {
                 await dbContext.TrainerSettingConfigs.AddAsync(TrainerSettingConfig);
+                await dbContext.SaveChangesAsync();
             }
 
-            GameEncoder gameEncoder = new();
-            byte[] data = gameEncoder.Encode(MoveTree);
-
-            if (Game.EncodedGameData != null)
-            {
-                Game.EncodedGameData.Data = data;
-                dbContext.Update(Game.EncodedGameData);
-            }
-            else
-            {
-                Game.EncodedGameData = new(Game.Id, data);
-                await dbContext.EncodedGameDatas.AddAsync(Game.EncodedGameData);
-            }
-
-            await dbContext.SaveChangesAsync();
             await dbContext.DisposeAsync();
 
             dbContext = await dbContextFactory.CreateDbContextAsync();
@@ -383,6 +369,25 @@ namespace Gosuji.API.Services.TrainerService
             else
             {
                 await dbContext.Games.AddAsync(Game);
+            }
+
+            await dbContext.SaveChangesAsync();
+            await dbContext.DisposeAsync();
+
+            dbContext = await dbContextFactory.CreateDbContextAsync();
+
+            GameEncoder gameEncoder = new();
+            byte[] data = gameEncoder.Encode(MoveTree);
+
+            if (Game.EncodedGameData != null)
+            {
+                Game.EncodedGameData.Data = data;
+                dbContext.Update(Game.EncodedGameData);
+            }
+            else
+            {
+                Game.EncodedGameData = new(Game.Id, data);
+                await dbContext.EncodedGameDatas.AddAsync(Game.EncodedGameData);
             }
 
             await dbContext.SaveChangesAsync();
