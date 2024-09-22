@@ -28,7 +28,7 @@ namespace Gosuji.API.Helpers
                 DecodeLoop();
 
                 MoveNode defaultRootNode = tree.RootNode;
-                tree.RootNode = tree.RootNode.Children[0];
+                tree.RootNode = nodes[1];
                 tree.AllNodes.Remove(defaultRootNode);
 
                 CalcMissingValues();
@@ -118,6 +118,8 @@ namespace Gosuji.API.Helpers
         private MoveSuggestionList DecodeSuggestions()
         {
             MoveSuggestionList suggestions = new();
+
+            suggestions.Visits = bitUtils.ExtractInt(20);
 
             int suggestionCount = bitUtils.ExtractInt(6);
             for (int i = 0; i < suggestionCount; i++)
