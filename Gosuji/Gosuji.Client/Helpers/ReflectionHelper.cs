@@ -12,7 +12,8 @@ namespace Gosuji.Client.Helpers
         public static Dictionary<string, FieldInfo> GetFields(Type type)
         {
             return FieldCache.GetOrAdd(type, t => t
-                .GetFields(BindingFlags.Public | BindingFlags.Instance)
+                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(f => !f.Name.Contains("k__BackingField"))
                 .ToDictionary(f => f.Name));
         }
 
@@ -227,9 +228,7 @@ namespace Gosuji.Client.Helpers
             Type type = obj1.GetType();
             bool isEqual = true;
 
-            Dictionary<string, FieldInfo> fields = FieldCache.GetOrAdd(type, t => t
-                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .ToDictionary(f => f.Name));
+            Dictionary<string, FieldInfo> fields = GetFields(type);
             foreach (FieldInfo field in fields.Values)
             {
                 object? value1 = field.GetValue(obj1);
@@ -241,10 +240,7 @@ namespace Gosuji.Client.Helpers
                 }
             }
 
-            Dictionary<string, PropertyInfo> properties = PropertyCache.GetOrAdd(type, t => t
-                .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(p => p.CanRead)
-                .ToDictionary(p => p.Name));
+            Dictionary<string, PropertyInfo> properties = GetProperties(type);
             foreach (PropertyInfo property in properties.Values)
             {
                 object? value1 = property.GetValue(obj1);
