@@ -8,6 +8,7 @@ namespace Gosuji.Client.Helpers
     {
         public static ConcurrentDictionary<Type, Dictionary<string, FieldInfo>> FieldCache { get; } = new();
         public static ConcurrentDictionary<Type, Dictionary<string, PropertyInfo>> PropertyCache { get; } = new();
+        public static ConcurrentDictionary<Type, Dictionary<string, MemberInfo>> MemberCache { get; } = new();
 
         public static Dictionary<string, FieldInfo> GetFields(Type type)
         {
@@ -23,6 +24,13 @@ namespace Gosuji.Client.Helpers
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(p => p.CanRead)
                 .ToDictionary(p => p.Name));
+        }
+
+        public static Dictionary<string, MemberInfo> GetMembers(Type type)
+        {
+            return MemberCache.GetOrAdd(type, t => GetFields(t).Values.Cast<MemberInfo>()
+                .Concat(GetProperties(t).Values.Cast<MemberInfo>())
+                .ToDictionary(m => m.Name));
         }
 
         public static bool SetProperty<T>(T obj, string name, string? value)
@@ -104,23 +112,22 @@ namespace Gosuji.Client.Helpers
             Type type = typeof(T);
             StringBuilder result = new();
 
-            Dictionary<string, FieldInfo> fields = GetFields(type);
-            foreach (FieldInfo field in fields.Values)
+            Dictionary<string, MemberInfo> members = GetMembers(type);
+            foreach (MemberInfo member in members.Values)
             {
-                object? value = field.GetValue(obj);
-                if (value != null)
+                object? value = null;
+                if (member is FieldInfo field)
                 {
-                    result.AppendLine($"{field.Name}: {value}");
+                    value = field.GetValue(obj);
                 }
-            }
+                else if (member is PropertyInfo property)
+                {
+                    value = property.GetValue(obj);
+                }
 
-            Dictionary<string, PropertyInfo> properties = GetProperties(type);
-            foreach (PropertyInfo property in properties.Values)
-            {
-                object? value = property.GetValue(obj);
                 if (value != null)
                 {
-                    result.AppendLine($"{property.Name}: {value}");
+                    result.AppendLine($"{member.Name}: {value}");
                 }
             }
 
@@ -149,20 +156,15 @@ namespace Gosuji.Client.Helpers
 
             if (obj1 == null || obj2 == null)
             {
-                if (differences != null)
-                {
-                    differences.Add($"{path} 1=[{obj1}] 2=[{obj2}]");
-                }
+                differences?.Add($"{path} 1=[{obj1}] 2=[{obj2}]");
                 return false;
             }
 
             Type type = obj1.GetType();
             bool areEqual = true;
 
-            IEnumerable<MemberInfo> members = GetFields(type).Values.Cast<MemberInfo>()
-                .Concat(GetProperties(type).Values.Cast<MemberInfo>());
-
-            foreach (MemberInfo? member in members)
+            Dictionary<string, MemberInfo> members = GetMembers(type);
+            foreach (MemberInfo? member in members.Values)
             {
                 Type memberType;
                 object? value1;
@@ -194,10 +196,7 @@ namespace Gosuji.Client.Helpers
                 }
                 else if (!AreEqual(value1, value2))
                 {
-                    if (differences != null)
-                    {
-                        differences.Add($"{path}.{member.Name} 1=[{value1}] 2=[{value2}]");
-                    }
+                    differences?.Add($"{path}.{member.Name} 1=[{value1}] 2=[{value2}]");
                     areEqual = false;
                 }
             }
