@@ -147,7 +147,12 @@ namespace Gosuji.Client.Helpers
             return areEqual;
         }
 
-        public static bool CompareEqual(object obj1, object obj2, List<string>? differences, string path)
+        public static bool CompareEqual<T>(T obj1, T obj2)
+        {
+            return CompareEqual(obj1, obj2, null, typeof(T).Name);
+        }
+
+        private static bool CompareEqual(object obj1, object obj2, List<string>? differences, string path)
         {
             if (obj1 == null && obj2 == null)
             {
@@ -161,10 +166,32 @@ namespace Gosuji.Client.Helpers
             }
 
             Type type = obj1.GetType();
-            bool areEqual = true;
 
+            if (typeof(System.Collections.IEnumerable).IsAssignableFrom(type) && type != typeof(string))
+            {
+                List<object> enumerable1 = ((System.Collections.IEnumerable)obj1).Cast<object>().ToList();
+                List<object> enumerable2 = ((System.Collections.IEnumerable)obj2).Cast<object>().ToList();
+
+                if (enumerable1.Count != enumerable2.Count)
+                {
+                    differences?.Add($"{path}.Count 1=[{enumerable1.Count}] 2=[{enumerable2.Count}]");
+                    return false;
+                }
+
+                bool areEnumerablesEqual = true;
+                for (int i = 0; i < enumerable1.Count; i++)
+                {
+                    if (!CompareEqual(enumerable1[i], enumerable2[i], differences, $"{path}[{i}]"))
+                    {
+                        areEnumerablesEqual = false;
+                    }
+                }
+                return areEnumerablesEqual;
+            }
+
+            bool areEqual = true;
             Dictionary<string, MemberInfo> members = GetMembers(type);
-            foreach (MemberInfo? member in members.Values)
+            foreach (MemberInfo member in members.Values)
             {
                 Type memberType;
                 object? value1;
@@ -200,23 +227,12 @@ namespace Gosuji.Client.Helpers
                     areEqual = false;
                 }
             }
-
             return areEqual;
         }
 
         private static bool AreEqual(object? value1, object? value2)
         {
-            if (value1 == null && value2 == null)
-            {
-                return true;
-            }
-
-            if (value1 == null || value2 == null)
-            {
-                return false;
-            }
-
-            return value1.Equals(value2);
+            return value1 == null ? value2 == null : value1.Equals(value2);
         }
     }
 }
