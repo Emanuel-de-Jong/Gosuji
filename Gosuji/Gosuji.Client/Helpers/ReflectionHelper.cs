@@ -204,5 +204,97 @@ namespace Gosuji.Client.Helpers
 
             return Equals(value1, value2);
         }
+
+        public static bool CompareAndLogDifferences(object? obj1, object? obj2)
+        {
+            if (obj1 == null && obj2 == null)
+            {
+                return true;
+            }
+
+            if (obj1 == null || obj2 == null)
+            {
+                Console.WriteLine($"One of the objects is null. obj1: {obj1}, obj2: {obj2}");
+                return false;
+            }
+
+            if (obj1.GetType() != obj2.GetType())
+            {
+                Console.WriteLine($"Objects are of different types. obj1 type: {obj1.GetType().Name}, obj2 type: {obj2.GetType().Name}");
+                return false;
+            }
+
+            Type type = obj1.GetType();
+            bool isEqual = true;
+
+            Dictionary<string, FieldInfo> fields = FieldCache.GetOrAdd(type, t => t
+                .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .ToDictionary(f => f.Name));
+            foreach (FieldInfo field in fields.Values)
+            {
+                object? value1 = field.GetValue(obj1);
+                object? value2 = field.GetValue(obj2);
+
+                if (!AreEqualWithLogging(field.Name, value1, value2, field.FieldType, type.Name))
+                {
+                    isEqual = false;
+                }
+            }
+
+            Dictionary<string, PropertyInfo> properties = PropertyCache.GetOrAdd(type, t => t
+                .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(p => p.CanRead)
+                .ToDictionary(p => p.Name));
+            foreach (PropertyInfo property in properties.Values)
+            {
+                object? value1 = property.GetValue(obj1);
+                object? value2 = property.GetValue(obj2);
+
+                if (!AreEqualWithLogging(property.Name, value1, value2, property.PropertyType, type.Name))
+                {
+                    isEqual = false;
+                }
+            }
+
+            return isEqual;
+        }
+
+        private static bool AreEqualWithLogging(string memberName, object? value1, object? value2, Type memberType, string className)
+        {
+            if (value1 == null && value2 == null)
+            {
+                return true;
+            }
+
+            if (value1 == null || value2 == null)
+            {
+                Console.WriteLine($"{className}.{memberName} differs. Value1: {value1 ?? "null"}, Value2: {value2 ?? "null"}");
+                return false;
+            }
+
+            if (value1.GetType() != value2.GetType())
+            {
+                Console.WriteLine($"{className}.{memberName} differs. Different types: {value1.GetType().Name} vs {value2.GetType().Name}");
+                return false;
+            }
+
+            if (value1.GetType().IsPrimitive || value1 is string || value1 is ValueType)
+            {
+                if (!value1.Equals(value2))
+                {
+                    Console.WriteLine($"{className}.{memberName} differs. Value1: {value1}, Value2: {value2}");
+                    return false;
+                }
+            }
+            else
+            {
+                if (!CompareAndLogDifferences(value1, value2))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 }
