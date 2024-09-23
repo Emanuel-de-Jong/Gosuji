@@ -80,16 +80,16 @@ namespace Gosuji.API.Helpers
                 }
             } while (indicator is not ENodeIndicator.NODE and not ENodeIndicator.END);
 
+            tree.AllNodes.Add(moveNode);
+            nodes.Add(nodeId, moveNode);
+
+            if (parentNodeId != 0)
+            {
+                nodes[parentNodeId].Add(moveNode);
+            }
+
             if (indicator == ENodeIndicator.NODE)
             {
-                tree.AllNodes.Add(moveNode);
-                nodes.Add(nodeId, moveNode);
-
-                if (parentNodeId != 0)
-                {
-                    nodes[parentNodeId].Add(moveNode);
-                }
-
                 DecodeLoop();
             }
         }

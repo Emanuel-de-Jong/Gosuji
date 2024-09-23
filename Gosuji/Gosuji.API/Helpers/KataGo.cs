@@ -209,7 +209,6 @@ namespace Gosuji.API.Helpers
             ClearReader();
 
             MoveSuggestion suggestion = ParseAnalysis(analysis, move.Color.Value).Suggestions.FirstOrDefault();
-            suggestion.Grade = "X";
 
             return suggestion;
         }
