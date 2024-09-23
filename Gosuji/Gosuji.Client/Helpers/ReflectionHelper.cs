@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Gosuji.Client.Helpers
@@ -134,10 +135,11 @@ namespace Gosuji.Client.Helpers
             return result.ToString();
         }
 
-        public static bool CompareDifferences<T>(T obj1, T obj2, string[]? blacklist)
+        public static bool CompareDifferences<T>(T obj1, T obj2, string[]? blacklist = null)
         {
-            List<string> differences = [];
-            bool areEqual = CompareEqual(obj1, obj2, typeof(T).Name, differences, blacklist);
+            List<string> differences = new();
+            bool areEqual = CompareEqual(obj1, obj2, typeof(T).Name,
+                differences, blacklist);
 
             foreach (string difference in differences)
             {
@@ -147,13 +149,8 @@ namespace Gosuji.Client.Helpers
             return areEqual;
         }
 
-        public static bool CompareEqual<T>(T obj1, T obj2)
-        {
-            return CompareEqual(obj1, obj2, typeof(T).Name, null, null);
-        }
-
         private static bool CompareEqual(object obj1, object obj2, string path,
-            List<string>? differences, string[]? blacklist)
+            List<string>? differences = null, string[]? blacklist = null, HashSet<int>? visited = null)
         {
             if (obj1 == null && obj2 == null)
             {
@@ -165,6 +162,18 @@ namespace Gosuji.Client.Helpers
                 differences?.Add($"{path} 1=[{obj1}] 2=[{obj2}]");
                 return false;
             }
+
+            int obj1Hash = RuntimeHelpers.GetHashCode(obj1);
+            int obj2Hash = RuntimeHelpers.GetHashCode(obj2);
+
+            visited ??= [];
+            if (visited.Contains(obj1Hash) || visited.Contains(obj2Hash))
+            {
+                return true;
+            }
+
+            visited.Add(obj1Hash);
+            visited.Add(obj2Hash);
 
             Type type = obj1.GetType();
 
@@ -182,7 +191,8 @@ namespace Gosuji.Client.Helpers
                 bool areEnumerablesEqual = true;
                 for (int i = 0; i < enumerable1.Count; i++)
                 {
-                    if (!CompareEqual(enumerable1[i], enumerable2[i], $"{path}[{i}]", differences, blacklist))
+                    if (!CompareEqual(enumerable1[i], enumerable2[i], $"{path}[{i}]",
+                        differences, blacklist, visited))
                     {
                         areEnumerablesEqual = false;
                     }
@@ -222,7 +232,8 @@ namespace Gosuji.Client.Helpers
 
                 if (memberType.IsClass && memberType != typeof(string))
                 {
-                    if (!CompareEqual(value1, value2, $"{path}.{member.Name}", differences, blacklist))
+                    if (!CompareEqual(value1, value2, $"{path}.{member.Name}",
+                        differences, blacklist, visited))
                     {
                         areEqual = false;
                     }
