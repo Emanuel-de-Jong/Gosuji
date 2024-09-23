@@ -140,7 +140,7 @@ namespace Gosuji.Client.Helpers
             return areEqual;
         }
 
-        private static bool CompareEqual(object obj1, object obj2, List<string> differences, string path)
+        public static bool CompareEqual(object obj1, object obj2, List<string>? differences, string path)
         {
             if (obj1 == null && obj2 == null)
             {
@@ -149,47 +149,55 @@ namespace Gosuji.Client.Helpers
 
             if (obj1 == null || obj2 == null)
             {
-                differences.Add($"{path} 1=[{obj1}] 2=[{obj2}]");
+                if (differences != null)
+                {
+                    differences.Add($"{path} 1=[{obj1}] 2=[{obj2}]");
+                }
                 return false;
             }
 
             Type type = obj1.GetType();
             bool areEqual = true;
 
-            foreach (FieldInfo field in GetFields(type).Values)
-            {
-                object? value1 = field.GetValue(obj1);
-                object? value2 = field.GetValue(obj2);
+            IEnumerable<MemberInfo> members = GetFields(type).Values.Cast<MemberInfo>()
+                .Concat(GetProperties(type).Values.Cast<MemberInfo>());
 
-                if (IsComplexType(field.FieldType))
+            foreach (MemberInfo? member in members)
+            {
+                Type memberType;
+                object? value1;
+                object? value2;
+
+                if (member is FieldInfo field)
                 {
-                    if (!CompareEqual(value1, value2, differences, $"{path}.{field.Name}"))
+                    memberType = field.FieldType;
+                    value1 = field.GetValue(obj1);
+                    value2 = field.GetValue(obj2);
+                }
+                else if (member is PropertyInfo property)
+                {
+                    memberType = property.PropertyType;
+                    value1 = property.GetValue(obj1);
+                    value2 = property.GetValue(obj2);
+                }
+                else
+                {
+                    continue;
+                }
+
+                if (memberType.IsClass && memberType != typeof(string))
+                {
+                    if (!CompareEqual(value1, value2, differences, $"{path}.{member.Name}"))
                     {
                         areEqual = false;
                     }
                 }
                 else if (!AreEqual(value1, value2))
                 {
-                    differences.Add($"{path}.{field.Name} 1=[{value1}] 2=[{value2}]");
-                    areEqual = false;
-                }
-            }
-
-            foreach (PropertyInfo property in GetProperties(type).Values)
-            {
-                object? value1 = property.GetValue(obj1);
-                object? value2 = property.GetValue(obj2);
-
-                if (IsComplexType(property.PropertyType))
-                {
-                    if (!CompareEqual(value1, value2, differences, $"{path}.{property.Name}"))
+                    if (differences != null)
                     {
-                        areEqual = false;
+                        differences.Add($"{path}.{member.Name} 1=[{value1}] 2=[{value2}]");
                     }
-                }
-                else if (!AreEqual(value1, value2))
-                {
-                    differences.Add($"{path}.{property.Name} 1=[{value1}] 2=[{value2}]");
                     areEqual = false;
                 }
             }
@@ -210,11 +218,6 @@ namespace Gosuji.Client.Helpers
             }
 
             return value1.Equals(value2);
-        }
-
-        private static bool IsComplexType(Type type)
-        {
-            return type.IsClass && type != typeof(string);
         }
     }
 }
