@@ -134,10 +134,10 @@ namespace Gosuji.Client.Helpers
             return result.ToString();
         }
 
-        public static bool CompareDifferences<T>(T obj1, T obj2)
+        public static bool CompareDifferences<T>(T obj1, T obj2, string[]? blacklist)
         {
             List<string> differences = [];
-            bool areEqual = CompareEqual(obj1, obj2, differences, typeof(T).Name);
+            bool areEqual = CompareEqual(obj1, obj2, typeof(T).Name, differences, blacklist);
 
             foreach (string difference in differences)
             {
@@ -149,10 +149,11 @@ namespace Gosuji.Client.Helpers
 
         public static bool CompareEqual<T>(T obj1, T obj2)
         {
-            return CompareEqual(obj1, obj2, null, typeof(T).Name);
+            return CompareEqual(obj1, obj2, typeof(T).Name, null, null);
         }
 
-        private static bool CompareEqual(object obj1, object obj2, List<string>? differences, string path)
+        private static bool CompareEqual(object obj1, object obj2, string path,
+            List<string>? differences, string[]? blacklist)
         {
             if (obj1 == null && obj2 == null)
             {
@@ -181,7 +182,7 @@ namespace Gosuji.Client.Helpers
                 bool areEnumerablesEqual = true;
                 for (int i = 0; i < enumerable1.Count; i++)
                 {
-                    if (!CompareEqual(enumerable1[i], enumerable2[i], differences, $"{path}[{i}]"))
+                    if (!CompareEqual(enumerable1[i], enumerable2[i], $"{path}[{i}]", differences, blacklist))
                     {
                         areEnumerablesEqual = false;
                     }
@@ -193,6 +194,11 @@ namespace Gosuji.Client.Helpers
             Dictionary<string, MemberInfo> members = GetMembers(type);
             foreach (MemberInfo member in members.Values)
             {
+                if (blacklist?.Contains(member.Name) ?? false)
+                {
+                    continue;
+                }
+
                 Type memberType;
                 object? value1;
                 object? value2;
@@ -216,7 +222,7 @@ namespace Gosuji.Client.Helpers
 
                 if (memberType.IsClass && memberType != typeof(string))
                 {
-                    if (!CompareEqual(value1, value2, differences, $"{path}.{member.Name}"))
+                    if (!CompareEqual(value1, value2, $"{path}.{member.Name}", differences, blacklist))
                     {
                         areEqual = false;
                     }
