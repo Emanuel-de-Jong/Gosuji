@@ -4,7 +4,7 @@ class History {
     nodeKey;
     nodes = new Set();
 
-    constructor(name, isServerDataReady = trainerG.isLoadingServerData) {
+    constructor(name, isServerDataReady = trainerG.gameLoadInfo != null) {
         this.nodeKey = name;
 
         if (isServerDataReady) {

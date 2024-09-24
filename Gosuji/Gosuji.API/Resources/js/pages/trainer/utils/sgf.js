@@ -6,7 +6,7 @@ import { trainerG } from "./trainerG";
 let sgf = { id: "sgf" };
 
 
-sgf.init = function (userName, gameLoadInfo) {
+sgf.init = function (userName) {
     sgf.userName = userName;
 
     sgf.sgfLoadingEvent = new CEvent(sgf.sgfLoadingListener);
@@ -14,15 +14,15 @@ sgf.init = function (userName, gameLoadInfo) {
 
     trainerG.board.editor.addListener(sgf.boardEditorListener);
 
-    sgf.clear(gameLoadInfo);
+    sgf.clear();
 };
 
-sgf.clear = function (gameLoadInfo) {
+sgf.clear = function () {
     sgf.isSGFLoading = false;
     sgf.isThirdParty = false;
 
-    sgf.setRuleset(gameLoadInfo ? gameLoadInfo.ruleset : settings.ruleset);
-    sgf.setKomi(gameLoadInfo ? gameLoadInfo.komi : settings.komi);
+    sgf.setRuleset(trainerG.gameLoadInfo ? trainerG.gameLoadInfo.ruleset : settings.ruleset);
+    sgf.setKomi(trainerG.gameLoadInfo ? trainerG.gameLoadInfo.komi : settings.komi);
 
     trainerG.board.editor.setGameInfo("Gosuji", "GN");
     trainerG.board.editor.setGameInfo("Gosuji", "SO");

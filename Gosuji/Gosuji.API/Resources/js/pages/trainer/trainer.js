@@ -33,19 +33,18 @@ trainerPage.init = async function (
     trainerSettingConfig,
     gameLoadInfo
 ) {
-    trainerG.isLoadingServerData = gameLoadInfo != null;
+    trainerG.setGameLoadInfo(gameLoadInfo);
 
     trainerG.init(trainerRef);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
     await kataGo.init(trainerConnectionRef);
-    await settings.init(trainerSettingConfig, gameLoadInfo);
+    await settings.init(trainerSettingConfig);
     trainerG.board.init(
         stoneVolume,
         isPreMoveStoneSound,
-        isSelfplayStoneSound,
-        gameLoadInfo);
+        isSelfplayStoneSound);
     
-    if (trainerG.isLoadingServerData) {
+    if (trainerG.gameLoadInfo) {
         trainerG.suggestionsHistory.addMissingNodes();
         trainerG.moveOriginHistory.addMissingNodes();
     }
@@ -58,10 +57,10 @@ trainerPage.init = async function (
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
     trainerPage.newGameButton.addEventListener("click", trainerPage.restartButtonClickListener);
 
-    sgf.init(userName, gameLoadInfo);
+    sgf.init(userName);
     sgfComment.init();
     scoreChart.init();
-    await stats.init(gameLoadInfo);
+    await stats.init();
     ratioChart.init();
     debug.init();
     gameplay.init();
@@ -74,7 +73,7 @@ trainerPage.init = async function (
 
     document.getElementById("settingsAccordion").hidden = false;
 
-    if (trainerG.isLoadingServerData) {
+    if (trainerG.gameLoadInfo) {
         trainerG.board.editor.setCurrent(trainerG.board.lastNode);
         trainerG.board.editor.notifyListeners({ navChange: true });
 
@@ -112,8 +111,8 @@ trainerPage.start = async function () {
 
     await kataGo.start();
     
-    if (trainerG.isLoadingServerData || debug.testData) {
-        trainerG.isLoadingServerData = false;
+    if (trainerG.gameLoadInfo || debug.testData) {
+        trainerG.gameLoadInfo = null;
         gameplay.start(false);
     } else {
         preMovePlacer.start();

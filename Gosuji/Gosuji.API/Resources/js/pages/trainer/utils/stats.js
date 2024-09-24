@@ -18,7 +18,7 @@ stats.PLAYER_RESULT_TYPE = {
 stats.PLAYER_RESULT_Y_INDICATOR = -1;
 
 
-stats.init = async function (gameLoadInfo) {
+stats.init = async function () {
     stats.rightStreakElement = document.getElementById("rightStreak");
     stats.rightTopStreakElement = document.getElementById("rightTopStreak");
     stats.perfectStreakElement = document.getElementById("perfectStreak");
@@ -29,20 +29,20 @@ stats.init = async function (gameLoadInfo) {
 
     trainerG.board.editor.addListener(stats.drawStats);
 
-    await stats.clear(gameLoadInfo);
+    await stats.clear();
 };
 
-stats.clear = async function (gameLoadInfo) {
+stats.clear = async function () {
     stats.playerResultHistory = new History(stats.PLAYER_RESULT_HISTORY_NAME);
     stats.resultHistory = new History(stats.RESULT_HISTORY_NAME);
 
     await stats.clearSuggestions();
     stats.clearResult();
 
-    stats.rightStreak = gameLoadInfo ? gameLoadInfo.rightStreak : 0;
-    stats.perfectStreak = gameLoadInfo ? gameLoadInfo.perfectStreak : 0;
-    stats.rightTopStreak = gameLoadInfo ? gameLoadInfo.rightTopStreak : 0;
-    stats.perfectTopStreak = gameLoadInfo ? gameLoadInfo.perfectTopStreak : 0;
+    stats.rightStreak = trainerG.gameLoadInfo ? trainerG.gameLoadInfo.rightStreak : 0;
+    stats.perfectStreak = trainerG.gameLoadInfo ? trainerG.gameLoadInfo.perfectStreak : 0;
+    stats.rightTopStreak = trainerG.gameLoadInfo ? trainerG.gameLoadInfo.rightTopStreak : 0;
+    stats.perfectTopStreak = trainerG.gameLoadInfo ? trainerG.gameLoadInfo.perfectTopStreak : 0;
 };
 
 

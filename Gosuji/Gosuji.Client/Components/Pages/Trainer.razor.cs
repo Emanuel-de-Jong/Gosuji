@@ -81,8 +81,6 @@ namespace Gosuji.Client.Components.Pages
 
             currentPreset = presets[userState.LastPresetId.Value];
 
-            await SetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
-
             if (GameId != null)
             {
                 if (!await StartTrainerConnection())
@@ -94,6 +92,10 @@ namespace Gosuji.Client.Components.Pages
                 if (G.StatusMessage.HandleAPIResponse(loadGameResponse)) return;
                 SetTrainerSettingConfig(loadGameResponse.Data.TrainerSettingConfig);
                 gameLoadInfo = new(loadGameResponse.Data.Game, loadGameResponse.Data.MoveTree);
+            }
+            else
+            {
+                await SetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
             }
 
             isInitialized = true;

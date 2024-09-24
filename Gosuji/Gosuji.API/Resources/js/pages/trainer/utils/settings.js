@@ -91,7 +91,7 @@ settings.FORCE_OPPONENT_CORNERS = {
 };
 
 
-settings.init = async function (trainerSettingConfig, gameLoadInfo) {
+settings.init = async function (trainerSettingConfig) {
     for (const key in settings.SETTINGS) {
         settings[key + "Element"] = document.getElementById(key);
     }
@@ -115,13 +115,13 @@ settings.init = async function (trainerSettingConfig, gameLoadInfo) {
 
     await settings.syncWithCS(trainerSettingConfig);
 
-    settings.clear(gameLoadInfo);
+    settings.clear();
 };
 
-settings.clear = function (gameLoadInfo) {
-    trainerG.setColor(gameLoadInfo ? gameLoadInfo.color : settings.colorType);
+settings.clear = function () {
+    trainerG.setColor(trainerG.gameLoadInfo ? trainerG.gameLoadInfo.color : settings.colorType);
 
-    if (gameLoadInfo) {
+    if (trainerG.gameLoadInfo) {
         settings.togglePreGameSettings();
     }
 };

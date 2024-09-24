@@ -1,5 +1,6 @@
 ﻿using Gosuji.Client.Data;
 using Gosuji.Client.Services.TrainerService;
+using System.Text.Json;
 
 namespace Gosuji.Client.Models.Trainer
 {
@@ -17,7 +18,7 @@ namespace Gosuji.Client.Models.Trainer
         public int RightTopStreak { get; set; }
         public int PerfectTopStreak { get; set; }
 
-        public MoveTree MoveTree { get; set; }
+        public string MoveTree { get; set; }
 
         public GameLoadInfo(Game game, MoveTree moveTree)
         {
@@ -33,7 +34,11 @@ namespace Gosuji.Client.Models.Trainer
             RightTopStreak = game.RightTopStreak;
             PerfectTopStreak = game.PerfectTopStreak;
 
-            MoveTree = moveTree;
+            JsonSerializerOptions jsonSerializerOptions = new(G.JsonSerializerOptions)
+            {
+                MaxDepth = 256
+            };
+            MoveTree = JsonSerializer.Serialize(moveTree, jsonSerializerOptions);
         }
     }
 }

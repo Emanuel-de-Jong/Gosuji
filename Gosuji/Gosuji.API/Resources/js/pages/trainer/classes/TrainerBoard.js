@@ -28,7 +28,7 @@ class TrainerBoard extends Board {
         }
     }
 
-    init(stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound, gameLoadInfo) {
+    init(stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
         if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
             this.setIsPreMoveStoneSound(isPreMoveStoneSound);
             this.setIsSelfplayStoneSound(isSelfplayStoneSound);
@@ -107,8 +107,8 @@ class TrainerBoard extends Board {
             this.deleteBranchButton.addEventListener("click", this.deleteBranch);
         }
 
-        if (gameLoadInfo) {
-            this.addServerData(gameLoadInfo.moveTree.rootNode);
+        if (trainerG.gameLoadInfo) {
+            this.addServerData(trainerG.gameLoadInfo.moveTree.rootNode);
             this.redraw();
         }
 

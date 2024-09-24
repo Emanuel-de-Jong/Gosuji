@@ -132,7 +132,7 @@ scoreChart.clear = function () {
     scoreChart.clearChart();
     scoreChart.history = new History(scoreChart.HISTORY_NAME);
 
-    if (trainerG.isLoadingServerData) {
+    if (trainerG.gameLoadInfo) {
         scoreChart.fillHistoryWithSuggestionsHistory();
     }
 };

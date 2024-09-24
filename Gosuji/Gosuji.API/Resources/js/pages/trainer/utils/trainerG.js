@@ -35,9 +35,6 @@ trainerG.PHASE_TYPE = {
 };
 
 
-trainerG.isLoadingServerData = false;
-
-
 trainerG.init = function (trainerRef) {
     trainerG.trainerRef = trainerRef;
 
@@ -73,6 +70,15 @@ trainerG.isMainBranch = function () {
     }
 
     return isMainBranch;
+};
+
+trainerG.setGameLoadInfo = function (gameLoadInfo) {
+    if (!gameLoadInfo) {
+        return;
+    }
+    
+    gameLoadInfo.moveTree = JSON.parse(gameLoadInfo.moveTree);
+    trainerG.gameLoadInfo = gameLoadInfo;
 };
 
 trainerG.setPhase = function (phase) {
