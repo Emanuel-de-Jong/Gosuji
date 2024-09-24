@@ -4,8 +4,12 @@ class History {
     nodeKey;
     nodes = new Set();
 
-    constructor() {
-        this.nodeKey = utils.randomString();
+    constructor(name, isServerDataReady = trainerG.isLoadingServerData) {
+        this.nodeKey = name;
+
+        if (isServerDataReady) {
+            this.addMissingNodes();
+        }
     }
 
     add(data, node=trainerG.board.get()) {
@@ -40,6 +44,21 @@ class History {
 
     has(node=trainerG.board.get()) {
         return this.get(node) != null;
+    }
+
+    addMissingNodes(node = trainerG.board.editor.getRoot()) {
+        if (node == null) {
+            return;
+        }
+
+        const data = node[this.nodeKey];
+        if (data != null) {
+            this.nodes.add(node);
+        }
+
+        for (const childNode of node.children) {
+            this.addMissingNodes(childNode);
+        }
     }
 
     findFirstInBranch(node=trainerG.board.get()) {

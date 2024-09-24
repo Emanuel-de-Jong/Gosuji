@@ -35,16 +35,20 @@ trainerPage.init = async function (
 ) {
     trainerG.isLoadingServerData = gameLoadInfo != null;
 
-    trainerG.init(trainerRef, gameLoadInfo);
+    trainerG.init(trainerRef);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
     await kataGo.init(trainerConnectionRef);
     await settings.init(trainerSettingConfig, gameLoadInfo);
-    trainerG.board.init(gameLoadInfo ? gameLoadInfo.boardsize : null,
-        gameLoadInfo ? gameLoadInfo.handicap : null,
-        gameLoadInfo ? gameLoadInfo.sgf : null,
+    trainerG.board.init(
         stoneVolume,
         isPreMoveStoneSound,
-        isSelfplayStoneSound);
+        isSelfplayStoneSound,
+        gameLoadInfo);
+    
+    if (trainerG.isLoadingServerData) {
+        trainerG.suggestionsHistory.addMissingNodes();
+        trainerG.moveOriginHistory.addMissingNodes();
+    }
 
     trainerPage.startButton = document.getElementById("startBtn");
     trainerPage.restartButton = document.getElementById("restartBtn");
@@ -60,7 +64,7 @@ trainerPage.init = async function (
     await stats.init(gameLoadInfo);
     ratioChart.init();
     debug.init();
-    gameplay.init(gameLoadInfo);
+    gameplay.init();
     cornerPlacer.init();
     preMovePlacer.init();
     await selfplay.init();
@@ -69,6 +73,10 @@ trainerPage.init = async function (
     sgf.sgfLoadedEvent.add(trainerPage.sgfLoadedListener);
 
     document.getElementById("settingsAccordion").hidden = false;
+
+    if (trainerG.isLoadingServerData) {
+        await trainerPage.start();
+    }
 };
 
 trainerPage.clear = async function () {

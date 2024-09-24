@@ -7,6 +7,8 @@ import { debug } from "../debug";
 let scoreChart = { id: "scoreChart" };
 
 
+scoreChart.HISTORY_NAME = "score";
+
 scoreChart.DATA = {
     datasets: [
         {
@@ -128,7 +130,7 @@ scoreChart.init = function () {
 
 scoreChart.clear = function () {
     scoreChart.clearChart();
-    scoreChart.history = new History();
+    scoreChart.history = new History(scoreChart.HISTORY_NAME);
 
     if (trainerG.isLoadingServerData) {
         scoreChart.fillHistoryWithSuggestionsHistory();

@@ -6,6 +6,8 @@ import { gameplay } from "../gameplay";
 
 let stats = { id: "stats" };
 
+stats.PLAYER_RESULT_HISTORY_NAME = "playerResult";
+stats.RESULT_HISTORY_NAME = "result";
 
 stats.PLAYER_RESULT_TYPE = {
     WRONG: 0,
@@ -31,8 +33,8 @@ stats.init = async function (gameLoadInfo) {
 };
 
 stats.clear = async function (gameLoadInfo) {
-    stats.playerResultHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.playerResults) : new History();
-    stats.resultHistory = new History();
+    stats.playerResultHistory = new History(stats.PLAYER_RESULT_HISTORY_NAME);
+    stats.resultHistory = new History(stats.RESULT_HISTORY_NAME);
 
     await stats.clearSuggestions();
     stats.clearResult();

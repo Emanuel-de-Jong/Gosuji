@@ -12,24 +12,23 @@ import { kataGo } from "./utils/kataGo";
 
 let gameplay = { id: "gameplay" };
 
+gameplay.CHOSEN_NOT_PLAYED_COORD_HISTORY_NAME = "chosenNotPlayedCoord";
 
 gameplay.OPPONENT_MIN_VISITS_PERC = 10;
 gameplay.OPPONENT_MAX_VISIT_DIFF_PERC = 50;
 
 
-gameplay.init = function (gameLoadInfo) {
+gameplay.init = function () {
     trainerG.board.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
     trainerG.board.editor.addListener(gameplay.detectJump);
     trainerG.board.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
 
-    gameplay.clear(gameLoadInfo);
+    gameplay.clear();
 };
 
-gameplay.clear = function (gameLoadInfo) {
+gameplay.clear = function () {
     gameplay.suggestionsPromise = null;
-    gameplay.chosenNotPlayedCoordHistory = gameLoadInfo
-        ? History.fromServer(gameLoadInfo.chosenNotPlayedCoords, Coord)
-        : new History();
+    gameplay.chosenNotPlayedCoordHistory = new History(gameplay.CHOSEN_NOT_PLAYED_COORD_HISTORY_NAME);
     gameplay.isPlayerControlling = false;
     gameplay.isJumped = false;
     gameplay.playerTurnId = 0;

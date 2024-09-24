@@ -27,7 +27,7 @@ class TrainerBoard extends Board {
         }
     }
 
-    init(boardsize, handicap, sgfContent, stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
+    init(stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound, gameLoadInfo) {
         if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
             this.setIsPreMoveStoneSound(isPreMoveStoneSound);
             this.setIsSelfplayStoneSound(isSelfplayStoneSound);
@@ -43,24 +43,25 @@ class TrainerBoard extends Board {
             trainerG.phaseChangedEvent.add(this.phaseChangedListener);
         }
 
-        super.init(boardsize ? boardsize : settings.boardsize,
-            handicap != null ? handicap : settings.handicap,
-            sgfContent, stoneVolume);
+        super.init(settings.boardsize, settings.handicap, null, stoneVolume);
 
-        document.querySelector('#trainerGame button[title="Variants: [child]/sibling"]').remove();
-        document.querySelector('#trainerGame button[title="Variants: show/[hide]"]').remove();
-        document.querySelector('#trainerGame button[title="Previous sibling"]').remove();
-        document.querySelector('#trainerGame button[title="Next sibling"]').remove();
-        document.querySelector('#trainerGame input[value="9x9"]').remove();
-        document.querySelector('#trainerGame input[value="13x13"]').remove();
-        document.querySelector('#trainerGame input[value="19x19"]').remove();
-        document.querySelector('#trainerGame input[value="?x?"]').remove();
+        this.containerElement = document.getElementById("trainerGame");
+        this.containerElement.hidden = true;
 
-        document.querySelector("#trainerGame .besogo-board")
+        this.containerElement.querySelector('button[title="Variants: [child]/sibling"]').remove();
+        this.containerElement.querySelector('button[title="Variants: show/[hide]"]').remove();
+        this.containerElement.querySelector('button[title="Previous sibling"]').remove();
+        this.containerElement.querySelector('button[title="Next sibling"]').remove();
+        this.containerElement.querySelector('input[value="9x9"]').remove();
+        this.containerElement.querySelector('input[value="13x13"]').remove();
+        this.containerElement.querySelector('input[value="19x19"]').remove();
+        this.containerElement.querySelector('input[value="?x?"]').remove();
+
+        this.containerElement.querySelector(".besogo-board")
             .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary btn-sm next" disabled>></button>');
-        this.nextButton = document.querySelector(".next");
+        this.nextButton = this.containerElement.querySelector(".next");
 
-        document.querySelector("#trainerGame .besogo-board")
+        this.containerElement.querySelector(".besogo-board")
             .insertAdjacentHTML("afterbegin",`
                 <div id="startOverlay" class="boardOverlay" hidden>
                     <button type="button" class="btn btn-primary btn-lg" id="startBtn">Start</button>
@@ -70,7 +71,7 @@ class TrainerBoard extends Board {
             this.startOverlay.hidden = false;
         }
 
-        document.querySelector("#trainerGame .besogo-board")
+        this.containerElement.querySelector(".besogo-board")
             .insertAdjacentHTML("afterbegin",`
                 <div id="finishedOverlay" class="boardOverlay" hidden>
                     <p>Game finished!</p>
@@ -82,19 +83,19 @@ class TrainerBoard extends Board {
                 </div>`);
         this.finishedOverlay = document.getElementById("finishedOverlay");
 
-        document.querySelector("#trainerGame .besogo-control")
+        this.containerElement.querySelector(".besogo-control")
             .insertAdjacentHTML("beforeend", '<button class="bsg" id="deleteBranchBtn"><i class="fa-solid fa-trash"></i></button>');
         this.deleteBranchButton = document.getElementById("deleteBranchBtn");
 
-        this.navStartButton = document.querySelector('#trainerGame button[title="First node"]');
-        this.navBranchStartButton = document.querySelector('#trainerGame button[title="Jump back"]');
-        this.navPreviousButton = document.querySelector('#trainerGame button[title="Previous node"]');
-        this.navNextButton = document.querySelector('#trainerGame button[title="Next node"]');
-        this.navBranchEndButton = document.querySelector('#trainerGame button[title="Jump forward"]');
-        this.navEndButton = document.querySelector('#trainerGame button[title="Last node"]');
-        this.toggleCoordStyleButton = document.querySelector('#trainerGame button[title="Toggle coordinates"]');
+        this.navStartButton = this.containerElement.querySelector('button[title="First node"]');
+        this.navBranchStartButton = this.containerElement.querySelector('button[title="Jump back"]');
+        this.navPreviousButton = this.containerElement.querySelector('button[title="Previous node"]');
+        this.navNextButton = this.containerElement.querySelector('button[title="Next node"]');
+        this.navBranchEndButton = this.containerElement.querySelector('button[title="Jump forward"]');
+        this.navEndButton = this.containerElement.querySelector('button[title="Last node"]');
+        this.toggleCoordStyleButton = this.containerElement.querySelector('button[title="Toggle coordinates"]');
 
-        document.querySelector("#trainerGame .besogo-whiteInfo")
+        this.containerElement.querySelector(".besogo-whiteInfo")
             .insertAdjacentHTML("afterend", '<div id="komiDisplay">' + settings.komi + '</div>');
         this.komiDisplay = document.getElementById("komiDisplay");
 
@@ -105,9 +106,19 @@ class TrainerBoard extends Board {
             this.deleteBranchButton.addEventListener("click", this.deleteBranch);
         }
 
+        if (gameLoadInfo) {
+            this.addServerData(gameLoadInfo.moveTree.rootNode);
+        }
+
+        this.containerElement.hidden = false;
+
         // console.log(besogo);
         // console.log(this.editor);
         // console.log(this.get());
+    }
+
+    addServerData(moveNode) {
+
     }
 
     async play(suggestion, moveOrigin, tool = "auto") {

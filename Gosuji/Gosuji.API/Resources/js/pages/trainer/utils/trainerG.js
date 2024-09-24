@@ -10,6 +10,8 @@ import { gameplay } from "../gameplay";
 
 let trainerG = { id: "trainerG" };
 
+trainerG.SUGGESTIONS_HISTORY_NAME = "suggestions";
+trainerG.MOVE_ORIGIN_HISTORY_NAME = "moveOrigin";
 
 trainerG.MOVE_ORIGIN = {
     INIT: 0,
@@ -36,24 +38,22 @@ trainerG.PHASE_TYPE = {
 trainerG.isLoadingServerData = false;
 
 
-trainerG.init = function (trainerRef, gameLoadInfo) {
+trainerG.init = function (trainerRef) {
     trainerG.trainerRef = trainerRef;
 
     trainerG.loadAnimation = document.querySelector("#trainerGame .loadAnimation");
     trainerG.phaseChangedEvent = new CEvent();
     trainerG.board = new TrainerBoard();
 
-    trainerG.clear(gameLoadInfo);
+    trainerG.clear();
 };
 
-trainerG.clear = function (gameLoadInfo) {
+trainerG.clear = function () {
     trainerG.setPhase(trainerG.PHASE_TYPE.NONE);
     trainerG.setColor(null);
     trainerG.suggestions = null;
-    trainerG.suggestionsHistory = gameLoadInfo
-        ? History.fromServer(gameLoadInfo.suggestions, MoveSuggestionList)
-        : new History();
-    trainerG.moveOriginHistory = gameLoadInfo ? History.fromServer(gameLoadInfo.moveOrigins) : new History();
+    trainerG.suggestionsHistory = new History(trainerG.SUGGESTIONS_HISTORY_NAME, false);
+    trainerG.moveOriginHistory = new History(trainerG.MOVE_ORIGIN_HISTORY_NAME, false);
     trainerG.isPassed = false;
 };
 
