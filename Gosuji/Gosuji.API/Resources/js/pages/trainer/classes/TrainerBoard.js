@@ -108,6 +108,7 @@ class TrainerBoard extends Board {
 
         if (gameLoadInfo) {
             this.addServerData(gameLoadInfo.moveTree.rootNode);
+            this.redraw();
         }
 
         this.containerElement.hidden = false;
@@ -117,8 +118,24 @@ class TrainerBoard extends Board {
         // console.log(this.get());
     }
 
-    addServerData(moveNode) {
+    addServerData(moveNode, parentNode) {
+        let node;
+        if (parentNode != null) {
+            node = parentNode.makeChild();
+            if (parentNode.playMove(moveNode.move.coord.x, moveNode.move.coord.y, moveNode.move.color)) {
+                parentNode.addChild(node);
+            }
+        } else {
+            node = this.editor.getRoot();
+        }
 
+        if (moveNode.moveOrigin != null) {
+            node[trainerG.MOVE_ORIGIN_HISTORY_NAME] = moveNode.moveOrigin;
+        }
+
+        for (const childMoveNode of moveNode.children) {
+            this.addServerData(childMoveNode, node);
+        }
     }
 
     async play(suggestion, moveOrigin, tool = "auto") {
