@@ -25,6 +25,8 @@ namespace Gosuji.API.Services
         public MoveTree? MoveTree { get; set; }
         public KataGo? KataGo { get; set; }
 
+        private MoveSuggestionList? suggestions;
+
         private bool isFirstInit = true;
         private Random rnd = new();
         private bool isAnalyzing = false;
@@ -164,8 +166,7 @@ namespace Gosuji.API.Services
                     break;
             }
 
-            MoveSuggestionList suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc, moveOptions);
-            MoveTree.CurrentNode.Suggestions = suggestions;
+            suggestions = (await GetKataGo()).Analyze(color, maxVisits, minVisitsPerc, maxVisitDiffPerc, moveOptions);
 
             int? playIndex = null;
 
@@ -308,6 +309,7 @@ namespace Gosuji.API.Services
         {
             MoveTree.Add(move);
             MoveTree.CurrentNode.MoveOrigin = moveOrigin;
+            MoveTree.CurrentNode.Suggestions = suggestions;
 
             if (MoveTree.MainBranch == MoveTree.CurrentNode.Parent)
             {
