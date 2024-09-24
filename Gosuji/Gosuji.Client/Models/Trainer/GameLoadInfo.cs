@@ -1,4 +1,5 @@
 ﻿using Gosuji.Client.Data;
+using Gosuji.Client.Services.TrainerService;
 
 namespace Gosuji.Client.Models.Trainer
 {
@@ -13,9 +14,9 @@ namespace Gosuji.Client.Models.Trainer
         public int RightTopStreak { get; set; }
         public int PerfectTopStreak { get; set; }
 
-        public GameLoadInfo() { }
+        public MoveTree MoveTree { get; set; }
 
-        public GameLoadInfo(Game game)
+        public GameLoadInfo(Game game, MoveTree moveTree)
         {
             Name = game.Name;
             Color = game.Color;
@@ -25,6 +26,8 @@ namespace Gosuji.Client.Models.Trainer
             PerfectStreak = game.PerfectStreak;
             RightTopStreak = game.RightTopStreak;
             PerfectTopStreak = game.PerfectTopStreak;
+
+            MoveTree = moveTree;
         }
     }
 }

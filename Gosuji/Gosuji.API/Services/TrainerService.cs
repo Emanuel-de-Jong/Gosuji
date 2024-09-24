@@ -39,13 +39,14 @@ namespace Gosuji.API.Services
             this.dbContextFactory = dbContextFactory;
         }
 
-        public async Task<MoveTree> LoadGame(string gameId)
+        public async Task<LoadGameResponse> LoadGame(string gameId)
         {
             isExistingGame = true;
 
             ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
             Game = await dbContext.Games
                 .Where(g => g.Id == gameId)
+                .Include(g => g.TrainerSettingConfig)
                 .Include(g => g.EncodedGameData)
                 .Include(g => g.GameStat)
                 .Include(g => g.OpeningStat)
@@ -57,7 +58,11 @@ namespace Gosuji.API.Services
             GameDecoder gameDecoder = new();
             MoveTree = gameDecoder.Decode(Game.EncodedGameData.Data);
 
-            return MoveTree;
+            LoadGameResponse response = new(Game, Game.TrainerSettingConfig, MoveTree);
+
+            Game.TrainerSettingConfig = null;
+
+            return response;
         }
 
         public async Task<bool> Init(TrainerSettingConfig trainerSettingConfig,

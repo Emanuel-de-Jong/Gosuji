@@ -51,13 +51,7 @@ namespace Gosuji.Client.Components.Pages
         private UserState? userState;
         private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
-        private MoveTree? moveTree;
-
-        private Game? game;
-        private GameStat? gameStat;
-        private GameStat? openingStat;
-        private GameStat? midgameStat;
-        private GameStat? endgameStat;
+        private GameLoadInfo? gameLoadInfo;
 
         private string sgfRuleset;
         private double sgfKomi;
@@ -96,9 +90,10 @@ namespace Gosuji.Client.Components.Pages
                    return;
                 }
 
-                APIResponse<MoveTree> loadGameResponse = await trainerConnection.LoadGame(GameId);
+                APIResponse<LoadGameResponse> loadGameResponse = await trainerConnection.LoadGame(GameId);
                 if (G.StatusMessage.HandleAPIResponse(loadGameResponse)) return;
-                moveTree = loadGameResponse.Data;
+                SetTrainerSettingConfig(loadGameResponse.Data.TrainerSettingConfig);
+                gameLoadInfo = new(loadGameResponse.Data.Game, loadGameResponse.Data.MoveTree);
             }
 
             isInitialized = true;
@@ -142,18 +137,6 @@ namespace Gosuji.Client.Components.Pages
 
         public async Task InitJS()
         {
-            GameLoadInfo? gameLoadInfo = null;
-            if (GameId != null)
-            {
-                APIResponse<Game> response = await dataAPI.GetGame(GameId, true);
-                if (G.StatusMessage.HandleAPIResponse(response)) return;
-                game = response.Data;
-
-                trainerSettingConfig = game.TrainerSettingConfig;
-
-                gameLoadInfo = new(game);
-            }
-
             await jsRef.InvokeVoidAsync("trainerPage.init",
                 trainerRef,
                 trainerConnectionRef,
@@ -176,10 +159,14 @@ namespace Gosuji.Client.Components.Pages
         {
             APIResponse<TrainerSettingConfig> trainerSettingConfigResponse = await dataAPI.GetTrainerSettingConfig(id);
             if (G.StatusMessage.HandleAPIResponse(trainerSettingConfigResponse)) return;
-            trainerSettingConfig = trainerSettingConfigResponse.Data;
+            SetTrainerSettingConfig(trainerSettingConfigResponse.Data);
+        }
 
+        private void SetTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
+        {
             trainerSettingConfig.Language = Enum.Parse<ELanguage>(settingConfigService.SettingConfig.LanguageId);
             trainerSettingConfig.SubscriptionType = settingConfigService.Subscription?.SubscriptionType;
+            this.trainerSettingConfig = trainerSettingConfig;
         }
 
         [JSInvokable]

@@ -46,7 +46,7 @@
                             @foreach (VMGame game in Games)
                             {
                                 <tr>
-                                    <td><a href="/trainer/@game.Id">@game.Name</a></td>
+                                    <td><a href="/learn/trainer/@game.Id">@game.Name</a></td>
                                     <td>@(game.Result != null ? "Yes" : "No")</td>
                                     <td>@game.Boardsize</td>
                                     <td>@game.Handicap</td>

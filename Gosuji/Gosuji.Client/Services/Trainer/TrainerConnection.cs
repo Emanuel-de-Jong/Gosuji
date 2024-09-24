@@ -16,10 +16,10 @@ namespace Gosuji.Client.Services.Trainer
         {
         }
 
-        public async Task<APIResponse<MoveTree>> LoadGame(string gameId)
+        public async Task<APIResponse<LoadGameResponse>> LoadGame(string gameId)
         {
             string uri = "LoadGame";
-            return await HubResponseHandler.TryCatch<MoveTree>(uri,
+            return await HubResponseHandler.TryCatch<LoadGameResponse>(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
                 gameId));
         }

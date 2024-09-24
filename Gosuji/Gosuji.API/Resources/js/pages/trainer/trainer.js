@@ -35,10 +35,6 @@ trainerPage.init = async function (
 ) {
     trainerG.isLoadingServerData = gameLoadInfo != null;
 
-    if (trainerG.isLoadingServerData) {
-        debug.testData = 0;
-    }
-
     trainerG.init(trainerRef, gameLoadInfo);
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
     await kataGo.init(trainerConnectionRef);
