@@ -1,3 +1,4 @@
+import { MoveSuggestionList } from "./MoveSuggestionList";
 import { kataGo } from "../utils/kataGo";
 import { ratioChart } from "../utils/ratioChart";
 import { scoreChart } from "../utils/scoreChart";
@@ -122,7 +123,7 @@ class TrainerBoard extends Board {
         let node;
         if (parentNode != null) {
             node = parentNode.makeChild();
-            if (parentNode.playMove(moveNode.move.coord.x, moveNode.move.coord.y, moveNode.move.color)) {
+            if (node.playMove(moveNode.move.coord.x, moveNode.move.coord.y, moveNode.move.color)) {
                 parentNode.addChild(node);
             }
         } else {
@@ -131,6 +132,14 @@ class TrainerBoard extends Board {
 
         if (moveNode.moveOrigin != null) {
             node[trainerG.MOVE_ORIGIN_HISTORY_NAME] = moveNode.moveOrigin;
+        }
+
+        if (moveNode.suggestions != null) {
+            node[trainerG.SUGGESTIONS_HISTORY_NAME] = MoveSuggestionList.fromKataGo(moveNode.suggestions);
+        }
+
+        if (moveNode.isCurrent != null) {
+            this.lastNode = node;
         }
 
         for (const childMoveNode of moveNode.children) {
@@ -164,7 +173,7 @@ class TrainerBoard extends Board {
                 this.playPlaceStoneAudio();
             }
 
-            this.lastMove = this.get();
+            this.lastNode = this.get();
 
             trainerG.suggestionsHistory.add(trainerG.suggestions);
 

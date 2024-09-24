@@ -41,8 +41,6 @@ selfplay.enableButton = function () {
 selfplay.start = async function () {
     trainerG.setPhase(trainerG.PHASE_TYPE.SELFPLAY);
 
-    await gameplay.handleJumped();
-
     while (selfplay.isPlaying || trainerG.color != trainerG.board.getNextColor()) {
         await kataGo.analyze(trainerG.MOVE_ORIGIN.SELFPLAY);
         if (trainerG.isPassed) {

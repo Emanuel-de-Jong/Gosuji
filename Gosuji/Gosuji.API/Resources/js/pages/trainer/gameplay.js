@@ -89,7 +89,14 @@ gameplay.playerMarkupPlacedCheckListener = async function (event) {
 gameplay.playerTurn = async function (markupCoord) {
     let playerTurnId = ++gameplay.playerTurnId;
 
-    await gameplay.handleJumped();
+    if (gameplay.isJumped) {
+        gameplay.isJumped = false;
+        gameplay.suggestionsPromise = kataGo.analyze(
+            trainerG.MOVE_ORIGIN.PLAYER,
+            trainerG.board.getNextColor(),
+            true);
+        await gameplay.suggestionsPromise();
+    }
     if (playerTurnId != gameplay.playerTurnId) return;
 
     if (!gameplay.suggestionsPromise) gameplay.suggestionsPromise = kataGo.analyze();
@@ -146,16 +153,6 @@ gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
     }
 };
 
-gameplay.handleJumped = async function () {
-    if (gameplay.isJumped) {
-        gameplay.suggestionsPromise = kataGo.analyze(
-            trainerG.MOVE_ORIGIN.PLAYER,
-            trainerG.board.getNextColor(),
-            true);
-        gameplay.isJumped = false;
-    }
-};
-
 gameplay.nextButtonClickListener = async function () {
     trainerG.board.nextButton.disabled = true;
 
@@ -193,10 +190,10 @@ gameplay.opponentTurn = async function () {
     gameplay.givePlayerControl();
 };
 
-gameplay.detectJump = async function (event) {
+gameplay.detectJump = function (event) {
     if (event.navChange &&
         !event.treeChange &&
-        trainerG.board.get().moveNumber != trainerG.board.lastMove.moveNumber + 1
+        trainerG.board.get().moveNumber != trainerG.board.lastNode.moveNumber + 1
     ) {
         if (!gameplay.isJumped) {
             gameplay.isJumped = true;

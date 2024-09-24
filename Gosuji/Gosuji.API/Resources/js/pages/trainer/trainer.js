@@ -75,6 +75,9 @@ trainerPage.init = async function (
     document.getElementById("settingsAccordion").hidden = false;
 
     if (trainerG.isLoadingServerData) {
+        trainerG.board.editor.setCurrent(trainerG.board.lastNode);
+        trainerG.board.editor.notifyListeners({ navChange: true });
+
         await trainerPage.start();
     }
 };

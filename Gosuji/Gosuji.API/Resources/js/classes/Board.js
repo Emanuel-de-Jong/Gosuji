@@ -91,7 +91,7 @@ if (typeof Board === "undefined") {
 
             this.editor = this.element.besogoEditor;
 
-            this.lastMove = this.get();
+            this.lastNode = this.get();
         }
 
 
