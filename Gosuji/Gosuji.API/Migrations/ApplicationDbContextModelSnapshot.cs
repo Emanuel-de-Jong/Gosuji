@@ -92,6 +92,8 @@ namespace Gosuji.API.Migrations
 
                     b.HasKey("Token");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("RefreshTokens");
                 });
 
@@ -201,7 +203,6 @@ namespace Gosuji.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
@@ -209,7 +210,7 @@ namespace Gosuji.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserActivities", (string)null);
+                    b.ToTable("UserActivities");
                 });
 
             modelBuilder.Entity("Gosuji.API.Data.UserMoveCount", b =>
@@ -380,6 +381,8 @@ namespace Gosuji.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Feedbacks");
                 });
 
@@ -398,7 +401,7 @@ namespace Gosuji.API.Migrations
                     b.Property<long?>("EndgameStatId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("GameStatId")
+                    b.Property<long?>("GameStatId")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsDeleted")
@@ -407,7 +410,7 @@ namespace Gosuji.API.Migrations
                     b.Property<bool>("IsThirdPartySGF")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("KataGoVersionId")
+                    b.Property<long?>("KataGoVersionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("Komi")
@@ -452,7 +455,7 @@ namespace Gosuji.API.Migrations
                     b.Property<bool>("ShouldIgnoreStats")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("TrainerSettingConfigId")
+                    b.Property<long?>("TrainerSettingConfigId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
@@ -593,6 +596,8 @@ namespace Gosuji.API.Migrations
 
                     b.HasIndex("TrainerSettingConfigId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Presets");
                 });
 
@@ -614,7 +619,6 @@ namespace Gosuji.API.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LanguageId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MasterVolume")
@@ -665,6 +669,8 @@ namespace Gosuji.API.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DiscountId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Subscriptions");
                 });
@@ -802,9 +808,6 @@ namespace Gosuji.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Hash")
-                        .IsUnique();
-
                     b.ToTable("TrainerSettingConfigs");
                 });
 
@@ -816,7 +819,7 @@ namespace Gosuji.API.Migrations
                     b.Property<DateTimeOffset>("CreateDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("LastPresetId")
+                    b.Property<long?>("LastPresetId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset>("ModifyDate")
@@ -947,17 +950,27 @@ namespace Gosuji.API.Migrations
                     b.HasOne("Gosuji.API.Data.User", "User")
                         .WithOne()
                         .HasForeignKey("Gosuji.API.Data.PendingUserChange", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Gosuji.API.Data.RefreshToken", b =>
+                {
+                    b.HasOne("Gosuji.API.Data.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Gosuji.API.Data.User", b =>
                 {
                     b.HasOne("Gosuji.Client.Data.Subscription", "CurrentSubscription")
                         .WithMany()
-                        .HasForeignKey("CurrentSubscriptionId");
+                        .HasForeignKey("CurrentSubscriptionId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("CurrentSubscription");
                 });
@@ -967,8 +980,7 @@ namespace Gosuji.API.Migrations
                     b.HasOne("Gosuji.API.Data.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("User");
                 });
@@ -978,7 +990,7 @@ namespace Gosuji.API.Migrations
                     b.HasOne("Gosuji.API.Data.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -1008,40 +1020,45 @@ namespace Gosuji.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Gosuji.Client.Data.Feedback", b =>
+                {
+                    b.HasOne("Gosuji.API.Data.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
             modelBuilder.Entity("Gosuji.Client.Data.Game", b =>
                 {
                     b.HasOne("Gosuji.Client.Data.GameStat", "EndgameStat")
                         .WithMany()
                         .HasForeignKey("EndgameStatId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Gosuji.Client.Data.GameStat", "GameStat")
                         .WithMany()
                         .HasForeignKey("GameStatId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Gosuji.Client.Data.KataGoVersion", "KataGoVersion")
                         .WithMany()
                         .HasForeignKey("KataGoVersionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("Gosuji.Client.Data.GameStat", "MidgameStat")
                         .WithMany()
                         .HasForeignKey("MidgameStatId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Gosuji.Client.Data.GameStat", "OpeningStat")
                         .WithMany()
                         .HasForeignKey("OpeningStatId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Gosuji.Client.Data.TrainerSettingConfig", "TrainerSettingConfig")
                         .WithMany()
                         .HasForeignKey("TrainerSettingConfigId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("EndgameStat");
 
@@ -1061,8 +1078,13 @@ namespace Gosuji.API.Migrations
                     b.HasOne("Gosuji.Client.Data.TrainerSettingConfig", "TrainerSettingConfig")
                         .WithMany()
                         .HasForeignKey("TrainerSettingConfigId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
+
+                    b.HasOne("Gosuji.API.Data.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("TrainerSettingConfig");
                 });
@@ -1072,8 +1094,7 @@ namespace Gosuji.API.Migrations
                     b.HasOne("Gosuji.Client.Data.Language", "Language")
                         .WithMany()
                         .HasForeignKey("LanguageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Language");
                 });
@@ -1082,18 +1103,30 @@ namespace Gosuji.API.Migrations
                 {
                     b.HasOne("Gosuji.Client.Data.Discount", "Discount")
                         .WithMany()
-                        .HasForeignKey("DiscountId");
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Gosuji.API.Data.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Discount");
                 });
 
             modelBuilder.Entity("Gosuji.Client.Data.UserState", b =>
                 {
+                    b.HasOne("Gosuji.API.Data.User", null)
+                        .WithOne()
+                        .HasForeignKey("Gosuji.Client.Data.UserState", "Id")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
                     b.HasOne("Gosuji.Client.Data.Preset", "LastPreset")
                         .WithMany()
                         .HasForeignKey("LastPresetId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("LastPreset");
                 });

@@ -227,7 +227,7 @@ namespace Gosuji.API.Data
                 .OnDelete(DeleteBehavior.SetNull);
             builder.Entity<Language>()
                 .HasMany<SettingConfig>()
-                .WithOne()
+                .WithOne(sc => sc.Language)
                 .HasForeignKey(sc => sc.LanguageId)
                 .OnDelete(DeleteBehavior.SetNull);
 

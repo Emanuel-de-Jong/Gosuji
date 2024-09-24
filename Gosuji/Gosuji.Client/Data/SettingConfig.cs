@@ -22,11 +22,6 @@ namespace Gosuji.Client.Data
         [CustomPersonalData]
         public bool IsGetChangelogEmail { get; set; }
 
-        public SettingConfig()
-        {
-            LanguageId ??= ELanguage.en.ToString();
-        }
-
         public double CalcMasterVolume()
         {
             return MasterVolume / 100d;

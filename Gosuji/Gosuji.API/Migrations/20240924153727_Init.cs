@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -57,26 +58,6 @@ namespace Gosuji.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Discounts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Feedbacks",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
-                    FeedbackType = table.Column<int>(type: "INTEGER", nullable: false),
-                    Subject = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
-                    Message = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
-                    IsRead = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsResolved = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -144,21 +125,6 @@ namespace Gosuji.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RateLimitViolations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RefreshTokens",
-                columns: table => new
-                {
-                    Token = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    ExpireDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RefreshTokens", x => x.Token);
                 });
 
             migrationBuilder.CreateTable(
@@ -236,34 +202,11 @@ namespace Gosuji.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subscriptions",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
-                    SubscriptionType = table.Column<int>(type: "INTEGER", nullable: false),
-                    DiscountId = table.Column<long>(type: "INTEGER", nullable: true),
-                    Months = table.Column<int>(type: "INTEGER", nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Subscriptions_Discounts_DiscountId",
-                        column: x => x.DiscountId,
-                        principalTable: "Discounts",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "SettingConfigs",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    LanguageId = table.Column<string>(type: "TEXT", nullable: false),
+                    LanguageId = table.Column<string>(type: "TEXT", nullable: true),
                     Theme = table.Column<int>(type: "INTEGER", nullable: false),
                     MasterVolume = table.Column<int>(type: "INTEGER", nullable: false),
                     StoneVolume = table.Column<int>(type: "INTEGER", nullable: false),
@@ -281,7 +224,7 @@ namespace Gosuji.API.Migrations
                         column: x => x.LanguageId,
                         principalTable: "Languages",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -290,9 +233,9 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<string>(type: "TEXT", maxLength: 12, nullable: false),
                     UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
-                    TrainerSettingConfigId = table.Column<long>(type: "INTEGER", nullable: false),
-                    KataGoVersionId = table.Column<long>(type: "INTEGER", nullable: false),
-                    GameStatId = table.Column<long>(type: "INTEGER", nullable: false),
+                    TrainerSettingConfigId = table.Column<long>(type: "INTEGER", nullable: true),
+                    KataGoVersionId = table.Column<long>(type: "INTEGER", nullable: true),
+                    GameStatId = table.Column<long>(type: "INTEGER", nullable: true),
                     OpeningStatId = table.Column<long>(type: "INTEGER", nullable: true),
                     MidgameStatId = table.Column<long>(type: "INTEGER", nullable: true),
                     EndgameStatId = table.Column<long>(type: "INTEGER", nullable: true),
@@ -305,13 +248,10 @@ namespace Gosuji.API.Migrations
                     IsThirdPartySGF = table.Column<bool>(type: "INTEGER", nullable: false),
                     Ruleset = table.Column<string>(type: "TEXT", nullable: false),
                     Komi = table.Column<double>(type: "REAL", nullable: false),
-                    LastNodeX = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastNodeY = table.Column<int>(type: "INTEGER", nullable: false),
                     RightStreak = table.Column<int>(type: "INTEGER", nullable: false),
                     PerfectStreak = table.Column<int>(type: "INTEGER", nullable: false),
                     RightTopStreak = table.Column<int>(type: "INTEGER", nullable: false),
                     PerfectTopStreak = table.Column<int>(type: "INTEGER", nullable: false),
-                    EncodedData = table.Column<byte[]>(type: "BLOB", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
@@ -322,58 +262,121 @@ namespace Gosuji.API.Migrations
                         name: "FK_Games_GameStats_EndgameStatId",
                         column: x => x.EndgameStatId,
                         principalTable: "GameStats",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Games_GameStats_GameStatId",
                         column: x => x.GameStatId,
                         principalTable: "GameStats",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Games_GameStats_MidgameStatId",
                         column: x => x.MidgameStatId,
                         principalTable: "GameStats",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Games_GameStats_OpeningStatId",
                         column: x => x.OpeningStatId,
                         principalTable: "GameStats",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Games_KataGoVersions_KataGoVersionId",
                         column: x => x.KataGoVersionId,
                         principalTable: "KataGoVersions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Games_TrainerSettingConfigs_TrainerSettingConfigId",
                         column: x => x.TrainerSettingConfigId,
                         principalTable: "TrainerSettingConfigs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Presets",
+                name: "EncodedGameDatas",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
-                    TrainerSettingConfigId = table.Column<long>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 22, nullable: false),
-                    Order = table.Column<int>(type: "INTEGER", nullable: true),
+                    Id = table.Column<string>(type: "TEXT", maxLength: 12, nullable: false),
+                    Data = table.Column<byte[]>(type: "BLOB", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Presets", x => x.Id);
+                    table.PrimaryKey("PK_EncodedGameDatas", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Presets_TrainerSettingConfigs_TrainerSettingConfigId",
-                        column: x => x.TrainerSettingConfigId,
-                        principalTable: "TrainerSettingConfigs",
+                        name: "FK_EncodedGameDatas_Games_Id",
+                        column: x => x.Id,
+                        principalTable: "Games",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserClaims",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserLogins",
+                columns: table => new
+                {
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserRoles",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUserTokens",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                 });
 
             migrationBuilder.CreateTable(
@@ -405,118 +408,32 @@ namespace Gosuji.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUsers_Subscriptions_CurrentSubscriptionId",
-                        column: x => x.CurrentSubscriptionId,
-                        principalTable: "Subscriptions",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserStates",
+                name: "Feedbacks",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "TEXT", nullable: false),
-                    LastPresetId = table.Column<long>(type: "INTEGER", nullable: false),
-                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserStates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserStates_Presets_LastPresetId",
-                        column: x => x.LastPresetId,
-                        principalTable: "Presets",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserClaims",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
-                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserLogins",
-                columns: table => new
-                {
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserRoles",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    RoleId = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
+                    FeedbackType = table.Column<int>(type: "INTEGER", nullable: false),
+                    Subject = table.Column<string>(type: "TEXT", maxLength: 250, nullable: false),
+                    Message = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: true),
+                    IsRead = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsResolved = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUserRoles", x => new { x.UserId, x.RoleId });
+                    table.PrimaryKey("PK_Feedbacks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        name: "FK_Feedbacks_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUserTokens",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "TEXT", nullable: false),
-                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Value = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
-                    table.ForeignKey(
-                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -538,7 +455,88 @@ namespace Gosuji.API.Migrations
                         column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Presets",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
+                    TrainerSettingConfigId = table.Column<long>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 22, nullable: false),
+                    Order = table.Column<int>(type: "INTEGER", nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Presets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Presets_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Presets_TrainerSettingConfigs_TrainerSettingConfigId",
+                        column: x => x.TrainerSettingConfigId,
+                        principalTable: "TrainerSettingConfigs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Token = table.Column<string>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: false),
+                    ExpireDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Token);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Subscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    SubscriptionType = table.Column<int>(type: "INTEGER", nullable: false),
+                    DiscountId = table.Column<long>(type: "INTEGER", nullable: true),
+                    Months = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Subscriptions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Subscriptions_Discounts_DiscountId",
+                        column: x => x.DiscountId,
+                        principalTable: "Discounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -547,7 +545,7 @@ namespace Gosuji.API.Migrations
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", maxLength: 36, nullable: true),
                     Ip = table.Column<string>(type: "TEXT", maxLength: 120, nullable: false),
                     EndDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
@@ -561,7 +559,7 @@ namespace Gosuji.API.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -584,7 +582,33 @@ namespace Gosuji.API.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserStates",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    LastPresetId = table.Column<long>(type: "INTEGER", nullable: true),
+                    CreateDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    ModifyDate = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserStates_AspNetUsers_Id",
+                        column: x => x.Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_UserStates_Presets_LastPresetId",
+                        column: x => x.LastPresetId,
+                        principalTable: "Presets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
@@ -630,6 +654,11 @@ namespace Gosuji.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Feedbacks_UserId",
+                table: "Feedbacks",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Games_EndgameStatId",
                 table: "Games",
                 column: "EndgameStatId");
@@ -665,6 +694,16 @@ namespace Gosuji.API.Migrations
                 column: "TrainerSettingConfigId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Presets_UserId",
+                table: "Presets",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SettingConfigs_LanguageId",
                 table: "SettingConfigs",
                 column: "LanguageId");
@@ -675,10 +714,9 @@ namespace Gosuji.API.Migrations
                 column: "DiscountId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TrainerSettingConfigs_Hash",
-                table: "TrainerSettingConfigs",
-                column: "Hash",
-                unique: true);
+                name: "IX_Subscriptions_UserId",
+                table: "Subscriptions",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserActivities_UserId",
@@ -694,11 +732,55 @@ namespace Gosuji.API.Migrations
                 name: "IX_UserStates_LastPresetId",
                 table: "UserStates",
                 column: "LastPresetId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                table: "AspNetUserClaims",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                table: "AspNetUserLogins",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                table: "AspNetUserRoles",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUserTokens_AspNetUsers_UserId",
+                table: "AspNetUserTokens",
+                column: "UserId",
+                principalTable: "AspNetUsers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AspNetUsers_Subscriptions_CurrentSubscriptionId",
+                table: "AspNetUsers",
+                column: "CurrentSubscriptionId",
+                principalTable: "Subscriptions",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.SetNull);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Subscriptions_AspNetUsers_UserId",
+                table: "Subscriptions");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -718,10 +800,10 @@ namespace Gosuji.API.Migrations
                 name: "Changelogs");
 
             migrationBuilder.DropTable(
-                name: "Feedbacks");
+                name: "EncodedGameDatas");
 
             migrationBuilder.DropTable(
-                name: "Games");
+                name: "Feedbacks");
 
             migrationBuilder.DropTable(
                 name: "PendingUserChanges");
@@ -748,25 +830,28 @@ namespace Gosuji.API.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Games");
+
+            migrationBuilder.DropTable(
+                name: "Languages");
+
+            migrationBuilder.DropTable(
+                name: "Presets");
+
+            migrationBuilder.DropTable(
                 name: "GameStats");
 
             migrationBuilder.DropTable(
                 name: "KataGoVersions");
 
             migrationBuilder.DropTable(
-                name: "Languages");
+                name: "TrainerSettingConfigs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "Presets");
-
-            migrationBuilder.DropTable(
                 name: "Subscriptions");
-
-            migrationBuilder.DropTable(
-                name: "TrainerSettingConfigs");
 
             migrationBuilder.DropTable(
                 name: "Discounts");

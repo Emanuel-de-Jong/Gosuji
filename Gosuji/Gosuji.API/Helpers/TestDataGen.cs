@@ -96,12 +96,12 @@ namespace Gosuji.API.Helpers
                 Boardsize = 19,
                 Handicap = 0,
                 PreMovesSwitch = false,
-                PreMoves = 5,
-                HideOptions = EHideOptions.PERFECT,
+                PreMoves = 4,
+                HideOptions = EHideOptions.RIGHT,
                 ColorType = EMoveColor.RANDOM,
                 WrongMoveCorrection = true,
 
-                ForceOpponentCorners = EForceOpponentCorners.BOTH,
+                ForceOpponentCorners = EForceOpponentCorners.FIRST,
                 CornerSwitch44 = true,
                 CornerSwitch34 = true,
                 CornerSwitch33 = false,
@@ -267,10 +267,24 @@ namespace Gosuji.API.Helpers
             Random random = new();
             TrainerSettingConfig config = GetTrainerSettingConfigBase();
             config.Handicap = random.Next(10);
-            config.ColorType = (EMoveColor)random.Next(3) - 1;
             config.PreMovesSwitch = random.Next(2) == 0;
-            config.PreMoves = random.Next(11);
-            config.WrongMoveCorrection = random.Next(2) == 0;
+            config.PreMoves = random.Next(5) + 1;
+            config.HideOptions = (EHideOptions)random.Next(4);
+            config.ColorType = (EMoveColor)random.Next(3) - 1;
+            config.WrongMoveCorrection = random.Next(3) == 0;
+
+            config.ForceOpponentCorners = (EForceOpponentCorners)random.Next(4);
+            config.CornerSwitch33 = random.Next(5) == 0;
+            config.CornerSwitch45 = random.Next(5) == 0;
+            config.CornerSwitch35 = random.Next(5) == 0;
+            config.PreOptionPercSwitch = random.Next(2) == 0;
+
+            config.HideWeakerOptions = random.Next(3) == 0;
+            config.MinVisitsPercSwitch = random.Next(3) == 0;
+            config.MaxVisitDiffPercSwitch = random.Next(3) == 0;
+
+            config.HideOpponentOptions = (EHideOpponentOptions)random.Next(3);
+            config.OpponentOptionPercSwitch = random.Next(2) == 0;
             return config.SetHash();
         }
 
