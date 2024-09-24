@@ -6,6 +6,7 @@ using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Resources.Translations;
 using Gosuji.Client.Services;
 using Gosuji.Client.Services.Trainer;
+using Gosuji.Client.Services.TrainerService;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Localization;
@@ -50,6 +51,7 @@ namespace Gosuji.Client.Components.Pages
         private UserState? userState;
         private Preset? currentPreset;
         private TrainerSettingConfig? trainerSettingConfig;
+        private MoveTree? moveTree;
 
         private Game? game;
         private GameStat? gameStat;
@@ -87,6 +89,18 @@ namespace Gosuji.Client.Components.Pages
 
             await SetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
 
+            if (GameId != null)
+            {
+                if (!await StartTrainerConnection())
+                {
+                   return;
+                }
+
+                APIResponse<MoveTree> loadGameResponse = await trainerConnection.LoadGame(GameId);
+                if (G.StatusMessage.HandleAPIResponse(loadGameResponse)) return;
+                moveTree = loadGameResponse.Data;
+            }
+
             isInitialized = true;
         }
 
@@ -113,6 +127,17 @@ namespace Gosuji.Client.Components.Pages
                 jsRef ??= await js.InvokeAsync<IJSObjectReference>("import", "./js/pages/trainer/bundle.js");
                 await InitJS();
             }
+        }
+
+        private async Task<bool> StartTrainerConnection()
+        {
+            if (!trainerConnection.IsConnected)
+            {
+                APIResponse startResponse = await trainerConnection.Start();
+                if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
+            }
+
+            return true;
         }
 
         public async Task InitJS()
@@ -161,10 +186,9 @@ namespace Gosuji.Client.Components.Pages
         public async Task<bool> InitTrainerConnection(string sgfRuleset, double sgfKomi,
             TreeNode<Move>? thirdPartyMoves, string? name)
         {
-            if (!trainerConnection.IsConnected)
+            if (!await StartTrainerConnection())
             {
-                APIResponse startResponse = await trainerConnection.Start();
-                if (G.StatusMessage.HandleAPIResponse(startResponse)) return false;
+                return false;
             }
 
             this.sgfRuleset = sgfRuleset;
@@ -174,7 +198,7 @@ namespace Gosuji.Client.Components.Pages
             tscWithSGFSettings.SGFRuleset = sgfRuleset;
             tscWithSGFSettings.SGFKomi = sgfKomi;
 
-            APIResponse<bool> initResponse = await trainerConnection.Init(tscWithSGFSettings, thirdPartyMoves, name, GameId);
+            APIResponse<bool> initResponse = await trainerConnection.Init(tscWithSGFSettings, thirdPartyMoves, name);
             if (G.StatusMessage.HandleAPIResponse(initResponse)) return false;
             bool isOnlyInstance = initResponse.Data;
 

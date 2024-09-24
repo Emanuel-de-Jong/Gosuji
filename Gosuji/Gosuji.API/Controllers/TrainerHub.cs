@@ -49,11 +49,16 @@ namespace Gosuji.API.Controllers
             await base.OnDisconnectedAsync(exception);
         }
 
+        public async Task<HubResponse> LoadGame(string gameId)
+        {
+            return OkData(await trainerServices[Context.ConnectionId].LoadGame(gameId));
+        }
+
         public async Task<HubResponse> Init(TrainerSettingConfig trainerSettingConfig,
-            TreeNode<Move>? thirdPartyMoves, string? name, string? gameId)
+            TreeNode<Move>? thirdPartyMoves, string? name)
         {
             return OkData(await trainerServices[Context.ConnectionId].Init(trainerSettingConfig,
-                thirdPartyMoves, name, gameId));
+                thirdPartyMoves, name));
         }
 
         public async Task<HubResponse> UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)

@@ -39,8 +39,29 @@ namespace Gosuji.API.Services
             this.dbContextFactory = dbContextFactory;
         }
 
+        public async Task<MoveTree> LoadGame(string gameId)
+        {
+            isExistingGame = true;
+
+            ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
+            Game = await dbContext.Games
+                .Where(g => g.Id == gameId)
+                .Include(g => g.EncodedGameData)
+                .Include(g => g.GameStat)
+                .Include(g => g.OpeningStat)
+                .Include(g => g.MidgameStat)
+                .Include(g => g.EndgameStat)
+                .FirstOrDefaultAsync();
+            await dbContext.DisposeAsync();
+
+            GameDecoder gameDecoder = new();
+            MoveTree = gameDecoder.Decode(Game.EncodedGameData.Data);
+
+            return MoveTree;
+        }
+
         public async Task<bool> Init(TrainerSettingConfig trainerSettingConfig,
-            TreeNode<Move>? thirdPartyMoves, string? name, string? gameId)
+            TreeNode<Move>? thirdPartyMoves, string? name)
         {
             if (isFirstInit)
             {
@@ -61,34 +82,19 @@ namespace Gosuji.API.Services
             else
             {
                 await Save();
+
+                Game = new();
+                MoveTree = new();
             }
 
             TrainerSettingConfig = trainerSettingConfig;
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
 
-            Game = new();
-            MoveTree = new();
-
-            if (gameId != null)
-            {
-                ApplicationDbContext dbContext = await dbContextFactory.CreateDbContextAsync();
-                Game = await dbContext.Games
-                    .Where(g => g.Id == gameId)
-                    .Include(g => g.EncodedGameData)
-                    .Include(g => g.GameStat)
-                    .Include(g => g.OpeningStat)
-                    .Include(g => g.MidgameStat)
-                    .Include(g => g.EndgameStat)
-                    .FirstOrDefaultAsync();
-                await dbContext.DisposeAsync();
-
-                GameDecoder gameDecoder = new();
-                MoveTree = gameDecoder.Decode(Game.EncodedGameData.Data);
-            }
+            Game = Game ?? new();
+            MoveTree = MoveTree ?? new();
 
             Game.IsThirdPartySGF = thirdPartyMoves != null;
             this.name = name ?? Game.Name;
-            isExistingGame = gameId != null;
 
             await StartKataGo();
 
@@ -335,7 +341,7 @@ namespace Gosuji.API.Services
             Game.Ruleset = TrainerSettingConfig.GetRuleset;
             Game.Komi = TrainerSettingConfig.GetKomi;
 
-            SetMainBranchColor();
+            SetMainBranchValues();
 
             await AddGameStats();
 
@@ -397,29 +403,45 @@ namespace Gosuji.API.Services
             await dbContext.DisposeAsync();
         }
 
-        private void SetMainBranchColor()
+        private void SetMainBranchValues()
         {
-            if (Game.Color != EMoveColor.RANDOM)
-            {
-                return;
-            }
+            EMoveColor? color = null;
+            double? result = null;
 
             MoveNode parentNode = MoveTree.MainBranch ?? MoveTree.CurrentNode;
             while (parentNode != null)
             {
-                if (parentNode.MoveOrigin == EMoveOrigin.PLAYER)
+                if (color == null && parentNode.MoveOrigin == EMoveOrigin.PLAYER)
                 {
-                    Game.Color = parentNode.Move.Color.Value;
-                    return;
+                    color = parentNode.Move.Color.Value;
+                }
+
+                if (result == null)
+                {
+                    result = parentNode.Result;
+                }
+
+                if (color != null && result != null)
+                {
+                    break;
                 }
 
                 parentNode = parentNode.Parent;
             }
 
-            Game.Color = EMoveColor.BLACK;
-            if (TrainerSettingConfig.ColorType != EMoveColor.RANDOM)
+            Game.Result = result;
+
+            if (color != null)
             {
-                Game.Color = TrainerSettingConfig.ColorType;
+                Game.Color = color.Value;
+            }
+            else
+            {
+                Game.Color = EMoveColor.BLACK;
+                if (TrainerSettingConfig.ColorType != EMoveColor.RANDOM)
+                {
+                    Game.Color = TrainerSettingConfig.ColorType;
+                }
             }
         }
 

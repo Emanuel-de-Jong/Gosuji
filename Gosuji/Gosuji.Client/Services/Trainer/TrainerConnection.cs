@@ -2,6 +2,7 @@
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
+using Gosuji.Client.Services.TrainerService;
 using Gosuji.Client.Services.User;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.JSInterop;
@@ -15,13 +16,21 @@ namespace Gosuji.Client.Services.Trainer
         {
         }
 
+        public async Task<APIResponse<MoveTree>> LoadGame(string gameId)
+        {
+            string uri = "LoadGame";
+            return await HubResponseHandler.TryCatch<MoveTree>(uri,
+                HubConnection.InvokeAsync<HubResponse>(uri,
+                gameId));
+        }
+
         public async Task<APIResponse<bool>> Init(TrainerSettingConfig trainerSettingConfig,
-            TreeNode<Move>? thirdPartyMoves, string? name, string? gameId)
+            TreeNode<Move>? thirdPartyMoves, string? name)
         {
             string uri = "Init";
             return await HubResponseHandler.TryCatch<bool>(uri,
                 HubConnection.InvokeAsync<HubResponse>(uri,
-                trainerSettingConfig, thirdPartyMoves, name, gameId));
+                trainerSettingConfig, thirdPartyMoves, name));
         }
 
         public async Task<APIResponse> UpdateTrainerSettingConfig(TrainerSettingConfig trainerSettingConfig)
