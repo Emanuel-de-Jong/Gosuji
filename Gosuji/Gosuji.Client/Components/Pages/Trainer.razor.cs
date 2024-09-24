@@ -79,7 +79,7 @@ namespace Gosuji.Client.Components.Pages
             if (G.StatusMessage.HandleAPIResponse(userStateResponse)) return;
             userState = userStateResponse.Data;
 
-            currentPreset = presets[userState.LastPresetId];
+            currentPreset = presets[userState.LastPresetId.Value];
 
             await SetTrainerSettingConfig(currentPreset.TrainerSettingConfigId);
 

@@ -265,6 +265,7 @@ namespace Gosuji.API.Data
             builder.Entity<User>()
                 .HasOne<UserState>()
                 .WithOne()
+                .HasForeignKey<UserState>(us => us.Id)
                 .OnDelete(DeleteBehavior.SetNull);
         }
     }
