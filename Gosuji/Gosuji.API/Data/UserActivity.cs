@@ -9,9 +9,8 @@ namespace Gosuji.API.Data
         [Key]
         public long Id { get; set; }
 
-        [Required]
         [StringLength(36)]
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
         public User? User { get; set; }
         [Required]
         [MaxLength(120)]

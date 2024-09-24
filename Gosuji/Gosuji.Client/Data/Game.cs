@@ -13,13 +13,12 @@ namespace Gosuji.Client.Data
 
         [StringLength(36)]
         public string? UserId { get; set; }
-        [Required]
-        public long TrainerSettingConfigId { get; set; }
+        public long? TrainerSettingConfigId { get; set; }
         public TrainerSettingConfig? TrainerSettingConfig { get; set; }
-        public long KataGoVersionId { get; set; }
+        public long? KataGoVersionId { get; set; }
         public KataGoVersion? KataGoVersion { get; set; }
         public EncodedGameData? EncodedGameData { get; set; }
-        public long GameStatId { get; set; }
+        public long? GameStatId { get; set; }
         public GameStat? GameStat { get; set; }
         public long? OpeningStatId { get; set; }
         public GameStat? OpeningStat { get; set; }

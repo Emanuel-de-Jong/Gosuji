@@ -8,8 +8,7 @@ namespace Gosuji.Client.Data
         [Key]
         public string Id { get; set; } // Same as User.Id
 
-        [Required]
-        public long LastPresetId { get; set; }
+        public long? LastPresetId { get; set; }
         public Preset? LastPreset { get; set; }
     }
 }
