@@ -1,6 +1,5 @@
 ﻿using Gosuji.API.Data;
 using Gosuji.API.Services;
-using Gosuji.API.Services.TrainerService;
 using Gosuji.Client.Data;
 using Gosuji.Client.Helpers.HttpResponseHandler;
 using Gosuji.Client.Models;

@@ -1,7 +1,7 @@
 ﻿using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
 
-namespace Gosuji.API.Services.TrainerService
+namespace Gosuji.Client.Services.TrainerService
 {
     public class MoveNode : IEquatable<MoveNode>
     {

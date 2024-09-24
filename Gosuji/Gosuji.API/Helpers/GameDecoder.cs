@@ -1,7 +1,7 @@
 ﻿using AngleSharp.Dom;
-using Gosuji.API.Services.TrainerService;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
+using Gosuji.Client.Services.TrainerService;
 
 namespace Gosuji.API.Helpers
 {

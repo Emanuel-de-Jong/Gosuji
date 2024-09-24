@@ -4,9 +4,10 @@ using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
 using Gosuji.Client.Services.Trainer;
+using Gosuji.Client.Services.TrainerService;
 using Microsoft.EntityFrameworkCore;
 
-namespace Gosuji.API.Services.TrainerService
+namespace Gosuji.API.Services
 {
     public class TrainerService : IAsyncDisposable
     {
@@ -33,8 +34,8 @@ namespace Gosuji.API.Services.TrainerService
 
         public TrainerService(string userId, KataGoPool kataGoPool, IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
-            this.UserId = userId;
-            this.pool = kataGoPool;
+            UserId = userId;
+            pool = kataGoPool;
             this.dbContextFactory = dbContextFactory;
         }
 
@@ -255,13 +256,13 @@ namespace Gosuji.API.Services.TrainerService
             {
                 if (!shouldBeImperfectSuggestion)
                 {
-                    if ((moveOrigin == EMoveOrigin.OPPONENT &&
+                    if (moveOrigin == EMoveOrigin.OPPONENT &&
                         TrainerSettingConfig.OpponentOptionPercSwitch &&
-                        rnd.Next(1, 101) <= TrainerSettingConfig.OpponentOptionPerc)
+                        rnd.Next(1, 101) <= TrainerSettingConfig.OpponentOptionPerc
                         ||
-                        (moveOrigin == EMoveOrigin.PRE &&
+                        moveOrigin == EMoveOrigin.PRE &&
                         TrainerSettingConfig.PreOptionPercSwitch &&
-                        rnd.Next(1, 101) <= TrainerSettingConfig.PreOptionPerc))
+                        rnd.Next(1, 101) <= TrainerSettingConfig.PreOptionPerc)
                     {
                         shouldBeImperfectSuggestion = true;
                     }

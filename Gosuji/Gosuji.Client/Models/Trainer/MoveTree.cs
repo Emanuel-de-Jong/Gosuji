@@ -1,6 +1,6 @@
 ﻿using Gosuji.Client.Models;
 
-namespace Gosuji.API.Services.TrainerService
+namespace Gosuji.Client.Services.TrainerService
 {
     public class MoveTree
     {
