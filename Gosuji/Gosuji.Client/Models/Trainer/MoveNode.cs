@@ -1,10 +1,12 @@
 ﻿using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
+using System.Text.Json.Serialization;
 
 namespace Gosuji.Client.Services.TrainerService
 {
     public class MoveNode : IEquatable<MoveNode>
     {
+        [JsonIgnore]
         public MoveNode? Parent { get; set; }
         public List<MoveNode> Children { get; set; } = [];
 
@@ -14,6 +16,9 @@ namespace Gosuji.Client.Services.TrainerService
         public MoveSuggestionList? Suggestions { get; set; }
         public Coord? ChosenNotPlayedCoord { get; set; }
         public double? Result { get; set; }
+
+        public bool? IsCurrent;
+        public bool? IsMainBranch;
 
         public MoveNode() { }
 

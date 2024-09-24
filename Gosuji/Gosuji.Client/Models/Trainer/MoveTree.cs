@@ -1,12 +1,16 @@
 ﻿using Gosuji.Client.Models;
+using System.Text.Json.Serialization;
 
 namespace Gosuji.Client.Services.TrainerService
 {
     public class MoveTree
     {
         public MoveNode RootNode { get; set; } = new MoveNode(Move.ROOT_MOVE);
+        [JsonIgnore]
         public List<MoveNode> AllNodes { get; set; } = [];
+        [JsonIgnore]
         public MoveNode CurrentNode { get; set; }
+        [JsonIgnore]
         public MoveNode? MainBranch { get; set; }
 
         public MoveTree()
@@ -47,6 +51,15 @@ namespace Gosuji.Client.Services.TrainerService
             else if (CurrentNode.Equals(node))
             {
                 CurrentNode = node.Parent;
+            }
+        }
+
+        public void PrepareForJSON()
+        {
+            CurrentNode.IsCurrent = true;
+            if (MainBranch != null)
+            {
+                MainBranch.IsMainBranch = true;
             }
         }
     }

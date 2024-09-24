@@ -57,6 +57,7 @@ namespace Gosuji.API.Services
 
             GameDecoder gameDecoder = new();
             MoveTree = gameDecoder.Decode(Game.EncodedGameData.Data);
+            MoveTree.PrepareForJSON();
 
             LoadGameResponse response = new(Game, Game.TrainerSettingConfig, MoveTree);
 
