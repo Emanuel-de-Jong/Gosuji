@@ -95,7 +95,7 @@ gameplay.playerTurn = async function (markupCoord) {
             trainerG.MOVE_ORIGIN.PLAYER,
             trainerG.board.getNextColor(),
             true);
-        await gameplay.suggestionsPromise();
+        await gameplay.suggestionsPromise;
     }
     if (playerTurnId != gameplay.playerTurnId) return;
 
