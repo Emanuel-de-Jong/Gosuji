@@ -3,11 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Gosuji.Client.Data
 {
+    // An EncodedGameData always has 1 Game. A Game always has 1 EncodedGameData.
     public class EncodedGameData : DbModel
     {
         [StringLength(12)]
         [Key]
-        public string Id { get; set; }
+        public string Id { get; set; } // Same as Game.Id
 
         [Required]
         public byte[] Data { get; set; }

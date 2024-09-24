@@ -3,10 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Gosuji.Client.Data
 {
+    // A SettingConfig always has 1 User. A User always has 1 SettingConfig.
     public class SettingConfig : DbModel
     {
         [Key]
-        public string Id { get; set; }
+        public string Id { get; set; } // Same as User.Id
 
         [Required]
         public string LanguageId { get; set; } = ELanguage.en.ToString();

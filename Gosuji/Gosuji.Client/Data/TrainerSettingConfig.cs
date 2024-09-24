@@ -6,6 +6,10 @@ using System.Text;
 
 namespace Gosuji.Client.Data
 {
+    // This class is saved in an unusual way.
+    // The Hash property is generated from all other mapped properties meaning configs with the same settings get the same hash.
+    // We only ever want to save a single TrainerSettingConfig for each unique set of settings.
+    // So when the settings of a game change, a new config is created and assigned to it without deleting the old one.
     public class TrainerSettingConfig : DbModel
     {
         [Key]
@@ -204,17 +208,15 @@ namespace Gosuji.Client.Data
 
             builder.Append(config.Boardsize);
             builder.Append(config.Handicap);
-            builder.Append(config.ColorType);
             builder.Append(config.PreMovesSwitch);
             builder.Append(config.PreMoves);
+            builder.Append(config.HideOptions);
+            builder.Append(config.ColorType);
             builder.Append(config.WrongMoveCorrection);
 
-            builder.Append(config.Ruleset);
             builder.Append(config.Komi);
+            builder.Append(config.Ruleset);
 
-            builder.Append(config.PreOptions);
-            builder.Append(config.PreOptionPercSwitch);
-            builder.Append(config.PreOptionPerc);
             builder.Append(config.ForceOpponentCorners);
             builder.Append(config.CornerSwitch44);
             builder.Append(config.CornerSwitch34);
@@ -226,19 +228,21 @@ namespace Gosuji.Client.Data
             builder.Append(config.CornerChance33);
             builder.Append(config.CornerChance45);
             builder.Append(config.CornerChance35);
+            builder.Append(config.PreOptions);
+            builder.Append(config.PreOptionPercSwitch);
+            builder.Append(config.PreOptionPerc);
 
             builder.Append(config.SuggestionOptions);
-            builder.Append(config.HideOptions);
             builder.Append(config.HideWeakerOptions);
             builder.Append(config.MinVisitsPercSwitch);
             builder.Append(config.MinVisitsPerc);
             builder.Append(config.MaxVisitDiffPercSwitch);
             builder.Append(config.MaxVisitDiffPerc);
 
-            builder.Append(config.OpponentOptionPercSwitch);
             builder.Append(config.OpponentOptions);
-            builder.Append(config.OpponentOptionPerc);
             builder.Append(config.HideOpponentOptions);
+            builder.Append(config.OpponentOptionPercSwitch);
+            builder.Append(config.OpponentOptionPerc);
 
             builder.Append(config.SelfplayPlaySpeed);
 

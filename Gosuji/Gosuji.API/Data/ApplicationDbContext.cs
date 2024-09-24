@@ -10,24 +10,24 @@ namespace Gosuji.API.Data
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<User, IdentityRole, string, IdentityUserClaim<string>, UserRole,
         IdentityUserLogin<string>, IdentityRoleClaim<string>, IdentityUserToken<string>>(options)
     {
-        public DbSet<SettingConfig> SettingConfigs { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
-        public DbSet<Discount> Discounts { get; set; }
+        public DbSet<PendingUserChange> PendingUserChanges { get; set; }
+        public DbSet<RateLimitViolation> RateLimitViolations { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<UserActivity> UserActivities { get; set; }
         public DbSet<UserMoveCount> UserMoveCounts { get; set; }
-        public DbSet<Game> Games { get; set; }
-        public DbSet<TrainerSettingConfig> TrainerSettingConfigs { get; set; }
-        public DbSet<KataGoVersion> KataGoVersions { get; set; }
-        public DbSet<Preset> Presets { get; set; }
-        public DbSet<GameStat> GameStats { get; set; }
-        public DbSet<Feedback> Feedbacks { get; set; }
-        public DbSet<Language> Languages { get; set; }
         public DbSet<Changelog> Changelogs { get; set; }
-        public DbSet<RateLimitViolation> RateLimitViolations { get; set; }
-        public DbSet<UserState> UserStates { get; set; }
-        public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<PendingUserChange> PendingUserChanges { get; set; }
+        public DbSet<Discount> Discounts { get; set; }
         public DbSet<EncodedGameData> EncodedGameDatas { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<GameStat> GameStats { get; set; }
+        public DbSet<KataGoVersion> KataGoVersions { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Preset> Presets { get; set; }
+        public DbSet<SettingConfig> SettingConfigs { get; set; }
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<TrainerSettingConfig> TrainerSettingConfigs { get; set; }
+        public DbSet<UserState> UserStates { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
