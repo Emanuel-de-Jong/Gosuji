@@ -9,7 +9,7 @@ namespace Gosuji.Client.Data
         [Key]
         public string Id { get; set; } // Same as User.Id
 
-        public string? LanguageId { get; set; } = ELanguage.en.ToString();
+        public string? LanguageId { get; set; }
         public Language? Language { get; set; }
         [CustomPersonalData]
         public EThemeType Theme { get; set; } = EThemeType.DARK;
@@ -21,6 +21,11 @@ namespace Gosuji.Client.Data
         public bool IsSelfplayStoneSound { get; set; } = true;
         [CustomPersonalData]
         public bool IsGetChangelogEmail { get; set; }
+
+        public SettingConfig()
+        {
+            LanguageId ??= ELanguage.en.ToString();
+        }
 
         public double CalcMasterVolume()
         {

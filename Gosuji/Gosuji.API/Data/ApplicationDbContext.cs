@@ -66,7 +66,6 @@ namespace Gosuji.API.Data
         {
             base.OnModelCreating(builder);
 
-            // PendingUserChange and User
             builder.Entity<PendingUserChange>()
                 .HasOne(puc => puc.User)
                 .WithOne()
@@ -75,9 +74,9 @@ namespace Gosuji.API.Data
             builder.Entity<User>()
                 .HasOne<PendingUserChange>()
                 .WithOne(puc => puc.User)
+                .HasForeignKey<PendingUserChange>(puc => puc.Id)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // RefreshToken and User
             builder.Entity<RefreshToken>()
                 .HasOne<User>()
                 .WithMany()
@@ -89,7 +88,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(rt => rt.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // UserActivity and User
             builder.Entity<UserActivity>()
                 .HasOne(ua => ua.User)
                 .WithMany()
@@ -101,7 +99,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(ua => ua.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // UserMoveCount and User
             builder.Entity<UserMoveCount>()
                 .HasOne(umc => umc.User)
                 .WithMany()
@@ -113,7 +110,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(umc => umc.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Feedback and User
             builder.Entity<Feedback>()
                 .HasOne<User>()
                 .WithMany()
@@ -125,7 +121,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(fb => fb.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Game and EncodedGameData
             builder.Entity<Game>()
                 .HasOne(g => g.EncodedGameData)
                 .WithOne()
@@ -134,9 +129,9 @@ namespace Gosuji.API.Data
             builder.Entity<EncodedGameData>()
                 .HasOne<Game>()
                 .WithOne(g => g.EncodedGameData)
+                .HasForeignKey<EncodedGameData>(egd => egd.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Game and TrainerSettingConfig
             builder.Entity<Game>()
                 .HasOne(g => g.TrainerSettingConfig)
                 .WithMany()
@@ -145,9 +140,9 @@ namespace Gosuji.API.Data
             builder.Entity<TrainerSettingConfig>()
                 .HasMany<Game>()
                 .WithOne(g => g.TrainerSettingConfig)
+                .HasForeignKey(g => g.TrainerSettingConfigId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Game and KataGoVersion
             builder.Entity<Game>()
                 .HasOne(g => g.KataGoVersion)
                 .WithMany()
@@ -156,9 +151,9 @@ namespace Gosuji.API.Data
             builder.Entity<KataGoVersion>()
                 .HasMany<Game>()
                 .WithOne(g => g.KataGoVersion)
+                .HasForeignKey(g => g.KataGoVersionId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Game and GameStat
             builder.Entity<Game>()
                 .HasOne(g => g.GameStat)
                 .WithMany()
@@ -167,9 +162,9 @@ namespace Gosuji.API.Data
             builder.Entity<GameStat>()
                 .HasMany<Game>()
                 .WithOne(g => g.GameStat)
+                .HasForeignKey(g => g.GameStatId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Game and OpeningStat
             builder.Entity<Game>()
                 .HasOne(g => g.OpeningStat)
                 .WithMany()
@@ -181,7 +176,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(g => g.OpeningStatId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Game and MidgameStat
             builder.Entity<Game>()
                 .HasOne(g => g.MidgameStat)
                 .WithMany()
@@ -193,7 +187,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(g => g.MidgameStatId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Game and EndgameStat
             builder.Entity<Game>()
                 .HasOne(g => g.EndgameStat)
                 .WithMany()
@@ -205,7 +198,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(g => g.EndgameStatId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Preset and User
             builder.Entity<Preset>()
                 .HasOne<User>()
                 .WithMany()
@@ -217,7 +209,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Preset and TrainerSettingConfig
             builder.Entity<Preset>()
                 .HasOne(p => p.TrainerSettingConfig)
                 .WithMany()
@@ -226,9 +217,9 @@ namespace Gosuji.API.Data
             builder.Entity<TrainerSettingConfig>()
                 .HasMany<Preset>()
                 .WithOne(p => p.TrainerSettingConfig)
+                .HasForeignKey(p => p.TrainerSettingConfigId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // SettingConfig and Language
             builder.Entity<SettingConfig>()
                 .HasOne(sc => sc.Language)
                 .WithMany()
@@ -240,7 +231,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(sc => sc.LanguageId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Subscription and User
             builder.Entity<Subscription>()
                 .HasOne<User>()
                 .WithMany()
@@ -257,7 +247,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(u => u.CurrentSubscriptionId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Subscription and Discount
             builder.Entity<Subscription>()
                 .HasOne(s => s.Discount)
                 .WithMany()
@@ -266,9 +255,9 @@ namespace Gosuji.API.Data
             builder.Entity<Discount>()
                 .HasMany<Subscription>()
                 .WithOne(s => s.Discount)
+                .HasForeignKey(s => s.DiscountId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // UserState and LastPreset
             builder.Entity<UserState>()
                 .HasOne(us => us.LastPreset)
                 .WithMany()
@@ -280,7 +269,6 @@ namespace Gosuji.API.Data
                 .HasForeignKey(us => us.LastPresetId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // UserState and User
             builder.Entity<UserState>()
                 .HasOne<User>()
                 .WithOne()

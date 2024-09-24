@@ -98,8 +98,8 @@ namespace Gosuji.API.Services
             TrainerSettingConfig = trainerSettingConfig;
             TrainerSettingConfig.SubscriptionType = Subscription?.SubscriptionType;
 
-            Game = Game ?? new();
-            MoveTree = MoveTree ?? new();
+            Game ??= new();
+            MoveTree ??= new();
 
             Game.IsThirdPartySGF = thirdPartyMoves != null;
             this.name = name ?? Game.Name;
