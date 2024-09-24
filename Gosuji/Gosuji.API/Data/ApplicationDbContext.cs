@@ -33,68 +33,110 @@ namespace Gosuji.API.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<User>()
-                .HasOne(e => e.CurrentSubscription)
-                .WithMany()
-                .HasForeignKey(e => e.CurrentSubscriptionId);
-
-            builder.Entity<SettingConfig>();
-            builder.Entity<Subscription>();
-            builder.Entity<Discount>();
-
-            builder.Entity<UserActivity>(b =>
-            {
-                b.ToTable("UserActivities");
-            });
-
-            builder.Entity<UserMoveCount>();
-
-            builder.Entity<Game>()
-                .HasOne(e => e.EncodedGameData)
+            builder.Entity<PendingUserChange>()
+                .HasOne(puc => puc.User)
                 .WithOne()
-                .HasForeignKey<EncodedGameData>(e => e.Id);
-            builder.Entity<Game>()
-                .HasOne(e => e.GameStat)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Game>()
-                .HasOne(e => e.OpeningStat)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Game>()
-                .HasOne(e => e.MidgameStat)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction);
-            builder.Entity<Game>()
-                .HasOne(e => e.EndgameStat)
-                .WithMany()
-                .OnDelete(DeleteBehavior.NoAction);
+                .HasForeignKey<PendingUserChange>(puc => puc.Id)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<TrainerSettingConfig>()
-                .HasIndex(e => e.Hash)
-                .IsUnique();
+            builder.Entity<RefreshToken>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(rt => rt.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<KataGoVersion>();
-            builder.Entity<Preset>();
-            builder.Entity<GameStat>();
-            builder.Entity<Feedback>();
-            builder.Entity<Language>();
-            builder.Entity<Changelog>();
-            builder.Entity<RateLimitViolation>();
+            builder.Entity<UserActivity>()
+                .HasOne(ua => ua.User)
+                .WithMany()
+                .HasForeignKey(ua => ua.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<UserMoveCount>()
+                .HasOne(umc => umc.User)
+                .WithMany()
+                .HasForeignKey(umc => umc.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Feedback>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(fb => fb.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Game>()
+                .HasOne(g => g.EncodedGameData)
+                .WithOne()
+                .HasForeignKey<EncodedGameData>(egd => egd.Id)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Game>()
+                .HasOne(g => g.TrainerSettingConfig)
+                .WithMany()
+                .HasForeignKey(g => g.TrainerSettingConfigId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Game>()
+                .HasOne(g => g.KataGoVersion)
+                .WithMany()
+                .HasForeignKey(g => g.KataGoVersionId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Game>()
+                .HasOne(g => g.GameStat)
+                .WithMany()
+                .HasForeignKey(g => g.GameStatId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Game>()
+                .HasOne(g => g.OpeningStat)
+                .WithMany()
+                .HasForeignKey(g => g.OpeningStatId)
+                .OnDelete(DeleteBehavior.SetNull);
+            builder.Entity<Game>()
+                .HasOne(g => g.MidgameStat)
+                .WithMany()
+                .HasForeignKey(g => g.MidgameStatId)
+                .OnDelete(DeleteBehavior.SetNull);
+            builder.Entity<Game>()
+                .HasOne(g => g.EndgameStat)
+                .WithMany()
+                .HasForeignKey(g => g.EndgameStatId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Entity<Preset>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Preset>()
+                .HasOne(p => p.TrainerSettingConfig)
+                .WithMany()
+                .HasForeignKey(p => p.TrainerSettingConfigId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<SettingConfig>()
+                .HasOne<Language>()
+                .WithMany()
+                .HasForeignKey(sc => sc.LanguageId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Subscription>()
+                .HasOne<User>()
+                .WithMany()
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+            builder.Entity<Subscription>()
+                .HasOne(s => s.Discount)
+                .WithMany()
+                .HasForeignKey(s => s.DiscountId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<UserState>()
-                .HasOne(e => e.LastPreset)
+                .HasOne(us => us.LastPreset)
                 .WithMany()
-                .HasForeignKey(e => e.LastPresetId);
-
-            builder.Entity<RefreshToken>();
-
-            builder.Entity<PendingUserChange>()
-                .HasOne(e => e.User)
+                .HasForeignKey(us => us.LastPresetId)
+                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<UserState>()
+                .HasOne<User>()
                 .WithOne()
-                .HasForeignKey<PendingUserChange>(e => e.Id);
-
-            builder.Entity<EncodedGameData>();
+                .HasForeignKey<UserState>(us => us.Id)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         public override EntityEntry<TEntity> Update<TEntity>(TEntity entity)
