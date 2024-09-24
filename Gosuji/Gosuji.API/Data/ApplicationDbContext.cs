@@ -66,6 +66,10 @@ namespace Gosuji.API.Data
         {
             base.OnModelCreating(builder);
 
+            builder.Entity<TrainerSettingConfig>()
+                .HasIndex(e => e.Hash)
+                .IsUnique();
+
             builder.Entity<PendingUserChange>()
                 .HasOne(puc => puc.User)
                 .WithOne()
