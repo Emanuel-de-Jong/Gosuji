@@ -100,7 +100,19 @@ if (typeof Board === "undefined") {
         }
 
         redraw() {
+            this.editor.notifyListeners({ markupChange: true, stoneChange: true, navChange: true, treeChange: true });
+        }
+
+        redrawMarkup() {
             this.editor.notifyListeners({ markupChange: true });
+        }
+
+        redrawBoard() {
+            this.editor.notifyListeners({ markupChange: true, stoneChange: true });
+        }
+
+        redrawTree() {
+            this.editor.notifyListeners({ navChange: true, treeChange: true });
         }
 
         setStoneVolume(volume) {

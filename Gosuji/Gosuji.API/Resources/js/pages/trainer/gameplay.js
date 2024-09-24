@@ -69,7 +69,7 @@ gameplay.playerMarkupPlacedCheckListener = async function (event) {
         // Coord already has stone
         if (trainerG.board.get().getStone(event.x, event.y) != 0) {
             trainerG.board.removeMarkup(markupCoord);
-            trainerG.board.redraw();
+            trainerG.board.redrawMarkup();
             return;
         }
 
@@ -160,7 +160,7 @@ gameplay.nextButtonClickListener = async function () {
         await gameplay.opponentTurn();
     } else {
         trainerG.board.clearMarkups();
-        trainerG.board.redraw();
+        trainerG.board.redrawMarkup();
     }
 };
 

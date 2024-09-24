@@ -16,7 +16,7 @@ class JosekisBoard extends Board {
         this.addMarkup(16, 5, "C");
         this.addMarkup(17, 3, "D");
         this.addMarkup(17, 5, "E");
-        this.redraw();
+        this.redrawMarkup();
 
         document.querySelector('button[title="Jump back"]').remove();
         document.querySelector('button[title="Next node"]').remove();

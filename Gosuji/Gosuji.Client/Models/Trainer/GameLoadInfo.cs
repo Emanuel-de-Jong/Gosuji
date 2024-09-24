@@ -34,9 +34,11 @@ namespace Gosuji.Client.Models.Trainer
             RightTopStreak = game.RightTopStreak;
             PerfectTopStreak = game.PerfectTopStreak;
 
-            JsonSerializerOptions jsonSerializerOptions = new(G.JsonSerializerOptions)
+            JsonSerializerOptions jsonSerializerOptions = new()
             {
-                MaxDepth = 256
+                MaxDepth = 256,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNameCaseInsensitive = true
             };
             MoveTree = JsonSerializer.Serialize(moveTree, jsonSerializerOptions);
         }

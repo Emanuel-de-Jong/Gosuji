@@ -260,7 +260,7 @@ class TrainerBoard extends Board {
             this.editor.addMarkupToCurrent(coord.x, coord.y, suggestion.grade);
         }
 
-        this.redraw();
+        this.redrawMarkup();
     }
 
     getMoves() {

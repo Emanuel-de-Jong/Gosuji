@@ -112,7 +112,7 @@ namespace Gosuji.Client.Components.Pages
                 StateHasChanged();
             }
 
-            await jsRef.InvokeVoidAsync($"{BOARD}.redraw");
+            await jsRef.InvokeVoidAsync($"{BOARD}.redrawMarkup");
         }
 
         private async Task AddGhostStone(JosekisMark mark)
