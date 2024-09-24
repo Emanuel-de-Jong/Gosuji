@@ -134,8 +134,20 @@ class TrainerBoard extends Board {
             node[trainerG.MOVE_ORIGIN_HISTORY_NAME] = moveNode.moveOrigin;
         }
 
+        if (moveNode.playerResult != null) {
+            node[stats.PLAYER_RESULT_HISTORY_NAME] = moveNode.playerResult;
+        }
+
         if (moveNode.suggestions != null) {
             node[trainerG.SUGGESTIONS_HISTORY_NAME] = MoveSuggestionList.fromKataGo(moveNode.suggestions);
+        }
+
+        if (moveNode.chosenNotPlayedCoord != null) {
+            node[gameplay.CHOSEN_NOT_PLAYED_COORD_HISTORY_NAME] = moveNode.chosenNotPlayedCoord;
+        }
+
+        if (moveNode.result != null) {
+            node[stats.RESULT_HISTORY_NAME] = moveNode.result;
         }
 
         if (moveNode.isCurrent != null) {
