@@ -163,6 +163,8 @@ stats.drawStats = async function (event) {
     if (!event.navChange) {
         return;
     }
+
+    trainerG.board.clearMarkups();
     
     let node = trainerG.board.get();
     if (node.parent == null || node.navTreeY == node.parent.navTreeY) {
@@ -181,8 +183,15 @@ stats.drawStats = async function (event) {
 
         if (trainerG.suggestions) {
             await stats.setSuggestions(trainerG.suggestions);
-            trainerG.board.drawCoords(trainerG.suggestions);
+            trainerG.board.drawSuggestionList(trainerG.suggestions);
         }
+
+        const chosenNotPlayedCoord = gameplay.chosenNotPlayedCoordHistory.get();
+        if (chosenNotPlayedCoord) {
+            trainerG.board.get().addMarkup(chosenNotPlayedCoord.x, chosenNotPlayedCoord.y, 4);
+        }
+
+        trainerG.board.redrawMarkup();
     } else {
         await stats.clearSuggestions();
     }

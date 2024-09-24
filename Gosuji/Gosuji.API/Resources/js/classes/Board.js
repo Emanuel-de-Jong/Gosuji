@@ -170,10 +170,10 @@ if (typeof Board === "undefined") {
             markup[(coord.x - 1) * this.boardsize + (coord.y - 1)] = 0;
         }
 
-        clearMarkups() {
+        clearMarkups(shouldKeepCross = false) {
             let markup = this.get().markup;
             for (let i = 0; i < markup.length; i++) {
-                if (markup[i] && markup[i] != 4) {
+                if (markup[i] && (!shouldKeepCross || markup[i] != 4)) {
                     markup[i] = 0;
                 }
             }

@@ -262,17 +262,12 @@ class TrainerBoard extends Board {
         this.isSelfplayStoneSound = isSelfplayStoneSound;
     }
 
-    drawCoords(suggestionList) {
-        let suggestions = suggestionList.getFilterByWeaker();
-
-        this.clearMarkups();
-
+    drawSuggestionList(suggestionList) {
+        const suggestions = suggestionList.getFilterByWeaker();
         for (const suggestion of suggestions) {
             let coord = suggestion.coord;
             this.editor.addMarkupToCurrent(coord.x, coord.y, suggestion.grade);
         }
-
-        this.redrawMarkup();
     }
 
     getMoves() {

@@ -159,7 +159,7 @@ gameplay.nextButtonClickListener = async function () {
     if (trainerG.color == trainerG.board.getColor()) {
         await gameplay.opponentTurn();
     } else {
-        trainerG.board.clearMarkups();
+        trainerG.board.clearMarkups(true);
         trainerG.board.redrawMarkup();
     }
 };
