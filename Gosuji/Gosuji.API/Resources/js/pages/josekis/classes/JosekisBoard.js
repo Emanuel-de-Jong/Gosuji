@@ -41,7 +41,7 @@ class JosekisBoard extends Board {
         document.querySelector('button[title="First node"]').addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("First"); });
         document.querySelector('button[title="Previous node"]').addEventListener("click", async () => { await josekisPage.josekisRef.invokeMethodAsync("Prev"); });
 
-        this.editor.addListener(this.crossPlacedListener);
+        this.addListener(this.crossPlacedListener);
     }
     
     clearFuture() {
@@ -51,7 +51,7 @@ class JosekisBoard extends Board {
     crossPlacedListener = async (event) => {
         if (event.markupChange && event.mark == 4) {
             this.removeMarkup(new Coord(event.x, event.y));
-            this.editor.notifyListeners({ stoneChange: true });
+            this.redrawBoard();
 
             await josekisPage.josekisRef.invokeMethodAsync("Next", event.x, event.y);
         }

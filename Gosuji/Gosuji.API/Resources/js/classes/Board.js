@@ -94,25 +94,34 @@ if (typeof Board === "undefined") {
             this.lastNode = this.get();
         }
 
+        addListener(listener) {
+            this.editor.addListener((event) => {
+                if (event.boardCall) {
+                    return;
+                }
+
+                listener();
+            });
+        }
 
         get() {
             return this.editor.getCurrent();
         }
 
         redraw() {
-            this.editor.notifyListeners({ markupChange: true, stoneChange: true, navChange: true, treeChange: true });
+            this.editor.notifyListeners({ boardCall: true, markupChange: true, stoneChange: true, navChange: true, treeChange: true });
         }
 
         redrawMarkup() {
-            this.editor.notifyListeners({ markupChange: true });
+            this.editor.notifyListeners({ boardCall: true, markupChange: true });
         }
 
         redrawBoard() {
-            this.editor.notifyListeners({ markupChange: true, stoneChange: true });
+            this.editor.notifyListeners({ boardCall: true, markupChange: true, stoneChange: true });
         }
 
         redrawTree() {
-            this.editor.notifyListeners({ navChange: true, treeChange: true });
+            this.editor.notifyListeners({ boardCall: true, navChange: true, treeChange: true });
         }
 
         setStoneVolume(volume) {

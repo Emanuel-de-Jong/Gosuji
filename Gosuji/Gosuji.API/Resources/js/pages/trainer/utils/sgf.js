@@ -12,7 +12,7 @@ sgf.init = function (userName) {
     sgf.sgfLoadingEvent = new CEvent(sgf.sgfLoadingListener);
     sgf.sgfLoadedEvent = new CEvent(sgf.sgfLoadedListener);
 
-    trainerG.board.editor.addListener(sgf.boardEditorListener);
+    trainerG.board.addListener(sgf.boardEditorListener);
 
     sgf.clear();
 };

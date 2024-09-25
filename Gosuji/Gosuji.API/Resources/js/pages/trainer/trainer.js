@@ -75,7 +75,7 @@ trainerPage.init = async function (
 
     if (trainerG.gameLoadInfo) {
         trainerG.board.editor.setCurrent(trainerG.board.lastNode);
-        trainerG.board.editor.notifyListeners({ navChange: true });
+        trainerG.board.redrawTree();
 
         await trainerPage.start();
     }

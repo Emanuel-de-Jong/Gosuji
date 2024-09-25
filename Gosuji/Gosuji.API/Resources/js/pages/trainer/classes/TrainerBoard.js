@@ -189,7 +189,7 @@ class TrainerBoard extends Board {
             
             if (moveOrigin === trainerG.MOVE_ORIGIN.PLAYER) {
                 if (!trainerG.isRightChoice) {
-                    gameplay.chosenNotPlayedCoordHistory.add(markupCoord);
+                    gameplay.chosenNotPlayedCoordHistory.add(gameplay.playerPlayedCoord);
                 }
 
                 if (tool == "auto") {
@@ -251,7 +251,7 @@ class TrainerBoard extends Board {
         gameplay.chosenNotPlayedCoordHistory.refreshNodes();
         scoreChart.history.refreshNodes();
 
-        this.editor.notifyListeners({ treeChange: true, navChange: true });
+        this.redrawTree();
 
         gameplay.start();
     }

@@ -27,7 +27,7 @@ stats.init = async function () {
     stats.resultDivElement = document.getElementById("resultDiv");
     stats.resultElement = document.getElementById("result");
 
-    trainerG.board.editor.addListener(stats.drawStats);
+    trainerG.board.addListener(stats.drawStats);
 
     await stats.clear();
 };
@@ -160,6 +160,8 @@ stats.clearResult = function () {
 
 
 stats.drawStats = async function (event) {
+    console.log("sdofh");
+
     if (!event.navChange) {
         return;
     }
@@ -183,8 +185,6 @@ stats.drawStats = async function (event) {
         if (!event.treeChange || trainerG.board.getNodeX() == 0) {
             trainerG.suggestions = trainerG.suggestionsHistory.get();
             chosenNotPlayedCoord = gameplay.chosenNotPlayedCoordHistory.get();
-        } else if (!trainerG.isRightChoice) {
-            chosenNotPlayedCoord = gameplay.playerPlayedCoord;
         }
 
         if (trainerG.suggestions) {

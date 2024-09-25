@@ -19,8 +19,8 @@ gameplay.OPPONENT_MAX_VISIT_DIFF_PERC = 50;
 
 
 gameplay.init = function () {
-    trainerG.board.editor.addListener(gameplay.playerMarkupPlacedCheckListener);
-    trainerG.board.editor.addListener(gameplay.detectJump);
+    trainerG.board.addListener(gameplay.playerMarkupPlacedCheckListener);
+    trainerG.board.addListener(gameplay.detectJump);
     trainerG.board.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
 
     gameplay.clear();
@@ -80,8 +80,6 @@ gameplay.playerMarkupPlacedCheckListener = async function (event) {
             trainerG.setColor();
         }
 
-        trainerG.board.removeMarkup(gameplay.playerPlayedCoord);
-
         await gameplay.playerTurn();
     }
 };
@@ -121,6 +119,8 @@ gameplay.playerTurn = async function () {
     }
 
     stats.update();
+
+    trainerG.board.removeMarkup(gameplay.playerPlayedCoord);
 
     if (settings.wrongMoveCorrection || trainerG.isRightChoice) {
         await trainerG.board.play(suggestionToPlay, trainerG.MOVE_ORIGIN.PLAYER);
