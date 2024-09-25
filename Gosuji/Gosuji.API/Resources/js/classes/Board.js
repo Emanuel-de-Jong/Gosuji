@@ -100,7 +100,7 @@ if (typeof Board === "undefined") {
                     return;
                 }
 
-                listener();
+                listener(event);
             });
         }
 

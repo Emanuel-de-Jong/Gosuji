@@ -160,8 +160,6 @@ stats.clearResult = function () {
 
 
 stats.drawStats = async function (event) {
-    console.log("sdofh");
-
     if (!event.navChange) {
         return;
     }
@@ -185,6 +183,11 @@ stats.drawStats = async function (event) {
         if (!event.treeChange || trainerG.board.getNodeX() == 0) {
             trainerG.suggestions = trainerG.suggestionsHistory.get();
             chosenNotPlayedCoord = gameplay.chosenNotPlayedCoordHistory.get();
+        } else if (!trainerG.isRightChoice &&
+            settings.wrongMoveCorrection &&
+            trainerG.color == trainerG.board.getColor()
+        ) {
+            chosenNotPlayedCoord = gameplay.playerPlayedCoord;
         }
 
         if (trainerG.suggestions) {
@@ -195,11 +198,11 @@ stats.drawStats = async function (event) {
         if (chosenNotPlayedCoord) {
             trainerG.board.get().addMarkup(chosenNotPlayedCoord.x, chosenNotPlayedCoord.y, 4);
         }
-
-        trainerG.board.redrawMarkup();
     } else {
         await stats.clearSuggestions();
     }
+
+    trainerG.board.redrawMarkup();
 };
 
 if (!window.trainer) window.trainer = {};
