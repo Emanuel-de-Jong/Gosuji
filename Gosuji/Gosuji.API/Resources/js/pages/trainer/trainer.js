@@ -108,13 +108,12 @@ trainerPage.start = async function () {
     trainerPage.restartButton.disabled = false;
 
     settings.togglePreGameSettings();
-
-    await kataGo.start();
     
     if (trainerG.gameLoadInfo || debug.testData) {
         trainerG.gameLoadInfo = null;
         gameplay.start(false);
     } else {
+        await kataGo.start();
         preMovePlacer.start();
     }
 };

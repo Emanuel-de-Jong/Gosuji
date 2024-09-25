@@ -179,14 +179,19 @@ stats.drawStats = async function (event) {
             (gameplay.shouldShowOpponentOptions() && trainerG.color != trainerG.board.getColor())
         )
     ) {
-        if (!event.treeChange || trainerG.board.getNodeX() == 0) trainerG.suggestions = trainerG.suggestionsHistory.get();
+        let chosenNotPlayedCoord;
+        if (!event.treeChange || trainerG.board.getNodeX() == 0) {
+            trainerG.suggestions = trainerG.suggestionsHistory.get();
+            chosenNotPlayedCoord = gameplay.chosenNotPlayedCoordHistory.get();
+        } else if (!trainerG.isRightChoice) {
+            chosenNotPlayedCoord = gameplay.playerPlayedCoord;
+        }
 
         if (trainerG.suggestions) {
             await stats.setSuggestions(trainerG.suggestions);
             trainerG.board.drawSuggestionList(trainerG.suggestions);
         }
 
-        const chosenNotPlayedCoord = gameplay.chosenNotPlayedCoordHistory.get();
         if (chosenNotPlayedCoord) {
             trainerG.board.get().addMarkup(chosenNotPlayedCoord.x, chosenNotPlayedCoord.y, 4);
         }

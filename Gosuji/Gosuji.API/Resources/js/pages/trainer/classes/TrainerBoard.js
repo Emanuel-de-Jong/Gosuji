@@ -160,9 +160,7 @@ class TrainerBoard extends Board {
     }
 
     async play(suggestion, moveOrigin, tool = "auto") {
-        let sendToServer = moveOrigin == trainerG.MOVE_ORIGIN.PLAYER;
-
-        await this.draw(suggestion.coord, tool, sendToServer);
+        await this.draw(suggestion.coord, tool, moveOrigin);
         scoreChart.update(suggestion);
         trainerG.moveOriginHistory.add(moveOrigin);
 
@@ -171,7 +169,7 @@ class TrainerBoard extends Board {
         }
     }
 
-    async draw(coord, tool = "auto", sendToServer = false) {
+    async draw(coord, tool = "auto", moveOrigin) {
         this.editor.setTool(tool);
         this.editor.click(coord.x, coord.y, false, false);
         this.editor.setTool("navOnly");
@@ -188,8 +186,12 @@ class TrainerBoard extends Board {
             this.lastNode = this.get();
 
             trainerG.suggestionsHistory.add(trainerG.suggestions);
+            
+            if (moveOrigin === trainerG.MOVE_ORIGIN.PLAYER) {
+                if (!trainerG.isRightChoice) {
+                    gameplay.chosenNotPlayedCoordHistory.add(markupCoord);
+                }
 
-            if (sendToServer) {
                 if (tool == "auto") {
                     await kataGo.playPlayer(coord);
                 } else if (tool == "playB") {

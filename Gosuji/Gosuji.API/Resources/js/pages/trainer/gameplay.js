@@ -64,11 +64,11 @@ gameplay.takePlayerControl = function () {
 
 gameplay.playerMarkupPlacedCheckListener = async function (event) {
     if (event.markupChange && event.mark == 4 && gameplay.isPlayerControlling && !sgf.isSGFLoading) {
-        let markupCoord = new Coord(event.x, event.y);
+        gameplay.playerPlayedCoord = new Coord(event.x, event.y);
 
         // Coord already has stone
         if (trainerG.board.get().getStone(event.x, event.y) != 0) {
-            trainerG.board.removeMarkup(markupCoord);
+            trainerG.board.removeMarkup(gameplay.playerPlayedCoord);
             trainerG.board.redrawMarkup();
             return;
         }
@@ -80,13 +80,13 @@ gameplay.playerMarkupPlacedCheckListener = async function (event) {
             trainerG.setColor();
         }
 
-        trainerG.board.removeMarkup(markupCoord);
+        trainerG.board.removeMarkup(gameplay.playerPlayedCoord);
 
-        await gameplay.playerTurn(markupCoord);
+        await gameplay.playerTurn();
     }
 };
 
-gameplay.playerTurn = async function (markupCoord) {
+gameplay.playerTurn = async function () {
     let playerTurnId = ++gameplay.playerTurnId;
 
     if (gameplay.isJumped) {
@@ -109,7 +109,7 @@ gameplay.playerTurn = async function (markupCoord) {
     trainerG.isRightChoice = false;
     trainerG.isPerfectChoice = false;
     for (let i = 0; i < trainerG.suggestions.length(); i++) {
-        if (markupCoord.compare(trainerG.suggestions.get(i).coord)) {
+        if (gameplay.playerPlayedCoord.compare(trainerG.suggestions.get(i).coord)) {
             if (trainerG.suggestions.get(i).grade == "A") {
                 trainerG.isPerfectChoice = true;
             }
@@ -120,36 +120,24 @@ gameplay.playerTurn = async function (markupCoord) {
         }
     }
 
-    await gameplay.playerPlay(suggestionToPlay, markupCoord);
+    stats.update();
+
+    if (settings.wrongMoveCorrection || trainerG.isRightChoice) {
+        await trainerG.board.play(suggestionToPlay, trainerG.MOVE_ORIGIN.PLAYER);
+    } else {
+        await trainerG.board.play(await kataGo.analyzeMove(gameplay.playerPlayedCoord), trainerG.MOVE_ORIGIN.PLAYER);
+    }
+
+    selfplay.enableButton();
+
+    if (!cornerPlacer.shouldForce()) {
+        gameplay.suggestionsPromise = kataGo.analyze(trainerG.MOVE_ORIGIN.OPPONENT);
+    }
 
     if (gameplay.shouldShowPlayerOptions()) {
         trainerG.board.nextButton.disabled = false;
     } else {
         await gameplay.nextButtonClickListener();
-    }
-};
-
-gameplay.playerPlay = async function (suggestionToPlay, markupCoord) {
-    stats.update();
-
-    if (settings.wrongMoveCorrection || trainerG.isRightChoice) {
-        await trainerG.board.play(suggestionToPlay, trainerG.MOVE_ORIGIN.PLAYER);
-
-        if (!trainerG.isRightChoice) {
-            gameplay.chosenNotPlayedCoordHistory.add(markupCoord);
-        }
-        
-        selfplay.enableButton();
-
-        if (!trainerG.isRightChoice) {
-            await trainerG.board.draw(markupCoord, "cross");
-        }
-    } else {
-        await trainerG.board.play(await kataGo.analyzeMove(markupCoord), trainerG.MOVE_ORIGIN.PLAYER);
-    }
-
-    if (!cornerPlacer.shouldForce()) {
-        gameplay.suggestionsPromise = kataGo.analyze(trainerG.MOVE_ORIGIN.OPPONENT);
     }
 };
 

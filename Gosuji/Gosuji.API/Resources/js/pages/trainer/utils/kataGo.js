@@ -82,7 +82,7 @@ kataGo.playPlayer = async function (coord, color = trainerG.board.getColor()) {
     return await kataGo.sendRequest("PlayPlayer",
         new Move(color, coord),
         stats.playerResultHistory.get(),
-        gameplay.chosenNotPlayedCoordHistory.get(trainerG.board.get().parent),
+        gameplay.chosenNotPlayedCoordHistory.get(trainerG.board.get()),
         stats.rightStreak,
         stats.perfectStreak,
         stats.rightTopStreak,
