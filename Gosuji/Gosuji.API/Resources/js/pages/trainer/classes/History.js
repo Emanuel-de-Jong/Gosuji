@@ -28,7 +28,11 @@ class History {
 
     get(node=trainerG.board.get()) {
         if (node == null) {
-            return null;
+            return;
+        }
+
+        if (!node.hasOwnProperty(this.nodeKey)) {
+            return;
         }
 
         return node[this.nodeKey];

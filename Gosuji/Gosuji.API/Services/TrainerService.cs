@@ -217,8 +217,8 @@ namespace Gosuji.API.Services
         {
             await Play(move, EMoveOrigin.PLAYER);
 
-            MoveTree.CurrentNode.PlayerResult = playerResult;
-            MoveTree.CurrentNode.Parent.ChosenNotPlayedCoord = chosenNotPlayedCoord;
+            MoveTree.CurrentNode.Parent.PlayerResult = playerResult;
+            MoveTree.CurrentNode.ChosenNotPlayedCoord = chosenNotPlayedCoord;
 
             Game.RightStreak = rightStreak;
             Game.PerfectStreak = perfectStreak;
