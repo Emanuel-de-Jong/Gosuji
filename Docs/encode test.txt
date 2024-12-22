@@ -1,0 +1,111 @@
+GameEncoder gameEncoder = new();
+byte[] data = gameEncoder.Encode(MoveTree);
+
+GameDecoder gameDecoder = new();
+MoveTree moveTree2 = gameDecoder.Decode(data);
+bool equalsResult2 = ReflectionHelper.CompareDifferences(MoveTree, moveTree2, ["Winrate", "ScoreLead"]);
+
+if (Game.EncodedGameData != null)
+{
+    Game.EncodedGameData.Data = data;
+    dbContext.Update(Game.EncodedGameData);
+}
+else
+{
+    Game.EncodedGameData = new(Game.Id, data);
+    await dbContext.EncodedGameDatas.AddAsync(Game.EncodedGameData);
+}
+
+await dbContext.SaveChangesAsync();
+await dbContext.DisposeAsync();
+
+dbContext = await dbContextFactory.CreateDbContextAsync();
+byte[] data3 = (await dbContext.EncodedGameDatas.FindAsync(Game.Id)).Data;
+MoveTree moveTree3 = gameDecoder.Decode(data3);
+bool equalsResult3 = ReflectionHelper.CompareDifferences(MoveTree, moveTree3, ["Winrate", "ScoreLead"]);
+await dbContext.DisposeAsync();
+
+
+
+
+
+        MyClass c1 = new(1) { MyProperty = 1, MySubClass = new(1) { MyProperty = 1 } };
+        MyClass c2 = new(1) { MyProperty = 1, MySubClass = new(1) { MyProperty = 1 } };
+        MyClass c3 = new(2) { MyProperty = 1, MySubClass = new(1) { MyProperty = 1 } };
+        MyClass c4 = new(1) { MyProperty = 2, MySubClass = new(1) { MyProperty = 1 } };
+        MyClass c5 = new(1) { MyProperty = 1, MySubClass = new(2) { MyProperty = 1 } };
+        MyClass c6 = new(1) { MyProperty = 1, MySubClass = new(1) { MyProperty = 2 } };
+
+        MyClass c11 = new(1) { MySubClass = new(1) { MyProperty = 1, MySubSubClass = new() { MyProperty = 1 } } };
+        MyClass c12 = new(1) { MySubClass = new(1) { MyProperty = 1, MySubSubClass = new() { MyProperty = 1 } } };
+        MyClass c13 = new(1) { MySubClass = new(1) { MyProperty = 1, MySubSubClass = new() { MyProperty = 2 } } };
+
+        MyClass c21 = new(1) { MySubClasses = [new(1), new(2)] };
+        MyClass c22 = new(1) { MySubClasses = [new(1), new(2)] };
+        MyClass c23 = new(1) { MySubClasses = [new(1), new(3)] };
+        MyClass c24 = new(1) { MySubClasses = [new(1)] };
+
+        MyClass c31 = new();
+        c31.MySubClass = new(1) { MyClass = c31 };
+        MyClass c32 = new();
+        c32.MySubClass = new(1) { MyClass = c32 };
+        MyClass c33 = new();
+        c33.MySubClass = new(2) { MyClass = c33 };
+
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c1, c2)); // expected: true
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c1, c3)); // expected: false
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c1, c4)); // expected: false
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c1, c5)); // expected: false
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c1, c6)); // expected: false
+
+        Console.WriteLine();
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c11, c12)); // expected: true
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c11, c13)); // expected: false
+
+        Console.WriteLine();
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c21, c22)); // expected: true
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c21, c23)); // expected: false
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c21, c24)); // expected: false
+
+        Console.WriteLine();
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c31, c32)); // expected: true
+        Console.WriteLine(ReflectionHelper.CompareDifferences(c31, c33)); // expected: false
+
+        app.Run();
+    }
+}
+
+public class MyClass
+{
+    public MySubClass MySubClass { get; set; }
+    public List<MySubClass>? MySubClasses { get; set; }
+    public int MyProperty { get; set; }
+    private int MyField;
+
+    public MyClass() { }
+
+    public MyClass(int myField)
+    {
+        MyField = myField;
+    }
+}
+
+public class MySubClass
+{
+    public MySubSubClass? MySubSubClass { get; set; }
+    public MyClass? MyClass { get; set; }
+    public int MyProperty { get; set; }
+    private int MyField;
+
+    public MySubClass() { }
+
+    public MySubClass(int myField)
+    {
+        MyField = myField;
+    }
+}
+
+public class MySubSubClass
+{
+    public int MyProperty { get; set; }
+}

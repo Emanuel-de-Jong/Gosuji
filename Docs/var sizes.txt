@@ -1,0 +1,46 @@
+ENodeIndicator 0 - 50 (6)
+	NODE,
+	MOVE,
+	CURRENT_NODE,
+	MOVE_ORIGIN,
+	CHOSEN_NOT_PLAYED_COORD,
+	RESULT,
+	SUGGESTIONS,
+	END
+
+EMoveIndicator 0 - 25 (5)
+	MOVE_TYPE
+
+ESuggestionsIndicator 0 - 25 (5)
+	ANALYZE_MOVE_SUGGESTION
+	PASS_SUGGESTION
+
+ENodeIndicator.NODE
+	node id 0 - 2_000 (11)
+	EMoveColor 0 - 1 (1)
+	X 0 - 20 (5)
+	Y 0 - 20 (5)
+	EMoveIndicator.MOVE_TYPE
+		MoveType 0 - 25 (5)
+	ENodeIndicator.CURRENT_NODE
+	ENodeIndicator.MOVE_ORIGIN
+		MoveOrigin 0 - 25 (5)
+	ENodeIndicator.CHOSEN_NOT_PLAYED_COORD
+		X
+		Y
+	ENodeIndicator.RESULT
+		Result -10_000 - 10_000 (u15)
+	ENodeIndicator.SUGGESTIONS
+		Visits 1 - 1_000_000 (20)
+		count 1 - 50 (6)
+			X
+			Y
+			Visits 1 - 1_000_000 (20)
+			Winrate 0 - 100_000 (17)
+			ScoreLead -1_000_000 - 1_000_000 (u21)
+			count 0-400 (9)
+				X
+				Y
+		ESuggestionsIndicator.ANALYZE_MOVE_SUGGESTION
+		ESuggestionsIndicator.PASS_SUGGESTION
+ENodeIndicator.END
