@@ -8,7 +8,9 @@ namespace Gosuji.Client.Data
         [NotMapped]
         public const string VERSION = "1.15.3";
         [NotMapped]
-        public const string MODEL = "kata1-b28c512nbt-s7332806912-d4357057652";
+        public const string MODEL = "kata1-b28c512nbt-s8032072448-d4548958859";
+        [NotMapped]
+        public const string BACKEND = "OpenCL"; // OpenCL TensorRT
 
         [Key]
         public long Id { get; set; }
@@ -25,7 +27,7 @@ namespace Gosuji.Client.Data
 
         public static string GetConfig()
         {
-            return File.ReadAllText(@"Resources\KataGo\default_gtp.cfg");
+            return File.ReadAllText($"Resources/KataGo/{BACKEND}/default_gtp.cfg");
         }
 
         public static KataGoVersion GetCurrent()

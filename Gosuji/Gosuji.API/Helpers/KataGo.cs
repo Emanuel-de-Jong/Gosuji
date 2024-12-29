@@ -35,8 +35,8 @@ namespace Gosuji.API.Helpers
             lastMaxVisits = 0;
 
             process = new Process();
-            process.StartInfo.FileName = @"Resources\KataGo\katago.exe";
-            process.StartInfo.Arguments = @"gtp -model Resources\KataGo\" + KataGoVersion.MODEL + ".bin.gz";
+            process.StartInfo.FileName = $"Resources/KataGo/{KataGoVersion.BACKEND}/katago.exe";
+            process.StartInfo.Arguments = $"gtp -model Resources/KataGo/Models/{KataGoVersion.MODEL}.bin.gz";
             process.StartInfo.RedirectStandardOutput = true;
             process.StartInfo.RedirectStandardError = true;
             process.StartInfo.RedirectStandardInput = true;
