@@ -10,7 +10,7 @@ namespace Gosuji.Client.Data
         [NotMapped]
         public const string MODEL = "kata1-b28c512nbt-s8032072448-d4548958859";
         [NotMapped]
-        public const string BACKEND = "OpenCL"; // OpenCL TensorRT
+        public const string BACKEND = "TensorRT"; // OpenCL TensorRT
 
         [Key]
         public long Id { get; set; }
