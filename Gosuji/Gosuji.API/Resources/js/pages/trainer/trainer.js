@@ -5,6 +5,7 @@ import { Ratio } from "./classes/Ratio";
 import { Score } from "./classes/Score";
 import { TrainerBoard } from "./classes/TrainerBoard";
 
+import { boardOverlay } from "./utils/boardOverlay";
 import { kataGo } from "./utils/kataGo";
 import { scoreChart } from "./utils/scoreChart";
 import { ratioChart } from "./utils/ratioChart";
@@ -39,6 +40,7 @@ trainerPage.init = async function (
     trainerG.setPhase(trainerG.PHASE_TYPE.INIT);
     await kataGo.init(trainerConnectionRef);
     await settings.init(trainerSettingConfig);
+    boardOverlay.init();
     trainerG.board.init(
         stoneVolume,
         isPreMoveStoneSound,
@@ -49,13 +51,11 @@ trainerPage.init = async function (
         trainerG.moveOriginHistory.addMissingNodes();
     }
 
-    trainerPage.startButton = document.getElementById("startBtn");
     trainerPage.restartButton = document.getElementById("restartBtn");
     trainerPage.restartButton.disabled = true;
-    trainerPage.newGameButton = document.getElementById("newGameBtn");
-    trainerPage.startButton.addEventListener("click", trainerPage.start);
+    boardOverlay.startOverlayStartBtn.addEventListener("click", trainerPage.start);
     trainerPage.restartButton.addEventListener("click", trainerPage.restartButtonClickListener);
-    trainerPage.newGameButton.addEventListener("click", trainerPage.restartButtonClickListener);
+    boardOverlay.finishedOverlayNewGameBtn.addEventListener("click", trainerPage.restartButtonClickListener);
 
     sgf.init(userName);
     sgfComment.init();
@@ -89,6 +89,7 @@ trainerPage.clear = async function () {
     await selfplay.clear();
     trainerG.clear();
     settings.clear();
+    boardOverlay.clear();
     trainerG.board.init();
     sgf.clear();
     sgfComment.clear();
@@ -151,6 +152,7 @@ export {
     // Score,
     // TrainerBoard,
 
+    // boardOverlay,
     // kataGo,
     // scoreChart,
     // ratioChart,

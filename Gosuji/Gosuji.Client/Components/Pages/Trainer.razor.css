@@ -58,20 +58,60 @@
         padding-bottom: 16px;
     }
 
-    #trainerSettings #presetSettings .row {
-        margin-bottom: 15px;
-    }
+        #trainerSettings #presetSettings .row {
+            margin-bottom: 15px;
+        }
 
-    #trainerSettings #presetSettings .generalPresetOption {
-        font-weight: 600;
-        color: lightblue;
-    }
+        #trainerSettings #presetSettings .generalPresetOption {
+            font-weight: 600;
+            color: lightblue;
+        }
 
 
 #trainerGame {
     position: relative;
     max-width: 725px;
 }
+
+    #trainerGame .boardOverlay {
+        position: absolute;
+        z-index: 30;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(54, 54, 54, 0.5);
+    }
+
+    #trainerGame #preMoveOverlay {
+        background-color: transparent;
+        justify-content: end;
+    }
+
+    #trainerGame #stopPreMovesBtn {
+        margin-bottom: 20px;
+    }
+
+    #trainerGame #finishedOverlay p {
+        margin-bottom: 75px;
+        font-size: 50px;
+        font-weight: 800;
+        text-decoration: underline;
+    }
+
+    #trainerGame #finishedOverlay div {
+        display: flex;
+        justify-content: space-between;
+        width: 60%;
+    }
+
+    #trainerGame #finishedOverlay .btn {
+        margin: 0 15px;
+        width: 100%;
+        text-wrap: nowrap;
+    }
 
     #trainerGame .loadAnimation {
         position: absolute;

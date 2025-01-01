@@ -428,6 +428,19 @@
 
             <div class="flex-item">
                 <div id="trainerGame">
+                    <div id="boardOverlay">
+                        <div id="startOverlay" class="boardOverlay">
+                            <button type="button" class="startBtn btn btn-primary btn-lg">Start</button>
+                        </div>
+                        <div id="finishedOverlay" class="boardOverlay" hidden>
+                            <p>Game finished!</p>
+                            <div>
+                                <button type="button" class="closeBtn btn btn-primary">Close</button>
+                                <button type="button" class="newGameBtn btn btn-primary">New game</button>
+                                <a href="/profile" class="btn btn-primary">Statistics</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="loadAnimation" hidden></div>
                     <div class="board"></div>
                 </div>

@@ -61,46 +61,6 @@
     right: 5px;
 }
 
-#trainerPage #trainerGame .boardOverlay {
-    position: absolute;
-    z-index: 30;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(54, 54, 54, 0.5);
-}
-
-#trainerPage #trainerGame #preMoveOverlay {
-    background-color: transparent;
-    justify-content: end;
-}
-
-#trainerPage #trainerGame #stopPreMovesBtn {
-    margin-bottom: 20px;
-}
-
-#trainerPage #trainerGame #finishedOverlay p {
-    margin-bottom: 75px;
-    font-size: 50px;
-    font-weight: 800;
-    text-decoration: underline;
-}
-
-#trainerPage #trainerGame #finishedOverlay div {
-    display: flex;
-    justify-content: space-between;
-    width: 60%;
-}
-
-#trainerPage #trainerGame #finishedOverlay .btn {
-    margin: 0 15px;
-    width: 100%;
-    text-wrap: nowrap;
-}
-
 #trainerPage #trainerGame #komiDisplay {
     background-color: rgb(0, 0, 0);
     width: 50px;

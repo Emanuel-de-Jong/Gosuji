@@ -62,28 +62,6 @@ class TrainerBoard extends Board {
             .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary btn-sm next" disabled>></button>');
         this.nextButton = this.containerElement.querySelector(".next");
 
-        this.containerElement.querySelector(".besogo-board")
-            .insertAdjacentHTML("afterbegin",`
-                <div id="startOverlay" class="boardOverlay" hidden>
-                    <button type="button" class="btn btn-primary btn-lg" id="startBtn">Start</button>
-                </div>`);
-        this.startOverlay = document.getElementById("startOverlay");
-        if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
-            this.startOverlay.hidden = false;
-        }
-
-        this.containerElement.querySelector(".besogo-board")
-            .insertAdjacentHTML("afterbegin",`
-                <div id="finishedOverlay" class="boardOverlay" hidden>
-                    <p>Game finished!</p>
-                    <div>
-                        <button type="button" class="btn btn-primary" id="closeOverlayBtn">Close</button>
-                        <button type="button" class="btn btn-primary" id="newGameBtn">New game</button>
-                        <a href="/profile" class="btn btn-primary">Statistics</a>
-                    </div>
-                </div>`);
-        this.finishedOverlay = document.getElementById("finishedOverlay");
-
         this.containerElement.querySelector(".besogo-control")
             .insertAdjacentHTML("beforeend", '<button class="bsg" id="deleteBranchBtn"><i class="fa-solid fa-trash"></i></button>');
         this.deleteBranchButton = document.getElementById("deleteBranchBtn");
@@ -103,7 +81,6 @@ class TrainerBoard extends Board {
         this.phaseChangedListener({ phase: trainerG.phase });
 
         if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
-            document.getElementById("closeOverlayBtn").addEventListener("click", () => this.finishedOverlay.hidden = true);
             this.deleteBranchButton.addEventListener("click", this.deleteBranch);
         }
 
