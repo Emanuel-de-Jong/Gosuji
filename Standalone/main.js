@@ -1,12 +1,13 @@
 const path = require('path');
-const { app, BrowserWindow } = require('electron/main')
+const { app, BrowserWindow } = require('electron');
 const { execFile } = require('child_process');
 const express = require('express');
 
-CLIENT_PATH = 'client'
-SERVER_PATH = 'server'
+const CLIENT_PATH = 'client';
+const SERVER_PATH = 'server';
+const PORT = 7171;
 
-const exePath = path.join(__dirname, 'server', 'Gosuji.API.exe');
+const exePath = path.join(__dirname, SERVER_PATH, 'Gosuji.API.exe');
 execFile(exePath, [], { cwd: SERVER_PATH }, (error, stdout, stderr) => {
     if (error) {
         console.error(`Error starting the executable: ${error.message}`);
@@ -14,39 +15,55 @@ execFile(exePath, [], { cwd: SERVER_PATH }, (error, stdout, stderr) => {
     }
     if (stderr) {
         console.error(`stderr: ${stderr}`);
-        return;
     }
     console.log(`stdout: ${stdout}`);
 });
 
 const expressApp = express();
 expressApp.use(express.static(path.join(__dirname, CLIENT_PATH)));
-const port = 7171;
+
+let server;
+let mainWindow;
 
 const createWindow = () => {
-    const win = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            contextIsolation: false,
         },
-    })
+    });
 
-    return win;
-}
+    mainWindow.loadURL(`http://localhost:${PORT}/index.html`);
+
+    mainWindow.on('closed', () => {
+        mainWindow = null;
+    });
+};
 
 app.whenReady().then(() => {
-    expressApp.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`);
+    server = expressApp.listen(PORT, () => {
+        console.log(`Server running at http://localhost:${PORT}`);
 
-        win = createWindow()
-
-        win.loadURL(`http://localhost:${port}/index.html`);
+        createWindow();
     });
-})
+
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow();
+        }
+    });
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
-})
+
+    if (server) {
+        server.close(() => {
+            console.log('Express server closed');
+        });
+    }
+});
