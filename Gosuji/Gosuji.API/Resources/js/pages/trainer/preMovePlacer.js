@@ -1,3 +1,4 @@
+import { boardOverlay } from "./utils/boardOverlay";
 import { kataGo } from "./utils/kataGo";
 import { settings } from "./utils/settings";
 import { sgf } from "./utils/sgf";
@@ -13,22 +14,13 @@ preMovePlacer.MAX_VISIT_DIFF_PERC = 50;
 
 
 preMovePlacer.init = function () {
-    preMovePlacer.clear();
+    boardOverlay.preMoveOverlayStopBtn.addEventListener("click", preMovePlacer.stopButtonClickListener);
     
-    preMovePlacer.stopButton.addEventListener("click", preMovePlacer.stopButtonClickListener);
+    preMovePlacer.clear();
 };
 
 preMovePlacer.clear = function () {
     preMovePlacer.isStopped = true;
-
-    document.querySelector("#trainerGame .besogo-board")
-        .insertAdjacentHTML("afterbegin",`
-            <div id="preMoveOverlay" class="boardOverlay" hidden>
-                <button type="button" class="btn btn-primary" id="stopPreMovesBtn">Stop pre moves</button>
-            </div>`);
-    preMovePlacer.overlay = document.getElementById("preMoveOverlay");
-
-    preMovePlacer.stopButton = document.getElementById("stopPreMovesBtn");
 };
 
 
@@ -38,7 +30,7 @@ preMovePlacer.start = async function () {
     preMovePlacer.isStopped = false;
 
     if (settings.preMovesSwitch) {
-        preMovePlacer.overlay.hidden = false;
+        boardOverlay.preMoveOverlay.hidden = false;
 
         for (let i = 0; i < settings.preMoves; i++) {
             if (preMovePlacer.isStopped) break;
@@ -55,7 +47,7 @@ preMovePlacer.start = async function () {
         await preMovePlacer.play(true);
     }
 
-    preMovePlacer.overlay.hidden = true;
+    boardOverlay.preMoveOverlay.hidden = true;
 
     if (!trainerG.isPassed && !sgf.isSGFLoading) {
         gameplay.start();

@@ -2,6 +2,7 @@ import { History } from "../classes/History";
 import { MoveSuggestionList } from "../classes/MoveSuggestionList";
 import { MoveSuggestion } from "../classes/MoveSuggestion";
 import { TrainerBoard } from "../classes/TrainerBoard";
+import { boardOverlay } from "./boardOverlay";
 import { kataGo } from "./kataGo";
 import { sgf } from "./sgf";
 import { stats } from "./stats";
@@ -122,7 +123,7 @@ trainerG.handleResult = function (result) {
     stats.setResult(resultStr);
     sgf.setResultMeta(resultStr);
 
-    trainerG.board.finishedOverlay.hidden = false;
+    boardOverlay.finishedOverlay.hidden = false;
 };
 
 if (!window.trainer) window.trainer = {};
