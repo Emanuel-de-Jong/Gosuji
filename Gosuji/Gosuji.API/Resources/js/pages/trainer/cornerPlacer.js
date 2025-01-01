@@ -23,6 +23,7 @@ cornerPlacer.CORNERS = {
 
 cornerPlacer.init = function () {
     cornerPlacer.clear();
+    cornerPlacer.isInitialized = true;
 };
 
 cornerPlacer.clear = function () { };

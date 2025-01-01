@@ -15,6 +15,7 @@ sgf.init = function (userName) {
     trainerG.board.addListener(sgf.boardEditorListener);
 
     sgf.clear();
+    sgf.isInitialized = true;
 };
 
 sgf.clear = function () {

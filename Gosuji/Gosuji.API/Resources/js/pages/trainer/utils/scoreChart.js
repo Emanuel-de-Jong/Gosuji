@@ -126,6 +126,7 @@ scoreChart.init = function () {
     theme.themeChangedEvent.add(scoreChart.themeChangedListener);
 
     scoreChart.clear();
+    scoreChart.isInitialized = true;
 };
 
 scoreChart.clear = function () {

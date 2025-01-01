@@ -30,6 +30,7 @@ stats.init = async function () {
     trainerG.board.addListener(stats.drawStats);
 
     await stats.clear();
+    stats.isInitialized = true;
 };
 
 stats.clear = async function () {

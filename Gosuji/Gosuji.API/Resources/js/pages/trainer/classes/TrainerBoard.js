@@ -29,7 +29,12 @@ class TrainerBoard extends Board {
     }
 
     init(stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
-        if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
+        let isFirstInit = false;
+        if (!this.isInitialized) {
+            isFirstInit = true;
+        }
+
+        if (isFirstInit) {
             this.setIsPreMoveStoneSound(isPreMoveStoneSound);
             this.setIsSelfplayStoneSound(isSelfplayStoneSound);
 
@@ -80,7 +85,7 @@ class TrainerBoard extends Board {
 
         this.phaseChangedListener({ phase: trainerG.phase });
 
-        if (trainerG.phase == trainerG.PHASE_TYPE.INIT) {
+        if (isFirstInit) {
             this.deleteBranchButton.addEventListener("click", this.deleteBranch);
         }
 
@@ -90,6 +95,12 @@ class TrainerBoard extends Board {
         }
 
         this.containerElement.hidden = false;
+
+        if (sgf.isInitialized) {
+            sgf.clear();
+        }
+
+        this.isInitialized = true;
 
         // console.log(besogo);
         // console.log(this.editor);

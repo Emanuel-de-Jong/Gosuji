@@ -20,6 +20,8 @@ boardOverlay.init = function () {
     boardOverlay.automateHeight();
 
     boardOverlay.finishedOverlayCloseBtn.addEventListener("click", () => boardOverlay.finishedOverlay.hidden = true);
+
+    boardOverlay.isInitialized = true;
 };
 
 boardOverlay.clear = function () {

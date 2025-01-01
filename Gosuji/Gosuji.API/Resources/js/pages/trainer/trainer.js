@@ -79,6 +79,8 @@ trainerPage.init = async function (
 
         await trainerPage.start();
     }
+
+    trainerPage.isInitialized = true;
 };
 
 trainerPage.clear = async function () {

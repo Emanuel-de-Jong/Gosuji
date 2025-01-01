@@ -79,6 +79,7 @@ ratioChart.init = function () {
     theme.themeChangedEvent.add(ratioChart.themeChangedListener);
 
     ratioChart.clear();
+    ratioChart.isInitialized = true;
 };
 
 ratioChart.clear = function () {

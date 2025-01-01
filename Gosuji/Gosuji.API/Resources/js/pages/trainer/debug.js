@@ -24,6 +24,7 @@ debug.init = function () {
     // debug.logAllFuncCalls();
 
     debug.clear();
+    debug.isInitialized = true;
 };
 
 debug.clear = function () { };

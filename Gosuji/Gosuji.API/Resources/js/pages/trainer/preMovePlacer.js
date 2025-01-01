@@ -17,6 +17,7 @@ preMovePlacer.init = function () {
     boardOverlay.preMoveOverlayStopBtn.addEventListener("click", preMovePlacer.stopButtonClickListener);
     
     preMovePlacer.clear();
+    preMovePlacer.isInitialized = true;
 };
 
 preMovePlacer.clear = function () {

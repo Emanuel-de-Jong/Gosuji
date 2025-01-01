@@ -8,7 +8,7 @@ let sgfComment = { id: "sgfComment" };
 
 
 sgfComment.init = function () {
-    
+    sgfComment.isInitialized = true;
 };
 
 sgfComment.clear = function () {

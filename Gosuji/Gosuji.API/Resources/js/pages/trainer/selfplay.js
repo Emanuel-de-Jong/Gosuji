@@ -19,6 +19,7 @@ selfplay.init = async function () {
     selfplay.lastMoveTime = 0;
 
     await selfplay.clear();
+    selfplay.isInitialized = true;
 };
 
 selfplay.clear = async function () {

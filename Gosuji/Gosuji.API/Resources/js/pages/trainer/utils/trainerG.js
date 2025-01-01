@@ -44,6 +44,7 @@ trainerG.init = function (trainerRef) {
     trainerG.board = new TrainerBoard();
 
     trainerG.clear();
+    trainerG.isInitialized = true;
 };
 
 trainerG.clear = function () {

@@ -24,6 +24,7 @@ gameplay.init = function () {
     trainerG.board.nextButton.addEventListener("click", gameplay.nextButtonClickListener);
 
     gameplay.clear();
+    gameplay.isInitialized = true;
 };
 
 gameplay.clear = function () {

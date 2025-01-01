@@ -12,6 +12,8 @@ let kataGo = { id: "kataGo" };
 kataGo.init = async function (serviceRef) {
     kataGo.serviceRef = serviceRef;
     kataGo.isStarted = false;
+
+    kataGo.isInitialized = true;
 };
 
 kataGo.clear = async function () {

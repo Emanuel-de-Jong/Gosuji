@@ -101,6 +101,8 @@ settings.init = async function (trainerSettingConfig) {
         "input",
         settings.inputAndSelectInputListener
     );
+    settings.boardsizeElement.addEventListener("input", settings.setBoardsize);
+    settings.colorTypeElement.addEventListener("input", settings.setColorType);
     settings.customKomiElement.addEventListener("input", settings.toggleCustomKomi);
     settings.handicapElement.addEventListener("input", settings.setKomi);
     settings.rulesetElement.addEventListener("input", settings.setRuleset);
@@ -116,6 +118,7 @@ settings.init = async function (trainerSettingConfig) {
     await settings.syncWithCS(trainerSettingConfig);
 
     settings.clear();
+    settings.isInitialized = true;
 };
 
 settings.clear = function () {
@@ -235,6 +238,15 @@ settings.hideInvalidMessage = function (input) {
 
     let messageDiv = utils.getSiblingByClass(input, "form-invalid-message");
     messageDiv.textContent = "";
+};
+
+settings.setBoardsize = async function () {
+    trainerG.board.init();
+};
+
+settings.setColorType = async function () {
+    trainerG.setColor(settings.colorType);
+    trainerG.board.init();
 };
 
 settings.toggleCustomKomi = async function () {
