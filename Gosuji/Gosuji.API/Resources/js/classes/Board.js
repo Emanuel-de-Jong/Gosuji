@@ -47,7 +47,9 @@ if (typeof Board === "undefined") {
             nowheel: true,
         };
 
-        init(boardsize, handicap, sgfContent, stoneVolume) {
+        async init(boardsize, handicap, sgfContent, stoneVolume) {
+            this.listeners = [];
+
             if (this.placeStoneAudios == null) {
                 this.placeStoneAudios = [];
 
@@ -95,6 +97,11 @@ if (typeof Board === "undefined") {
         }
 
         addListener(listener) {
+            if (this.listeners.includes(listener)) {
+                return;
+            }
+            this.listeners.push(listener);
+            
             this.editor.addListener((event) => {
                 if (event.boardCall) {
                     return;

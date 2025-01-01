@@ -41,7 +41,7 @@ trainerPage.init = async function (
     await kataGo.init(trainerConnectionRef);
     await settings.init(trainerSettingConfig);
     boardOverlay.init();
-    trainerG.board.init(
+    await trainerG.board.init(
         stoneVolume,
         isPreMoveStoneSound,
         isSelfplayStoneSound);
@@ -92,7 +92,7 @@ trainerPage.clear = async function () {
     trainerG.clear();
     settings.clear();
     boardOverlay.clear();
-    trainerG.board.init();
+    await trainerG.board.init();
     sgf.clear();
     sgfComment.clear();
     scoreChart.clear();

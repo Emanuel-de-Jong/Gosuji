@@ -12,7 +12,7 @@ sgf.init = function (userName) {
     sgf.sgfLoadingEvent = new CEvent(sgf.sgfLoadingListener);
     sgf.sgfLoadedEvent = new CEvent(sgf.sgfLoadedListener);
 
-    trainerG.board.addListener(sgf.boardEditorListener);
+    trainerG.board.initEvent.add(sgf.setBoardEditorListeners);
 
     sgf.clear();
     sgf.isInitialized = true;
@@ -21,6 +21,12 @@ sgf.init = function (userName) {
 sgf.clear = function () {
     sgf.isSGFLoading = false;
     sgf.isThirdParty = false;
+
+    sgf.setBoardEditorListeners();
+};
+
+sgf.setBoardEditorListeners = function () {
+    trainerG.board.addListener(sgf.boardEditorListener);
 
     sgf.setRuleset(trainerG.gameLoadInfo ? trainerG.gameLoadInfo.ruleset : settings.ruleset);
     sgf.setKomi(trainerG.gameLoadInfo ? trainerG.gameLoadInfo.komi : settings.komi);

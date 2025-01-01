@@ -27,7 +27,7 @@ stats.init = async function () {
     stats.resultDivElement = document.getElementById("resultDiv");
     stats.resultElement = document.getElementById("result");
 
-    trainerG.board.addListener(stats.drawStats);
+    trainerG.board.initEvent.add(stats.setBoardEditorListeners);
 
     await stats.clear();
     stats.isInitialized = true;
@@ -37,6 +37,8 @@ stats.clear = async function () {
     stats.playerResultHistory = new History(stats.PLAYER_RESULT_HISTORY_NAME);
     stats.resultHistory = new History(stats.RESULT_HISTORY_NAME);
 
+    stats.setBoardEditorListeners();
+
     await stats.clearSuggestions();
     stats.clearResult();
 
@@ -44,6 +46,10 @@ stats.clear = async function () {
     stats.perfectStreak = trainerG.gameLoadInfo ? trainerG.gameLoadInfo.perfectStreak : 0;
     stats.rightTopStreak = trainerG.gameLoadInfo ? trainerG.gameLoadInfo.rightTopStreak : 0;
     stats.perfectTopStreak = trainerG.gameLoadInfo ? trainerG.gameLoadInfo.perfectTopStreak : 0;
+};
+
+stats.setBoardEditorListeners = function () {
+    trainerG.board.addListener(stats.drawStats);
 };
 
 

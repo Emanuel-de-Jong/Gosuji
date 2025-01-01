@@ -55,8 +55,8 @@
     {
         await base.OnInitializedAsync();
 
-        // navigationManager.NavigateTo("settings");
-        // return;
+        navigationManager.NavigateTo("learn/trainer");
+        return;
 
         changelogs = await dataAPI.GetChangelogs();
         if (changelogs != null)

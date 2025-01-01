@@ -241,12 +241,12 @@ settings.hideInvalidMessage = function (input) {
 };
 
 settings.setBoardsize = async function () {
-    trainerG.board.init();
+    await trainerG.board.init();
 };
 
 settings.setColorType = async function () {
     trainerG.setColor(settings.colorType);
-    trainerG.board.init();
+    await trainerG.board.init();
 };
 
 settings.toggleCustomKomi = async function () {

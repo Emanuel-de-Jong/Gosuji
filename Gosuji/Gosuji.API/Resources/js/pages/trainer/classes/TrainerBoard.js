@@ -28,13 +28,15 @@ class TrainerBoard extends Board {
         }
     }
 
-    init(stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
+    async init(stoneVolume, isPreMoveStoneSound, isSelfplayStoneSound) {
         let isFirstInit = false;
         if (!this.isInitialized) {
             isFirstInit = true;
         }
 
         if (isFirstInit) {
+            this.initEvent = new CEvent();
+
             this.setIsPreMoveStoneSound(isPreMoveStoneSound);
             this.setIsSelfplayStoneSound(isSelfplayStoneSound);
 
@@ -49,7 +51,7 @@ class TrainerBoard extends Board {
             trainerG.phaseChangedEvent.add(this.phaseChangedListener);
         }
 
-        super.init(settings.boardsize, settings.handicap, null, stoneVolume);
+        await super.init(settings.boardsize, settings.handicap, null, stoneVolume);
 
         this.containerElement = document.getElementById("trainerGame");
         this.containerElement.hidden = true;
@@ -96,11 +98,8 @@ class TrainerBoard extends Board {
 
         this.containerElement.hidden = false;
 
-        if (sgf.isInitialized) {
-            sgf.clear();
-        }
-
         this.isInitialized = true;
+        await this.initEvent.dispatchAsync();
 
         // console.log(besogo);
         // console.log(this.editor);
