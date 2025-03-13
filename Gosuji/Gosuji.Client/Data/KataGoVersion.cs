@@ -7,10 +7,11 @@ namespace Gosuji.Client.Data
     {
         [NotMapped]
         public const string VERSION = "1.15.3";
+        // Download: https://media.katagotraining.org/uploaded/networks/models/kata1/kata1-b28c512nbt-s8032072448-d4548958859.bin.gz
         [NotMapped]
         public const string MODEL = "kata1-b28c512nbt-s8032072448-d4548958859";
         [NotMapped]
-        public const string BACKEND = "TensorRT"; // OpenCL TensorRT
+        public const string BACKEND = "OpenCL"; // OpenCL TensorRT
 
         [Key]
         public long Id { get; set; }
