@@ -185,18 +185,21 @@ namespace Gosuji.API.Helpers
                 UserName = "Admino",
                 Email = "admino@gmail.com",
                 EmailConfirmed = true,
+                BackupCode = "ABC"
             }, password).Wait();
             userManager.CreateAsync(new()
             {
                 UserName = "Bob",
                 Email = "bob@gmail.com",
                 EmailConfirmed = true,
+                BackupCode = "BCD"
             }, password).Wait();
             userManager.CreateAsync(new()
             {
                 UserName = "Jessy",
                 Email = "jessy@gmail.com",
                 EmailConfirmed = false,
+                BackupCode = "CDE"
             }, password).Wait();
         }
 
