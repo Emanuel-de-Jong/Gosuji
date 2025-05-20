@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
   "author": "Manuel",
   "license": "ISC",
@@ -14,5 +15,26 @@
   "devDependencies": {
     "electron": "^36.2.1",
     "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.example.gosuji",
+    "productName": "Gosuji",
+    "directories": {
+      "output": "dist"
+    },
+    "extraResources": [
+      {
+        "from": "client",
+        "to": "client"
+      },
+      {
+        "from": "api",
+        "to": "api"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    }
   }
 }
