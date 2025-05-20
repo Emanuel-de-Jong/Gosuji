@@ -22,10 +22,18 @@ namespace Gosuji.Client.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
+            if (G.IsFirstPage)
+            {
+                G.IsFirstPage = false;
 
-            // navigationManager.NavigateTo("learn/trainer");
-            // return;
+                if (G.IsStandalone)
+                {
+                    navigationManager.NavigateTo("learn/trainer");
+                    return;
+                }
+            }
+
+            await base.OnInitializedAsync();
 
             changelogs = await dataAPI.GetChangelogs();
             if (changelogs != null)
