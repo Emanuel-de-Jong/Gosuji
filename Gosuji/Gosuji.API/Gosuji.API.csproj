@@ -14,6 +14,11 @@
   </Target>
 
   <ItemGroup>
+	<Content Include="Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf" CopyToOutputDirectory="PreserveNewest" />
+	<Content Include="Resources\gosuji.db" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="HtmlSanitizer" Version="8.0.865" />
     <PackageReference Include="IGOEnchi.GoGameSgf" Version="1.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />

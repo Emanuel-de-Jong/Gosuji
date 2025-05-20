@@ -138,6 +138,8 @@ namespace Gosuji.API
 
             WebApplication app = builder.Build();
 
+            app.Urls.Add(builder.Configuration["BackendUrl"]);
+
             app.UseRateLimiter();
 
             if (builder.Environment.IsDevelopment())
