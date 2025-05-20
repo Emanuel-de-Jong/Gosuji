@@ -1,8 +1,8 @@
 # Custom
 client/*
-server/*
+api/*
 !client/.gitkeep
-!server/.gitkeep
+!api/.gitkeep
 
 # Logs
 logs

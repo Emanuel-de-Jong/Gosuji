@@ -4,11 +4,11 @@ const { execFile } = require('child_process');
 const express = require('express');
 
 const CLIENT_PATH = 'client';
-const SERVER_PATH = 'server';
+const API_PATH = 'api';
 const PORT = 5001;
 
-const exePath = path.join(__dirname, SERVER_PATH, 'Gosuji.API.exe');
-execFile(exePath, [], { cwd: SERVER_PATH }, (error, stdout, stderr) => {
+const exePath = path.join(__dirname, API_PATH, 'Gosuji.API.exe');
+execFile(exePath, [], { cwd: API_PATH }, (error, stdout, stderr) => {
     if (error) {
         console.error(`Error starting the executable: ${error.message}`);
         return;
@@ -22,7 +22,7 @@ execFile(exePath, [], { cwd: SERVER_PATH }, (error, stdout, stderr) => {
 const expressApp = express();
 expressApp.use(express.static(path.join(__dirname, CLIENT_PATH)));
 
-let server;
+let clientServer;
 let mainWindow;
 
 const createWindow = () => {
@@ -43,8 +43,8 @@ const createWindow = () => {
 };
 
 app.whenReady().then(() => {
-    server = expressApp.listen(PORT, () => {
-        console.log(`Server running at http://localhost:${PORT}`);
+    clientServer = expressApp.listen(PORT, () => {
+        console.log(`Client server running at http://localhost:${PORT}`);
 
         createWindow();
     });
@@ -61,9 +61,9 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 
-    if (server) {
-        server.close(() => {
-            console.log('Express server closed');
+    if (clientServer) {
+        clientServer.close(() => {
+            console.log('Client server closed');
         });
     }
 });
