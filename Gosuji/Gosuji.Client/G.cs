@@ -9,12 +9,16 @@ namespace Gosuji.Client
 {
     public static class G
     {
+        public static bool IsStandalone = true;
+
         public static LogLevel LogLevel =
 #if DEBUG
                 LogLevel.Trace;
 #else
                 LogLevel.None;
 #endif
+
+        public static bool IsFirstPage = true;
 
         public static CStatusMessage? StatusMessage = null;
 

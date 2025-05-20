@@ -46,8 +46,8 @@ namespace Gosuji.API.Services
             }
 
             JwtSecurityToken tokenObj = new(
-                issuer: configuration["Jwt:Issuer"],
-                audience: configuration["Jwt:Audience"],
+                issuer: configuration["BackendUrl"],
+                audience: configuration["FrontendUrl"],
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(5),
                 signingCredentials: creds);

@@ -7,11 +7,6 @@
 
 @inherits CustomPage
 
-@inject AuthenticationStateProvider authenticationStateProvider
-@inject DataAPI dataAPI
-@inject NavigationManager navigationManager
-@inject IStringLocalizer<General> tl
-
 <PageTitle>Gosuji</PageTitle>
 
 <div id="homePage">
@@ -47,21 +42,3 @@
         }
     </div>
 </div>
-
-@code {
-    private Changelog[]? changelogs;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        navigationManager.NavigateTo("learn/trainer");
-        return;
-
-        changelogs = await dataAPI.GetChangelogs();
-        if (changelogs != null)
-        {
-            changelogs = changelogs.OrderByDescending(c => c.Date).ToArray();
-        }
-    }
-}

@@ -2,6 +2,8 @@
 
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject SettingConfigService settingConfigService
+@inject UserAPI userAPI
+@inject NavigationManager navigationManager
 
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(App).Assembly">
@@ -40,6 +42,21 @@
             isInitialized = true;
 
             ClaimsPrincipal claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+
+            if (G.IsStandalone && (claimsPrincipal.Identity == null || !claimsPrincipal.Identity.IsAuthenticated))
+            {
+                VMLogin login = new VMLogin
+                    {
+                        UserName = "DefaultUser",
+                        Password = "@Password1"
+                    };
+                APIResponse apiResponse = await userAPI.Login(login);
+                if (!G.StatusMessage.HandleAPIResponse(apiResponse))
+                {
+                    navigationManager.NavigateTo("/", true);
+                }
+            }
+
             if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
             {
                 if (await settingConfigService.FromDb())

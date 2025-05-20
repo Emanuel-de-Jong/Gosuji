@@ -1,0 +1,32 @@
+{
+  "name": "gosuji",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "Manuel",
+  "license": "ISC",
+  "description": "Gosuji",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "electron": "^36.2.1",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.example.gosuji",
+    "productName": "Gosuji",
+    "directories": {
+      "output": "../build"
+    },
+    "win": {
+      "artifactName": "${productName}.${ext}",
+      "target": "portable",
+      "icon": "icon.ico"
+    },
+    "asar": false
+  }
+}

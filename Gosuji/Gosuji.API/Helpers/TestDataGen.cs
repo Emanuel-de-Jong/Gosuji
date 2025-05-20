@@ -176,30 +176,34 @@ namespace Gosuji.API.Helpers
             dbContext.Dispose();
         }
 
+        private string CreateBackupCode()
+        {
+            return Guid.NewGuid().ToString().Replace("-", "");
+        }
+
         public void GenerateUsers()
         {
-            int settingConfigIndex = 0;
             string password = "@Password1";
             userManager.CreateAsync(new()
             {
-                UserName = "Admino",
-                Email = "admino@gmail.com",
+                UserName = "DefaultUser",
+                Email = "defaultuser@gmail.com",
                 EmailConfirmed = true,
-                BackupCode = "ABC"
+                BackupCode = CreateBackupCode()
             }, password).Wait();
             userManager.CreateAsync(new()
             {
                 UserName = "Bob",
                 Email = "bob@gmail.com",
                 EmailConfirmed = true,
-                BackupCode = "BCD"
+                BackupCode = CreateBackupCode()
             }, password).Wait();
             userManager.CreateAsync(new()
             {
                 UserName = "Jessy",
                 Email = "jessy@gmail.com",
                 EmailConfirmed = false,
-                BackupCode = "CDE"
+                BackupCode = CreateBackupCode()
             }, password).Wait();
         }
 
@@ -241,7 +245,7 @@ namespace Gosuji.API.Helpers
             Dictionary<string, string> roleIds = dbContext.Roles.ToDictionary(r => r.Name, r => r.Id);
             dbContext.UserRoles.AddRange([
                 new() {
-                    UserId = userIds["Admino"],
+                    UserId = userIds["DefaultUser"],
                     RoleId = roleIds["Owner"],
                 },
             ]);
