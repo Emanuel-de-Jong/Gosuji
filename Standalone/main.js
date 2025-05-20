@@ -3,18 +3,20 @@ const { app, BrowserWindow } = require('electron');
 const { spawn } = require('child_process');
 const express = require('express');
 
-const CLIENT_PATH = app.isPackaged
-  ? path.join(process.resourcesPath, 'client')
-  : path.join(__dirname, 'client');
+const getResourcePath = () => {
+  return app.isPackaged 
+    ? path.join(process.resourcesPath)
+    : __dirname;
+};
 
-const API_EXE_PATH = app.isPackaged
-  ? path.join(process.resourcesPath, 'api', 'Gosuji.API.exe')
-  : path.join(__dirname, 'api', 'Gosuji.API.exe');
+const resourcePath = getResourcePath();
 
+const CLIENT_PATH = path.join(resourcePath, 'client');
+const API_PATH = path.join(resourcePath, 'api');
 const CLIENT_PORT = 5001;
 
-const apiProcess = spawn(API_EXE_PATH, [], {
-  cwd: path.dirname(API_EXE_PATH)
+const apiProcess = spawn(path.join(API_PATH, 'Gosuji.API.exe'), [], {
+  cwd: API_PATH
 });
 
 apiProcess.stdout.on('data', (data) => console.log(`API: ${data}`));
@@ -23,7 +25,7 @@ apiProcess.stderr.on('data', (data) => console.error(`API ERROR: ${data}`));
 const clientApp = express();
 clientApp.use(express.static(CLIENT_PATH));
 const clientServer = clientApp.listen(CLIENT_PORT, () => {
-  console.log(`Blazor client served at http://localhost:${CLIENT_PORT}`);
+  console.log(`Client served at http://localhost:${CLIENT_PORT}`);
 });
 
 function createWindow() {
@@ -43,8 +45,8 @@ app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    clientServer.close();
     apiProcess.kill();
+    clientServer.close();
     app.quit();
   }
 });

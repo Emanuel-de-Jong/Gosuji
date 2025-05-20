@@ -25,16 +25,19 @@
     "extraResources": [
       {
         "from": "client",
-        "to": "client"
+        "to": "client",
+        "filter": ["**/*"]
       },
       {
         "from": "api",
-        "to": "api"
+        "to": "api",
+        "filter": ["**/*"]
       }
     ],
     "win": {
-      "target": "nsis",
+      "target": "portable",
       "icon": "icon.ico"
-    }
+    },
+    "asar": false
   }
 }
