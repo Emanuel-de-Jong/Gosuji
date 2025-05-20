@@ -1,9 +1,6 @@
 # Custom
-client/*
-api/*
-!client/.gitkeep
-!api/.gitkeep
-builder_out/
+app/client/*
+app/api/*
 build/
 
 # Logs

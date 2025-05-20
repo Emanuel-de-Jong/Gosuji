@@ -5,7 +5,7 @@ const express = require('express');
 
 const getResourcePath = () => {
   return app.isPackaged 
-    ? path.join(process.resourcesPath)
+    ? path.join(process.resourcesPath, "app")
     : __dirname;
 };
 

@@ -20,21 +20,10 @@
     "appId": "com.example.gosuji",
     "productName": "Gosuji",
     "directories": {
-      "output": "builder_out"
+      "output": "../build"
     },
-    "extraResources": [
-      {
-        "from": "client",
-        "to": "client",
-        "filter": ["**/*"]
-      },
-      {
-        "from": "api",
-        "to": "api",
-        "filter": ["**/*"]
-      }
-    ],
     "win": {
+      "artifactName": "${productName}.${ext}",
       "target": "portable",
       "icon": "icon.ico"
     },
