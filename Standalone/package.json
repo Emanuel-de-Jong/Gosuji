@@ -8,8 +8,11 @@
   "author": "Manuel",
   "license": "ISC",
   "description": "Gosuji",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
   "devDependencies": {
     "electron": "^36.2.1",
-    "express": "^5.1.0"
+    "electron-builder": "^26.0.12"
   }
 }
