@@ -3,6 +3,7 @@
 @inject AuthenticationStateProvider authenticationStateProvider
 @inject SettingConfigService settingConfigService
 @inject UserAPI userAPI
+@inject NavigationManager navigationManager
 
 <CascadingAuthenticationState>
     <Router AppAssembly="typeof(App).Assembly">
@@ -52,7 +53,7 @@
                 APIResponse apiResponse = await userAPI.Login(login);
                 if (!G.StatusMessage.HandleAPIResponse(apiResponse))
                 {
-                    claimsPrincipal = (await authenticationStateProvider.GetAuthenticationStateAsync()).User;
+                    navigationManager.NavigateTo("/", true);
                 }
             }
 
