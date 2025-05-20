@@ -20,7 +20,7 @@
     "appId": "com.example.gosuji",
     "productName": "Gosuji",
     "directories": {
-      "output": "dist"
+      "output": "builder_out"
     },
     "extraResources": [
       {
