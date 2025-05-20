@@ -22,16 +22,14 @@ const clientServer = clientApp.listen(CLIENT_PORT, () => {
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false,
+            nodeIntegration: false,
+            contextIsolation: true,
             webSecurity: false
         }
     });
 
-    win.webContents.openDevTools();
+    win.maximize();
 
     win.loadURL(`http://localhost:${CLIENT_PORT}`);
 }
