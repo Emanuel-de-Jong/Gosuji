@@ -46,8 +46,8 @@ namespace Gosuji.API
                 ValidateAudience = true,
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings["Issuer"],
-                ValidAudience = jwtSettings["Audience"],
+                ValidIssuer = builder.Configuration["BackendUrl"],
+                ValidAudience = builder.Configuration["FrontendUrl"],
                 IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
                 ClockSkew = TimeSpan.Zero
             };
@@ -157,7 +157,7 @@ namespace Gosuji.API
 
             app.UseCors("wasm");
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             // Enable authentication and authorization after CORS Middleware
             // processing (UseCors) in case the Authorization Middleware tries
