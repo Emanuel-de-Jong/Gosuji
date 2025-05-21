@@ -15,6 +15,26 @@ function getResourcePath() {
     : __dirname;
 }
 
+const resourcePath = getResourcePath();
+const clientPath = path.join(resourcePath, 'client');
+const apiPath = path.join(resourcePath, 'api');
+
+let clientApp;
+
+function setupClientApp() {
+  clientApp = express();
+  clientApp.use(express.static(clientPath));
+
+  clientApp.get('*', (req, res) => {
+    res.sendFile(path.join(clientPath, 'index.html'));
+  });
+
+  clientApp.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+  });
+}
+
 function createWindow() {
   const window = new BrowserWindow({
     webPreferences: {
@@ -26,17 +46,11 @@ function createWindow() {
 
   window.maximize();
   window.loadURL(`http://localhost:${CLIENT_PORT}`);
-
-  return window;
 }
 
-let apiProcess, clientApp, clientServer;
+let apiProcess, clientServer;
 
 async function start() {
-  const resourcePath = getResourcePath();
-  const clientPath = path.join(resourcePath, 'client');
-  const apiPath = path.join(resourcePath, 'api');
-
   apiProcess = spawn(path.join(apiPath, 'Gosuji.API.exe'), [], {
     cwd: apiPath
   });
@@ -44,8 +58,8 @@ async function start() {
   apiProcess.stdout.on('data', (data) => console.log(`API: ${data}`));
   apiProcess.stderr.on('data', (data) => console.error(`API ERROR: ${data}`));
 
-  clientApp = express();
-  clientApp.use(express.static(clientPath));
+  setupClientApp();
+
   clientServer = clientApp.listen(CLIENT_PORT, () => {
     console.log(`Client served at http://localhost:${CLIENT_PORT}`);
   });
