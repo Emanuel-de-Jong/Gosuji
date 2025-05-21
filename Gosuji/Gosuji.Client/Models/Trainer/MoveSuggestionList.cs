@@ -58,6 +58,13 @@
 
         public void FilterByVisits(double minVisitsPerc, double maxVisitDiffPerc)
         {
+            if (Suggestions.Count == 0 || (Suggestions.Count == 1 && PassSuggestion == null))
+            {
+                return;
+            }
+
+            MoveSuggestion failsaveSuggestion = Suggestions[0];
+
             int highestVisits = Suggestions.Max(s => s.Visits);
 
             int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * Visits);
@@ -82,10 +89,20 @@
             {
                 Suggestions.Remove(suggestion);
             }
+
+            if (Suggestions.Count == 0)
+            {
+                Suggestions.Add(failsaveSuggestion);
+            }
         }
 
         public void FilterByScoreLead(EMoveColor color)
         {
+            if (Suggestions.Count == 0 || (Suggestions.Count == 1 && PassSuggestion == null))
+            {
+                return;
+            }
+
             double bestScoreLead = color == EMoveColor.BLACK
                 ? Suggestions.Max(s => s.Score.ScoreLead)
                 : Suggestions.Min(s => s.Score.ScoreLead);
