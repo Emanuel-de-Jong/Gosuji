@@ -58,14 +58,17 @@ async function start() {
 
 start();
 
-app.on('window-all-closed', async () => {
-  if (process.platform !== 'darwin') {
-    clientServer.close();
-
-    // Wait for API to save potential game
-    await sleep(1500);
-    apiProcess.kill('SIGTERM');
-
-    app.quit();
+app.on('window-all-closed', () => {
+  if (process.platform === 'darwin') {
+    return;
   }
+
+  clientServer.close();
+
+  // Wait for API to save potential game
+  setTimeout(() => apiProcess.kill('SIGTERM'), 1500);
+
+  apiProcess.on('close', () => {
+    app.quit();
+  });
 });
