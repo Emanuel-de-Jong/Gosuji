@@ -2,6 +2,7 @@ const path = require('path');
 const { app, BrowserWindow } = require('electron');
 const { spawn } = require('child_process');
 const express = require('express');
+const fs = require('fs');
 
 const CLIENT_PORT = 5001;
 
@@ -18,9 +19,28 @@ function getResourcePath() {
 const resourcePath = getResourcePath();
 const clientPath = path.join(resourcePath, 'client');
 const apiPath = path.join(resourcePath, 'api');
+const logPath = 'error.log';
+
+const logStream = fs.createWriteStream(logPath, { flags: 'a' });
+function logToFile(...args) {
+  const message = args.map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg))).join(' ');
+  const timestamp = new Date().toISOString();
+  logStream.write(`[${timestamp}] ${message}\n`);
+}
+
+['log', 'error', 'warn', 'info'].forEach(method => {
+  const orig = console[method];
+  console[method] = (...args) => {
+    logToFile(...args);
+    orig.apply(console, args);
+  };
+});
+
+app.on('before-quit', (e) => {
+  console.log('Closing...');
+});
 
 let clientApp;
-
 function setupClientApp() {
   clientApp = express();
   clientApp.use(express.static(clientPath));
@@ -48,7 +68,6 @@ function createWindow() {
 }
 
 let apiProcess, clientServer;
-
 async function run() {
   apiProcess = spawn(path.join(apiPath, 'Gosuji.API.exe'), [], {
     cwd: apiPath
