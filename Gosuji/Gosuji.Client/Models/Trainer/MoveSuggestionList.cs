@@ -67,7 +67,7 @@
 
             int highestVisits = Suggestions.Max(s => s.Visits);
 
-            int minVisitThreshold = (int)Math.Min(200.0, Visits/3.5);
+            int minVisitThreshold = (int)Math.Min(150.0, Visits/3.5);
             int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * highestVisits);
             minVisits = Math.Max(minVisits, minVisitThreshold);
 

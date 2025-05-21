@@ -40,8 +40,14 @@ if (Test-Path $appClientPath) {
 Copy-Item -Path $apiPublishPath -Destination "app\api" -Recurse
 Copy-Item -Path "$($clientPublishPath)\wwwroot\.client" -Destination "app\client" -Recurse
 
-if (Test-Path "build") {
-    Remove-Item -Path "build" -Recurse -Force
+$appLogPath = "app\error.log"
+if (Test-Path $appLogPath) {
+    Remove-Item -Path $appLogPath -Force
+}
+
+$buildPath = "build";
+if (Test-Path $buildPath) {
+    Remove-Item -Path $buildPath -Recurse -Force
 }
 
 npm --prefix "app" run build

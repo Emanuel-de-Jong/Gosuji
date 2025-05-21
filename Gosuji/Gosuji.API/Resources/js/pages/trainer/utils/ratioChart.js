@@ -110,7 +110,7 @@ ratioChart.getRatio = function (rangeStart, rangeEnd = Number.MAX_SAFE_INTEGER, 
         node = node.parent;
 
         let playerResult = stats.playerResultHistory.get(node);
-        if (!playerResult) continue;
+        if (playerResult == null) continue;
 
         playerResults.push(playerResult);
     }
