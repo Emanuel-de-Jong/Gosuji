@@ -67,8 +67,11 @@
 
             int highestVisits = Suggestions.Max(s => s.Visits);
 
-            int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * Visits);
-            int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(Visits, highestVisits));
+            int minVisitThreshold = (int)Math.Min(200.0, Visits/3.5);
+            int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * highestVisits);
+            minVisits = Math.Max(minVisits, minVisitThreshold);
+
+            int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * highestVisits);
 
             int lastSuggestionVisits = Suggestions[0].Visits;
             List<MoveSuggestion> suggestionsToRem = [];
