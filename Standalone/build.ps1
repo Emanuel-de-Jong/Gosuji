@@ -11,20 +11,34 @@ foreach ($arg in $args) {
     if ($arg -eq "-sp") { $shouldSkipPublish = $true }
 }
 
+$apiPath = "..\Gosuji\Gosuji.API"
+$clientPath = "..\Gosuji\Gosuji.Client"
+
+$apiPublishPath = "$($apiPath)\bin\Release\net8.0\publish"
+$clientPublishPath = "$($clientPath)\bin\Release\net8.0\publish"
 if (-Not $shouldSkipPublish) {
-    dotnet publish "..\Gosuji\Gosuji.API" -c Release
-    dotnet publish "..\Gosuji\Gosuji.Client" -c Release
+    if (Test-Path $apiPublishPath) {
+        Remove-Item -Path $apiPublishPath -Recurse -Force
+    }
+    if (Test-Path $clientPublishPath) {
+        Remove-Item -Path $clientPublishPath -Recurse -Force
+    }
+
+    dotnet publish $apiPath -c Release
+    dotnet publish $clientPath -c Release
 }
 
-if (Test-Path "app\api") {
-    Remove-Item -Path "app\api" -Recurse -Force
+$appApiPath = "app\api"
+if (Test-Path $appApiPath) {
+    Remove-Item -Path $appApiPath -Recurse -Force
 }
-if (Test-Path "app\client") {
-    Remove-Item -Path "app\client" -Recurse -Force
+$appClientPath = "app\client"
+if (Test-Path $appClientPath) {
+    Remove-Item -Path $appClientPath -Recurse -Force
 }
 
-Copy-Item -Path "..\Gosuji\Gosuji.API\bin\Release\net8.0\publish" -Destination "app\api" -Recurse
-Copy-Item -Path "..\Gosuji\Gosuji.Client\bin\Release\net8.0\publish\wwwroot\.client" -Destination "app\client" -Recurse
+Copy-Item -Path $apiPublishPath -Destination "app\api" -Recurse
+Copy-Item -Path "$($clientPublishPath)\wwwroot\.client" -Destination "app\client" -Recurse
 
 if (Test-Path "build") {
     Remove-Item -Path "build" -Recurse -Force
