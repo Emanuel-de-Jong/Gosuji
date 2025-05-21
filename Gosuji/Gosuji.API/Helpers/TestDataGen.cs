@@ -119,7 +119,7 @@ namespace Gosuji.API.Helpers
                 SuggestionOptions = 6,
                 HideWeakerOptions = true,
                 MinVisitsPercSwitch = true,
-                MinVisitsPerc = 10,
+                MinVisitsPerc = 5,
                 MaxVisitDiffPercSwitch = false,
                 MaxVisitDiffPerc = 40,
 
