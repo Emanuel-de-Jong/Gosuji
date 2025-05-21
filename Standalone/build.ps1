@@ -1,3 +1,10 @@
+Write-Host "Usage: build.ps1 [-k] [-sp]"
+Write-Host "  -k    Copy KataGoData from Gosuji.API if exists. Makes testing faster but should not be in a public build."
+Write-Host "  -sp   Skip publishing the .NET projects. Usefull when there were no code changes."
+Write-Host ""
+
+$shouldCopyKataGoData = $args[0] -eq "-k"
+
 dotnet publish "..\Gosuji\Gosuji.API" -c Release
 dotnet publish "..\Gosuji\Gosuji.Client" -c Release
 
@@ -16,3 +23,7 @@ if (Test-Path "build") {
 }
 
 npm --prefix "app" run build
+
+if ($shouldCopyKataGoData) {
+    Write-Host $args[0]
+}

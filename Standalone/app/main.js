@@ -43,10 +43,14 @@ function createWindow() {
 
 app.whenReady().then(createWindow);
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
-    apiProcess.kill();
     clientServer.close();
+
+    // Wait for API to save potential game
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    apiProcess.kill('SIGTERM');
+
     app.quit();
   }
 });
