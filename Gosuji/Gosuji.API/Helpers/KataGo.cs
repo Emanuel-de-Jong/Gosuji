@@ -235,7 +235,7 @@ namespace Gosuji.API.Helpers
             MoveSuggestionList suggestionList = ParseAnalysis(analysis, color);
             suggestionList.Visits = maxVisits;
 
-            suggestionList.Filter(minVisitsPerc, maxVisitDiffPerc, moveOptions);
+            suggestionList.Filter(color, minVisitsPerc, maxVisitDiffPerc, moveOptions);
 
             return suggestionList;
         }

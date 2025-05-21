@@ -22,10 +22,11 @@
             return true;
         }
 
-        public void Filter(double minVisitsPerc, double maxVisitDiffPerc, int moveOptions)
+        public void Filter(EMoveColor color, double minVisitsPerc, double maxVisitDiffPerc, int moveOptions)
         {
             FilterPass();
             FilterByVisits(minVisitsPerc, maxVisitDiffPerc);
+            FilterByScoreLead(color);
             AddGrades();
             FilterByOptions(moveOptions);
         }
@@ -57,26 +58,18 @@
 
         public void FilterByVisits(double minVisitsPerc, double maxVisitDiffPerc)
         {
-            int highestVisits = 0;
-            foreach (MoveSuggestion suggestion in Suggestions)
-            {
-                if (highestVisits < suggestion.Visits)
-                {
-                    highestVisits = suggestion.Visits;
-                }
-            }
+            int highestVisits = Suggestions.Max(s => s.Visits);
 
             int minVisits = (int)Math.Round(minVisitsPerc / 100.0 * Visits);
             int maxVisitDiff = (int)Math.Round(maxVisitDiffPerc / 100.0 * Math.Max(Visits, highestVisits));
 
-            int index;
             int lastSuggestionVisits = Suggestions[0].Visits;
-            for (index = 1; index < Suggestions.Count; index++)
+            List<MoveSuggestion> suggestionsToRem = [];
+            foreach (MoveSuggestion suggestion in Suggestions)
             {
-                MoveSuggestion suggestion = Suggestions[index];
                 if (suggestion.Visits < minVisits || lastSuggestionVisits - suggestion.Visits > maxVisitDiff)
                 {
-                    break;
+                    suggestionsToRem.Add(suggestion);
                 }
 
                 if (lastSuggestionVisits > suggestion.Visits)
@@ -85,11 +78,20 @@
                 }
             }
 
-            // If loop broke, we want to go back to the last suggestion
-            // If loop didn't break, we want to revert the last increment before the loop check
-            index--;
+            foreach (MoveSuggestion suggestion in suggestionsToRem)
+            {
+                Suggestions.Remove(suggestion);
+            }
+        }
 
-            Suggestions = Suggestions[..(index + 1)];
+        public void FilterByScoreLead(EMoveColor color)
+        {
+            double bestScoreLead = color == EMoveColor.BLACK
+                ? Suggestions.Max(s => s.Score.ScoreLead)
+                : Suggestions.Min(s => s.Score.ScoreLead);
+
+            double threshold = 3;
+            Suggestions.RemoveAll(s => Math.Abs(s.Score.ScoreLead - bestScoreLead) > threshold);
         }
 
         public void AddGrades()
