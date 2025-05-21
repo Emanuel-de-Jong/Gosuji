@@ -621,7 +621,7 @@ namespace Gosuji.API.Services
         public async ValueTask DisposeAsync()
         {
             await pool.Return(UserId);
-            //await Save();
+            await Save();
         }
     }
 }
