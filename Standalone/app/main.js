@@ -25,13 +25,12 @@ function setupClientApp() {
   clientApp = express();
   clientApp.use(express.static(clientPath));
 
-  clientApp.get('*', (req, res) => {
-    res.sendFile(path.join(clientPath, 'index.html'));
-  });
-
-  clientApp.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
+  clientApp.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api')) {
+      res.sendFile(path.join(clientPath, 'index.html'));
+    } else {
+      next();
+    }
   });
 }
 
@@ -50,7 +49,7 @@ function createWindow() {
 
 let apiProcess, clientServer;
 
-async function start() {
+async function run() {
   apiProcess = spawn(path.join(apiPath, 'Gosuji.API.exe'), [], {
     cwd: apiPath
   });
@@ -70,7 +69,10 @@ async function start() {
   app.whenReady().then(createWindow);
 }
 
-start();
+run().catch(err => {
+  console.error('Application failed:', err);
+  app.quit();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform === 'darwin') {
