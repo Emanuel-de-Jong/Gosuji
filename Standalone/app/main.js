@@ -22,16 +22,16 @@ const apiPath = path.join(resourcePath, 'api');
 const logPath = 'error.log';
 
 const logStream = fs.createWriteStream(logPath, { flags: 'a' });
-function logToFile(...args) {
+function logToFile(level, ...args) {
   const message = args.map(arg => (typeof arg === 'string' ? arg : JSON.stringify(arg))).join(' ');
   const timestamp = new Date().toISOString();
-  logStream.write(`[${timestamp}] ${message}\n`);
+  logStream.write(`[${timestamp}] [${level.toUpperCase()}] ${message}\n`);
 }
 
 ['log', 'error', 'warn', 'info'].forEach(method => {
   const orig = console[method];
   console[method] = (...args) => {
-    logToFile(...args);
+    logToFile(method, ...args);
     orig.apply(console, args);
   };
 });
