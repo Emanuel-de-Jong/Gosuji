@@ -3,33 +3,20 @@ const { app, BrowserWindow } = require('electron');
 const { spawn } = require('child_process');
 const express = require('express');
 
-const getResourcePath = () => {
+const CLIENT_PORT = 5001;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function getResourcePath() {
   return app.isPackaged 
     ? path.join(process.resourcesPath, "app")
     : __dirname;
-};
-
-const resourcePath = getResourcePath();
-
-const CLIENT_PATH = path.join(resourcePath, 'client');
-const API_PATH = path.join(resourcePath, 'api');
-const CLIENT_PORT = 5001;
-
-const apiProcess = spawn(path.join(API_PATH, 'Gosuji.API.exe'), [], {
-  cwd: API_PATH
-});
-
-apiProcess.stdout.on('data', (data) => console.log(`API: ${data}`));
-apiProcess.stderr.on('data', (data) => console.error(`API ERROR: ${data}`));
-
-const clientApp = express();
-clientApp.use(express.static(CLIENT_PATH));
-const clientServer = clientApp.listen(CLIENT_PORT, () => {
-  console.log(`Client served at http://localhost:${CLIENT_PORT}`);
-});
+}
 
 function createWindow() {
-  const win = new BrowserWindow({
+  const window = new BrowserWindow({
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -37,18 +24,46 @@ function createWindow() {
     }
   });
 
-  win.maximize();
-  win.loadURL(`http://localhost:${CLIENT_PORT}`);
+  window.maximize();
+  window.loadURL(`http://localhost:${CLIENT_PORT}`);
+
+  return window;
 }
 
-app.whenReady().then(createWindow);
+let apiProcess, clientApp, clientServer;
+
+async function start() {
+  const resourcePath = getResourcePath();
+  const clientPath = path.join(resourcePath, 'client');
+  const apiPath = path.join(resourcePath, 'api');
+
+  apiProcess = spawn(path.join(apiPath, 'Gosuji.API.exe'), [], {
+    cwd: apiPath
+  });
+
+  apiProcess.stdout.on('data', (data) => console.log(`API: ${data}`));
+  apiProcess.stderr.on('data', (data) => console.error(`API ERROR: ${data}`));
+
+  clientApp = express();
+  clientApp.use(express.static(clientPath));
+  clientServer = clientApp.listen(CLIENT_PORT, () => {
+    console.log(`Client served at http://localhost:${CLIENT_PORT}`);
+  });
+
+  // Wait for API and client to be ready
+  await sleep(1000);
+
+  app.whenReady().then(createWindow);
+}
+
+start();
 
 app.on('window-all-closed', async () => {
   if (process.platform !== 'darwin') {
     clientServer.close();
 
     // Wait for API to save potential game
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    await sleep(1500);
     apiProcess.kill('SIGTERM');
 
     app.quit();
