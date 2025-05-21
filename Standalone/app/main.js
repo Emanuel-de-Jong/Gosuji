@@ -48,7 +48,7 @@ app.on('window-all-closed', async () => {
     clientServer.close();
 
     // Wait for API to save potential game
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1500));
     apiProcess.kill('SIGTERM');
 
     app.quit();
