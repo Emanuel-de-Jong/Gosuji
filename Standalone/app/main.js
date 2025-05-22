@@ -94,6 +94,10 @@ ipcMain.on('trigger-save-file', (event, fileName, content) => {
   dialog.showSaveDialog(win, {
     title: 'Save File',
     defaultPath: fileName,
+    filters: [
+      { name: 'SGF Files', extensions: ['sgf'] },
+      { name: 'All Files', extensions: ['*'] }
+    ],
     properties: ['showOverwriteConfirmation']
   }).then(result => {
     if (!result.canceled && result.filePath) {
