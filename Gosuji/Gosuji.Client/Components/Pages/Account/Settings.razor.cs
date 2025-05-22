@@ -148,7 +148,7 @@ namespace Gosuji.Client.Components.Pages.Account
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             byte[] fileBytes = response.Data;
 
-            await js.InvokeVoidAsync("utils.downloadFile",
+            await js.InvokeVoidAsync("utils.downloadByteFile",
                 "PersonalData",
                 "json",
                 fileBytes,

@@ -122,7 +122,7 @@ if (typeof besogo === "undefined") {
                     portraitRatio = +(options.portratio || 200) / 100,
                     landscapeRatio = +(options.landratio || 200) / 100,
                     minPanelsWidth = +(options.minpanelswidth || 350),
-                    minPanelsHeight = +(options.minpanelsheight || 400),
+                    minPanelsHeight = +(options.minpanelsheight || 200),
                     minLandscapeWidth = +(options.transwidth || 600),
 
                     // Initial width parent

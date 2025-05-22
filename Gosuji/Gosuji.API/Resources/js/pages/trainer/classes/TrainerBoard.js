@@ -14,7 +14,8 @@ class TrainerBoard extends Board {
     constructor() {
         super();
 
-        this.besogoOptions.panels = "control+names+tree+file";
+        this.besogoOptions.panels = "control+names+tree";
+        this.besogoOptions.portratio = 100;
 
         if (debug.testData == 1) {
             this.besogoOptions.sgf =
@@ -60,10 +61,6 @@ class TrainerBoard extends Board {
         this.containerElement.querySelector('button[title="Variants: show/[hide]"]').remove();
         this.containerElement.querySelector('button[title="Previous sibling"]').remove();
         this.containerElement.querySelector('button[title="Next sibling"]').remove();
-        this.containerElement.querySelector('input[value="9x9"]').remove();
-        this.containerElement.querySelector('input[value="13x13"]').remove();
-        this.containerElement.querySelector('input[value="19x19"]').remove();
-        this.containerElement.querySelector('input[value="?x?"]').remove();
 
         this.containerElement.querySelector(".besogo-board")
             .insertAdjacentHTML("beforeend", '<button type="button" class="btn btn-secondary btn-sm next" disabled>></button>');
@@ -87,6 +84,12 @@ class TrainerBoard extends Board {
 
         this.phaseChangedListener({ phase: trainerG.phase });
 
+        this.saveButton = document.querySelector(".saveBtn");
+        this.loadButton = document.querySelector(".loadBtn");
+
+        this.saveButton.addEventListener("click", this.saveSGF);
+        this.loadButton.addEventListener("click", this.loadSGF);
+
         if (isFirstInit) {
             this.deleteBranchButton.addEventListener("click", this.deleteBranch);
         }
@@ -104,6 +107,38 @@ class TrainerBoard extends Board {
         // console.log(besogo);
         // console.log(this.editor);
         // console.log(this.get());
+    }
+
+    saveSGF = () => {
+        let text = besogo.composeSgf(this.editor);
+        utils.downloadTextFile("game", "sgf", text, "text/plain;charset=UTF-8");
+    }
+
+    loadSGF = () => {
+        let chooser = document.createElement('input');
+        chooser.type = 'file';
+        chooser.style.display = 'none';
+
+        chooser.onchange = (evt) => {
+            let file = evt.target.files[0];
+            let reader = new FileReader();
+
+            reader.onload = (e) => {
+                let sgf;
+                try {
+                    sgf = besogo.parseSgf(e.target.result);
+                } catch (error) {
+                    alert('SGF parse error at ' + error.at + ':\n' + error.message);
+                    return;
+                }
+
+                besogo.loadSgf(sgf, trainerG.board.editor);
+            };
+
+            reader.readAsText(file);
+        };
+
+        chooser.click();
     }
 
     addServerData(moveNode, parentNode) {

@@ -125,6 +125,15 @@
             height: 26px;
         }
 
+    #trainerGame #boardControls {
+        display: flex;
+        justify-content: center;
+    }
+
+        #trainerGame #boardControls button {
+            margin: 0 3px;
+        }
+
 
 #trainerStats {
     width: 450px;

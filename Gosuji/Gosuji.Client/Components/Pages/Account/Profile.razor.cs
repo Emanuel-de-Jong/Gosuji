@@ -112,7 +112,7 @@ namespace Gosuji.Client.Components.Pages.Account
             if (G.StatusMessage.HandleAPIResponse(response)) return;
             Game? fullGame = response.Data;
 
-            //await js.InvokeVoidAsync("utils.downloadFile",
+            //await js.InvokeVoidAsync("utils.downloadByteFile",
             //    fullGame.Name,
             //    "sgf",
             //    Encoding.UTF8.GetBytes(fullGame.SGF),

@@ -109,6 +109,8 @@ trainerPage.clear = async function () {
 trainerPage.start = async function () {
     boardOverlay.hide();
     trainerPage.restartButton.disabled = false;
+    trainerG.board.saveButton.disabled = false;
+    trainerG.board.loadButton.disabled = false;
 
     settings.togglePreGameSettings();
     

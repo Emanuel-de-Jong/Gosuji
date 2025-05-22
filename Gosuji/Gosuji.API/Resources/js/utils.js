@@ -12,9 +12,13 @@ if (typeof utils === "undefined") {
     };
 
 
-    utils.downloadFile = function (name, extension, bytes, type) {
+    utils.downloadByteFile = function (name, extension, bytes, type, encoding="utf-8") {
         let byteArray = new Uint8Array(bytes);
-        let blob = new Blob([byteArray], { type: type });
+        utils.downloadTextFile(name, extension, byteArray, type, encoding);
+    };
+
+    utils.downloadTextFile = function (name, extension, text, type, encoding="utf-8") {
+        let blob = new Blob([text], { encoding: encoding, type: type });
         let url = URL.createObjectURL(blob);
     
         let anchor = document.createElement("a");
