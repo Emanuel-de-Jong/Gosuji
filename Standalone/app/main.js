@@ -1,5 +1,5 @@
 const path = require('path');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { spawn } = require('child_process');
 const express = require('express');
 const fs = require('fs');
@@ -59,7 +59,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      webSecurity: false
+      webSecurity: false,
+      preload: path.join(resourcePath, 'preload.js')
     }
   });
 
@@ -87,6 +88,29 @@ async function run() {
 
   app.whenReady().then(createWindow);
 }
+
+ipcMain.on('trigger-save-file', (event, fileName, content) => {
+  const win = BrowserWindow.getFocusedWindow();
+  dialog.showSaveDialog(win, {
+    title: 'Save File',
+    defaultPath: fileName,
+    properties: ['showOverwriteConfirmation']
+  }).then(result => {
+    if (!result.canceled && result.filePath) {
+      fs.writeFile(result.filePath, content, 'utf8', (err) => {
+        if (err) {
+          console.error('Error saving file:', err);
+          event.reply('save-file-error', err.message);
+        } else {
+          event.reply('save-file-success');
+        }
+      });
+    }
+  }).catch(err => {
+    console.error('Dialog error:', err);
+    event.reply('save-file-error', err.message);
+  });
+});
 
 run().catch(err => {
   console.error('Application failed:', err);

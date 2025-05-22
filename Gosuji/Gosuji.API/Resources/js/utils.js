@@ -18,15 +18,19 @@ if (typeof utils === "undefined") {
     };
 
     utils.downloadTextFile = function (name, extension, text, type, encoding="utf-8") {
-        let blob = new Blob([text], { encoding: encoding, type: type });
-        let url = URL.createObjectURL(blob);
-    
-        let anchor = document.createElement("a");
-        anchor.href = url;
-        anchor.download = name + "." + extension;
-        anchor.click();
+        if (window.electronAPI) {
+            window.electronAPI.saveFile(name, text);
+        } else {
+            let blob = new Blob([text], { encoding: encoding, type: type });
+            let url = URL.createObjectURL(blob);
         
-        URL.revokeObjectURL(url);
+            let anchor = document.createElement("a");
+            anchor.href = url;
+            anchor.download = name + "." + extension;
+            anchor.click();
+            
+            URL.revokeObjectURL(url);
+        }
     };
 
 
