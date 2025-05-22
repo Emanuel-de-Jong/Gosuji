@@ -45,7 +45,7 @@ sgfComment.setComment = function (moveOrigin) {
 };
 
 sgfComment.createInitComment = function () {
-    return "GOSUJI " + "0.4.1" +
+    return "GOSUJI " + "VERSION" +
         "\nBoard size: " + trainerG.board.boardsize +
         "\nHandicap: " + trainerG.board.handicap +
         "\nPre moves switch: " + settings.preMovesSwitch +

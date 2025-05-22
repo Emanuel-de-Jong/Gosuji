@@ -33,7 +33,7 @@ namespace Gosuji.API
 
             // return version;
 
-            return "0.4.1";
+            return "0.4.2";
         }
     }
 }
