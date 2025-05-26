@@ -44,6 +44,9 @@ profilePage.createGameTable = function () {
 };
 
 profilePage.createPercentPerGameLineChart = function (rightPercents, perfectPercents) {
+    // rightPercents = [48, 52, 53, 53, 55];
+    // perfectPercents = [36, 38, 43, 40, 44];
+
     let datasets = [];
     datasets.push({
         label: "Right",
@@ -72,7 +75,6 @@ profilePage.createPercentPerGameLineChart = function (rightPercents, perfectPerc
         },
         options: {
             responsive: true,
-            showLine: false,
             scales: {
                 x: {
                     grid: {
@@ -105,18 +107,21 @@ profilePage.createPercentPerGameLineChart = function (rightPercents, perfectPerc
 };
 
 profilePage.createGameStageBarChart = function (right, perfect) {
+    // right = [74, 42, 63];
+    // perfect = [53, 35, 50];
+
     let datasets = [];
-    datasets.push({
-        label: "Right",
-        data: [right[0], right[1], right[2]],
-        borderColor: profilePage.rightColor,
-        backgroundColor: profilePage.rightColor,
-    });
     datasets.push({
         label: "Perfect",
         data: [perfect[0], perfect[1], perfect[2]],
         borderColor: profilePage.perfectColor,
         backgroundColor: profilePage.perfectColor,
+    });
+    datasets.push({
+        label: "Right",
+        data: [right[0], right[1], right[2]],
+        borderColor: profilePage.rightColor,
+        backgroundColor: profilePage.rightColor,
     });
 
     profilePage.gameStageBarChartCanvas = document.getElementById("gameStageBarChart");
@@ -130,6 +135,7 @@ profilePage.createGameStageBarChart = function (right, perfect) {
             responsive: true,
             scales: {
                 x: {
+                    stacked: true,
                     grid: {
                         color:
                             theme.theme == theme.TYPES.DARK
