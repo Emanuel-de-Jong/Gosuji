@@ -85,8 +85,8 @@ profilePage.createPercentPerGameLineChart = function (rightPercents, perfectPerc
                     },
                 },
                 y: {
-                    beginAtZero: true,
-                    max: 100,
+                    // beginAtZero: true,
+                    // max: 100,
                     grid: {
                         color:
                         theme.theme == theme.TYPES.DARK
@@ -144,8 +144,8 @@ profilePage.createGameStageBarChart = function (right, perfect) {
                     },
                 },
                 y: {
-                    beginAtZero: true,
-                    max: 100,
+                    // beginAtZero: true,
+                    // max: 100,
                     grid: {
                         color:
                             theme.theme == theme.TYPES.DARK
