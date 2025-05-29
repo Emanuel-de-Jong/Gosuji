@@ -14,7 +14,7 @@
   </Target>
 
   <ItemGroup>
-	<Content Include="Resources\KataGo\Models\kata1-b28c512nbt-s8032072448-d4548958859.bin.gz" CopyToOutputDirectory="PreserveNewest" />
+	<Content Include="Resources\KataGo\Models\kata1-b28c512nbt-s8954935040-d4794564322.bin.gz" CopyToOutputDirectory="PreserveNewest" />
 	  
 	<Content Include="Resources\KataGo\OpenCL\default_gtp.cfg" CopyToOutputDirectory="PreserveNewest" />
 	<Content Include="Resources\KataGo\OpenCL\katago.exe" CopyToOutputDirectory="PreserveNewest" />
