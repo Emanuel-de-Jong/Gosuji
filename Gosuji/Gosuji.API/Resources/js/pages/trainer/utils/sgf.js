@@ -98,6 +98,7 @@ sgf.setRuleset = function (ruleset) {
 sgf.setKomi = function (komi) {
     sgf.komi = komi;
     trainerG.board.komiDisplay.textContent = komi;
+    sgf.setKomiMeta(komi);
 };
 
 
