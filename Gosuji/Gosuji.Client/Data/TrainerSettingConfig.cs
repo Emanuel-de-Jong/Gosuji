@@ -149,11 +149,11 @@ namespace Gosuji.Client.Data
             }
         }
         [NotMapped]
-        public int GetSuggestionVisits => GetVisits(SuggestionVisits, 2000, new() {
-            { ESubscriptionType.TIER_1, 2000 }, { ESubscriptionType.TIER_2, 2000 }, { ESubscriptionType.TIER_3, 2000 }});
+        public int GetSuggestionVisits => GetVisits(SuggestionVisits, 200, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
         [NotMapped]
-        public int GetOpponentVisits => GetVisits(OpponentVisits, 2000, new() {
-            { ESubscriptionType.TIER_1, 2000 }, { ESubscriptionType.TIER_2, 2000 }, { ESubscriptionType.TIER_3, 2000 }});
+        public int GetOpponentVisits => GetVisits(OpponentVisits, 200, new() {
+            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
         [NotMapped]
         public int GetPreVisits => GetVisits(PreVisits, 500, new() {
             { ESubscriptionType.TIER_1, 500 }, { ESubscriptionType.TIER_2, 500 }, { ESubscriptionType.TIER_3, 500 }});
