@@ -1,57 +1,59 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>d15a37cb-18cd-4859-a12c-b791cec92c89</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <InvariantGlobalization>true</InvariantGlobalization>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>d15a37cb-18cd-4859-a12c-b791cec92c89</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<InvariantGlobalization>true</InvariantGlobalization>
+	</PropertyGroup>
 
-  <Target Name="PrepublishScript" BeforeTargets="Build">
-    <Exec Command="npm --prefix Resources/Rollup run build:js" />
-  </Target>
+	<Target Name="PrepublishScript" BeforeTargets="Build">
+		<Exec Command="npm --prefix Resources/Rollup run build:js" />
+	</Target>
 
-  <ItemGroup>
-	<Content Include="Resources\KataGo\Models\kata1-b28c512nbt-s8954935040-d4794564322.bin.gz" CopyToOutputDirectory="PreserveNewest" />
-	  
-	<Content Include="Resources\KataGo\OpenCL\default_gtp.cfg" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\katago.exe" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\libcrypto-3-x64.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\libssl-3-x64.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\libz.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\libzip.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\msvcp140.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\msvcp140_1.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\msvcp140_2.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\msvcp140_atomic_wait.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\msvcp140_codecvt_ids.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\vcruntime140.dll" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\KataGo\OpenCL\vcruntime140_1.dll" CopyToOutputDirectory="PreserveNewest" />
-	  
-	<Content Include="Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf" CopyToOutputDirectory="PreserveNewest" />
-	<Content Include="Resources\gosuji.db" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Resources\KataGo\Models\kata1-b28c512nbt-s8954935040-d4794564322.bin.gz" CopyToOutputDirectory="PreserveNewest" />
 
-  <ItemGroup>
-    <PackageReference Include="HtmlSanitizer" Version="8.0.865" />
-    <PackageReference Include="IGOEnchi.GoGameSgf" Version="1.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
+		<Content Include="Resources\KataGo\OpenCL\katago.exe" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\default_gtp.cfg" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\README.txt" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\cacert.pem" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\libcrypto-3-x64.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\libssl-3-x64.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\libz.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\libzip.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\msvcp140.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\msvcp140_1.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\msvcp140_2.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\msvcp140_atomic_wait.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\msvcp140_codecvt_ids.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\vcruntime140.dll" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\KataGo\OpenCL\vcruntime140_1.dll" CopyToOutputDirectory="PreserveNewest" />
 
-  <ItemGroup>
-    <ProjectReference Include="..\Gosuji.Client\Gosuji.Client.csproj" />
-  </ItemGroup>
+		<Content Include="Resources\AI-Josekis-40-0.3-48-48-26-26-20.sgf" CopyToOutputDirectory="PreserveNewest" />
+		<Content Include="Resources\gosuji.db" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="HtmlSanitizer" Version="8.0.865" />
+		<PackageReference Include="IGOEnchi.GoGameSgf" Version="1.0.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Gosuji.Client\Gosuji.Client.csproj" />
+	</ItemGroup>
 
 </Project>
