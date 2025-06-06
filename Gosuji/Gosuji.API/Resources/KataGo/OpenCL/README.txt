@@ -1,4 +1,4 @@
-KataGo v1.16.0
+KataGo v1.16.2
 https://github.com/lightvector/KataGo
 
 For neural nets from the latest run, download from here: 
