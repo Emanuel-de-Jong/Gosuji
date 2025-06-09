@@ -14,7 +14,7 @@ foreach ($arg in $args) {
 $apiPath = "..\Gosuji\Gosuji.API"
 $clientPath = "..\Gosuji\Gosuji.Client"
 
-$apiPublishPath = "$($apiPath)\bin\Release\net8.0\publish"
+$apiPublishPath = "$($apiPath)\bin\Release\net8.0\win-x64\publish"
 $clientPublishPath = "$($clientPath)\bin\Release\net8.0\publish"
 if (-Not $shouldSkipPublish) {
     if (Test-Path $apiPublishPath) {

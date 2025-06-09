@@ -7,6 +7,7 @@
 		<UserSecretsId>d15a37cb-18cd-4859-a12c-b791cec92c89</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 		<InvariantGlobalization>true</InvariantGlobalization>
+		<SelfContained>true</SelfContained>
 	</PropertyGroup>
 
 	<Target Name="PrepublishScript" BeforeTargets="Build">
