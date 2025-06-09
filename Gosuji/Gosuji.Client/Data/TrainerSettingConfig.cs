@@ -148,18 +148,19 @@ namespace Gosuji.Client.Data
                 return GetDefaultKomi(GetRuleset);
             }
         }
+
         [NotMapped]
-        public int GetSuggestionVisits => GetVisits(SuggestionVisits, 200, new() {
-            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+        public int GetSuggestionVisits => GetVisits(SuggestionVisits, 2000, new() {
+            { ESubscriptionType.TIER_1, 2000 }, { ESubscriptionType.TIER_2, 2000 }, { ESubscriptionType.TIER_3, 2000 }});
         [NotMapped]
-        public int GetOpponentVisits => GetVisits(OpponentVisits, 200, new() {
-            { ESubscriptionType.TIER_1, 200 }, { ESubscriptionType.TIER_2, 200 }, { ESubscriptionType.TIER_3, 200 }});
+        public int GetOpponentVisits => GetVisits(OpponentVisits, 2000, new() {
+            { ESubscriptionType.TIER_1, 2000 }, { ESubscriptionType.TIER_2, 2000 }, { ESubscriptionType.TIER_3, 2000 }});
         [NotMapped]
         public int GetPreVisits => GetVisits(PreVisits, 500, new() {
             { ESubscriptionType.TIER_1, 500 }, { ESubscriptionType.TIER_2, 500 }, { ESubscriptionType.TIER_3, 500 }});
         [NotMapped]
-        public int GetSelfplayVisits => GetVisits(SelfplayVisits, 1000, new() {
-            { ESubscriptionType.TIER_1, 1000 }, { ESubscriptionType.TIER_2, 1000 }, { ESubscriptionType.TIER_3, 1000 }});
+        public int GetSelfplayVisits => GetVisits(SelfplayVisits, 1500, new() {
+            { ESubscriptionType.TIER_1, 1500 }, { ESubscriptionType.TIER_2, 1500 }, { ESubscriptionType.TIER_3, 1500 }});
 
         public double GetDefaultKomi(string ruleset)
         {
@@ -183,12 +184,13 @@ namespace Gosuji.Client.Data
                 return visits.Value;
             }
 
-            if (SubscriptionType == null)
+            int resultVisits = noSubVisits;
+            if (SubscriptionType != null)
             {
-                return noSubVisits;
+                resultVisits = visitsBySub[SubscriptionType.Value];
             }
 
-            return visitsBySub[SubscriptionType.Value];
+            return G.IsLowComputeHost == false ? resultVisits : resultVisits / 10;
         }
 
         public TrainerSettingConfig SetHash()

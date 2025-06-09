@@ -1,4 +1,5 @@
-﻿using Gosuji.Client.Data;
+﻿using Gosuji.Client;
+using Gosuji.Client.Data;
 using Gosuji.Client.Models;
 using Gosuji.Client.Models.Trainer;
 using System.Diagnostics;
@@ -8,6 +9,18 @@ namespace Gosuji.API.Helpers
 {
     public class KataGo
     {
+        // Change numSearchThreads depending on backend als IsLowComputeHost.
+        public static Dictionary<string, Dictionary<bool, int>> SEARCH_THREAD_DEFAULTS = new() {
+            { "OpenCL", new() {
+                { false, 20 },
+                { true, 8 }
+            }},
+            { "TensorRT", new() {
+                { false, 24 },
+                { true, 12 }
+            }}
+        };
+
         public bool IsPaused { get; set; } = false;
         public int TotalVisits { get; set; } = 0;
         public DateTimeOffset LastStartTime { get; set; }
@@ -22,6 +35,23 @@ namespace Gosuji.API.Helpers
         private int handicap = 0;
 
         private int lastMaxVisits;
+
+        private void WaitForGTPReady()
+        {
+            string line;
+            do
+            {
+                line = ReadError();
+                Console.WriteLine(line);
+            } while (!line.Contains("GTP ready"));
+        }
+
+        private void SetSearchThreads()
+        {
+            int searchThreads = SEARCH_THREAD_DEFAULTS[KataGoVersion.BACKEND][G.IsLowComputeHost];
+            Write("kata-set-param numSearchThreads " + searchThreads);
+            ClearReader();
+        }
 
         public async Task Start()
         {
@@ -49,16 +79,8 @@ namespace Gosuji.API.Helpers
             writer = process.StandardInput;
 
             await Task.Run(WaitForGTPReady);
-        }
 
-        private void WaitForGTPReady()
-        {
-            string line;
-            do
-            {
-                line = ReadError();
-                Console.WriteLine(line);
-            } while (!line.Contains("GTP ready"));
+            SetSearchThreads();
         }
 
         public void Stop()

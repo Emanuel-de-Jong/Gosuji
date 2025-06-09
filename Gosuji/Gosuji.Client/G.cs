@@ -10,6 +10,7 @@ namespace Gosuji.Client
     public static class G
     {
         public static bool IsStandalone = true;
+        public static bool IsLowComputeHost = true;
 
         public static LogLevel LogLevel =
 #if DEBUG
