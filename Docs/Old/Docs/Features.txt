@@ -1,0 +1,123 @@
+Videos
+    trailer video
+    guide video
+    how to improve video
+
+Registration
+    Register
+        With google account
+    Log in
+        Forgot password
+
+Payment
+    Subscription
+        1, 3 and 12 months (longer is cheaper)
+        Discount
+        Email to me
+        Email to user
+		Type
+			Free
+				only basic features
+				visit limit 100
+				400 moves per day
+				white
+			Level 1
+				visit limit 500
+				5000 moves per day
+				bronze
+			Level 2
+				visit limit 1500
+				7500 moves per day
+				silver
+			Level 3
+				visit limit 5000
+				15000 moves per day
+				gold
+			Dynamic
+				pay per visit
+				unlimited moves per day
+				rainbow
+
+Changelog
+    Email to users
+
+Profile
+    Game history
+        Sortable
+        Tables
+            Best
+            Recent
+        Columns
+            Name
+            Date
+            Preset
+            MoveCount
+            PerfectRatio
+            PerfectStreak
+            RightRatio
+            RightStreak
+            SGF download button
+            Delete button
+    Stats
+        All or filtered by preset select
+        Ratio and streak charts for perfect and right
+        Game stage (opening, midgame, endgame) strength
+        Game count and move count charts for day and month
+    Settings
+
+Feedback
+    Type
+        Question
+        Bug report
+        Suggestion
+    Subject (optional)
+    Message
+    Email to me
+
+Presets
+    Default presets
+    Save load custom
+
+Trainer
+    Save button
+    Status bar ("analyzing suggestions")
+    Ratio and top streak chart
+
+Settings
+    Basic
+        Dark mode
+        Sound slide
+    Automatic komi value per ruleset and boardsize
+    Get email on changes check
+    Username, email, password edit
+    Download personal data
+
+
+Language select
+    Flag icons
+
+CMS
+    Database CRUD
+    Stats
+        Per user
+            subscription history
+            game history
+            visit history
+            login history
+        Overall
+            user count history
+            online user history
+            subscription count history
+            online subscribed user history
+            user subscription ratio history
+            game count history
+            site visit history per page
+                maybe with google library
+
+Legal
+	Copyright message
+    Privacy policy
+    Terms of service
+    Credits
+		Libs/frameworks used
+		Contributors

@@ -1,0 +1,172 @@
+stats
+    game overview
+    current strength per move
+    strength over time
+    play count over time
+    motivation to play every day
+
+    filter by
+        all or group of presets
+        handicap
+        color
+        boardsize
+        date range
+        min moveCount or moveCount range
+        min ratio total or total range (maybe instead of moveCount)
+        isFinished
+        right / perfect
+        filters can't be page wide for performance reasons
+
+    game tables
+        columns
+            thumbnail
+            name
+            isFinished
+            boardsize
+            handicap
+            color
+            moveCount
+            playedCount / ratio total (maybe instead of moveCount)
+            RightPercent
+            RightStreak
+            PerfectPercent
+            PerfectStreak
+            preset
+            IsThirdPartySGF
+            date
+            SGF download button
+            Delete button
+        click loads
+        column sorting
+        search bar
+        best table
+        recent table
+
+    ratio percent bar charts
+        3 stat
+            average of 3 games in a row
+                10 times
+                spread out from oldest to newest
+            x is opening, midgame, endgame
+            lighter color is newer
+        
+        all nodes
+            average of 3 games in a row
+                5 times
+                spread out from oldest to newest
+            x is movenumber
+            lighter color is newer
+
+        endgame stat
+            all games
+            x is date
+    
+    ratio percent 3 stat pie chart
+        last 5 games
+
+    grid of days played
+        green is played on day
+            the more plays the greener
+                hover to show play count
+        yellow is not finished
+        blue is making up for day not played
+            only for past days
+    
+    Game count and move count charts for day and month
+
+    streak charts for perfect and right
+
+
+Config file with default trainer settings so we don't have to rebuild after every change
+Save time
+    total time
+    player time
+    time stats in profile
+Implement table modified dates
+Maybe order games by date. Including modified if not null and game wasn't finished
+Use longest sequence of ratios for stats instead of main branch sequence
+Multiple games in 1 day can only catch up days before it. As not to get an ever growing collection of future catch ups
+
+Debug tree jumps
+Translate per page (db table)
+Rename MoveSuggestion to MoveOption
+Rename suggestions to suggestionList
+Handle restart spam
+Don't analyzeMove when scoreChart history already has it
+Make sure color of analyze and color played on board always match
+Settingconfig uses userid as id
+Change G.color, sgf.ruleset and sgf.komi with setting elements (G.color will cause bugs)
+Let user choose next color to play
+On loading server game, go to PrevNodeX, PrevNodeY
+More random options in settings
+    Random handicap count with min, max or range
+Analyze move 0 for scorechart (regardless of handicap)
+Close KataGo instance on page leave
+
+Client
+    Register
+        Captcha
+    Feedback
+        Captcha
+    Server
+        Retry request on error
+        Unreachable alert
+    Design
+        Icon for settings that can be updated without restart/save
+        Tooltips
+        Responsive (mobile friendly)
+        Make it pretty
+    Performance
+        Combine and minimize js files (e.g. trainer.min.js)
+
+Server
+    Unit tests
+    Restart when something goes wrong
+    Logging
+    Automatic DB backups
+    Rate limit on spam
+    Performance
+        Trainer
+            Add grades in server to use katago maxmoves and decrease package size
+            Maybe call MoveSuggestionList filter functions server side
+            Maybe don't send pass suggestions and add isPassed and passSuggestion server side
+
+Other
+    Prevent piracy
+    Prevent abuse
+    Trainer
+        Ask user if game should be saved and under what name on
+            Save button
+            Leaving page
+            Game finished
+
+
+
+AFTER 1.0
+Client
+    Pages
+        Home
+            Registered user count
+
+Other
+    Trainer
+        Play after pass
+        Play both colors
+        Play a sequence, then click a button that shows what sequence the AI would have played and how good your sequence was in comparison (comparing the winrate/score won/lost during those moves)
+    Settings
+        Stone texture
+        Default score chart color
+            Black
+            White
+            Player
+            Turn
+    Gain coins by playing and buy things in the shop
+    XP level system
+    Friends
+        User search
+        Add friend
+        Profile
+            Profile picture
+            Description
+            Social media links
+            Server and federation name/id and rank

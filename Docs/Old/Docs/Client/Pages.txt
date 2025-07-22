@@ -1,0 +1,43 @@
+header
+	gosuji (maybe logo)
+		Videos
+		description
+		Changelog
+
+	train
+		Trainer
+		Presets
+
+	contact
+		about me
+		Feedback
+
+	Language select
+
+
+
+
+	Register
+
+	Log in
+
+
+	CMS
+
+	Subscription
+
+	Profile
+
+	log out
+	
+	
+	dropdown (gear or down arrow icon)
+		Settings Basic
+
+
+
+
+
+
+footer
+	Legal

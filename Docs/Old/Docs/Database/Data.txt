@@ -1,0 +1,28 @@
+SubscriptionEnum
+    Free
+    Level1
+    Level2
+    Level3
+
+RoleEnum
+    Visitor
+    Free
+    Level1
+    Level2
+    Level3
+    Dynamic
+    Admin
+
+FeedbackEnum
+    Question
+    BugReport
+    Suggestion
+
+Language
+    English, EN
+    Dutch, NL
+    German, DE
+    Russian, RU
+    Chinese, CN
+    Japanese, JP
+    Korean, KR
