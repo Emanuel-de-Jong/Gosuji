@@ -8,7 +8,10 @@ A webapp to get feedback from AI, while playing against AI. This is THE method t
 
 | | |
 | :---: | :---: |
-| ![](/Screenshots/.png) | ![](/Screenshots/.png) |
+| ![](/Screenshots/1-Trainer.png) | ![](/Screenshots/2-Trainer-Light.png) |
+| ![](/Screenshots/3-Learn.png) | ![](/Screenshots/4-Profile.png) |
+| ![](/Screenshots/5-Settings-General.png) | ![](/Screenshots/6-Subscriptions.png) |
+| ![](/Screenshots/7-Contact.png) | ![](/Screenshots/8-Josekis.png) |
 
 ## Setup
 1. Find the KataGo model version in `KataGoVersion.MODEL`, download it from [KataGo Training](https://katagotraining.org/networks/) and put it in `Resources/KataGo/Models`.
