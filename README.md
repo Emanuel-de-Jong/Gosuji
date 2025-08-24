@@ -1,4 +1,6 @@
 # Gosuji
+A webapp to get feedback from AI, while playing against AI. This is THE method to learn the new AI intuition and sequences.
+
 [Blog about the features, creation process and roadmap.](https://gosuji.blogspot.com/2025/06/the-process-of-making-gosuji-new-way-of.html)
 
 **Active Development:** <br>
