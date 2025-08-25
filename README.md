@@ -3,8 +3,8 @@ A webapp to get feedback from AI, while playing against AI. This is THE method t
 
 [Blog about the features, creation process and roadmap.](https://gosuji.blogspot.com/2025/06/the-process-of-making-gosuji-new-way-of.html)
 
-**Active Development:** <br>
-**Last Change:** <br>
+**Active Development:** 2022-12-21 - 2025-06-09<br>
+**Last Change:** 2025-06-09<br>
 
 | | |
 | :---: | :---: |
