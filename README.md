@@ -18,3 +18,4 @@ A webapp to get feedback from AI, while playing against AI. This is THE method t
 2. Run `npm install` in `Gosuji.API/Resources/Rollup`.
 3. Change the API and Client launch settings from `https` to `http`.
 4. Make a new profile that first starts the API and then the Client.
+ 
