@@ -5,6 +5,7 @@ A webapp to get feedback from AI, while playing against AI. This is THE method t
 
 **Active Development:** 2022-12-21 - 2025-06-09<br>
 **Last Change:** 2025-06-09<br>
+**Highlights:** Machine Learning<br>
 
 | | |
 | :---: | :---: |
